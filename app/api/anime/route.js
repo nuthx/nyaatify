@@ -5,9 +5,18 @@ export async function GET() {
 
   try {
     const anime = await db.all('SELECT * FROM anime ORDER BY date DESC LIMIT 50');
-    return Response.json({ anime });
-  } catch (error) {
-    console.error('Failed to fetch anime:', error);
-    return Response.json({ error: 'Failed to fetch anime' }, { status: 500 });
+    return Response.json({
+      code: 200,
+      message: 'success',
+      data: anime
+    });
+  }
+  
+  catch (error) {
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
   }
 }

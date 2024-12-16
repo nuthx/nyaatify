@@ -26,7 +26,7 @@ export default function Settings() {
     try {
       const response = await fetch(rssApi);
       const data = await response.json();
-      setFeeds(data);
+      setFeeds(data.data);
     } catch (error) {
       console.error('Error fetching feeds:', error);
     }
@@ -161,7 +161,7 @@ export default function Settings() {
                       <div>
                         <h5 className="font-medium">{feed.name}</h5>
                         <p className="text-sm text-muted-foreground">{feed.url}</p>
-                        <p className="text-sm text-muted-foreground">Update interval: {feed.update_interval} minutes</p>
+                        <p className="text-sm text-muted-foreground">Update interval: {feed.interval} minutes</p>
                       </div>
                       <Button
                         variant="destructive"
