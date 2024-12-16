@@ -11,35 +11,40 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchRss = async () => {
-      const rssUrl = localStorage.getItem('rssUrl');
+  const fetchRss = async () => {
+    const rssUrl = localStorage.getItem('rssUrl');
+    
+    if (!rssUrl) {
+      setError('Please configure RSS URL first');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await fetch(`/api/rss/update?url=${encodeURIComponent(rssUrl)}`);
       
-      if (!rssUrl) {
-        setError('Please configure RSS URL first');
-        setLoading(false);
-        return;
+      const res = await fetch('/api/rss/latest');
+      const data = await res.json();
+      
+      if (!data.items || data.items.length === 0) {
+        throw new Error('Failed to parse RSS');
       }
+      
+      setItems(data.items);
+      setError(null);
+    } catch (error) {
+      console.error('Failed to fetch RSS:', error);
+      setError('RSS configuration error, please check if the RSS URL is correct');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      try {
-        const res = await fetch(`/api/rss?url=${encodeURIComponent(rssUrl)}`);
-        const data = await res.json();
-        
-        if (!data.items || data.items.length === 0) {
-          throw new Error('Failed to parse RSS');
-        }
-        
-        setItems(data.items);
-        setError(null);
-      } catch (error) {
-        console.error('Failed to fetch RSS:', error);
-        setError('RSS configuration error, please check if the RSS URL is correct');
-      } finally {
-        setLoading(false);
-      }
-    };
-
+  useEffect(() => {
     fetchRss();
+    const interval = setInterval(fetchRss, 5 * 60 * 1000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   return (
