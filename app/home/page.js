@@ -42,7 +42,11 @@ export default function Home() {
 
   useEffect(() => {
     fetchRss();
-    const interval = setInterval(fetchRss, 5 * 60 * 1000);
+    
+    const updateInterval = parseInt(localStorage.getItem('updateInterval') || '300', 10);
+    const intervalMs = updateInterval * 1000;
+    
+    const interval = setInterval(fetchRss, intervalMs);
     
     return () => clearInterval(interval);
   }, []);
