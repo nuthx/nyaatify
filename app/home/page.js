@@ -1,6 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ExternalLink } from "lucide-react";
 
 export default function Home() {
   const [items, setItems] = useState([]);
@@ -42,38 +46,47 @@ export default function Home() {
     <div className="min-h-screen p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Nyaaitfy</h1>
-        <Link href="/settings" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
-          Settings
-        </Link>
+        <Button asChild>
+          <Link href="/settings">Settings</Link>
+        </Button>
       </div>
       
       {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <div className="text-red-500 p-4 border border-red-300 rounded-lg bg-red-50">
-          {error}
-          <Link href="/settings" className="ml-2 text-blue-500 hover:underline">
-            Go to Settings
-          </Link>
+        <div className="flex items-center justify-center">
+          <p>Loading...</p>
         </div>
+      ) : error ? (
+        <Alert variant="destructive">
+          <AlertDescription>
+            {error}
+            <Link href="/settings" className="ml-2 text-blue-500 hover:underline">
+              Go to Settings
+            </Link>
+          </AlertDescription>
+        </Alert>
       ) : (
-        <ul className="space-y-4">
+        <div className="grid gap-4">
           {items.map((item, index) => (
-            <li key={index} className="border p-4 rounded-lg hover:bg-gray-50">
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer" 
-                className="text-blue-600 hover:underline block"
-              >
-                {item.title}
-              </a>
-              <p className="text-sm text-gray-500 mt-1">
-                {new Date(item.pubDate).toLocaleString()}
-              </p>
-            </li>
+            <Card key={index}>
+              <CardContent className="pt-6">
+                <div className="flex items-start justify-between">
+                  <a
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer" 
+                    className="text-blue-600 hover:underline flex items-center gap-2"
+                  >
+                    {item.title}
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                  <time className="text-sm text-muted-foreground">
+                    {new Date(item.pubDate).toLocaleString()}
+                  </time>
+                </div>
+              </CardContent>
+            </Card>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
