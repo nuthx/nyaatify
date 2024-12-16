@@ -5,6 +5,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
+const rssApi = '/api/setting/rss';
+const rssAddApi = '/api/setting/rss/add';
+const rssEditApi = '/api/setting/rss/edit';
+
 export default function Settings() {
   const [feeds, setFeeds] = useState([]);
   const [newFeed, setNewFeed] = useState({
@@ -20,7 +24,7 @@ export default function Settings() {
 
   const fetchFeeds = async () => {
     try {
-      const response = await fetch('/api/feeds');
+      const response = await fetch(rssApi);
       const data = await response.json();
       setFeeds(data);
     } catch (error) {
@@ -31,7 +35,7 @@ export default function Settings() {
   const handleAddFeed = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/feeds/add', {
+      const response = await fetch(rssAddApi, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +54,7 @@ export default function Settings() {
 
   const handleDeleteFeed = async (id) => {
     try {
-      await fetch(`/api/feeds/edit`, {
+      await fetch(`${rssEditApi}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

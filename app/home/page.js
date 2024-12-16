@@ -6,6 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ExternalLink } from "lucide-react";
 
+const animeApi = '/api/anime';
+const updateAnimeApi = '/api/anime/update';
+
 export default function Home() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,9 +24,9 @@ export default function Home() {
     }
 
     try {
-      await fetch(`/api/rss/update?url=${encodeURIComponent(rssUrl)}`);
+      await fetch(`${updateAnimeApi}?url=${encodeURIComponent(rssUrl)}`);
       
-      const res = await fetch('/api/rss/latest');
+      const res = await fetch(animeApi);
       const data = await res.json();
       
       if (!data.items || data.items.length === 0) {
