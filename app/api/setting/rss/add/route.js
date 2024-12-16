@@ -6,7 +6,7 @@ export async function POST(request) {
   
   try {
     await db.run(
-      'INSERT INTO feeds (name, url, update_interval, enabled) VALUES (?, ?, ?, 1)',
+      'INSERT INTO rss (name, url, interval) VALUES (?, ?, ?)',
       [data.name, data.url, data.interval]
     );
     return new Response(null, { status: 201 });

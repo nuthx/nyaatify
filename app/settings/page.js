@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 
 const rssApi = '/api/setting/rss';
 const rssAddApi = '/api/setting/rss/add';
-const rssEditApi = '/api/setting/rss/edit';
+const rssDeleteApi = '/api/setting/rss/delete';
 
 export default function Settings() {
   const [feeds, setFeeds] = useState([]);
@@ -54,7 +54,7 @@ export default function Settings() {
 
   const handleDeleteFeed = async (id) => {
     try {
-      await fetch(`${rssEditApi}`, {
+      await fetch(`${rssDeleteApi}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
