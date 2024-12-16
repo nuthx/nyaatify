@@ -1,17 +1,13 @@
 import { getDb } from '@/lib/db';
 
 export async function GET() {
-  try {
-    const db = await getDb();
-    const items = await db.all(`
-      SELECT * FROM items 
-      ORDER BY pubDate DESC 
-      LIMIT 50
-    `);
+  const db = await getDb();
 
-    return Response.json({ items });
+  try {
+    const anime = await db.all('SELECT * FROM anime ORDER BY date DESC LIMIT 50');
+    return Response.json({ anime });
   } catch (error) {
-    console.error('Failed to fetch items:', error);
-    return Response.json({ error: 'Failed to fetch items' }, { status: 500 });
+    console.error('Failed to fetch anime:', error);
+    return Response.json({ error: 'Failed to fetch anime' }, { status: 500 });
   }
 }
