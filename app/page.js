@@ -46,7 +46,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen p-8">
+    <div className="min-h-screen container mx-auto py-8">
       {loading ? (
         <div className="flex items-center justify-center">
           <p>Loading...</p>

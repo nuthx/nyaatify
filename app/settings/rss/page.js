@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import Title from "@/components/settings/title";
 
 const rssApi = "/api/setting/rss";
 const rssAddApi = "/api/setting/rss/add";
@@ -71,12 +72,10 @@ export default function RSSSettings() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium">RSS Settings</h3>
-        <p className="text-sm text-muted-foreground">
-          Manage RSS feed sources
-        </p>
-      </div>
+      <Title 
+        title="RSS Settings"
+        description="Manage RSS feed sources"
+      />
       <Separator />
 
       <form onSubmit={handleAddFeed} className="space-y-4">

@@ -1,17 +1,13 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { usePathname, useRouter } from "next/navigation";
+import { Nav } from "@/components/settings/nav";
 
 export default function SettingsLayout({ children }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  
   return (
     <div className="container mx-auto py-6">
-      
       {/* Header */}
-      <div className="mb-6">
+      <div className="my-6">
         <h2 className="text-2xl font-bold">Settings</h2>
         <p className="text-sm text-muted-foreground">Manage Nyaatify settings and preferences</p>
       </div>
@@ -20,25 +16,14 @@ export default function SettingsLayout({ children }) {
 
       <div className="flex">
         {/* Left Sidebar */}
-        <div className="w-1/4 pr-6">
+        <div className="w-72 pr-6">
           <nav className="space-y-2">
-            <button
-              className={`w-full text-left px-4 py-2 rounded-lg ${
-                pathname === "/settings/rss" ? "bg-secondary" : ""
-              }`}
-              onClick={() => router.push("/settings/rss")}
-            >
-              RSS Settings
-            </button>
-
-            <button
-              className={`w-full text-left px-4 py-2 rounded-lg ${
-                pathname === "/settings/about" ? "bg-secondary" : ""
-              }`}
-              onClick={() => router.push("/settings/about")}
-            >
-              About
-            </button>
+            <Nav label="General" path="/settings/general" />
+            <Nav label="RSS Subscription" path="/settings/rss" />
+            <Nav label="Download Server" path="/settings/server" />
+            <Nav label="Notification" path="/settings/notification" />
+            <Nav label="User" path="/settings/user" />
+            <Nav label="About" path="/settings/about" />
           </nav>
         </div>
 
