@@ -1,56 +1,52 @@
-'use client';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Button } from "@/components/ui/button";
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ExternalLink } from "lucide-react";
+
+const animeApi = "/api/anime";
 
 export default function Home() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchRss = async () => {
-      const rssUrl = localStorage.getItem('rssUrl');
+  const fetchAnimeList = async () => {
+    try {
+      const res = await fetch(animeApi);
+      const { code, message, data } = await res.json();
       
-      if (!rssUrl) {
-        setError('Please configure RSS URL first');
-        setLoading(false);
+      if (code !== 200) {
+        setError(message);
         return;
       }
 
-      try {
-        const res = await fetch(`/api/rss?url=${encodeURIComponent(rssUrl)}`);
-        const data = await res.json();
-        
-        if (!data.items || data.items.length === 0) {
-          throw new Error('Failed to parse RSS');
-        }
-        
-        setItems(data.items);
-        setError(null);
-      } catch (error) {
-        console.error('Failed to fetch RSS:', error);
-        setError('RSS configuration error, please check if the RSS URL is correct');
-      } finally {
-        setLoading(false);
+      if (!data || data.length === 0) {
+        setError("Please add RSS subscription in settings first.");
+        return;
       }
-    };
+      
+      setItems(data);
+      setError(null);
+    } 
+    
+    catch (error) {
+      setError("Failed to load list");
+    } 
+    
+    finally {
+      setLoading(false);
+    }
+  };
 
-    fetchRss();
+  useEffect(() => {
+    fetchAnimeList();
   }, []);
 
   return (
     <div className="min-h-screen p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Nyaaitfy</h1>
-        <Button asChild>
-          <Link href="/settings">Settings</Link>
-        </Button>
-      </div>
-      
       {loading ? (
         <div className="flex items-center justify-center">
           <p>Loading...</p>
