@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 const rssApi = '/api/setting/rss';
 const rssAddApi = '/api/setting/rss/add';
 const rssDeleteApi = '/api/setting/rss/delete';
+const rssUpdateApi = '/api/setting/rss/update';
 
 export default function Settings() {
   const [feeds, setFeeds] = useState([]);
@@ -45,6 +46,7 @@ export default function Settings() {
 
       if (response.ok) {
         setNewFeed({ name: '', url: '', interval: '300' });
+        await fetch(rssUpdateApi);
         fetchFeeds();
       }
     } catch (error) {
@@ -61,6 +63,7 @@ export default function Settings() {
         },
         body: JSON.stringify({ id }),
       });
+      await fetch(rssUpdateApi);
       fetchFeeds();
     } catch (error) {
       console.error('Error deleting feed:', error);
