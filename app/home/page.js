@@ -1,68 +1,52 @@
-'use client';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Button } from "@/components/ui/button";
+"use client";
+
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ExternalLink } from "lucide-react";
 
-const animeApi = '/api/anime';
-const updateAnimeApi = '/api/anime/update';
+const animeApi = "/api/anime";
 
 export default function Home() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchRss = async () => {
-    const rssUrl = localStorage.getItem('rssUrl');
-    
-    if (!rssUrl) {
-      setError('Please configure RSS URL first');
-      setLoading(false);
-      return;
-    }
-
+  const fetchAnimeList = async () => {
     try {
-      await fetch(`${updateAnimeApi}?url=${encodeURIComponent(rssUrl)}`);
-      
       const res = await fetch(animeApi);
-      const data = await res.json();
+      const { code, message, data } = await res.json();
       
-      if (!data.items || data.items.length === 0) {
-        throw new Error('Failed to parse RSS');
+      if (code !== 200) {
+        setError(message);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        setError("Please add RSS subscription in settings first.");
+        return;
       }
       
-      setItems(data.items);
+      setItems(data);
       setError(null);
-    } catch (error) {
-      console.error('Failed to fetch RSS:', error);
-      setError('RSS configuration error, please check if the RSS URL is correct');
-    } finally {
+    } 
+    
+    catch (error) {
+      setError("Failed to load list");
+    } 
+    
+    finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchRss();
-    
-    const updateInterval = parseInt(localStorage.getItem('updateInterval') || '300', 10);
-    const intervalMs = updateInterval * 1000;
-    
-    const interval = setInterval(fetchRss, intervalMs);
-    
-    return () => clearInterval(interval);
+    fetchAnimeList();
   }, []);
 
   return (
     <div className="min-h-screen p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Nyaaitfy</h1>
-        <Button asChild>
-          <Link href="/settings">Settings</Link>
-        </Button>
-      </div>
-      
       {loading ? (
         <div className="flex items-center justify-center">
           <p>Loading...</p>
