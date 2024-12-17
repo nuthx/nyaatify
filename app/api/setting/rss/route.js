@@ -1,13 +1,13 @@
-import { getDb } from '@/lib/db';
+import { getDb } from "@/lib/db";
 
 export async function GET() {
   const db = await getDb();
 
   try {
-    const rss = await db.all('SELECT * FROM rss ORDER BY id ASC');
+    const rss = await db.all("SELECT * FROM rss ORDER BY id ASC");
     return Response.json({
       code: 200,
-      message: 'success', 
+      message: "success", 
       data: rss
     });
   }
@@ -15,8 +15,7 @@ export async function GET() {
   catch (error) {
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }
