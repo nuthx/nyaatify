@@ -1,8 +1,8 @@
-import { initRss } from "@/lib/rssManager";
+import { rssSchedule } from "@/lib/schedule";
 
 export async function GET() {
   try {
-    await initRss();
+    await rssSchedule();
     return Response.json({
       code: 200,
       message: "success"

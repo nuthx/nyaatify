@@ -1,9 +1,12 @@
-import { NavBar } from "@/components/nav-bar";
 import "./globals.css";
-import { initRss } from "@/lib/rssManager";
+import { NavBar } from "@/components/nav-bar";
+import { rssSchedule } from "@/lib/schedule";
 
-// Initialize RSS auto update task
-initRss().catch(console.error);
+// Start RSS auto update task
+// Only start in production
+if (process.env.NODE_ENV === "production") {
+  rssSchedule().catch(console.error);
+}
 
 export default function RootLayout({ children }) {
   return (
