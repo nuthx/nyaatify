@@ -5,6 +5,14 @@ import { useEffect, useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const animeApi = "/api/anime";
 
@@ -12,11 +20,13 @@ export default function Home() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const fetchAnimeList = async () => {
+  const fetchAnimeList = async (page = 1) => {
     try {
-      const res = await fetch(animeApi);
-      const { code, message, data } = await res.json();
+      const res = await fetch(`${animeApi}?page=${page}`);
+      const { code, message, data, pagination } = await res.json();
       
       if (code !== 200) {
         setError(message);
@@ -29,6 +39,7 @@ export default function Home() {
       }
       
       setItems(data);
+      setTotalPages(Math.ceil(pagination.total / pagination.size));
       setError(null);
     } 
     
@@ -42,8 +53,8 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchAnimeList();
-  }, []);
+    fetchAnimeList(currentPage);
+  }, [currentPage]);
 
   return (
     <div className="min-h-screen container mx-auto py-8">
@@ -93,6 +104,36 @@ export default function Home() {
               </CardContent>
             </Card>
           ))}
+        </div>
+      )}
+      {!loading && !error && totalPages > 1 && (
+        <div className="mt-8">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                />
+              </PaginationItem>
+              {[...Array(totalPages)].map((_, i) => (
+                <PaginationItem key={i + 1}>
+                  <PaginationLink
+                    onClick={() => setCurrentPage(i + 1)}
+                    isActive={currentPage === i + 1}
+                  >
+                    {i + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       )}
     </div>
