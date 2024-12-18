@@ -39,7 +39,7 @@ export async function GET(request) {
   }
   
   catch (error) {
-    log.error(`Load anime list failed: ${error}`);
+    log.error(`Failed to load anime list: ${error}`);
     return Response.json({
       code: 500,
       message: error.message

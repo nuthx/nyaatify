@@ -47,7 +47,7 @@ export async function POST(request) {
     // Commit transaction
     await db.run('COMMIT');
 
-    log.info(`Delete RSS subscription success, name: ${data.name}`);
+    log.info(`RSS subscription deleted successfully, name: ${data.name}`);
     return Response.json({
       code: 200,
       message: "success"
@@ -58,7 +58,7 @@ export async function POST(request) {
     // Rollback transaction
     await db.run('ROLLBACK');
 
-    log.error(`Delete RSS subscription failed: ${error}`);
+    log.error(`Failed to delete RSS subscription: ${error}`);
     return Response.json({
       code: 500,
       message: error.message

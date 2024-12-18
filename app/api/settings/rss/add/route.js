@@ -39,7 +39,7 @@ export async function POST(request) {
     // Update RSS schedule
     await rssSchedule();
 
-    log.info(`Add RSS subscription success, name: ${data.name}, url: ${data.url}, interval: ${data.interval} minutes`);
+    log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, interval: ${data.interval} minutes`);
     return Response.json({
       code: 200,
       message: "success"
@@ -47,7 +47,7 @@ export async function POST(request) {
   }
   
   catch (error) {
-    log.error(`Add RSS subscription failed: ${error}`);
+    log.error(`Failed to add RSS subscription: ${error}`);
     return Response.json({
       code: 500,
       message: error.message

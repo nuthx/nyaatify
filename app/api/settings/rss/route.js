@@ -16,7 +16,7 @@ export async function GET() {
   }
   
   catch (error) {
-    log.error(`Load RSS subscriptions failed: ${error}`);
+    log.error(`Failed to load RSS subscriptions: ${error}`);
     return Response.json({
       code: 500,
       message: error.message

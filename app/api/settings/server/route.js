@@ -17,7 +17,7 @@ export async function GET() {
   }
   
   catch (error) {
-    log.error(`Load server list failed: ${error}`);
+    log.error(`Failed to load server list: ${error}`);
     return Response.json({
       code: 500,
       message: error.message
