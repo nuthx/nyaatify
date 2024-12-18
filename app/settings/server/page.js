@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import Title from "@/components/settings/title";
+import { Title } from "@/components/settings/title";
 
 const serverApi = "/api/settings/server";
 const serverEditApi = "/api/settings/server/edit";

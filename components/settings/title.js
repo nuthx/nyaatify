@@ -1,4 +1,4 @@
-export default function Title({ title, description }) {
+export function Title({ title, description }) {
   return (
     <div>
       <h3 className="text-lg font-medium">{title}</h3>

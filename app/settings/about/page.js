@@ -1,7 +1,7 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import Title from "@/components/settings/title";
+import { Title } from "@/components/settings/title";
 
 export default function AboutSettings() {
   return (

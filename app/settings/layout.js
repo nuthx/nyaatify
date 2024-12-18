@@ -6,7 +6,7 @@ export default function SettingsLayout({ children }) {
   return (
     <div className="container flex mx-auto py-6">
         <nav className="w-80 pr-8 space-y-2">
-          <Nav label="General" path="/settings/general" />
+          <Nav label="General" path="/settings" />
           <Nav label="RSS Subscription" path="/settings/rss" />
           <Nav label="Download Server" path="/settings/server" />
           <Nav label="Notification" path="/settings/notification" />

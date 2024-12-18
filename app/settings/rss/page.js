@@ -1,10 +1,11 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import Title from "@/components/settings/title";
+import { Title } from "@/components/settings/title";
 
 const rssApi = "/api/settings/rss";
 const rssAddApi = "/api/settings/rss/add";
