@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Title from "@/components/settings/title";
 
-const rssApi = "/api/setting/rss";
-const rssAddApi = "/api/setting/rss/add";
-const rssDeleteApi = "/api/setting/rss/delete";
-const rssUpdateApi = "/api/setting/rss/update";
+const rssApi = "/api/settings/rss";
+const rssAddApi = "/api/settings/rss/add";
+const rssDeleteApi = "/api/settings/rss/delete";
+const rssUpdateApi = "/api/settings/rss/update";
 
 export default function RSSSettings() {
   const [feeds, setFeeds] = useState([]);

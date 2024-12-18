@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Title from "@/components/settings/title";
 
-const serverApi = "/api/setting/server";
-const serverEditApi = "/api/setting/server/edit";
+const serverApi = "/api/settings/server";
+const serverEditApi = "/api/settings/server/edit";
 
 export default function ServerSettings() {
   const [serverConfig, setServerConfig] = useState({
