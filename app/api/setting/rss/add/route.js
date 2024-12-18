@@ -1,4 +1,14 @@
 import { getDb } from "@/lib/db";
+import { rssSchedule } from "@/lib/schedule";
+import { log } from "@/lib/log";
+
+// Add a new RSS subscription
+// Method: POST
+// Body: {
+//   name: string,
+//   url: string,
+//   interval: number
+// }
 
 export async function POST(request) {
   const db = await getDb();
@@ -23,7 +33,13 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
+    // Insert to database
     await db.run("INSERT INTO rss (name, url, interval) VALUES (?, ?, ?)", [data.name, data.url, data.interval]);
+
+    // Update RSS schedule
+    await rssSchedule();
+
+    log.info(`Add RSS subscription success, name: ${data.name}, url: ${data.url}, interval: ${data.interval} minutes`);
     return Response.json({
       code: 200,
       message: "success"
@@ -31,6 +47,7 @@ export async function POST(request) {
   }
   
   catch (error) {
+    log.error(`Add RSS subscription failed: ${error}`);
     return Response.json({
       code: 500,
       message: error.message

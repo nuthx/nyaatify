@@ -1,4 +1,12 @@
 import { getDb } from "@/lib/db";
+import { rssSchedule } from "@/lib/schedule";
+import { log } from "@/lib/log";
+
+// Delete a RSS subscription
+// Method: POST
+// Body: {
+//   id: number
+// }
 
 export async function POST(request) {
   const db = await getDb();
@@ -8,7 +16,7 @@ export async function POST(request) {
     // Start transaction
     await db.run('BEGIN TRANSACTION');
 
-    // 1. Find anime related to this rss
+    // Find anime related to this rss
     const animesToDelete = await db.all(`
       SELECT anime_id 
       FROM anime_rss ar1
@@ -21,19 +29,25 @@ export async function POST(request) {
       )
     `, [data.id, data.id]);
 
-    // 2. Delete anime_rss
+    // Delete anime_rss
     await db.run("DELETE FROM anime_rss WHERE rss_id = ?", [data.id]);
 
-    // 3. Delete anime related to this rss
+    // Delete anime related to this rss
     if (animesToDelete.length > 0) {
       const animeIds = animesToDelete.map(a => a.anime_id).join(',');
       await db.run(`DELETE FROM anime WHERE guid IN (${animeIds})`);
     }
 
-    // 4. Delete rss
+    // Delete rss
     await db.run("DELETE FROM rss WHERE id = ?", [data.id]);
+
+    // Update RSS schedule
+    await rssSchedule();
+
+    // Commit transaction
     await db.run('COMMIT');
 
+    log.info(`Delete RSS subscription success, name: ${data.name}`);
     return Response.json({
       code: 200,
       message: "success"
@@ -41,8 +55,10 @@ export async function POST(request) {
   }
   
   catch (error) {
+    // Rollback transaction
     await db.run('ROLLBACK');
 
+    log.error(`Delete RSS subscription failed: ${error}`);
     return Response.json({
       code: 500,
       message: error.message

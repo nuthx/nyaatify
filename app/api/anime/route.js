@@ -1,4 +1,8 @@
 import { getDb } from "@/lib/db";
+import { log } from "@/lib/log";
+
+// Get anime list with pagination
+// Method: GET
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -21,7 +25,7 @@ export async function GET(request) {
       `, [size, offset]),
       db.get('SELECT COUNT(*) as count FROM anime')
     ]);
-    
+
     return Response.json({
       code: 200,
       message: "success",
@@ -35,6 +39,7 @@ export async function GET(request) {
   }
   
   catch (error) {
+    log.error(`Load anime list failed: ${error}`);
     return Response.json({
       code: 500,
       message: error.message

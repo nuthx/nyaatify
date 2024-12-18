@@ -1,4 +1,8 @@
 import { getDb } from '@/lib/db';
+import { log } from '@/lib/log';
+
+// Get server list
+// Method: GET
 
 export async function GET() {
   const db = await getDb();
@@ -13,6 +17,7 @@ export async function GET() {
   }
   
   catch (error) {
+    log.error(`Load server list failed: ${error}`);
     return Response.json({
       code: 500,
       message: error.message
