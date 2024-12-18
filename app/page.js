@@ -65,19 +65,30 @@ export default function Home() {
           {items.map((item, index) => (
             <Card key={index}>
               <CardContent className="pt-6">
-                <div className="flex items-start justify-between">
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer" 
-                    className="text-blue-600 hover:underline flex items-center gap-2"
-                  >
-                    {item.title}
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                  <time className="text-sm text-muted-foreground">
-                    {new Date(item.pubDate).toLocaleString()}
-                  </time>
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-start justify-between">
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noopener noreferrer" 
+                      className="text-blue-600 hover:underline flex items-center gap-2"
+                    >
+                      {item.title}
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                    <time className="text-sm text-muted-foreground">
+                      {new Date(item.date).toLocaleString()}
+                    </time>
+                  </div>
+                  {item.rss_names && (
+                    <div className="flex gap-2">
+                      {item.rss_names.split(',').map((name, idx) => (
+                        <span key={idx} className="text-xs px-2 py-1 bg-gray-100 rounded-full">
+                          {name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

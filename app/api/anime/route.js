@@ -4,7 +4,15 @@ export async function GET() {
   const db = await getDb();
 
   try {
-    const anime = await db.all("SELECT * FROM anime ORDER BY date DESC LIMIT 50");
+    const anime = await db.all(`
+      SELECT a.*, GROUP_CONCAT(r.name) as rss_names
+      FROM anime a
+      LEFT JOIN anime_rss ar ON a.guid = ar.anime_id
+      LEFT JOIN rss r ON ar.rss_id = r.id
+      GROUP BY a.guid
+      ORDER BY a.date DESC 
+      LIMIT 50
+    `);
     return Response.json({
       code: 200,
       message: "success",
