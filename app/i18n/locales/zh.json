@@ -1,0 +1,58 @@
+{
+  "common": {
+    "cancel": "取消",
+    "delete": "删除"
+  },
+  "st": {
+    "title": "设置",
+    "nav": {
+      "general": "常规",
+      "rss": "RSS 订阅",
+      "server": "下载服务器",
+      "notification": "通知",
+      "user": "用户",
+      "about": "关于"
+    },
+    "gr": {
+      "theme": {
+        "title": "主题",
+        "description": "选择 Nyaatify 的显示主题",
+        "system": "跟随系统",
+        "light": "亮色",
+        "dark": "暗色"
+      },
+      "language": {
+        "title": "语言",
+        "description": "选择 Nyaatify 的显示语言，此设置仅会保存在浏览器本地"
+      }
+    },
+    "rss": {
+      "add": {
+        "title": "添加新的 RSS 订阅",
+        "description": "在开始之前，您必须至少添加一个 RSS 订阅",
+        "name": "名称",
+        "url": "RSS URL",
+        "interval": "更新间隔 (分钟)",
+        "add": "添加"
+      },
+      "subscription": {
+        "title": "RSS 订阅",
+        "empty": "请先添加一个 RSS 订阅",
+        "refresh": "刷新间隔：",
+        "min": "分钟",
+        "delete": {
+          "title": "删除 RSS 订阅",
+          "description": "此操作将会永久删除此 RSS 订阅"
+        }
+      }
+    },
+    "about": {
+      "version": {
+        "title": "版本信息",
+        "description": "查看你的 Nyaatify 的版本。您也可以在 GitHub 上查看最新版本",
+        "current": "当前版本",
+        "latest": "最新版本"
+      }
+    }
+  }
+}

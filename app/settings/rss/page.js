@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -50,12 +51,14 @@ const formSchema = z.object({
   interval: z.coerce
     .number()
     .int({ message: "Interval must be a whole number" })
-    .min(3, { message: "Update interval must be at least 3 minutes" })
+    .min(3, { message: "Refresh interval must be at least 3 minutes" })
 })
 
 export default function RSSSettings() {
+  const { t } = useTranslation();
   const [rssList, setRSSList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
   
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -68,6 +71,7 @@ export default function RSSSettings() {
 
   useEffect(() => {
     fetchRSS();
+    setMounted(true);
   }, []);
 
   const fetchRSS = async () => {
@@ -117,12 +121,14 @@ export default function RSSSettings() {
     }
   };
 
+  if (!mounted) return null;
+
   return (
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Add a New RSS Subscription</CardTitle>
-          <CardDescription>Before you start, you have to add at least one RSS subscription.</CardDescription>
+          <CardTitle>{t('st.rss.add.title')}</CardTitle>
+          <CardDescription>{t('st.rss.add.description')}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent>
@@ -133,7 +139,7 @@ export default function RSSSettings() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{t('st.rss.add.name')}</FormLabel>
                     <FormControl>
                       <Input className="w-72" placeholder="Nyaatify" required {...field} />
                     </FormControl>
@@ -146,7 +152,7 @@ export default function RSSSettings() {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>RSS URL</FormLabel>
+                    <FormLabel>{t('st.rss.add.url')}</FormLabel>
                     <FormControl>
                       <Input className="w-full" placeholder="https://nyaa.si/?page=rss" required {...field} />
                     </FormControl>
@@ -159,7 +165,7 @@ export default function RSSSettings() {
                 name="interval"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Update Interval (minutes)</FormLabel>
+                    <FormLabel>{t('st.rss.add.interval')}</FormLabel>
                     <FormControl>
                       <Input className="w-72" type="number" min="3" required {...field} />
                     </FormControl>
@@ -167,7 +173,7 @@ export default function RSSSettings() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">Add</Button>
+              <Button type="submit">{t('st.rss.add.add')}</Button>
             </form>
           </Form>
         </CardContent>
@@ -175,7 +181,7 @@ export default function RSSSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>RSS Subscription</CardTitle>
+          <CardTitle>{t('st.rss.subscription.title')}</CardTitle>
         </CardHeader>
         <Separator />
         <CardContent className="p-0">
@@ -190,7 +196,7 @@ export default function RSSSettings() {
             ))
           ) : rssList.length === 0 ? (
             <div className="flex items-center justify-center px-6 py-8 text-sm text-zinc-500">
-              Please add a RSS subscription first.
+              {t('st.rss.subscription.empty')}
             </div>
           ) : (
             rssList.map((rss) => (
@@ -200,7 +206,7 @@ export default function RSSSettings() {
                   <p className="text-sm text-zinc-500">{rss.url}</p>
                 </div>
                 <div className="flex space-x-6 items-center">
-                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{rss.interval} min</p>
+                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{t('st.rss.subscription.refresh')}{rss.interval} {t('st.rss.subscription.min')}</p>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon">
@@ -209,14 +215,14 @@ export default function RSSSettings() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Delete RSS Subscription</AlertDialogTitle>
+                        <AlertDialogTitle>{t('st.rss.subscription.delete.title')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This will permanently delete the RSS subscription &quot;{rss.name}&quot;.
+                          {t('st.rss.subscription.delete.description')}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteRSS(rss.id)}>Delete</AlertDialogAction>
+                        <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteRSS(rss.id)}>{t('common.delete')}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>

@@ -1,0 +1,58 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "delete": "Delete"
+  },
+  "st": {
+    "title": "Settings",
+    "nav": {
+      "general": "General",
+      "rss": "RSS Subscription",
+      "server": "Download Server",
+      "notification": "Notification",
+      "user": "User Account",
+      "about": "About Nyaatify"
+    },
+    "gr": {
+      "theme": {
+        "title": "Theme",
+        "description": "Choose how Nyaatify looks to you.",
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "language": {
+        "title": "Language",
+        "description": "This is the language of Nyaatify. This setting is saved in your browser."
+      }
+    },
+    "rss": {
+      "add": {
+        "title": "Add a New RSS Subscription",
+        "description": "Before you start, you have to add at least one RSS subscription.",
+        "name": "Name",
+        "url": "RSS URL",
+        "interval": "Refresh Interval (minutes)",
+        "add": "Add"
+      },
+      "subscription": {
+        "title": "RSS Subscription",
+        "empty": "Please add a RSS subscription first.",
+        "refresh": "Refresh Interval: ",
+        "min": "mins",
+        "delete": {
+          "title": "Delete RSS Subscription",
+          "description": "This action will delete this RSS subscription permanently."
+        }
+      }
+    },
+    "about": {
+      "version": {
+        "title": "Version",
+        "description": "This is the version of Nyaatify. You can check the latest version on GitHub.",
+        "current": "Current Version",
+        "latest": "Latest Version"
+      }
+    }
+  }
+}

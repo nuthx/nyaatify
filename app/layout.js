@@ -1,7 +1,9 @@
 import "./globals.css";
-import { NavBar } from "@/components/nav-bar";
-import { rssSchedule } from "@/lib/schedule";
+
+import { I18nWrapper } from "@/app/i18n/wrapper";
 import { log } from "@/lib/log";
+import { rssSchedule } from "@/lib/schedule";
+import { NavBar } from "@/components/nav-bar";
 
 // Start RSS subscription task
 // Only start in production
@@ -14,7 +16,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className="bg-zinc-50">
         <NavBar />
-        {children}
+        <I18nWrapper>{children}</I18nWrapper>
       </body>
     </html>
   );
