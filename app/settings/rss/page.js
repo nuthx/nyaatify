@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Trash2Icon } from "lucide-react";
 
 const rssApi = "/api/settings/rss";
@@ -43,6 +44,7 @@ const formSchema = z.object({
 
 export default function RSSSettings() {
   const [rssList, setRSSList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -58,12 +60,15 @@ export default function RSSSettings() {
   }, []);
 
   const fetchRSS = async () => {
+    setIsLoading(true);
     try {
       const response = await fetch(rssApi);
       const data = await response.json();
       setRSSList(data.data);
     } catch (error) {
       log.error("Failed to fetch RSS:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -163,20 +168,35 @@ export default function RSSSettings() {
         </CardHeader>
         <Separator />
         <CardContent className="p-0">
-          {rssList.map((rss) => (
-            <div key={rss.id} className="flex items-center justify-between px-6 py-4 border-b last:border-none">
-              <div className="space-y-1">
-                <h5 className="font-medium">{rss.name}</h5>
-                <p className="text-sm text-zinc-500">{rss.url}</p>
+          {isLoading ? (
+            Array.from({ length: 2 }).map((_, index) => (
+              <div key={index} className="flex items-center justify-between px-6 py-4 border-b last:border-none">
+                <div className="space-y-1">
+                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-5 w-64" />
+                </div>
               </div>
-              <div className="flex space-x-6 items-center">
-                <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{rss.interval} min</p>
-                <Button variant="ghost" size="icon" onClick={() => handleDeleteRSS(rss.id)}>
-                  <Trash2Icon />
-                </Button>
-              </div>
+            ))
+          ) : rssList.length === 0 ? (
+            <div className="flex items-center justify-center px-6 py-8 text-sm text-zinc-500">
+              Please add a RSS subscription first.
             </div>
-          ))}
+          ) : (
+            rssList.map((rss) => (
+              <div key={rss.id} className="flex items-center justify-between px-6 py-4 border-b last:border-none">
+                <div className="space-y-1">
+                  <h5 className="font-medium">{rss.name}</h5>
+                  <p className="text-sm text-zinc-500">{rss.url}</p>
+                </div>
+                <div className="flex space-x-6 items-center">
+                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{rss.interval} min</p>
+                  <Button variant="ghost" size="icon" onClick={() => handleDeleteRSS(rss.id)}>
+                    <Trash2Icon />
+                  </Button>
+                </div>
+              </div>
+            ))
+          )}
         </CardContent>
       </Card>
     </>
