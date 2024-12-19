@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Card,
   CardContent,
@@ -17,12 +19,25 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 export default function Settings() {
+  const { t, i18n } = useTranslation();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleLanguageChange = (value) => {
+    i18n.changeLanguage(value);
+  };
+
+  if (!mounted) return null;
+
   return (
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Theme</CardTitle>
-          <CardDescription>Choose how Nyaatify looks to you.</CardDescription>
+          <CardTitle>{t('st.gr.theme.title')}</CardTitle>
+          <CardDescription>{t('st.gr.theme.description')}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent>
@@ -31,9 +46,9 @@ export default function Settings() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="system">System</SelectItem>
-              <SelectItem value="light">Light</SelectItem>
-              <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="system">{t('st.gr.theme.system')}</SelectItem>
+              <SelectItem value="light">{t('st.gr.theme.light')}</SelectItem>
+              <SelectItem value="dark">{t('st.gr.theme.dark')}</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
@@ -41,19 +56,18 @@ export default function Settings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Language</CardTitle>
-          <CardDescription>This is the language of Nyaatify. This setting is saved in your browser.</CardDescription>
+          <CardTitle>{t('st.gr.language.title')}</CardTitle>
+          <CardDescription>{t('st.gr.language.description')}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent>
-          <Select defaultValue="en">
+          <Select defaultValue={i18n.language} onValueChange={handleLanguageChange}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="en">English</SelectItem>
-              <SelectItem value="zh-CN">简体中文</SelectItem>
-              <SelectItem value="zh-TW">繁体中文</SelectItem>
+              <SelectItem value="zh">简体中文</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
