@@ -8,7 +8,7 @@ export function Nav({ label, path }) {
   
   return (
     <button
-      className={`w-full text-left px-4 py-2 rounded-lg hover:bg-secondary/80 ${pathname === path ? "bg-secondary" : ""}`}
+      className={`w-full text-left px-4 py-2.5 rounded-lg hover:bg-zinc-200/60 ${pathname === path ? "bg-zinc-200/60" : ""}`}
       onClick={() => router.push(path)}
     >
       {label}

@@ -1,19 +1,52 @@
 "use client";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator";
-import { Title } from "@/components/settings/title";
 
-export default function AboutSettings() {
+export default function Settings() {
   return (
-    <div className="space-y-6">
-      <Title 
-        title="About"
-        description="Current application version details"
-      />
-      <Separator />
-      <div className="text-sm">
-        <p>Version: 0.0.1</p>
-      </div>
-    </div>
-  );
-} 
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Version</CardTitle>
+          <CardDescription>This is the version of Nyaatify. You can check the latest version on GitHub.</CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent>
+          <p>Version: 0.0.1</p>
+          <p>Latest version: 0.0.1</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Version</CardTitle>
+          <CardDescription>This is the version of Nyaatify. You can check the latest version on GitHub.</CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent>
+          <p>Version: 0.0.1</p>
+          <p>Latest version: 0.0.1</p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Version</CardTitle>
+          <CardDescription>This is the version of Nyaatify. You can check the latest version on GitHub.</CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent>
+          <p>Version: 0.0.1</p>
+          <p>Latest version: 0.0.1</p>
+        </CardContent>
+      </Card>
+    </>
+  )
+}

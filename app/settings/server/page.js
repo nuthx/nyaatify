@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Title } from "@/components/settings/title";
 
 const serverApi = "/api/settings/server";
 const serverEditApi = "/api/settings/server/edit";
@@ -63,11 +62,6 @@ export default function ServerSettings() {
 
   return (
     <div className="space-y-6">
-      <Title 
-        title="Server Settings"
-        description="Configure qBittorrent server connection"
-      />
-      <Separator />
 
       <form onSubmit={handleServerConfig} className="space-y-4">
         <div className="grid w-full max-w-sm items-center gap-1.5">

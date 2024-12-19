@@ -1,61 +1,92 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { log } from "@/lib/log";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Title } from "@/components/settings/title";
+import { Trash2Icon } from "lucide-react";
 
 const rssApi = "/api/settings/rss";
 const rssAddApi = "/api/settings/rss/add";
 const rssDeleteApi = "/api/settings/rss/delete";
-const rssUpdateApi = "/api/settings/rss/update";
+
+const formSchema = z.object({
+  name: z.string()
+    .min(2, { message: "Name must be at least 2 characters" }),
+  url: z.string()
+    .url({ message: "Invalid URL" })
+    .startsWith("http", { message: "URL must start with http or https" }),
+  interval: z.coerce
+    .number()
+    .int({ message: "Interval must be a whole number" })
+    .min(3, { message: "Update interval must be at least 3 minutes" })
+})
 
 export default function RSSSettings() {
-  const [feeds, setFeeds] = useState([]);
-  const [newFeed, setNewFeed] = useState({
-    name: "",
-    url: "",
-    interval: ""
-  });
+  const [rssList, setRSSList] = useState([]);
+  
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      url: "",
+      interval: 5,
+    },
+  })
 
   useEffect(() => {
-    fetchFeeds();
+    fetchRSS();
   }, []);
 
-  const fetchFeeds = async () => {
+  const fetchRSS = async () => {
     try {
       const response = await fetch(rssApi);
       const data = await response.json();
-      setFeeds(data.data);
+      setRSSList(data.data);
     } catch (error) {
-      console.error("Error fetching feeds:", error);
+      log.error("Failed to fetch RSS:", error);
     }
   };
 
-  const handleAddFeed = async (e) => {
-    e.preventDefault();
+  const handleAddRSS = async (values) => {
     try {
       const response = await fetch(rssAddApi, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(newFeed),
+        body: JSON.stringify(values),
       });
 
       if (response.ok) {
-        setNewFeed({ name: "", url: "", interval: "300" });
-        await fetch(rssUpdateApi);
-        fetchFeeds();
+        form.reset();
+        fetchRSS();
       }
     } catch (error) {
-      console.error("Error adding feed:", error);
+      log.error("Failed to add RSS:", error);
     }
   };
 
-  const handleDeleteFeed = async (id) => {
+  const handleDeleteRSS = async (id) => {
     try {
       await fetch(`${rssDeleteApi}`, {
         method: "POST",
@@ -64,81 +95,90 @@ export default function RSSSettings() {
         },
         body: JSON.stringify({ id }),
       });
-      await fetch(rssUpdateApi);
-      fetchFeeds();
+      fetchRSS();
     } catch (error) {
-      console.error("Error deleting feed:", error);
+      log.error("Failed to delete RSS:", error);
     }
   };
 
   return (
-    <div className="space-y-6">
-      <Title 
-        title="RSS Settings"
-        description="Manage RSS feed sources"
-      />
-      <Separator />
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>Add a New RSS Subscription</CardTitle>
+          <CardDescription>Before you start, you have to add at least one RSS subscription.</CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleAddRSS)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input className="w-72" placeholder="Nyaatify" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>RSS URL</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder="https://nyaa.si/?page=rss" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="interval"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Update Interval (minutes)</FormLabel>
+                    <FormControl>
+                      <Input className="w-72" type="number" min="3" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Add</Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
 
-      <form onSubmit={handleAddFeed} className="space-y-4">
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="feed-name">Feed Name</Label>
-          <Input
-            type="text"
-            id="feed-name"
-            value={newFeed.name}
-            onChange={(e) => setNewFeed({...newFeed, name: e.target.value})}
-            placeholder="Enter feed name"
-            required
-          />
-        </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="feed-url">RSS URL</Label>
-          <Input
-            type="url"
-            id="feed-url"
-            value={newFeed.url}
-            onChange={(e) => setNewFeed({...newFeed, url: e.target.value})}
-            placeholder="Enter RSS feed URL"
-            required
-          />
-        </div>
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="feed-interval">Update Interval (minutes)</Label>
-          <Input
-            type="number"
-            id="feed-interval"
-            value={newFeed.interval}
-            onChange={(e) => setNewFeed({...newFeed, interval: e.target.value})}
-            min="1"
-            placeholder="Enter update interval"
-            required
-          />
-        </div>
-        <Button type="submit">Add Feed</Button>
-      </form>
-
-      {/* Existing feeds list */}
-      <div className="mt-8">
-        <h4 className="text-lg font-medium mb-4">Existing Feeds</h4>
-        <div className="space-y-4">
-          {feeds.map((feed) => (
-            <div key={feed.id} className="flex items-center justify-between p-4 border rounded">
-              <div>
-                <h5 className="font-medium">{feed.name}</h5>
-                <p className="text-sm text-muted-foreground">{feed.url}</p>
-                <p className="text-sm text-muted-foreground">Update interval: {feed.interval} minutes</p>
+      <Card>
+        <CardHeader>
+          <CardTitle>RSS Subscription</CardTitle>
+        </CardHeader>
+        <Separator />
+        <CardContent className="p-0">
+          {rssList.map((rss) => (
+            <div key={rss.id} className="flex items-center justify-between px-6 py-4 border-b last:border-none">
+              <div className="space-y-1">
+                <h5 className="font-medium">{rss.name}</h5>
+                <p className="text-sm text-zinc-500">{rss.url}</p>
               </div>
-              <Button
-                variant="destructive"
-                size="sm"
-                onClick={() => handleDeleteFeed(feed.id)}
-              >
-                Delete
-              </Button>
+              <div className="flex space-x-6 items-center">
+                <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{rss.interval} min</p>
+                <Button variant="ghost" size="icon" onClick={() => handleDeleteRSS(rss.id)}>
+                  <Trash2Icon />
+                </Button>
+              </div>
             </div>
           ))}
-        </div>
-      </div>
-    </div>
+        </CardContent>
+      </Card>
+    </>
   );
-} 
+}

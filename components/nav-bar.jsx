@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function NavBar() {
   return (
-    <div className="border-b">
+    <div className="border-b bg-background">
       <div className="flex h-16 items-center container mx-auto">
         <div className="flex items-center space-x-6 mr-4">
           <Link href="/" className="font-bold text-xl">

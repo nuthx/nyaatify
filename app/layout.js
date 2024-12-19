@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === "production") {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-zinc-50">
         <NavBar />
         {children}
       </body>
