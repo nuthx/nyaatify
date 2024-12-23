@@ -3,6 +3,12 @@
     "cancel": "Cancel",
     "delete": "Delete"
   },
+  "nav": {
+    "home": "Home",
+    "download": "Download",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
   "st": {
     "title": "Settings",
     "nav": {

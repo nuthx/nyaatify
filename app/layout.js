@@ -15,8 +15,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className="bg-zinc-50">
-        <NavBar />
-        <I18nWrapper>{children}</I18nWrapper>
+        <I18nWrapper>
+          <NavBar />
+          {children}
+        </I18nWrapper>
       </body>
     </html>
   );
