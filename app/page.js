@@ -14,9 +14,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ExternalLink } from "lucide-react";
 
-const animeApi = "/api/anime";
-
 export default function Home() {
+  const animeApi = "/api/anime";
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const [items, setItems] = useState([]);
@@ -24,6 +24,23 @@ export default function Home() {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+
+  useEffect(() => {
+    // Get initial page from URL on first render
+    if (!currentPage) {
+      const pageFromUrl = Number(searchParams.get("page")) || 1;
+      setCurrentPage(pageFromUrl);
+      return;
+    }
+
+    // Fetch data and update URL when currentPage changes
+    fetchAnimeList(currentPage);
+    if (currentPage > 1) {
+      router.push(`?page=${currentPage}`);
+    } else {
+      router.push("/");
+    }
+  }, [currentPage, searchParams]);
 
   const fetchAnimeList = async (page = 1) => {
     try {
@@ -65,23 +82,6 @@ export default function Home() {
   const renderPageItems = (start, count) => (
     [...Array(count)].map((_, i) => renderPageItem(start + i, start + i === currentPage))
   );
-
-  useEffect(() => {
-    // Get initial page from URL on first render
-    if (!currentPage) {
-      const pageFromUrl = Number(searchParams.get("page")) || 1;
-      setCurrentPage(pageFromUrl);
-      return;
-    }
-
-    // Fetch data and update URL when currentPage changes
-    fetchAnimeList(currentPage);
-    if (currentPage > 1) {
-      router.push(`?page=${currentPage}`);
-    } else {
-      router.push("/");
-    }
-  }, [currentPage, searchParams]);
 
   return (
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">

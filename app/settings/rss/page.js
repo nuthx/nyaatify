@@ -38,27 +38,27 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trash2Icon } from "lucide-react";
 
-const rssApi = "/api/settings/rss";
-const rssAddApi = "/api/settings/rss/add";
-const rssDeleteApi = "/api/settings/rss/delete";
-
-const formSchema = z.object({
-  name: z.string()
-    .min(2, { message: "Name must be at least 2 characters" }),
-  url: z.string()
-    .url({ message: "Invalid URL" })
-    .startsWith("http", { message: "URL must start with http or https" }),
-  interval: z.coerce
-    .number()
-    .int({ message: "Interval must be a whole number" })
-    .min(3, { message: "Refresh interval must be at least 3 minutes" })
-})
-
 export default function RSSSettings() {
+  const rssApi = "/api/settings/rss";
+  const rssAddApi = "/api/settings/rss/add";
+  const rssDeleteApi = "/api/settings/rss/delete";
+
   const { t } = useTranslation();
   const [rssList, setRSSList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+
+  const formSchema = z.object({
+    name: z.string()
+      .min(2, { message: "Name must be at least 2 characters" }),
+    url: z.string()
+      .url({ message: "Invalid URL" })
+      .startsWith("http", { message: "URL must start with http or https" }),
+    interval: z.coerce
+      .number()
+      .int({ message: "Interval must be a whole number" })
+      .min(3, { message: "Refresh interval must be at least 3 minutes" })
+  })
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
