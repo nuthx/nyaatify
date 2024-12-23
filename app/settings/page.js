@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Card,
@@ -20,17 +19,10 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleLanguageChange = (value) => {
     i18n.changeLanguage(value);
   };
-
-  if (!mounted) return null;
 
   return (
     <>

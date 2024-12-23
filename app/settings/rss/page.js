@@ -58,7 +58,6 @@ export default function RSSSettings() {
   const { t } = useTranslation();
   const [rssList, setRSSList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
   
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -71,7 +70,6 @@ export default function RSSSettings() {
 
   useEffect(() => {
     fetchRSS();
-    setMounted(true);
   }, []);
 
   const fetchRSS = async () => {
@@ -120,8 +118,6 @@ export default function RSSSettings() {
       log.error("Failed to delete RSS:", error);
     }
   };
-
-  if (!mounted) return null;
 
   return (
     <>

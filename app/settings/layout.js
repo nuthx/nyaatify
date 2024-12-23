@@ -1,19 +1,11 @@
 "use client";
 
-import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Nav } from "@/components/settings";
 import { Separator } from "@/components/ui/separator";
 
 export default function SettingsLayout({ children }) {
   const { t } = useTranslation();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   return (
     <>
