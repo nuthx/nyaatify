@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: -apple-system, "system-ui", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", Arial, sans-serif;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
