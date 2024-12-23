@@ -8,10 +8,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
+  PaginationLink
 } from "@/components/ui/pagination";
 
 const animeApi = "/api/anime";
@@ -52,12 +51,24 @@ export default function Home() {
     }
   };
 
+  const renderPageItem = (page, isActive = false) => (
+    <PaginationItem key={page}>
+      <PaginationLink className="cursor-pointer" onClick={() => setCurrentPage(page)} isActive={isActive}>
+        {page}
+      </PaginationLink>
+    </PaginationItem>
+  );
+
+  const renderPageItems = (start, count) => (
+    [...Array(count)].map((_, i) => renderPageItem(start + i, start + i === currentPage))
+  );
+
   useEffect(() => {
     fetchAnimeList(currentPage);
   }, [currentPage]);
 
   return (
-    <div className="min-h-screen container mx-auto py-8">
+    <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
       {loading ? (
         <div className="flex items-center justify-center">
           <p>Loading...</p>
@@ -72,7 +83,7 @@ export default function Home() {
           </AlertDescription>
         </Alert>
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-2">
           {items.map((item, index) => (
             <Card key={index}>
               <CardContent className="pt-6">
@@ -107,34 +118,39 @@ export default function Home() {
         </div>
       )}
       {!loading && !error && totalPages > 1 && (
-        <div className="mt-8">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious 
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                />
-              </PaginationItem>
-              {[...Array(totalPages)].map((_, i) => (
-                <PaginationItem key={i + 1}>
-                  <PaginationLink
-                    onClick={() => setCurrentPage(i + 1)}
-                    isActive={currentPage === i + 1}
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <Pagination>
+          <PaginationContent>
+            {totalPages > 7 ? (
+              <>
+                {currentPage <= 4 ? (
+                  <>
+                    {renderPageItems(1, 6)}
+                    <PaginationEllipsis />
+                    {renderPageItem(totalPages)}
+                  </>
+                ) : 
+                currentPage > totalPages - 4 ? (
+                  <>
+                    {renderPageItem(1)}
+                    <PaginationEllipsis />
+                    {renderPageItems(totalPages - 5, 6)}
+                  </>
+                ) : 
+                (
+                  <>
+                    {renderPageItem(1)}
+                    <PaginationEllipsis />
+                    {renderPageItems(currentPage - 2, 5)}
+                    <PaginationEllipsis />
+                    {renderPageItem(totalPages)}
+                  </>
+                )}
+              </>
+            ) : (
+              renderPageItems(1, totalPages)
+            )}
+          </PaginationContent>
+        </Pagination>
       )}
     </div>
   );
