@@ -24,10 +24,10 @@ export function NavBar() {
           <Link href="/download" className={`text-sm transition-all hover:text-primary ${pathname === '/download' ? 'text-primary' : 'text-gray-500'}`}>
             {t('nav.download')}
           </Link>
-          <Link href="/settings" className={`text-sm text-sm transition-all hover:text-primary ${pathname === '/settings' ? 'text-primary' : 'text-gray-500'}`}>
+          <Link href="/settings" className={`text-sm text-sm transition-all hover:text-primary ${pathname.startsWith('/settings') ? 'text-primary' : 'text-gray-500'}`}>
             {t('nav.settings')}
           </Link>
-          <Link href="/logout" className={`text-sm text-sm transition-all hover:text-primary ${pathname === '/logout' ? 'text-primary' : 'text-gray-500'}`}>
+          <Link href="/logout" className={`text-sm text-sm transition-all hover:text-primary text-gray-500`}>
             {t('nav.logout')}
           </Link>
         </div>
