@@ -10,8 +10,9 @@ export function NavBar() {
   return (
     <nav className="border-b bg-background">
       <div className="container mx-auto max-w-screen-xl flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center gap-3">
           <Logo />
+          <span className="text-lg font-semibold">Nyaatify</span>
         </Link>
 
         <div className="flex items-center space-x-8">
