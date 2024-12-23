@@ -2,9 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ExternalLink } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
@@ -12,10 +10,15 @@ import {
   PaginationItem,
   PaginationLink
 } from "@/components/ui/pagination";
+import { Card, CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { ExternalLink } from "lucide-react";
 
 const animeApi = "/api/anime";
 
 export default function Home() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -64,8 +67,21 @@ export default function Home() {
   );
 
   useEffect(() => {
+    // Get initial page from URL on first render
+    if (!currentPage) {
+      const pageFromUrl = Number(searchParams.get("page")) || 1;
+      setCurrentPage(pageFromUrl);
+      return;
+    }
+
+    // Fetch data and update URL when currentPage changes
     fetchAnimeList(currentPage);
-  }, [currentPage]);
+    if (currentPage > 1) {
+      router.push(`?page=${currentPage}`);
+    } else {
+      router.push("/");
+    }
+  }, [currentPage, searchParams]);
 
   return (
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
