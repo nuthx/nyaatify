@@ -52,6 +52,19 @@
         }
       }
     },
+    "server": {
+      "add": {
+        "title": "Add a New Download Server",
+        "description": "Add a download server to manage your download tasks.",
+        "type": "Server Type",
+        "name": "Name",
+        "url": "URL",
+        "username": "Username",
+        "password": "Password",
+        "add": "Add",
+        "test": "Test Server"
+      }
+    },
     "about": {
       "version": {
         "title": "Version",
