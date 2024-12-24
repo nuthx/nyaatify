@@ -305,15 +305,16 @@ export default function ServerSettings() {
         <CardContent className="p-0">
           {isLoading ? (
             Array.from({ length: 2 }).map((_, index) => (
-              <div key={index} className="flex items-center justify-between px-6 py-4 border-b last:border-none">
+              <div key={index} className="flex items-center justify-between px-6 h-24 border-b last:border-none">
                 <div className="space-y-1">
-                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-5 w-32" />
                   <Skeleton className="h-5 w-64" />
+                  <Skeleton className="h-5 w-24" />
                 </div>
               </div>
             ))
           ) : serverList.length === 0 ? (
-            <div className="flex items-center justify-center px-6 py-8 text-sm text-zinc-500">
+            <div className="flex items-center justify-center h-24 text-sm text-zinc-500">
               {t("st.sv.servers.empty")}
             </div>
           ) : (

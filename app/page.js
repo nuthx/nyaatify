@@ -20,7 +20,6 @@ import {
   CardDescription
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge"
 import { LayoutGrid, Rows3 } from "lucide-react";
@@ -60,7 +59,7 @@ export default function Home() {
       const data = await response.json();
 
       if (!data.data || data.data.length === 0) {
-        setError("Please add RSS subscription first.");
+        setError("Please add a RSS subscription first.");
         return;
       }
       
@@ -89,7 +88,7 @@ export default function Home() {
   return (
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
       {isLoading ? (
-        <Skeleton className="h-2 w-full"/>
+        <></>
       ) : error ? (
         <a className="text-sm text-center text-zinc-500">
           {error}
