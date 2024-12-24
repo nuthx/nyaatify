@@ -42,13 +42,13 @@ export async function POST(request) {
     // Delete rss
     await db.run("DELETE FROM rss WHERE id = ?", [data.id]);
 
-    // Update RSS schedule
-    await rssSchedule();
-
     // Commit transaction
     await db.run("COMMIT");
 
+    // Update RSS schedule
     log.info(`RSS subscription deleted successfully, name: ${data.name}`);
+    await rssSchedule();
+
     return Response.json({
       code: 200,
       message: "success"

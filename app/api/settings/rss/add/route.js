@@ -39,9 +39,9 @@ export async function POST(request) {
     await db.run("INSERT INTO rss (name, url, interval) VALUES (?, ?, ?)", [data.name, data.url, data.interval]);
 
     // Update RSS schedule
+    log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, interval: ${data.interval} minutes`);
     await rssSchedule();
 
-    log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, interval: ${data.interval} minutes`);
     return Response.json({
       code: 200,
       message: "success"
