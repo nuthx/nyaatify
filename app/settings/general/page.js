@@ -1,7 +1,7 @@
 "use client";
 
-import { useTheme } from 'next-themes'
-import { useTranslation } from 'react-i18next';
+import { useTheme } from "next-themes"
+import { useTranslation } from "react-i18next";
 import {
   Card,
   CardContent,
@@ -30,8 +30,8 @@ export default function Settings() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>{t('st.gr.theme.title')}</CardTitle>
-          <CardDescription>{t('st.gr.theme.description')}</CardDescription>
+          <CardTitle>{t("st.gr.theme.title")}</CardTitle>
+          <CardDescription>{t("st.gr.theme.description")}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent>
@@ -40,9 +40,9 @@ export default function Settings() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="system">{t('st.gr.theme.system')}</SelectItem>
-              <SelectItem value="light">{t('st.gr.theme.light')}</SelectItem>
-              <SelectItem value="dark">{t('st.gr.theme.dark')}</SelectItem>
+              <SelectItem value="system">{t("st.gr.theme.system")}</SelectItem>
+              <SelectItem value="light">{t("st.gr.theme.light")}</SelectItem>
+              <SelectItem value="dark">{t("st.gr.theme.dark")}</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>
@@ -50,8 +50,8 @@ export default function Settings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('st.gr.language.title')}</CardTitle>
-          <CardDescription>{t('st.gr.language.description')}</CardDescription>
+          <CardTitle>{t("st.gr.language.title")}</CardTitle>
+          <CardDescription>{t("st.gr.language.description")}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent>

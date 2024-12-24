@@ -1,4 +1,4 @@
-import RSSParser from 'rss-parser';
+import RSSParser from "rss-parser";
 import { getDb } from "@/lib/db";
 import { rssSchedule } from "@/lib/schedule";
 import { log } from "@/lib/log";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import {
   Card,
   CardContent,
@@ -17,13 +17,13 @@ export default function Settings() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>{t('st.abt.version.title')}</CardTitle>
-          <CardDescription>{t('st.abt.version.description')}</CardDescription>
+          <CardTitle>{t("st.abt.version.title")}</CardTitle>
+          <CardDescription>{t("st.abt.version.description")}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent>
-          <p>{t('st.abt.version.current')}: 0.0.1</p>
-          <p>{t('st.abt.version.latest')}: 0.0.1</p>
+          <p>{t("st.abt.version.current")}: 0.0.1</p>
+          <p>{t("st.abt.version.latest")}: 0.0.1</p>
         </CardContent>
       </Card>
     </>

@@ -1,5 +1,5 @@
 import "./globals.css";
-import { AR_One_Sans } from 'next/font/google'
+import { AR_One_Sans } from "next/font/google"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { I18nWrapper } from "@/i18n/wrapper";
 import { log } from "@/lib/log";
@@ -9,9 +9,9 @@ import { NavBar } from "@/components/navbar";
 
 // Use Google Fonts
 const arOneSans = AR_One_Sans({ 
-  subsets: ['latin'],
-  display: 'swap',
-  fallback: ['-apple-system', 'system-ui', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft Yahei', 'Arial', 'sans-serif']
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["-apple-system", "system-ui", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "Arial", "sans-serif"]
 })
 
 // Start RSS subscription task (only in production)
