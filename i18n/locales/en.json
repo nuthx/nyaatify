@@ -1,5 +1,7 @@
 {
-  "common": {
+  "glb": {
+    "download": "Download",
+    "pause": "Pause",
     "cancel": "Cancel",
     "delete": "Delete"
   },
@@ -65,7 +67,7 @@
         }
       }
     },
-    "server": {
+    "sv": {
       "toast": {
         "fetch": "Failed to fetch download server list",
         "testsuccess": "Test successful",
@@ -105,7 +107,7 @@
         }
       }
     },
-    "about": {
+    "abt": {
       "version": {
         "title": "Version",
         "description": "This is the version of Nyaatify. You can check the latest version on GitHub.",

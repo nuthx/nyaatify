@@ -1,5 +1,7 @@
 {
-  "common": {
+  "glb": {
+    "download": "下载",
+    "pause": "暂停",
     "cancel": "取消",
     "delete": "删除"
   },
@@ -65,7 +67,7 @@
         }
       }
     },
-    "server": {
+    "sv": {
       "toast": {
         "fetch": "获取服务器列表失败",
         "testsuccess": "测试成功",
@@ -105,7 +107,7 @@
         }
       }
     },
-    "about": {
+    "abt": {
       "version": {
         "title": "版本信息",
         "description": "查看你的 Nyaatify 的版本。您也可以在 GitHub 上查看最新版本",

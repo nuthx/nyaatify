@@ -246,8 +246,8 @@ export default function RSSSettings() {
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteRSS(rss.id, rss.name)}>{t("common.delete")}</AlertDialogAction>
+                        <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteRSS(rss.id, rss.name)}>{t("glb.delete")}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>

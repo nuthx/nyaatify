@@ -66,15 +66,15 @@ export default function ServerSettings() {
   const formSchema = z.object({
     type: z.string(),
     name: z.string()
-      .min(2, { message: t("st.server.validate.name") }),
+      .min(2, { message: t("st.sv.validate.name") }),
     url: z.string()
-      .url({ message: t("st.server.validate.url1") })
-      .startsWith("http", { message: t("st.server.validate.url2") })
-      .refine(url => !url.endsWith("/"), { message: t("st.server.validate.url3") }),
+      .url({ message: t("st.sv.validate.url1") })
+      .startsWith("http", { message: t("st.sv.validate.url2") })
+      .refine(url => !url.endsWith("/"), { message: t("st.sv.validate.url3") }),
     username: z.string()
-      .min(1, { message: t("st.server.validate.username") }),
+      .min(1, { message: t("st.sv.validate.username") }),
     password: z.string()
-      .min(1, { message: t("st.server.validate.password") }),
+      .min(1, { message: t("st.sv.validate.password") }),
   })
 
   const form = useForm({
@@ -100,7 +100,7 @@ export default function ServerSettings() {
       setServerList(data.data);
     } catch (error) {
       toast({
-        title: t("st.server.toast.fetch"),
+        title: t("st.sv.toast.fetch"),
         description: error.message,
         variant: "destructive"
       });
@@ -121,19 +121,19 @@ export default function ServerSettings() {
       
       if (response.ok) {
         toast({
-          title: t("st.server.toast.testsuccess"),
-          description: t("st.server.toast.version") + data.data
+          title: t("st.sv.toast.testsuccess"),
+          description: t("st.sv.toast.version") + data.data
         });
       } else {
         toast({
-          title: t("st.server.toast.testfailed"),
+          title: t("st.sv.toast.testfailed"),
           description: data.message,
           variant: "destructive"
         });
       }
     } catch (error) {
       toast({
-        title: t("st.server.toast.testfailed"),
+        title: t("st.sv.toast.testfailed"),
         description: error.message,
         variant: "destructive"
       });
@@ -155,14 +155,14 @@ export default function ServerSettings() {
         fetchServer();
       } else {
         toast({
-          title: t("st.server.toast.add"),
+          title: t("st.sv.toast.add"),
           description: data.message,
           variant: "destructive"
         });
       }
     } catch (error) {
       toast({
-        title: t("st.server.toast.add"),
+        title: t("st.sv.toast.add"),
         description: error.message,
         variant: "destructive"
       });
@@ -183,14 +183,14 @@ export default function ServerSettings() {
         fetchServer();
       } else {
         toast({
-          title: t("st.server.toast.delete"),
+          title: t("st.sv.toast.delete"),
           description: data.message,
           variant: "destructive"
         });
       }
     } catch (error) {
       toast({
-        title: t("st.server.toast.delete"),
+        title: t("st.sv.toast.delete"),
         description: error.message,
         variant: "destructive"
       });
@@ -201,8 +201,8 @@ export default function ServerSettings() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.server.add.title")}</CardTitle>
-          <CardDescription>{t("st.server.add.description")}</CardDescription>
+          <CardTitle>{t("st.sv.add.title")}</CardTitle>
+          <CardDescription>{t("st.sv.add.description")}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent>
@@ -213,7 +213,7 @@ export default function ServerSettings() {
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("st.server.add.type")}</FormLabel>
+                    <FormLabel>{t("st.sv.add.type")}</FormLabel>
                     <Select 
                       defaultValue={field.value} 
                       onValueChange={(value) => {
@@ -241,7 +241,7 @@ export default function ServerSettings() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("st.server.add.name")}</FormLabel>
+                    <FormLabel>{t("st.sv.add.name")}</FormLabel>
                     <FormControl>
                       <Input className="w-72" placeholder="Server" required {...field} />
                     </FormControl>
@@ -254,7 +254,7 @@ export default function ServerSettings() {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("st.server.add.url")}</FormLabel>
+                    <FormLabel>{t("st.sv.add.url")}</FormLabel>
                     <FormControl>
                       <Input className="w-full" placeholder={urlPlaceholders[selectedType]} required {...field} />
                     </FormControl>
@@ -267,7 +267,7 @@ export default function ServerSettings() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("st.server.add.username")}</FormLabel>
+                    <FormLabel>{t("st.sv.add.username")}</FormLabel>
                     <FormControl>
                       <Input className="w-72" placeholder="admin" {...field} />
                     </FormControl>
@@ -280,7 +280,7 @@ export default function ServerSettings() {
                 name="password" 
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("st.server.add.password")}</FormLabel>
+                    <FormLabel>{t("st.sv.add.password")}</FormLabel>
                     <FormControl>
                       <Input className="w-72" type="password" placeholder="password" {...field} />
                     </FormControl>
@@ -289,8 +289,8 @@ export default function ServerSettings() {
                 )}
               />
               <div className="flex gap-2">
-                <Button type="submit">{t("st.server.add.add")}</Button>
-                <Button type="button" variant="secondary" onClick={form.handleSubmit(handleTestServer)}>{t("st.server.add.test")}</Button>
+                <Button type="submit">{t("st.sv.add.add")}</Button>
+                <Button type="button" variant="secondary" onClick={form.handleSubmit(handleTestServer)}>{t("st.sv.add.test")}</Button>
               </div>
             </form>
           </Form>
@@ -299,7 +299,7 @@ export default function ServerSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.server.servers.title")}</CardTitle>
+          <CardTitle>{t("st.sv.servers.title")}</CardTitle>
         </CardHeader>
         <Separator />
         <CardContent className="p-0">
@@ -314,7 +314,7 @@ export default function ServerSettings() {
             ))
           ) : serverList.length === 0 ? (
             <div className="flex items-center justify-center px-6 py-8 text-sm text-zinc-500">
-              {t("st.server.servers.empty")}
+              {t("st.sv.servers.empty")}
             </div>
           ) : (
             serverList.map((server) => (
@@ -325,10 +325,10 @@ export default function ServerSettings() {
                     <Badge variant="outline">{server.type}</Badge>
                   </div>
                   <p className="text-sm text-zinc-500">{server.url}</p>
-                  <p className="text-sm text-zinc-500">{t("st.server.servers.version")} 1.0</p>
+                  <p className="text-sm text-zinc-500">{t("st.sv.servers.version")} 1.0</p>
                 </div>
                 <div className="flex space-x-4 items-center">
-                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{t("st.server.servers.offline")}</p>
+                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{t("st.sv.servers.offline")}</p>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon">
@@ -337,14 +337,14 @@ export default function ServerSettings() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>{t("st.server.servers.delete.title")}</AlertDialogTitle>
+                        <AlertDialogTitle>{t("st.sv.servers.delete.title")}</AlertDialogTitle>
                         <AlertDialogDescription>
-                          {t("st.server.servers.delete.description")}
+                          {t("st.sv.servers.delete.description")}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteServer(server.id, server.name)}>{t("common.delete")}</AlertDialogAction>
+                        <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteServer(server.id, server.name)}>{t("glb.delete")}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
