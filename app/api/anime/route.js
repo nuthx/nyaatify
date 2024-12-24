@@ -6,7 +6,7 @@ import { log } from "@/lib/log";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const page = parseInt(searchParams.get('page') || '1');
+  const page = parseInt(searchParams.get("page") || "1");
   const size = 25;
   const offset = (page - 1) * size;
   
@@ -23,7 +23,7 @@ export async function GET(request) {
         ORDER BY a.date DESC 
         LIMIT ? OFFSET ?
       `, [size, offset]),
-      db.get('SELECT COUNT(*) as count FROM anime')
+      db.get("SELECT COUNT(*) as count FROM anime")
     ]);
 
     return Response.json({
@@ -39,7 +39,7 @@ export async function GET(request) {
   }
   
   catch (error) {
-    log.error(`Failed to load anime list: ${error}`);
+    log.error(`Failed to load anime list: ${error.message}`);
     return Response.json({
       code: 500,
       message: error.message

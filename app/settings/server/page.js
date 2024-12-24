@@ -135,6 +135,7 @@ export default function ServerSettings() {
       const data = await response.json();
 
       if (response.ok) {
+        form.reset();
         fetchServer();
       } else {
         log.error(`Failed to add download server: ${data.message}`);
@@ -146,12 +147,19 @@ export default function ServerSettings() {
 
   const handleDeleteServer = async (id) => {
     try {
-      await fetch(serverDeleteApi, {
+      const response = await fetch(serverDeleteApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
-      fetchServer();
+
+      const data = await response.json();
+
+      if (response.ok) {
+        fetchServer();
+      } else {
+        log.error(`Failed to delete download server: ${data.message}`);
+      }
     } catch (error) {
       log.error(`Failed to delete download server: ${error.message}`);
     }

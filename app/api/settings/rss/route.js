@@ -1,4 +1,5 @@
 import { getDb } from "@/lib/db";
+import { log } from "@/lib/log";
 
 // Get RSS subscriptions
 // Method: GET
@@ -16,7 +17,7 @@ export async function GET() {
   }
   
   catch (error) {
-    log.error(`Failed to load RSS subscriptions: ${error}`);
+    log.error(`Failed to load RSS subscriptions: ${error.message}`);
     return Response.json({
       code: 500,
       message: error.message
