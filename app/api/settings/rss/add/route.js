@@ -1,3 +1,4 @@
+import RSSParser from 'rss-parser';
 import { getDb } from "@/lib/db";
 import { rssSchedule } from "@/lib/schedule";
 import { log } from "@/lib/log";
@@ -13,6 +14,7 @@ import { log } from "@/lib/log";
 export async function POST(request) {
   const db = await getDb();
   const data = await request.json();
+  const parser = new RSSParser();
 
   try {
     // Check if name already exists
@@ -20,7 +22,16 @@ export async function POST(request) {
     if (existingName) {
       return Response.json({
         code: 400,
-        message: "name exists"
+        message: "Name already exists"
+      }, { status: 400 });
+    }
+
+    // Check RSS validity
+    const rss = await parser.parseURL(data.url);
+    if (!rss) {
+      return Response.json({
+        code: 400,
+        message: "Invalid RSS"
       }, { status: 400 });
     }
 
