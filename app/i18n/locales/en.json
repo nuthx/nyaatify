@@ -64,6 +64,14 @@
         "add": "Add",
         "test": "Test Server"
       },
+      "validate": {
+        "name": "Name must be at least 2 characters",
+        "url1": "Invalid URL",
+        "url2": "URL must start with http or https",
+        "url3": "URL must not end with /",
+        "username": "Please enter a valid username",
+        "password": "Please enter a valid password"
+      },
       "servers": {
         "title": "Download Servers",
         "empty": "Please add a download server first.",

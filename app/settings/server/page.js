@@ -65,15 +65,15 @@ export default function ServerSettings() {
   const formSchema = z.object({
     type: z.string(),
     name: z.string()
-      .min(2, { message: "Name must be at least 2 characters" }),
+      .min(2, { message: t("st.server.validate.name") }),
     url: z.string()
-      .url({ message: "Invalid URL" })
-      .startsWith("http", { message: "URL must start with http or https" })
-      .refine(url => !url.endsWith("/"), { message: "URL must not end with /" }),
+      .url({ message: t("st.server.validate.url1") })
+      .startsWith("http", { message: t("st.server.validate.url2") })
+      .refine(url => !url.endsWith("/"), { message: t("st.server.validate.url3") }),
     username: z.string()
-      .min(1, { message: "Please enter a valid username" }),
+      .min(1, { message: t("st.server.validate.username") }),
     password: z.string()
-      .min(1, { message: "Please enter a valid password" }),
+      .min(1, { message: t("st.server.validate.password") }),
   })
 
   const form = useForm({
