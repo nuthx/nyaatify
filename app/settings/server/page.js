@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -21,15 +21,36 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge"
+import { Trash2Icon } from "lucide-react";
 
 export default function ServerSettings() {
   const serverApi = "/api/settings/server";
   const serverAddApi = "/api/settings/server/add";
-
+  const serverDeleteApi = "/api/settings/server/delete";
+  const serverTestApi = "/api/settings/server/test";
   const urlPlaceholders = {
     qbittorrent: "http://192.168.1.100:8080",
     transmission: "http://192.168.1.100:9091/transmission/rpc",
@@ -38,6 +59,8 @@ export default function ServerSettings() {
 
   const { t } = useTranslation();
   const [selectedType, setSelectedType] = useState("qbittorrent");
+  const [serverList, setServerList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const formSchema = z.object({
     type: z.string(),
@@ -45,7 +68,8 @@ export default function ServerSettings() {
       .min(2, { message: "Name must be at least 2 characters" }),
     url: z.string()
       .url({ message: "Invalid URL" })
-      .startsWith("http", { message: "URL must start with http or https" }),
+      .startsWith("http", { message: "URL must start with http or https" })
+      .refine(url => !url.endsWith("/"), { message: "URL must not end with /" }),
     username: z.string(),
     password: z.string()
   })
@@ -61,21 +85,73 @@ export default function ServerSettings() {
     },
   })
 
+  useEffect(() => {
+    fetchServer();
+  }, []);
+
+  const fetchServer = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(serverApi);
+      const data = await response.json();
+      setServerList(data.data);
+    } catch (error) {
+      log.error(`Failed to fetch download server: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleTestServer = async (values) => {
+    try {
+      const response = await fetch(serverTestApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        log.info(`Download server test successful, version: ${data.data}`);
+      } else {
+        log.error(`Failed to test download server: ${data.message}`);
+      }
+    } catch (error) {
+      log.error(`Failed to test download server: ${error.message}`);
+    }
+  };
+
   const handleAddServer = async (values) => {
     try {
       const response = await fetch(serverAddApi, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        console.log("success");
+        fetchServer();
+      } else {
+        log.error(`Failed to add download server: ${data.message}`);
       }
     } catch (error) {
-      console.error("error", error);
+      log.error(`Failed to add download server: ${error.message}`);
+    }
+  };
+
+  const handleDeleteServer = async (id) => {
+    try {
+      await fetch(serverDeleteApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      fetchServer();
+    } catch (error) {
+      log.error(`Failed to delete download server: ${error.message}`);
     }
   };
 
@@ -83,8 +159,8 @@ export default function ServerSettings() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>{t('st.server.add.title')}</CardTitle>
-          <CardDescription>{t('st.server.add.description')}</CardDescription>
+          <CardTitle>{t("st.server.add.title")}</CardTitle>
+          <CardDescription>{t("st.server.add.description")}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent>
@@ -95,7 +171,7 @@ export default function ServerSettings() {
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('st.server.add.type')}</FormLabel>
+                    <FormLabel>{t("st.server.add.type")}</FormLabel>
                     <Select 
                       defaultValue={field.value} 
                       onValueChange={(value) => {
@@ -123,7 +199,7 @@ export default function ServerSettings() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('st.server.add.name')}</FormLabel>
+                    <FormLabel>{t("st.server.add.name")}</FormLabel>
                     <FormControl>
                       <Input className="w-72" placeholder="Server" required {...field} />
                     </FormControl>
@@ -136,7 +212,7 @@ export default function ServerSettings() {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('st.server.add.url')}</FormLabel>
+                    <FormLabel>{t("st.server.add.url")}</FormLabel>
                     <FormControl>
                       <Input className="w-full" placeholder={urlPlaceholders[selectedType]} required {...field} />
                     </FormControl>
@@ -149,7 +225,7 @@ export default function ServerSettings() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('st.server.add.username')}</FormLabel>
+                    <FormLabel>{t("st.server.add.username")}</FormLabel>
                     <FormControl>
                       <Input className="w-72" placeholder="admin" {...field} />
                     </FormControl>
@@ -162,7 +238,7 @@ export default function ServerSettings() {
                 name="password" 
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('st.server.add.password')}</FormLabel>
+                    <FormLabel>{t("st.server.add.password")}</FormLabel>
                     <FormControl>
                       <Input className="w-72" type="password" placeholder="password" {...field} />
                     </FormControl>
@@ -171,11 +247,69 @@ export default function ServerSettings() {
                 )}
               />
               <div className="flex gap-2">
-                <Button type="submit">{t('st.server.add.add')}</Button>
-                <Button>{t('st.server.add.test')}</Button>
+                <Button type="submit">{t("st.server.add.add")}</Button>
+                <Button type="button" variant="secondary" onClick={() => handleTestServer(form.getValues())}>{t("st.server.add.test")}</Button>
               </div>
             </form>
           </Form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.server.servers.title")}</CardTitle>
+        </CardHeader>
+        <Separator />
+        <CardContent className="p-0">
+          {isLoading ? (
+            Array.from({ length: 2 }).map((_, index) => (
+              <div key={index} className="flex items-center justify-between px-6 py-4 border-b last:border-none">
+                <div className="space-y-1">
+                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-5 w-64" />
+                </div>
+              </div>
+            ))
+          ) : serverList.length === 0 ? (
+            <div className="flex items-center justify-center px-6 py-8 text-sm text-zinc-500">
+              {t("st.server.servers.empty")}
+            </div>
+          ) : (
+            serverList.map((server) => (
+              <div key={server.id} className="flex items-center justify-between px-6 py-4 border-b last:border-none">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h5 className="font-medium">{server.name}</h5>
+                    <Badge variant="outline">{server.type}</Badge>
+                  </div>
+                  <p className="text-sm text-zinc-500">{server.url}</p>
+                  <p className="text-sm text-zinc-500">{t("st.server.servers.version")} 1.0</p>
+                </div>
+                <div className="flex space-x-4 items-center">
+                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{t("st.server.servers.offline")}</p>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <Trash2Icon />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>{t("st.server.servers.delete.title")}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t("st.server.servers.delete.description")}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteServer(server.id)}>{t("common.delete")}</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </div>
+              </div>
+            ))
+          )}
         </CardContent>
       </Card>
     </>

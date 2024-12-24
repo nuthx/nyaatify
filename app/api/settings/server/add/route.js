@@ -1,5 +1,6 @@
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
+import { getQbittorrentCookie } from "@/lib/api/qbittorrent";
 
 // Add a new download server
 // Method: POST
@@ -21,23 +22,20 @@ export async function POST(request) {
     if (existingName) {
       return Response.json({
         code: 400,
-        message: "name exists"
+        message: "Name already exists"
       }, { status: 400 });
     }
 
-    // Check if url already exists
-    const existingUrl = await db.get("SELECT url FROM server WHERE url = ?", data.url);
-    if (existingUrl) {
-      return Response.json({
-        code: 400,
-        message: "url exists"
-      }, { status: 400 });
+    // Get download server cookie
+    let cookie = null;
+    if (data.type === "qbittorrent") {
+      cookie = await getQbittorrentCookie(data.url, data.username, data.password);
     }
 
     // Insert to database
     await db.run(
-      "INSERT INTO server (name, url, type, username, password, cookie) VALUES (?, ?, ?, ?, ?, ?)", 
-      [data.name, data.url, data.type, data.username, data.password, ""]
+      "INSERT INTO server (name, url, type, username, password, cookie, cookie_expiry) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [data.name, data.url, data.type, data.username, data.password, cookie, new Date(Date.now() + 30 * 60 * 1000).toISOString()]  // Cookie expires in 30 minutes
     );
 
     log.info(`Download server added successfully, name: ${data.name}, url: ${data.url}`);
@@ -48,7 +46,7 @@ export async function POST(request) {
   }
   
   catch (error) {
-    log.error(`Failed to add download server: ${error}`);
+    log.error(`Failed to add download server: ${error.message}`);
     return Response.json({
       code: 500,
       message: error.message

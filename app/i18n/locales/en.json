@@ -63,6 +63,17 @@
         "password": "Password",
         "add": "Add",
         "test": "Test Server"
+      },
+      "servers": {
+        "title": "Download Servers",
+        "empty": "Please add a download server first.",
+        "online": "Online",
+        "offline": "Offline",
+        "version": "Server version: ",
+        "delete": {
+          "title": "Delete Download Server",
+          "description": "This action will delete this download server permanently."
+        }
       }
     },
     "about": {
