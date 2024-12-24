@@ -5,6 +5,7 @@ import { log } from "@/lib/log";
 // Method: POST
 // Body: {
 //   id: number
+//   name: string
 // }
 
 export async function POST(request) {

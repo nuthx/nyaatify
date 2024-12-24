@@ -169,12 +169,12 @@ export default function ServerSettings() {
     }
   };
 
-  const handleDeleteServer = async (id) => {
+  const handleDeleteServer = async (id, name) => {
     try {
       const response = await fetch(serverDeleteApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id, name }),
       });
 
       const data = await response.json();
@@ -344,7 +344,7 @@ export default function ServerSettings() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteServer(server.id)}>{t("common.delete")}</AlertDialogAction>
+                        <AlertDialogAction onClick={() => handleDeleteServer(server.id, server.name)}>{t("common.delete")}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>

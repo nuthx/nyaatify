@@ -120,12 +120,12 @@ export default function RSSSettings() {
     }
   };
 
-  const handleDeleteRSS = async (id) => {
+  const handleDeleteRSS = async (id, name) => {
     try {
       const response = await fetch(`${rssDeleteApi}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({ id, name }),
       });
 
       const data = await response.json();
@@ -247,7 +247,7 @@ export default function RSSSettings() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteRSS(rss.id)}>{t("common.delete")}</AlertDialogAction>
+                        <AlertDialogAction onClick={() => handleDeleteRSS(rss.id, rss.name)}>{t("common.delete")}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
