@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next';
 import {
   Card,
@@ -19,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
+  const { theme, setTheme } = useTheme()
 
   const handleLanguageChange = (value) => {
     i18n.changeLanguage(value);
@@ -33,7 +35,7 @@ export default function Settings() {
         </CardHeader>
         <Separator />
         <CardContent>
-          <Select defaultValue="system">
+          <Select value={theme} onValueChange={setTheme}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>
