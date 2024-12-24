@@ -13,7 +13,7 @@ export default function SettingsLayout({ children }) {
       <Separator />
       <div className="container mx-auto max-w-screen-xl flex py-8">
         <nav className="w-80 pr-8 space-y-2">
-          <Nav label={t('st.nav.general')} path="/settings" />
+          <Nav label={t('st.nav.general')} path="/settings/general" />
           <Nav label={t('st.nav.rss')} path="/settings/rss" />
           <Nav label={t('st.nav.server')} path="/settings/server" />
           <Nav label={t('st.nav.notification')} path="/settings/notification" />
