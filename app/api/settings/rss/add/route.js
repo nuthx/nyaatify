@@ -24,15 +24,6 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
-    // Check if url already exists
-    const existingUrl = await db.get("SELECT url FROM rss WHERE url = ?", data.url);
-    if (existingUrl) {
-      return Response.json({
-        code: 400,
-        message: "url exists"
-      }, { status: 400 });
-    }
-
     // Insert to database
     await db.run("INSERT INTO rss (name, url, interval) VALUES (?, ?, ?)", [data.name, data.url, data.interval]);
 
@@ -47,7 +38,7 @@ export async function POST(request) {
   }
   
   catch (error) {
-    log.error(`Failed to add RSS subscription: ${error}`);
+    log.error(`Failed to add RSS subscription: ${error.message}`);
     return Response.json({
       code: 500,
       message: error.message

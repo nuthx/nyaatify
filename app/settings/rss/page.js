@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -49,14 +49,15 @@ export default function RSSSettings() {
 
   const formSchema = z.object({
     name: z.string()
-      .min(2, { message: "Name must be at least 2 characters" }),
+      .min(2, { message: t("st.rss.validate.name") }),
     url: z.string()
-      .url({ message: "Invalid URL" })
-      .startsWith("http", { message: "URL must start with http or https" }),
+      .url({ message: t("st.rss.validate.url1") })
+      .startsWith("http", { message: t("st.rss.validate.url2") })
+      .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.url3") }),
     interval: z.coerce
       .number()
-      .int({ message: "Interval must be a whole number" })
-      .min(3, { message: "Refresh interval must be at least 3 minutes" })
+      .int({ message: t("st.rss.validate.interval1") })
+      .min(3, { message: t("st.rss.validate.interval2") })
   })
 
   const form = useForm({
@@ -79,7 +80,7 @@ export default function RSSSettings() {
       const data = await response.json();
       setRSSList(data.data);
     } catch (error) {
-      log.error("Failed to fetch RSS:", error);
+      log.error(`Failed to fetch RSS: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -89,33 +90,40 @@ export default function RSSSettings() {
     try {
       const response = await fetch(rssAddApi, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
       });
+
+      const data = await response.json();
 
       if (response.ok) {
         form.reset();
         fetchRSS();
+      } else {
+        log.error(`Failed to add RSS: ${data.message}`);
       }
     } catch (error) {
-      log.error("Failed to add RSS:", error);
+      log.error(`Failed to add RSS: ${error.message}`);
     }
   };
 
   const handleDeleteRSS = async (id) => {
     try {
-      await fetch(`${rssDeleteApi}`, {
+      const response = await fetch(`${rssDeleteApi}`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
       });
-      fetchRSS();
+
+      const data = await response.json();
+
+      if (response.ok) {
+        fetchRSS();
+      } else {
+        log.error(`Failed to delete RSS: ${data.message}`);
+      }
     } catch (error) {
-      log.error("Failed to delete RSS:", error);
+      log.error(`Failed to delete RSS: ${error.message}`);
     }
   };
 
@@ -123,21 +131,21 @@ export default function RSSSettings() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>{t('st.rss.add.title')}</CardTitle>
-          <CardDescription>{t('st.rss.add.description')}</CardDescription>
+          <CardTitle>{t("st.rss.add.title")}</CardTitle>
+          <CardDescription>{t("st.rss.add.description")}</CardDescription>
         </CardHeader>
         <Separator />
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleAddRSS)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(handleAddRSS)} className="space-y-6" noValidate>
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('st.rss.add.name')}</FormLabel>
+                    <FormLabel>{t("st.rss.add.name")}</FormLabel>
                     <FormControl>
-                      <Input className="w-72" placeholder="Nyaatify" required {...field} />
+                      <Input className="w-72" placeholder="Subscription" required {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -148,7 +156,7 @@ export default function RSSSettings() {
                 name="url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('st.rss.add.url')}</FormLabel>
+                    <FormLabel>{t("st.rss.add.url")}</FormLabel>
                     <FormControl>
                       <Input className="w-full" placeholder="https://nyaa.si/?page=rss" required {...field} />
                     </FormControl>
@@ -161,7 +169,7 @@ export default function RSSSettings() {
                 name="interval"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t('st.rss.add.interval')}</FormLabel>
+                    <FormLabel>{t("st.rss.add.interval")}</FormLabel>
                     <FormControl>
                       <Input className="w-72" type="number" min="3" required {...field} />
                     </FormControl>
@@ -169,7 +177,7 @@ export default function RSSSettings() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">{t('st.rss.add.add')}</Button>
+              <Button type="submit">{t("st.rss.add.add")}</Button>
             </form>
           </Form>
         </CardContent>
@@ -177,7 +185,7 @@ export default function RSSSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('st.rss.subscription.title')}</CardTitle>
+          <CardTitle>{t("st.rss.subscription.title")}</CardTitle>
         </CardHeader>
         <Separator />
         <CardContent className="p-0">
@@ -192,7 +200,7 @@ export default function RSSSettings() {
             ))
           ) : rssList.length === 0 ? (
             <div className="flex items-center justify-center px-6 py-8 text-sm text-zinc-500">
-              {t('st.rss.subscription.empty')}
+              {t("st.rss.subscription.empty")}
             </div>
           ) : (
             rssList.map((rss) => (
@@ -201,8 +209,8 @@ export default function RSSSettings() {
                   <h5 className="font-medium">{rss.name}</h5>
                   <p className="text-sm text-zinc-500">{rss.url}</p>
                 </div>
-                <div className="flex space-x-6 items-center">
-                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{t('st.rss.subscription.refresh')}{rss.interval} {t('st.rss.subscription.min')}</p>
+                <div className="flex space-x-4 items-center">
+                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{t("st.rss.subscription.refresh")}{rss.interval} {t("st.rss.subscription.min")}</p>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon">
@@ -211,14 +219,14 @@ export default function RSSSettings() {
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>{t('st.rss.subscription.delete.title')}</AlertDialogTitle>
+                        <AlertDialogTitle>{t("st.rss.subscription.delete.title")}</AlertDialogTitle>
                         <AlertDialogDescription>
-                          {t('st.rss.subscription.delete.description')}
+                          {t("st.rss.subscription.delete.description")}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteRSS(rss.id)}>{t('common.delete')}</AlertDialogAction>
+                        <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleDeleteRSS(rss.id)}>{t("common.delete")}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>

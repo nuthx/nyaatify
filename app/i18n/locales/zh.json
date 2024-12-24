@@ -41,14 +41,54 @@
         "interval": "更新间隔 (分钟)",
         "add": "添加"
       },
+      "validate": {
+        "name": "名称至少为 2 个字符",
+        "url1": "无效的 URL",
+        "url2": "URL 必须以 http 或 https 开头",
+        "url3": "URL 不能以 / 结尾",
+        "interval1": "刷新间隔必须为整数",
+        "interval2": "刷新间隔至少为 3 分钟"
+      },
       "subscription": {
         "title": "RSS 订阅",
         "empty": "请先添加一个 RSS 订阅",
-        "refresh": "刷新间隔：",
+        "refresh": "刷新间隔: ",
         "min": "分钟",
         "delete": {
           "title": "删除 RSS 订阅",
           "description": "此操作将会永久删除此 RSS 订阅"
+        }
+      }
+    },
+    "server": {
+      "add": {
+        "title": "添加新的服务器",
+        "description": "添加一个下载服务器来管理您的下载任务",
+        "type": "服务器类型",
+        "name": "名称",
+        "url": "URL",
+        "username": "用户名",
+        "password": "密码",
+        "add": "添加",
+        "test": "测试连接"
+      },
+      "validate": {
+        "name": "名称至少为 2 个字符",
+        "url1": "无效的 URL",
+        "url2": "URL 必须以 http 或 https 开头",
+        "url3": "URL 不能以 / 结尾",
+        "username": "请输入用户名",
+        "password": "请输入密码"
+      },
+      "servers": {
+        "title": "下载服务器",
+        "empty": "请先添加一个下载服务器",
+        "online": "在线",
+        "offline": "离线",
+        "version": "版本: ",
+        "delete": {
+          "title": "删除下载服务器",
+          "description": "此操作将会永久删除此下载服务器"
         }
       }
     },

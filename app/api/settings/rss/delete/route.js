@@ -14,7 +14,7 @@ export async function POST(request) {
 
   try {
     // Start transaction
-    await db.run('BEGIN TRANSACTION');
+    await db.run("BEGIN TRANSACTION");
 
     // Find anime related to this rss
     const animesToDelete = await db.all(`
@@ -34,7 +34,7 @@ export async function POST(request) {
 
     // Delete anime related to this rss
     if (animesToDelete.length > 0) {
-      const animeIds = animesToDelete.map(a => a.anime_id).join(',');
+      const animeIds = animesToDelete.map(a => a.anime_id).join(",");
       await db.run(`DELETE FROM anime WHERE guid IN (${animeIds})`);
     }
 
@@ -45,7 +45,7 @@ export async function POST(request) {
     await rssSchedule();
 
     // Commit transaction
-    await db.run('COMMIT');
+    await db.run("COMMIT");
 
     log.info(`RSS subscription deleted successfully, name: ${data.name}`);
     return Response.json({
@@ -56,9 +56,9 @@ export async function POST(request) {
   
   catch (error) {
     // Rollback transaction
-    await db.run('ROLLBACK');
+    await db.run("ROLLBACK");
 
-    log.error(`Failed to delete RSS subscription: ${error}`);
+    log.error(`Failed to delete RSS subscription: ${error.message}`);
     return Response.json({
       code: 500,
       message: error.message
