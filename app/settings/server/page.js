@@ -70,8 +70,10 @@ export default function ServerSettings() {
       .url({ message: "Invalid URL" })
       .startsWith("http", { message: "URL must start with http or https" })
       .refine(url => !url.endsWith("/"), { message: "URL must not end with /" }),
-    username: z.string(),
+    username: z.string()
+      .min(1, { message: "Please enter a valid username" }),
     password: z.string()
+      .min(1, { message: "Please enter a valid password" }),
   })
 
   const form = useForm({
@@ -165,7 +167,7 @@ export default function ServerSettings() {
         <Separator />
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleAddServer)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(handleAddServer)} className="space-y-6" noValidate>
               <FormField
                 control={form.control}
                 name="type"
@@ -248,7 +250,7 @@ export default function ServerSettings() {
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("st.server.add.add")}</Button>
-                <Button type="button" variant="secondary" onClick={() => handleTestServer(form.getValues())}>{t("st.server.add.test")}</Button>
+                <Button type="button" variant="secondary" onClick={form.handleSubmit(handleTestServer)}>{t("st.server.add.test")}</Button>
               </div>
             </form>
           </Form>
