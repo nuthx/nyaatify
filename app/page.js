@@ -40,7 +40,7 @@ export default function Home() {
     } else {
       router.push("/");
     }
-  }, [currentPage, searchParams]);
+  }, [currentPage, searchParams, router]);
 
   const fetchAnimeList = async (page = 1) => {
     try {
@@ -60,7 +60,7 @@ export default function Home() {
       setItems(data);
       setTotalPages(Math.ceil(pagination.total / pagination.size));
       setError(null);
-    } 
+    }
     
     catch (error) {
       setError("Failed to load list");
