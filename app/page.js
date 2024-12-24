@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast"
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,
@@ -10,17 +11,28 @@ import {
   PaginationItem,
   PaginationLink
 } from "@/components/ui/pagination";
-import { Card, CardContent } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ExternalLink } from "lucide-react";
+import { 
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge"
+import { LayoutGrid, Rows3 } from "lucide-react";
 
 export default function Home() {
   const animeApi = "/api/anime";
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { toast } = useToast()
   const [items, setItems] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -34,7 +46,7 @@ export default function Home() {
     }
 
     // Fetch data and update URL when currentPage changes
-    fetchAnimeList(currentPage);
+    fetchAnime(currentPage);
     if (currentPage > 1) {
       router.push(`?page=${currentPage}`);
     } else {
@@ -42,32 +54,23 @@ export default function Home() {
     }
   }, [currentPage, searchParams, router]);
 
-  const fetchAnimeList = async (page = 1) => {
+  const fetchAnime = async (page = 1) => {
     try {
-      const res = await fetch(`${animeApi}?page=${page}`);
-      const { code, message, data, pagination } = await res.json();
-      
-      if (code !== 200) {
-        setError(message);
-        return;
-      }
+      const response = await fetch(`${animeApi}?page=${page}`);
+      const data = await response.json();
 
-      if (!data || data.length === 0) {
-        setError("Please add RSS subscription in settings first.");
+      if (!data.data || data.data.length === 0) {
+        setError("Please add RSS subscription first.");
         return;
       }
       
-      setItems(data);
-      setTotalPages(Math.ceil(pagination.total / pagination.size));
+      setItems(data.data);
+      setTotalPages(Math.ceil(data.pagination.total / data.pagination.size));
       setError(null);
-    }
-    
-    catch (error) {
-      setError("Failed to load list");
-    } 
-    
-    finally {
-      setLoading(false);
+    } catch (error) {
+      setError(`Failed to load list: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -85,55 +88,47 @@ export default function Home() {
 
   return (
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
-      {loading ? (
-        <div className="flex items-center justify-center">
-          <p>Loading...</p>
-        </div>
+      {isLoading ? (
+        <Skeleton className="h-2 w-full"/>
       ) : error ? (
-        <Alert variant="destructive">
-          <AlertDescription>
-            {error}
-            <Link href="/settings" className="ml-2 text-blue-500 hover:underline">
-              Go to Settings
-            </Link>
-          </AlertDescription>
-        </Alert>
+        <a className="text-sm text-center text-zinc-500">
+          {error}
+        </a>
       ) : (
-        <div className="grid gap-2">
+        <div className="grid gap-3">
+          <div className="flex gap-4 mx-1 mb-3">
+            <a className="text-sm text-zinc-500">Today: 10</a>
+            <a className="text-sm text-zinc-500">Week: 20</a>
+            <a className="text-sm text-zinc-500">Total: 100</a>
+          </div>
           {items.map((item, index) => (
             <Card key={index}>
-              <CardContent className="pt-6">
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-start justify-between">
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer" 
-                      className="text-blue-600 hover:underline flex items-center gap-2"
-                    >
-                      {item.title}
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
-                    <time className="text-sm text-muted-foreground">
-                      {new Date(item.date).toLocaleString()}
-                    </time>
+              <CardContent className="flex flex-col gap-2">
+                {item.rss_names && (
+                  <div className="flex gap-2">
+                    <Badge variant="outline">{new Date(item.date).toLocaleString()}</Badge>
+                    {item.rss_names.split(",").map((name, idx) => (
+                      <Badge key={idx} variant="outline">{name}</Badge>
+                    ))}
                   </div>
-                  {item.rss_names && (
-                    <div className="flex gap-2">
-                      {item.rss_names.split(',').map((name, idx) => (
-                        <span key={idx} className="text-xs px-2 py-1 bg-gray-100 rounded-full">
-                          {name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                )}
+                <a href={item.torrent} target="_blank" className="font-medium hover:underline">{item.title}</a>
+                <a className="text-sm text-zinc-500">{item.title}</a>
               </CardContent>
+              <Separator />
+              <CardFooter className="flex items-center justify-between py-4">
+                <a className="text-sm text-zinc-500">1.5GiB / {item.size}</a>
+                <div className="flex items-center gap-2">
+                  <Button className="w-auto">Download</Button>
+                  <Button className="w-auto">Pause</Button>
+                  <Button className="w-auto">Delete</Button>
+                </div>
+              </CardFooter>
             </Card>
           ))}
         </div>
       )}
-      {!loading && !error && totalPages > 1 && (
+      {!isLoading && !error && totalPages > 1 && (
         <Pagination>
           <PaginationContent>
             {totalPages > 7 ? (
