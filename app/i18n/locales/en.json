@@ -33,6 +33,11 @@
       }
     },
     "rss": {
+      "toast": {
+        "fetch": "Failed to fetch RSS list",
+        "add": "Failed to add RSS",
+        "delete": "Failed to delete RSS"
+      },
       "add": {
         "title": "Add a New RSS Subscription",
         "description": "Before you start, you have to add at least one RSS subscription.",
@@ -61,6 +66,14 @@
       }
     },
     "server": {
+      "toast": {
+        "fetch": "Failed to fetch download server list",
+        "testsuccess": "Test successful",
+        "version": "Version: ",
+        "testfailed": "Failed to connect to download server",
+        "add": "Failed to add download server",
+        "delete": "Failed to delete download server"
+      },
       "add": {
         "title": "Add a New Download Server",
         "description": "Add a download server to manage your download tasks.",

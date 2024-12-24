@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { log } from "@/lib/log";
 import {
   Card,
   CardContent,
@@ -44,6 +44,7 @@ export default function RSSSettings() {
   const rssDeleteApi = "/api/settings/rss/delete";
 
   const { t } = useTranslation();
+  const { toast } = useToast()
   const [rssList, setRSSList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -80,7 +81,11 @@ export default function RSSSettings() {
       const data = await response.json();
       setRSSList(data.data);
     } catch (error) {
-      log.error(`Failed to fetch RSS: ${error.message}`);
+      toast({
+        title: t("st.rss.toast.fetch"),
+        description: error.message,
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -100,10 +105,18 @@ export default function RSSSettings() {
         form.reset();
         fetchRSS();
       } else {
-        log.error(`Failed to add RSS: ${data.message}`);
+        toast({
+          title: t("st.rss.toast.add"),
+          description: data.message,
+          variant: "destructive"
+        });
       }
     } catch (error) {
-      log.error(`Failed to add RSS: ${error.message}`);
+      toast({
+        title: t("st.rss.toast.add"),
+        description: error.message,
+        variant: "destructive"
+      });
     }
   };
 
@@ -120,10 +133,18 @@ export default function RSSSettings() {
       if (response.ok) {
         fetchRSS();
       } else {
-        log.error(`Failed to delete RSS: ${data.message}`);
+        toast({
+          title: t("st.rss.toast.delete"),
+          description: data.message,
+          variant: "destructive"
+        });
       }
     } catch (error) {
-      log.error(`Failed to delete RSS: ${error.message}`);
+      toast({
+        title: t("st.rss.toast.delete"),
+        description: error.message,
+        variant: "destructive"
+      });
     }
   };
 

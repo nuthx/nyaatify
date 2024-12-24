@@ -4,6 +4,7 @@ import { AR_One_Sans } from 'next/font/google'
 import { I18nWrapper } from "@/app/i18n/wrapper";
 import { log } from "@/lib/log";
 import { rssSchedule } from "@/lib/schedule";
+import { Toaster } from "@/components/ui/toaster"
 import { NavBar } from "@/components/navbar";
 
 // Use Google Fonts
@@ -25,6 +26,7 @@ export default function RootLayout({ children }) {
         <I18nWrapper>
           <NavBar />
           {children}
+          <Toaster />
         </I18nWrapper>
       </body>
     </html>

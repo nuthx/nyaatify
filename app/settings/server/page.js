@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { log } from "@/lib/log";
 import {
   Card,
   CardContent,
@@ -58,6 +58,7 @@ export default function ServerSettings() {
   };
 
   const { t } = useTranslation();
+  const { toast } = useToast()
   const [selectedType, setSelectedType] = useState("qbittorrent");
   const [serverList, setServerList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -98,7 +99,11 @@ export default function ServerSettings() {
       const data = await response.json();
       setServerList(data.data);
     } catch (error) {
-      log.error(`Failed to fetch download server: ${error.message}`);
+      toast({
+        title: t("st.server.toast.fetch"),
+        description: error.message,
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -115,12 +120,23 @@ export default function ServerSettings() {
       const data = await response.json();
       
       if (response.ok) {
-        log.info(`Download server test successful, version: ${data.data}`);
+        toast({
+          title: t("st.server.toast.testsuccess"),
+          description: t("st.server.toast.version") + data.data
+        });
       } else {
-        log.error(`Failed to test download server: ${data.message}`);
+        toast({
+          title: t("st.server.toast.testfailed"),
+          description: data.message,
+          variant: "destructive"
+        });
       }
     } catch (error) {
-      log.error(`Failed to test download server: ${error.message}`);
+      toast({
+        title: t("st.server.toast.testfailed"),
+        description: error.message,
+        variant: "destructive"
+      });
     }
   };
 
@@ -138,10 +154,18 @@ export default function ServerSettings() {
         form.reset();
         fetchServer();
       } else {
-        log.error(`Failed to add download server: ${data.message}`);
+        toast({
+          title: t("st.server.toast.add"),
+          description: data.message,
+          variant: "destructive"
+        });
       }
     } catch (error) {
-      log.error(`Failed to add download server: ${error.message}`);
+      toast({
+        title: t("st.server.toast.add"),
+        description: error.message,
+        variant: "destructive"
+      });
     }
   };
 
@@ -158,10 +182,18 @@ export default function ServerSettings() {
       if (response.ok) {
         fetchServer();
       } else {
-        log.error(`Failed to delete download server: ${data.message}`);
+        toast({
+          title: t("st.server.toast.delete"),
+          description: data.message,
+          variant: "destructive"
+        });
       }
     } catch (error) {
-      log.error(`Failed to delete download server: ${error.message}`);
+      toast({
+        title: t("st.server.toast.delete"),
+        description: error.message,
+        variant: "destructive"
+      });
     }
   };
 
