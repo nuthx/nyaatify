@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast"
+import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Pagination,
@@ -29,6 +30,7 @@ export default function Home() {
 
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { t } = useTranslation();
   const { toast } = useToast()
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,7 +61,7 @@ export default function Home() {
       const data = await response.json();
 
       if (!data.data || data.data.length === 0) {
-        setError("Please add a RSS subscription first.");
+        setError(t("home.no_rss"));
         return;
       }
       
@@ -67,7 +69,7 @@ export default function Home() {
       setTotalPages(Math.ceil(data.pagination.total / data.pagination.size));
       setError(null);
     } catch (error) {
-      setError(`Failed to load list: ${error.message}`);
+      setError(`${t("home.load_fail")}: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -96,9 +98,9 @@ export default function Home() {
       ) : (
         <div className="grid gap-3">
           <div className="flex gap-4 mx-1 mb-3">
-            <a className="text-sm text-zinc-500">Today: 10</a>
-            <a className="text-sm text-zinc-500">Week: 20</a>
-            <a className="text-sm text-zinc-500">Total: 100</a>
+            <a className="text-sm text-zinc-500">{t("home.today")}: 10</a>
+            <a className="text-sm text-zinc-500">{t("home.week")}: 20</a>
+            <a className="text-sm text-zinc-500">{t("home.total")}: 100</a>
           </div>
           {items.map((item, index) => (
             <Card key={index}>
@@ -118,9 +120,9 @@ export default function Home() {
               <CardFooter className="flex items-center justify-between py-4">
                 <a className="text-sm text-zinc-500">1.5GiB / {item.size}</a>
                 <div className="flex items-center gap-2">
-                  <Button className="w-auto">Download</Button>
-                  <Button className="w-auto">Pause</Button>
-                  <Button className="w-auto">Delete</Button>
+                  <Button className="w-auto">{t("glb.download")}</Button>
+                  <Button className="w-auto">{t("glb.pause")}</Button>
+                  <Button className="w-auto">{t("glb.delete")}</Button>
                 </div>
               </CardFooter>
             </Card>

@@ -237,7 +237,7 @@ export default function RSSSettings() {
                 </div>
                 <div className="flex space-x-4 items-center">
                   <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md whitespace-nowrap">
-                    {t("st.rss.subscription.refresh")}{rss.interval} {t("st.rss.subscription.min")}
+                    {t("st.rss.subscription.refresh")}: {rss.interval} {t("st.rss.subscription.min")}
                   </p>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

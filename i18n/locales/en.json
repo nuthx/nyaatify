@@ -2,6 +2,7 @@
   "glb": {
     "download": "Download",
     "pause": "Pause",
+    "resume": "Resume",
     "cancel": "Cancel",
     "delete": "Delete"
   },
@@ -10,6 +11,13 @@
     "download": "Download",
     "settings": "Settings",
     "logout": "Logout"
+  },
+  "home": {
+    "no_rss": "Please add a RSS subscription first.",
+    "load_fail": "Failed to load list",
+    "today": "Today",
+    "week": "Week",
+    "total": "Total"
   },
   "st": {
     "title": "Settings",
@@ -60,7 +68,7 @@
       "subscription": {
         "title": "RSS Subscription",
         "empty": "Please add a RSS subscription first.",
-        "refresh": "Refresh Interval: ",
+        "refresh": "Refresh Interval",
         "min": "mins",
         "delete": {
           "title": "Delete RSS Subscription",
@@ -72,7 +80,7 @@
       "toast": {
         "fetch": "Failed to fetch download server list",
         "testsuccess": "Test successful",
-        "version": "Version: ",
+        "version": "Version",
         "testfailed": "Failed to connect to download server",
         "add": "Failed to add download server",
         "delete": "Failed to delete download server"
@@ -102,7 +110,7 @@
         "empty": "Please add a download server first.",
         "online": "Online",
         "offline": "Offline",
-        "version": "Server version: ",
+        "version": "Server version",
         "delete": {
           "title": "Delete Download Server",
           "description": "This action will delete this download server permanently."

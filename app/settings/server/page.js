@@ -123,7 +123,7 @@ export default function ServerSettings() {
       if (response.ok) {
         toast({
           title: t("st.sv.toast.testsuccess"),
-          description: t("st.sv.toast.version") + data.data
+          description: `${t("st.sv.toast.version")}: ${data.data}`
         });
       } else {
         toast({
@@ -327,7 +327,7 @@ export default function ServerSettings() {
                     <Badge variant="outline">{server.type}</Badge>
                   </div>
                   <p className="text-sm text-zinc-500">{server.url}</p>
-                  <p className="text-sm text-zinc-500">{t("st.sv.servers.version")} 1.0</p>
+                  <p className="text-sm text-zinc-500">{t("st.sv.servers.version")}: 1.0</p>
                 </div>
                 <div className="flex space-x-4 items-center">
                   <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{t("st.sv.servers.offline")}</p>
