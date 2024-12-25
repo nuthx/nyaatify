@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -15,15 +13,11 @@ import {
 import { 
   Card,
   CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  CardDescription
+  CardFooter
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge"
-import { LayoutGrid, Rows3 } from "lucide-react";
 
 export default function Home() {
   const animeApi = "/api/anime";
@@ -31,7 +25,6 @@ export default function Home() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslation();
-  const { toast } = useToast()
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -104,17 +97,32 @@ export default function Home() {
           </div>
           {items.map((item, index) => (
             <Card key={index}>
-              <CardContent className="flex flex-col gap-2">
-                {item.rss_names && (
-                  <div className="flex gap-2">
-                    <Badge variant="outline">{new Date(item.pub_date).toLocaleString()}</Badge>
-                    {item.rss_names.split(",").map((name, idx) => (
-                      <Badge key={idx} variant="outline">{name}</Badge>
-                    ))}
+              <CardContent className="flex gap-4">
+                <img 
+                  key={`${item.cover}-${currentPage}`}
+                  src={item.cover} 
+                  className="w-20 h-28 rounded-md object-cover bg-zinc-200"
+                  onError={(e) => {
+                    e.target.classList.remove('object-cover');
+                    e.target.src = '';
+                  }}
+                />
+                <div className="flex flex-col gap-2 my-1 w-fit">
+                  {item.rss_names && (
+                    <div className="flex gap-2">
+                      <Badge variant="outline">{new Date(item.pub_date).toLocaleString()}</Badge>
+                      {item.rss_names.split(",").map((name, idx) => (
+                        <Badge key={idx} variant="outline">{name}</Badge>
+                      ))}
+                    </div>
+                  )}
+                  <div className="w-fit">
+                    <a href={item.torrent} target="_blank" className="font-medium hover:underline">
+                      {item.name_cn || item.name_jp || item.name_en || item.name_title}
+                    </a>
                   </div>
-                )}
-                <a href={item.torrent} target="_blank" className="font-medium hover:underline">{item.name}</a>
-                <a className="text-sm text-zinc-500">{item.title}</a>
+                  <a className="text-sm text-zinc-500">{item.title}</a>
+                </div>
               </CardContent>
               <Separator />
               <CardFooter className="flex items-center justify-between py-4">
@@ -122,7 +130,7 @@ export default function Home() {
                 <div className="flex items-center gap-2">
                   <Button className="w-auto">{t("glb.download")}</Button>
                   <Button className="w-auto">{t("glb.pause")}</Button>
-                  <Button className="w-auto">{t("glb.delete")}</Button>
+                  <Button>{t("glb.delete")}</Button>
                 </div>
               </CardFooter>
             </Card>
