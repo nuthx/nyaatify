@@ -111,7 +111,7 @@ export default function Home() {
                     ))}
                   </div>
                 )}
-                <a href={item.torrent} target="_blank" className="font-medium hover:underline">{item.title}</a>
+                <a href={item.torrent} target="_blank" className="font-medium hover:underline">{item.name}</a>
                 <a className="text-sm text-zinc-500">{item.title}</a>
               </CardContent>
               <Separator />
