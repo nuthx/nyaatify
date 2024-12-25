@@ -49,7 +49,8 @@
         "add": "Add"
       },
       "validate": {
-        "name": "Name must be at least 2 characters",
+        "name1": "Name must be at least 2 characters",
+        "name2": "Name must be less than 40 characters",
         "url1": "Invalid URL",
         "url2": "URL must start with http or https",
         "url3": "URL must not end with /",
@@ -88,7 +89,8 @@
         "test": "Test Server"
       },
       "validate": {
-        "name": "Name must be at least 2 characters",
+        "name1": "Name must be at least 2 characters",
+        "name2": "Name must be less than 40 characters",
         "url1": "Invalid URL",
         "url2": "URL must start with http or https",
         "url3": "URL must not end with /",

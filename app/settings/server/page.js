@@ -66,7 +66,8 @@ export default function ServerSettings() {
   const formSchema = z.object({
     type: z.string(),
     name: z.string()
-      .min(2, { message: t("st.sv.validate.name") }),
+      .min(2, { message: t("st.sv.validate.name1") })
+      .max(40, { message: t("st.sv.validate.name2") }),
     url: z.string()
       .url({ message: t("st.sv.validate.url1") })
       .startsWith("http", { message: t("st.sv.validate.url2") })

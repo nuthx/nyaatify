@@ -49,7 +49,8 @@
         "add": "添加"
       },
       "validate": {
-        "name": "名称至少为 2 个字符",
+        "name1": "名称至少为 2 个字符",
+        "name2": "名称不能超过 40 个字符",
         "url1": "无效的 URL",
         "url2": "URL 必须以 http 或 https 开头",
         "url3": "URL 不能以 / 结尾",
@@ -88,7 +89,8 @@
         "test": "测试连接"
       },
       "validate": {
-        "name": "名称至少为 2 个字符",
+        "name1": "名称至少为 2 个字符",
+        "name2": "名称不能超过 40 个字符",
         "url1": "无效的 URL",
         "url2": "URL 必须以 http 或 https 开头",
         "url3": "URL 不能以 / 结尾",

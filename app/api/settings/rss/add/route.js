@@ -35,11 +35,21 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
+    // Identify RSS type
+    const url = data.url.toLowerCase();
+    const urlPrefix = url.substring(0, 20);
+    let rssType = "Unknown";
+    if (urlPrefix.includes("nyaa")) {
+      rssType = "Nyaa";
+    } else if (urlPrefix.includes("mikan")) {
+      rssType = "Mikan";
+    }
+
     // Insert to database
-    await db.run("INSERT INTO rss (name, url, interval) VALUES (?, ?, ?)", [data.name, data.url, data.interval]);
+    await db.run("INSERT INTO rss (name, url, interval, type) VALUES (?, ?, ?, ?)", [data.name, data.url, data.interval, rssType]);
 
     // Update RSS schedule
-    log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, interval: ${data.interval} minutes`);
+    log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, type: ${rssType}, interval: ${data.interval} minutes`);
     await rssSchedule();
 
     return Response.json({

@@ -105,7 +105,7 @@ export default function Home() {
               <CardContent className="flex flex-col gap-2">
                 {item.rss_names && (
                   <div className="flex gap-2">
-                    <Badge variant="outline">{new Date(item.date).toLocaleString()}</Badge>
+                    <Badge variant="outline">{new Date(item.pub_date).toLocaleString()}</Badge>
                     {item.rss_names.split(",").map((name, idx) => (
                       <Badge key={idx} variant="outline">{name}</Badge>
                     ))}

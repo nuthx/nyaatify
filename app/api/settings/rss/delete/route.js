@@ -36,7 +36,7 @@ export async function POST(request) {
     // Delete anime related to this rss
     if (animesToDelete.length > 0) {
       const animeIds = animesToDelete.map(a => a.anime_id).join(",");
-      await db.run(`DELETE FROM anime WHERE guid IN (${animeIds})`);
+      await db.run(`DELETE FROM anime WHERE id IN (${animeIds})`);
     }
 
     // Delete rss

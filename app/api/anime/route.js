@@ -17,10 +17,10 @@ export async function GET(request) {
       db.all(`
         SELECT a.*, GROUP_CONCAT(r.name) as rss_names
         FROM anime a
-        LEFT JOIN anime_rss ar ON a.guid = ar.anime_id
+        LEFT JOIN anime_rss ar ON a.id = ar.anime_id
         LEFT JOIN rss r ON ar.rss_id = r.id
-        GROUP BY a.guid
-        ORDER BY a.date DESC 
+        GROUP BY a.id
+        ORDER BY a.pub_date DESC 
         LIMIT ? OFFSET ?
       `, [size, offset]),
       db.get("SELECT COUNT(*) as count FROM anime")

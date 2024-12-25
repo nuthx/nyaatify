@@ -36,6 +36,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge"
 import { Trash2Icon } from "lucide-react";
 
 export default function RSSSettings() {
@@ -50,7 +51,8 @@ export default function RSSSettings() {
 
   const formSchema = z.object({
     name: z.string()
-      .min(2, { message: t("st.rss.validate.name") }),
+      .min(2, { message: t("st.rss.validate.name1") })
+      .max(40, { message: t("st.rss.validate.name2") }),
     url: z.string()
       .url({ message: t("st.rss.validate.url1") })
       .startsWith("http", { message: t("st.rss.validate.url2") })
@@ -227,11 +229,16 @@ export default function RSSSettings() {
             rssList.map((rss) => (
               <div key={rss.id} className="flex items-center justify-between px-6 py-4 border-b last:border-none">
                 <div className="space-y-1">
-                  <h5 className="font-medium">{rss.name}</h5>
+                  <div className="flex items-center gap-2">
+                    <h5 className="font-medium">{rss.name}</h5>
+                    <Badge variant="outline">{rss.type}</Badge>
+                  </div>
                   <p className="text-sm text-zinc-500">{rss.url}</p>
                 </div>
                 <div className="flex space-x-4 items-center">
-                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{t("st.rss.subscription.refresh")}{rss.interval} {t("st.rss.subscription.min")}</p>
+                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md whitespace-nowrap">
+                    {t("st.rss.subscription.refresh")}{rss.interval} {t("st.rss.subscription.min")}
+                  </p>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="ghost" size="icon">
