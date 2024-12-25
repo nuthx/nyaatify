@@ -34,7 +34,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge"
 import { Trash2Icon } from "lucide-react";
@@ -157,7 +156,6 @@ export default function RSSSettings() {
           <CardTitle>{t("st.rss.add.title")}</CardTitle>
           <CardDescription>{t("st.rss.add.description")}</CardDescription>
         </CardHeader>
-        <Separator />
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleAddRSS)} className="space-y-6" noValidate>
@@ -210,7 +208,6 @@ export default function RSSSettings() {
         <CardHeader>
           <CardTitle>{t("st.rss.subscription.title")}</CardTitle>
         </CardHeader>
-        <Separator />
         <CardContent className="p-0">
           {isLoading ? (
             Array.from({ length: 2 }).map((_, index) => (

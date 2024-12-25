@@ -41,7 +41,6 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge"
 import { Trash2Icon } from "lucide-react";
@@ -205,7 +204,6 @@ export default function ServerSettings() {
           <CardTitle>{t("st.sv.add.title")}</CardTitle>
           <CardDescription>{t("st.sv.add.description")}</CardDescription>
         </CardHeader>
-        <Separator />
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleAddServer)} className="space-y-6" noValidate>
@@ -302,7 +300,6 @@ export default function ServerSettings() {
         <CardHeader>
           <CardTitle>{t("st.sv.servers.title")}</CardTitle>
         </CardHeader>
-        <Separator />
         <CardContent className="p-0">
           {isLoading ? (
             Array.from({ length: 2 }).map((_, index) => (

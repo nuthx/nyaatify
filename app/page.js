@@ -16,7 +16,6 @@ import {
   CardFooter
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge"
 
 export default function Home() {
@@ -124,7 +123,6 @@ export default function Home() {
                   <a className="text-sm text-zinc-500">{item.title}</a>
                 </div>
               </CardContent>
-              <Separator />
               <CardFooter className="flex items-center justify-between py-4">
                 <div className="flex items-center gap-4">
                   <StateIndicator state="new"/>

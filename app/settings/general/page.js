@@ -16,7 +16,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Separator } from "@/components/ui/separator";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
@@ -33,7 +32,6 @@ export default function Settings() {
           <CardTitle>{t("st.gr.theme.title")}</CardTitle>
           <CardDescription>{t("st.gr.theme.description")}</CardDescription>
         </CardHeader>
-        <Separator />
         <CardContent>
           <Select value={theme} onValueChange={setTheme}>
             <SelectTrigger className="w-72">
@@ -53,7 +51,6 @@ export default function Settings() {
           <CardTitle>{t("st.gr.language.title")}</CardTitle>
           <CardDescription>{t("st.gr.language.description")}</CardDescription>
         </CardHeader>
-        <Separator />
         <CardContent>
           <Select defaultValue={i18n.language} onValueChange={handleLanguageChange}>
             <SelectTrigger className="w-72">
