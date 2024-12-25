@@ -42,7 +42,7 @@
       },
       "add": {
         "title": "添加新的 RSS 订阅",
-        "description": "在开始之前，您必须至少添加一个 RSS 订阅",
+        "description": "在开始之前，您必须至少添加一个 RSS 订阅。目前已支持 Nyaa 和 Mikan 的订阅链接",
         "name": "名称",
         "url": "RSS URL",
         "interval": "更新间隔 (分钟)",

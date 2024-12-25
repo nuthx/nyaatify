@@ -66,7 +66,7 @@ export default function RSSSettings() {
     defaultValues: {
       name: "",
       url: "",
-      interval: 5,
+      interval: 10,
     },
   })
 

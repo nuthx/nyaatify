@@ -26,6 +26,15 @@ export async function POST(request) {
       }, { status: 400 });
     }
 
+    // Check if URL already exists
+    const existingUrl = await db.get("SELECT url FROM server WHERE url = ?", data.url);
+    if (existingUrl) {
+      return Response.json({
+        code: 400,
+        message: "URL already exists"
+      }, { status: 400 });
+    }
+
     // Get download server cookie
     let cookie = null;
     if (data.type === "qbittorrent") {

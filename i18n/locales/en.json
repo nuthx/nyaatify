@@ -42,7 +42,7 @@
       },
       "add": {
         "title": "Add a New RSS Subscription",
-        "description": "Before you start, you have to add at least one RSS subscription.",
+        "description": "Before you start, you have to add at least one RSS subscription. Currently, Nyaa and Mikan Project are supported.",
         "name": "Name",
         "url": "RSS URL",
         "interval": "Refresh Interval (minutes)",
