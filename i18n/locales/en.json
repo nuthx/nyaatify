@@ -17,7 +17,14 @@
     "load_fail": "Failed to load list",
     "today": "Today",
     "week": "Week",
-    "total": "Total"
+    "total": "Total",
+    "state": {
+      "new": "New",
+      "downloading": "Downloading",
+      "completed": "Completed",
+      "paused": "Paused",
+      "failed": "Failed"
+    }
   },
   "st": {
     "title": "Settings",

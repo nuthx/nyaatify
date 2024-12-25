@@ -17,7 +17,14 @@
     "load_fail": "加载列表失败",
     "today": "今日",
     "week": "本周",
-    "total": "总数"
+    "total": "总数",
+    "state": {
+      "new": "新发布",
+      "downloading": "下载中",
+      "completed": "完成",
+      "paused": "暂停",
+      "failed": "失败"
+    }
   },
   "st": {
     "title": "设置",
