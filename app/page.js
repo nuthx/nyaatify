@@ -99,11 +99,11 @@ export default function Home() {
               <CardContent className="flex gap-4">
                 <img 
                   key={`${item.cover}-${currentPage}`}
-                  src={item.cover} 
+                  src={item.cover || null}
                   className="w-20 h-28 rounded-md object-cover bg-zinc-200"
                   onError={(e) => {
                     e.target.classList.remove('object-cover');
-                    e.target.src = '';
+                    e.target.src = null;
                   }}
                 />
                 <div className="flex flex-col gap-2 my-1 w-fit">
