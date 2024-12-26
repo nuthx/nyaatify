@@ -1,6 +1,6 @@
 import { getDb } from "@/lib/db";
-import { refreshRSS } from "@/lib/schedule";
 import { log } from "@/lib/log";
+import { stopTask } from "@/lib/schedule";
 
 // Delete a RSS subscription
 // Method: POST
@@ -17,7 +17,7 @@ export async function POST(request) {
     // Start transaction
     await db.run("BEGIN TRANSACTION");
 
-    // Find anime related to this rss
+    // Find all related anime from anime_rss table
     const animesToDelete = await db.all(`
       SELECT anime_id 
       FROM anime_rss ar1
@@ -30,24 +30,24 @@ export async function POST(request) {
       )
     `, [data.id, data.id]);
 
-    // Delete anime_rss
+    // Delete anime from anime_rss table
     await db.run("DELETE FROM anime_rss WHERE rss_id = ?", [data.id]);
 
-    // Delete anime related to this rss
+    // Delete anime from anime table
     if (animesToDelete.length > 0) {
       const animeIds = animesToDelete.map(a => a.anime_id).join(",");
       await db.run(`DELETE FROM anime WHERE id IN (${animeIds})`);
     }
 
-    // Delete rss
+    // Delete RSS from RSS table
     await db.run("DELETE FROM rss WHERE id = ?", [data.id]);
 
     // Commit transaction
     await db.run("COMMIT");
-
-    // Update RSS schedule
     log.info(`RSS subscription deleted successfully, name: ${data.name}`);
-    await refreshRSS();
+
+    // Stop RSS task
+    stopTask(data.name);
 
     return Response.json({
       code: 200,

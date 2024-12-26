@@ -1,7 +1,7 @@
 import RSSParser from "rss-parser";
 import { getDb } from "@/lib/db";
-import { refreshRSS } from "@/lib/schedule";
 import { log } from "@/lib/log";
+import { startTask } from "@/lib/schedule";
 
 // Add a new RSS subscription
 // Method: POST
@@ -47,10 +47,15 @@ export async function POST(request) {
 
     // Insert to database
     await db.run("INSERT INTO rss (name, url, interval, type) VALUES (?, ?, ?, ?)", [data.name, data.url, data.interval, rssType]);
-
-    // Update RSS schedule
     log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, type: ${rssType}, interval: ${data.interval} minutes`);
-    await refreshRSS();
+
+    // Start RSS task
+    await startTask({
+      name: data.name,
+      url: data.url,
+      interval: data.interval,
+      type: rssType
+    });
 
     return Response.json({
       code: 200,

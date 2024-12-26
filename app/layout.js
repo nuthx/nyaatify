@@ -3,7 +3,7 @@ import { AR_One_Sans } from "next/font/google"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { I18nWrapper } from "@/i18n/wrapper";
 import { log } from "@/lib/log";
-import { refreshRSS } from "@/lib/schedule";
+import { startAllTasks } from "@/lib/schedule";
 import { Toaster } from "@/components/ui/toaster"
 import { NavBar } from "@/components/navbar";
 
@@ -14,9 +14,9 @@ const arOneSans = AR_One_Sans({
   fallback: ["-apple-system", "system-ui", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "Arial", "sans-serif"]
 })
 
-// Start RSS subscription task (only in production)
+// Start RSS task (only in production)
 if (process.env.NODE_ENV === "production") {
-  refreshRSS().catch(log.error);
+  startAllTasks().catch(log.error);
 }
 
 export default function RootLayout({ children }) {
