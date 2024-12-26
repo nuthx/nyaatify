@@ -3,7 +3,7 @@ import { AR_One_Sans } from "next/font/google"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { I18nWrapper } from "@/i18n/wrapper";
 import { log } from "@/lib/log";
-import { rssSchedule } from "@/lib/schedule";
+import { refreshRSS } from "@/lib/schedule";
 import { Toaster } from "@/components/ui/toaster"
 import { NavBar } from "@/components/navbar";
 
@@ -16,7 +16,7 @@ const arOneSans = AR_One_Sans({
 
 // Start RSS subscription task (only in production)
 if (process.env.NODE_ENV === "production") {
-  rssSchedule().catch(log.error);
+  refreshRSS().catch(log.error);
 }
 
 export default function RootLayout({ children }) {

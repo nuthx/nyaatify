@@ -1,6 +1,6 @@
 import RSSParser from "rss-parser";
 import { getDb } from "@/lib/db";
-import { rssSchedule } from "@/lib/schedule";
+import { refreshRSS } from "@/lib/schedule";
 import { log } from "@/lib/log";
 
 // Add a new RSS subscription
@@ -50,7 +50,7 @@ export async function POST(request) {
 
     // Update RSS schedule
     log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, type: ${rssType}, interval: ${data.interval} minutes`);
-    await rssSchedule();
+    await refreshRSS();
 
     return Response.json({
       code: 200,

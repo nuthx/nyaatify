@@ -1,5 +1,5 @@
 import { getDb } from "@/lib/db";
-import { rssSchedule } from "@/lib/schedule";
+import { refreshRSS } from "@/lib/schedule";
 import { log } from "@/lib/log";
 
 // Delete a RSS subscription
@@ -47,7 +47,7 @@ export async function POST(request) {
 
     // Update RSS schedule
     log.info(`RSS subscription deleted successfully, name: ${data.name}`);
-    await rssSchedule();
+    await refreshRSS();
 
     return Response.json({
       code: 200,
