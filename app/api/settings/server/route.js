@@ -8,7 +8,7 @@ export async function GET() {
   const db = await getDb();
 
   try {
-    const servers = await db.all("SELECT * FROM server");
+    const servers = await db.all("SELECT * FROM server ORDER BY name ASC");
     return Response.json({
       code: 200,
       message: "success", 

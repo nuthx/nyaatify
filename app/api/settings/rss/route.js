@@ -8,7 +8,7 @@ export async function GET() {
   const db = await getDb();
 
   try {
-    const rss = await db.all("SELECT * FROM rss ORDER BY id ASC");
+    const rss = await db.all("SELECT * FROM rss ORDER BY name ASC");
     return Response.json({
       code: 200,
       message: "success", 
