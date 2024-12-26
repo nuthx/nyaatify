@@ -95,9 +95,9 @@
       "add": {
         "title": "Add a New Download Server",
         "description": "Add a download server to manage your download tasks.",
-        "type": "Server Type",
         "name": "Name",
-        "url": "URL",
+        "type": "Server Type",
+        "url": "Server URL",
         "username": "Username",
         "password": "Password",
         "add": "Add",

@@ -209,6 +209,19 @@ export default function ServerSettings() {
             <form onSubmit={form.handleSubmit(handleAddServer)} className="space-y-6" noValidate>
               <FormField
                 control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.sv.add.name")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-72" placeholder="Server" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="type"
                 render={({ field }) => (
                   <FormItem>
@@ -231,19 +244,6 @@ export default function ServerSettings() {
                         <SelectItem value="aria2">Aria2</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.sv.add.name")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-72" placeholder="Server" required {...field} />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

@@ -59,7 +59,7 @@
         "title": "添加新的 RSS 订阅",
         "description": "添加一个 Nyaa 或 Mikan 的 RSS 订阅来追踪动画发布情况。添加完成后，您需要等待几分钟来获取所有数据并在首页展示",
         "name": "名称",
-        "url": "RSS URL",
+        "url": "RSS 地址",
         "interval": "更新间隔 (分钟)",
         "add": "添加"
       },
@@ -95,9 +95,9 @@
       "add": {
         "title": "添加新的服务器",
         "description": "添加一个下载服务器来管理您的下载任务",
-        "type": "服务器类型",
         "name": "名称",
-        "url": "URL",
+        "type": "服务器类型",
+        "url": "服务器地址",
         "username": "用户名",
         "password": "密码",
         "add": "添加",
