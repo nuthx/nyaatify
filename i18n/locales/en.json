@@ -57,7 +57,7 @@
       },
       "add": {
         "title": "Add a New RSS Subscription",
-        "description": "Before you start, you have to add at least one RSS subscription. Currently, Nyaa and Mikan Project are supported.",
+        "description": "Add a Nyaa or Mikan RSS subscription to track anime publication. After adding, you need to wait a few minutes to parse all data and show on the home page.",
         "name": "Name",
         "url": "RSS URL",
         "interval": "Refresh Interval (minutes)",

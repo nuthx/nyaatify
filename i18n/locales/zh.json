@@ -57,7 +57,7 @@
       },
       "add": {
         "title": "添加新的 RSS 订阅",
-        "description": "在开始之前，您必须至少添加一个 RSS 订阅。目前已支持 Nyaa 和 Mikan 的订阅链接",
+        "description": "添加一个 Nyaa 或 Mikan 的 RSS 订阅来追踪动画发布情况。添加完成后，您需要等待几分钟来获取所有数据并在首页展示",
         "name": "名称",
         "url": "RSS URL",
         "interval": "更新间隔 (分钟)",
