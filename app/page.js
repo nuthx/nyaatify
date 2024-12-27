@@ -98,8 +98,8 @@ export default function Home() {
             <Card key={index}>
               <CardContent className="flex gap-4">
                 <img 
-                  key={`${item.cover}-${currentPage}`}
-                  src={item.cover || null}
+                  key={`${item.cover_bangumi}-${currentPage}`}
+                  src={item.cover_bangumi || null}
                   className="w-20 h-28 rounded-md object-cover bg-zinc-200"
                   onError={(e) => {
                     e.target.classList.remove('object-cover');
