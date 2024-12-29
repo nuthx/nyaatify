@@ -57,10 +57,6 @@ export default function RSSSettings() {
       .startsWith("http", { message: t("st.rss.validate.url2") })
       .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.url3") }),
     cron: z.string()
-      .regex(
-        /^(\*|[0-5]?[0-9])([-,/]\*|[-,/][0-5]?[0-9])*\s(\*|[0-5]?[0-9])([-,/]\*|[-,/][0-5]?[0-9])*\s(\*|1?[0-9]|2[0-3])([-,/]\*|[-,/](?:1?[0-9]|2[0-3]))*\s(\*|\?|[1-9]|[12][0-9]|3[01])([-,/]\*|[-,/](?:[1-9]|[12][0-9]|3[01]))*\s(\*|[1-9]|1[0-2]|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)([-,/]\*|[-,/](?:[1-9]|1[0-2]|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))*\s(\*|[0-6]|SUN|MON|TUE|WED|THU|FRI|SAT)([-,/]\*|[-,/](?:[0-6]|SUN|MON|TUE|WED|THU|FRI|SAT))*$/i,
-        { message: t("st.rss.validate.cron") }
-      )
   })
 
   const form = useForm({

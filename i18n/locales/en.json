@@ -68,8 +68,7 @@
         "name2": "Name must be less than 40 characters",
         "url1": "Invalid URL",
         "url2": "URL must start with http or https",
-        "url3": "URL must not end with /",
-        "cron": "Invalid CRON expression"
+        "url3": "URL must not end with /"
       },
       "subscription": {
         "title": "RSS Subscription",

@@ -1,3 +1,4 @@
+import parser from 'cron-parser';
 import RSSParser from "rss-parser";
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
@@ -14,7 +15,7 @@ import { startTask } from "@/lib/schedule";
 export async function POST(request) {
   const db = await getDb();
   const data = await request.json();
-  const parser = new RSSParser();
+  const rssParser = new RSSParser();
 
   try {
     // Check if name already exists
@@ -22,18 +23,22 @@ export async function POST(request) {
     if (existingName) {
       return Response.json({
         code: 400,
-        message: "Name already exists"
+        message: `Name ${data.name} already exists`
       }, { status: 400 });
     }
 
     // Check RSS validity
-    const rss = await parser.parseURL(data.url);
+    const rss = await rssParser.parseURL(data.url);
     if (!rss) {
       return Response.json({
         code: 400,
-        message: "Invalid RSS"
+        message: "Invalid RSS URL"
       }, { status: 400 });
     }
+
+    // Check cron validity
+    // If not valid, error message will return in the catch block
+    parser.parseExpression(data.cron);
 
     // Identify RSS type
     const url = data.url.toLowerCase();
@@ -47,7 +52,7 @@ export async function POST(request) {
 
     // Insert to database
     await db.run("INSERT INTO rss (name, url, cron, type, state) VALUES (?, ?, ?, ?, ?)", [data.name, data.url, data.cron, rssType, "completed"]);
-    log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, type: ${rssType}, cron: ${data.cron} minutes`);
+    log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, type: ${rssType}, cron: ${data.cron}`);
 
     // Start RSS task
     const { lastID } = await db.get("SELECT last_insert_rowid() as lastID");
