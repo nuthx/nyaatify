@@ -60,7 +60,7 @@
         "description": "Add a Nyaa or Mikan RSS subscription to track anime publication. After adding, you need to wait a few minutes to parse all data and show on the home page.",
         "name": "Name",
         "url": "RSS URL",
-        "interval": "Refresh Interval (minutes)",
+        "cron": "Refresh Rule (CRON)",
         "add": "Add"
       },
       "validate": {
@@ -69,14 +69,14 @@
         "url1": "Invalid URL",
         "url2": "URL must start with http or https",
         "url3": "URL must not end with /",
-        "interval1": "Refresh interval must be a whole number",
-        "interval2": "Refresh interval must be at least 3 minutes"
+        "cron": "Invalid CRON expression"
       },
       "subscription": {
         "title": "RSS Subscription",
         "empty": "Please add a RSS subscription first.",
-        "refresh": "Refresh Interval",
-        "min": "mins",
+        "cron": "Refresh Rule",
+        "running": "Refreshing",
+        "next": "Next",
         "delete": {
           "title": "Delete RSS Subscription",
           "description": "This action will delete this RSS subscription permanently."

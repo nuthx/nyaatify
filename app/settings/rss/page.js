@@ -56,10 +56,11 @@ export default function RSSSettings() {
       .url({ message: t("st.rss.validate.url1") })
       .startsWith("http", { message: t("st.rss.validate.url2") })
       .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.url3") }),
-    interval: z.coerce
-      .number()
-      .int({ message: t("st.rss.validate.interval1") })
-      .min(3, { message: t("st.rss.validate.interval2") })
+    cron: z.string()
+      .regex(
+        /^(\*|[0-5]?[0-9])([-,/]\*|[-,/][0-5]?[0-9])*\s(\*|[0-5]?[0-9])([-,/]\*|[-,/][0-5]?[0-9])*\s(\*|1?[0-9]|2[0-3])([-,/]\*|[-,/](?:1?[0-9]|2[0-3]))*\s(\*|\?|[1-9]|[12][0-9]|3[01])([-,/]\*|[-,/](?:[1-9]|[12][0-9]|3[01]))*\s(\*|[1-9]|1[0-2]|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)([-,/]\*|[-,/](?:[1-9]|1[0-2]|JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC))*\s(\*|[0-6]|SUN|MON|TUE|WED|THU|FRI|SAT)([-,/]\*|[-,/](?:[0-6]|SUN|MON|TUE|WED|THU|FRI|SAT))*$/i,
+        { message: t("st.rss.validate.cron") }
+      )
   })
 
   const form = useForm({
@@ -67,7 +68,7 @@ export default function RSSSettings() {
     defaultValues: {
       name: "",
       url: "",
-      interval: 10,
+      cron: "0 */10 * * * *",
     },
   })
 
@@ -187,12 +188,12 @@ export default function RSSSettings() {
               />
               <FormField
                 control={form.control}
-                name="interval"
+                name="cron"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("st.rss.add.interval")}</FormLabel>
+                    <FormLabel>{t("st.rss.add.cron")}</FormLabel>
                     <FormControl>
-                      <Input className="w-72" type="number" min="3" required {...field} />
+                      <Input className="w-72" placeholder="0 */10 * * * *" required {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -231,10 +232,15 @@ export default function RSSSettings() {
                     <Badge variant="outline">{rss.type}</Badge>
                   </div>
                   <p className="text-sm text-zinc-500">{rss.url}</p>
+                  <p className="text-sm text-zinc-500">{t("st.rss.subscription.cron")}: {rss.cron}</p>
                 </div>
                 <div className="flex space-x-4 items-center">
                   <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md whitespace-nowrap">
-                    {t("st.rss.subscription.refresh")}: {rss.interval} {t("st.rss.subscription.min")}
+                    {rss.state === "running" ? (
+                      <>{t("st.rss.subscription.running")}</>
+                    ) : (
+                      <>{t("st.rss.subscription.next")}: {new Date(rss.next).toLocaleString()}</>
+                    )}
                   </p>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>

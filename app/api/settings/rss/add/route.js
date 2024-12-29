@@ -8,7 +8,7 @@ import { startTask } from "@/lib/schedule";
 // Body: {
 //   name: string,
 //   url: string,
-//   interval: number
+//   cron: string
 // }
 
 export async function POST(request) {
@@ -46,14 +46,16 @@ export async function POST(request) {
     }
 
     // Insert to database
-    await db.run("INSERT INTO rss (name, url, interval, type) VALUES (?, ?, ?, ?)", [data.name, data.url, data.interval, rssType]);
-    log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, type: ${rssType}, interval: ${data.interval} minutes`);
+    await db.run("INSERT INTO rss (name, url, cron, type, state) VALUES (?, ?, ?, ?, ?)", [data.name, data.url, data.cron, rssType, "completed"]);
+    log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, type: ${rssType}, cron: ${data.cron} minutes`);
 
     // Start RSS task
+    const { lastID } = await db.get("SELECT last_insert_rowid() as lastID");
     await startTask({
+      id: lastID,
       name: data.name,
       url: data.url,
-      interval: data.interval,
+      cron: data.cron,
       type: rssType
     });
 
