@@ -51,7 +51,10 @@ export async function POST(request) {
     }
 
     // Insert to database
-    await db.run("INSERT INTO rss (name, url, cron, type, state) VALUES (?, ?, ?, ?, ?)", [data.name, data.url, data.cron, rssType, "completed"]);
+    await db.run(
+      "INSERT INTO rss (name, url, cron, type, state, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+      [data.name, data.url, data.cron, rssType, "completed", new Date().toISOString()]
+    );
     log.info(`RSS subscription added successfully, name: ${data.name}, url: ${data.url}, type: ${rssType}, cron: ${data.cron}`);
 
     // Start RSS task

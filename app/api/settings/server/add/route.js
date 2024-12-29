@@ -43,8 +43,8 @@ export async function POST(request) {
 
     // Insert to database
     await db.run(
-      "INSERT INTO server (name, url, type, username, password, cookie, cookie_expiry) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [data.name, data.url, data.type, data.username, data.password, cookie, new Date(Date.now() + 30 * 60 * 1000).toISOString()]  // Cookie expires in 30 minutes
+      "INSERT INTO server (name, url, type, username, password, created_at, cookie, cookie_expiry) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [data.name, data.url, data.type, data.username, data.password, new Date().toISOString(), cookie, new Date(Date.now() + 30 * 60 * 1000).toISOString()]  // Cookie expires in 30 minutes
     );
 
     log.info(`Download server added successfully, name: ${data.name}, url: ${data.url}`);
