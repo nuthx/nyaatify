@@ -38,14 +38,14 @@ export default function ServerSettings() {
   const serverDeleteApi = "/api/settings/server/delete";
   const serverTestApi = "/api/settings/server/test";
   const urlPlaceholders = {
-    qbittorrent: "http://192.168.1.100:8080",
-    transmission: "http://192.168.1.100:9091/transmission/rpc",
-    aria2: "http://192.168.1.100:6800/jsonrpc"
+    qBittorrent: "http://192.168.1.100:8080",
+    Transmission: "http://192.168.1.100:9091/transmission/rpc",
+    Aria2: "http://192.168.1.100:6800/jsonrpc"
   };
 
   const { t } = useTranslation();
   const { toast } = useToast()
-  const [selectedType, setSelectedType] = useState("qbittorrent");
+  const [selectedType, setSelectedType] = useState("qBittorrent");
   const [serverList, setServerList] = useState([]);
 
   const formSchema = z.object({
@@ -66,7 +66,7 @@ export default function ServerSettings() {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      type: "qbittorrent",
+      type: "qBittorrent",
       name: "",
       url: "",
       username: "",
@@ -222,9 +222,9 @@ export default function ServerSettings() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="qbittorrent">qBittorrent</SelectItem>
-                        <SelectItem value="transmission">Transmission</SelectItem>
-                        <SelectItem value="aria2">Aria2</SelectItem>
+                        <SelectItem value="qBittorrent">qBittorrent</SelectItem>
+                        <SelectItem value="Transmission">Transmission</SelectItem>
+                        <SelectItem value="Aria2">Aria2</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

@@ -37,7 +37,7 @@ export async function POST(request) {
 
     // Get download server cookie
     let cookie = null;
-    if (data.type === "qbittorrent") {
+    if (data.type === "qBittorrent") {
       cookie = await getQbittorrentCookie(data.url, data.username, data.password);
     }
 
