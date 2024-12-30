@@ -56,6 +56,13 @@ export default function RSSSettings() {
 
   useEffect(() => {
     fetchRSS();
+
+    // Set interval to fetch RSS list every 3 seconds
+    const pollingInterval = setInterval(() => {
+      fetchRSS();
+    }, 3000);
+
+    return () => clearInterval(pollingInterval);
   }, []);
 
   const fetchRSS = async () => {
