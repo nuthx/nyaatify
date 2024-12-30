@@ -206,6 +206,7 @@ export default function RSSSettings() {
               )
             )}
             onDelete={handleDeleteRSS}
+            deleteable={(rss) => rss.state !== "running"}
             deleteTitle={t("st.rss.subscription.delete.title")}
             deleteDescription={t("st.rss.subscription.delete.description")}
           />

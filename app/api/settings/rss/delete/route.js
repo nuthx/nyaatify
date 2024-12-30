@@ -14,6 +14,15 @@ export async function POST(request) {
   const data = await request.json();
 
   try {
+    // Check if RSS is running
+    const rss = await db.get("SELECT * FROM rss WHERE id = ?", [data.id]);
+    if (rss.state === "running") {
+      return Response.json({
+        code: 400,
+        message: "RSS task is running"
+      }, { status: 400 });
+    }
+
     // Start transaction
     await db.run("BEGIN TRANSACTION");
 

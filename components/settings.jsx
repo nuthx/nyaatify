@@ -37,7 +37,7 @@ export function Nav({ label, path }) {
   );
 }
 
-export function ListCard({ items = [], empty, content, state, onDelete, deleteTitle, deleteDescription }) {
+export function ListCard({ items = [], empty, content, state, onDelete, deleteable, deleteTitle, deleteDescription }) {
   const { t } = useTranslation();
 
   if (items.length === 0) {
@@ -68,7 +68,7 @@ export function ListCard({ items = [], empty, content, state, onDelete, deleteTi
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <AlertDialogTrigger asChild>
-                <DropdownMenuItem><Trash2Icon />{t("glb.delete")}</DropdownMenuItem>
+                <DropdownMenuItem disabled={!deleteable(item)}><Trash2Icon />{t("glb.delete")}</DropdownMenuItem>
               </AlertDialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
