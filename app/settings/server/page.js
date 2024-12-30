@@ -290,12 +290,12 @@ export default function ServerSettings() {
             content={(server) => (
               <>
                 <p className="text-sm text-zinc-500">{server.url}</p>
-                <p className="text-sm text-zinc-500">{t("st.sv.servers.version")}: 1.0</p>
+                <p className="text-sm text-zinc-500">{t("st.sv.servers.version")}: {server.version}</p>
               </>
             )}
             state={(server) => (
               <>
-                {t("st.sv.servers.offline")}
+                {server.state === "online" ? t("st.sv.servers.online") : t("st.sv.servers.offline")}
               </>
             )}
             onDelete={handleDeleteServer}
