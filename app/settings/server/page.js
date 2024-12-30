@@ -22,17 +22,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -41,9 +30,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Badge } from "@/components/ui/badge"
-import { Trash2Icon } from "lucide-react";
+import { ListCard } from "@/components/settings";
 
 export default function ServerSettings() {
   const serverApi = "/api/settings/server";
@@ -60,7 +47,6 @@ export default function ServerSettings() {
   const { toast } = useToast()
   const [selectedType, setSelectedType] = useState("qbittorrent");
   const [serverList, setServerList] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   const formSchema = z.object({
     type: z.string(),
@@ -93,7 +79,6 @@ export default function ServerSettings() {
   }, []);
 
   const fetchServer = async () => {
-    setIsLoading(true);
     try {
       const response = await fetch(serverApi);
       const data = await response.json();
@@ -104,8 +89,6 @@ export default function ServerSettings() {
         description: error.message,
         variant: "destructive"
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -301,56 +284,24 @@ export default function ServerSettings() {
           <CardTitle>{t("st.sv.servers.title")}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          {isLoading ? (
-            Array.from({ length: 2 }).map((_, index) => (
-              <div key={index} className="flex items-center justify-between px-6 h-24 border-b last:border-none">
-                <div className="space-y-1">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-5 w-64" />
-                  <Skeleton className="h-5 w-24" />
-                </div>
-              </div>
-            ))
-          ) : serverList.length === 0 ? (
-            <div className="flex items-center justify-center h-24 text-sm text-zinc-500">
-              {t("st.sv.servers.empty")}
-            </div>
-          ) : (
-            serverList.map((server) => (
-              <div key={server.id} className="flex items-center justify-between px-6 py-4 border-b last:border-none">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <h5 className="font-medium">{server.name}</h5>
-                    <Badge variant="outline">{server.type}</Badge>
-                  </div>
-                  <p className="text-sm text-zinc-500">{server.url}</p>
-                  <p className="text-sm text-zinc-500">{t("st.sv.servers.version")}: 1.0</p>
-                </div>
-                <div className="flex space-x-4 items-center">
-                  <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md">{t("st.sv.servers.offline")}</p>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="ghost" size="icon">
-                        <Trash2Icon />
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>{t("st.sv.servers.delete.title")}</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          {t("st.sv.servers.delete.description")}
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleDeleteServer(server.id, server.name)}>{t("glb.delete")}</AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              </div>
-            ))
-          )}
+          <ListCard
+            items={serverList}
+            empty={t("st.sv.servers.empty")}
+            content={(server) => (
+              <>
+                <p className="text-sm text-zinc-500">{server.url}</p>
+                <p className="text-sm text-zinc-500">{t("st.sv.servers.version")}: 1.0</p>
+              </>
+            )}
+            state={(server) => (
+              <>
+                {t("st.sv.servers.offline")}
+              </>
+            )}
+            onDelete={handleDeleteServer}
+            deleteTitle={t("st.sv.servers.delete.title")}
+            deleteDescription={t("st.sv.servers.delete.description")}
+          />
         </CardContent>
       </Card>
     </>
