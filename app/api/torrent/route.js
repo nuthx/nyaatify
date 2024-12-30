@@ -16,15 +16,13 @@ export async function GET() {
       torrents.forEach(torrent => {
         allTorrents.push({
           name: torrent.name,
-          added_on: torrent.added_on,
           state: torrent.state,
           progress: torrent.progress,
+          eta: torrent.eta,
           dlspeed: torrent.dlspeed,
           upspeed: torrent.upspeed,
-          downloaded: torrent.downloaded,
-          uploaded: torrent.uploaded,
-          num_leechs: torrent.num_leechs,
-          num_seeds: torrent.num_seeds,
+          completed: torrent.completed,
+          size: torrent.size,
           server: server.name
         });
       });

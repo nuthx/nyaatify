@@ -26,6 +26,13 @@
       "failed": "Failed"
     }
   },
+  "download": {
+    "empty": "Please add a download server first.",
+    "load_fail": "Failed to load list",
+    "d_speed": "Download Speed",
+    "u_speed": "Upload Speed",
+    "eta": "ETA"
+  },
   "st": {
     "title": "Settings",
     "nav": {
