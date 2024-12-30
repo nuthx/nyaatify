@@ -15,8 +15,21 @@ export async function POST(request) {
   const data = await request.json();
 
   try {
-    const sid = await getQbittorrentCookie(data.url, data.username, data.password);
+    const sid = await getQbittorrentCookie(data);
+    if (sid.includes("Error")) {
+      return Response.json({
+        code: 400,
+        message: sid
+      }, { status: 400 });
+    }
+
     const version = await getQbittorrentVersion(data.url, sid);
+    if (version === "unknown") {
+      return Response.json({
+        code: 400,
+        message: "Error: Failed to connect to server"
+      }, { status: 400 });
+    }
 
     log.info(`Download server test successful, version: ${version}`);
     return Response.json({
