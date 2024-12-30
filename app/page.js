@@ -53,7 +53,7 @@ export default function Home() {
       const data = await response.json();
 
       if (!data.data || data.data.length === 0) {
-        setError(t("home.no_rss"));
+        setError(t("home.empty"));
         return;
       }
       

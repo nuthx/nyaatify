@@ -13,7 +13,7 @@
     "logout": "Logout"
   },
   "home": {
-    "no_rss": "Please add a RSS subscription first.",
+    "empty": "Please add a RSS subscription first.",
     "load_fail": "Failed to load list",
     "today": "Today",
     "week": "Week",
