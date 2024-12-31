@@ -300,8 +300,7 @@ export default function ServerSettings() {
             )}
             onDelete={handleDeleteServer}
             deleteable={() => true}
-            deleteTitle={t("st.sv.servers.delete.title")}
-            deleteDescription={t("st.sv.servers.delete.description")}
+            deleteDescription={t("st.sv.servers.alert")}
           />
         </CardContent>
       </Card>

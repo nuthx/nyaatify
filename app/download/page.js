@@ -8,6 +8,17 @@ import {
   CardContent,
   CardFooter
 } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"
@@ -128,9 +139,27 @@ export default function Home() {
                       <RefreshCcw />{t("glb.resume")}
                     </Button>
                   )}
-                  <Button variant="outline" className="font-normal" onClick={() => handleManage("delete", item.hash, item.server)}>
-                    <Trash2 />{t("glb.delete")}
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" className="font-normal">
+                        <Trash2 />{t("glb.delete")}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t("download.alert")}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleManage("delete", item.hash, item.server)}>
+                          {t("glb.delete")}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </CardFooter>
               <Progress 

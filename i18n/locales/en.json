@@ -4,7 +4,8 @@
     "pause": "Pause",
     "resume": "Resume",
     "cancel": "Cancel",
-    "delete": "Delete"
+    "delete": "Delete",
+    "confirm_delete": "Confirm Deletion"
   },
   "nav": {
     "home": "Home",
@@ -36,6 +37,7 @@
     "h": "h",
     "m": "m",
     "s": "s",
+    "alert": "This action will delete the task from the download server, but the downloaded files will not be deleted.",
     "state": {
       "error": "Error",
       "missingFiles": "Missing Files",
@@ -115,10 +117,7 @@
         "cron": "Refresh Rule",
         "running": "Refreshing",
         "next": "Next",
-        "delete": {
-          "title": "Delete RSS Subscription",
-          "description": "This action will delete this RSS subscription permanently."
-        }
+        "alert": "This action will delete this RSS subscription permanently."
       }
     },
     "sv": {
@@ -156,10 +155,7 @@
         "online": "Online",
         "offline": "Offline",
         "version": "Server version",
-        "delete": {
-          "title": "Delete Download Server",
-          "description": "This action will delete this download server permanently."
-        }
+        "alert": "This action will delete this download server permanently."
       }
     },
     "abt": {

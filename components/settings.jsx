@@ -37,7 +37,7 @@ export function Nav({ label, path }) {
   );
 }
 
-export function ListCard({ items = [], empty, content, state, onDelete, deleteable, deleteTitle, deleteDescription }) {
+export function ListCard({ items = [], empty, content, state, onDelete, deleteable, deleteDescription }) {
   const { t } = useTranslation();
 
   if (items.length === 0) {
@@ -74,7 +74,7 @@ export function ListCard({ items = [], empty, content, state, onDelete, deleteab
           </DropdownMenu>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>{deleteTitle}</AlertDialogTitle>
+              <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
               <AlertDialogDescription>
                 {deleteDescription}
               </AlertDialogDescription>

@@ -4,7 +4,8 @@
     "pause": "暂停",
     "resume": "恢复",
     "cancel": "取消",
-    "delete": "删除"
+    "delete": "删除",
+    "confirm_delete": "确认删除"
   },
   "nav": {
     "home": "主页",
@@ -36,6 +37,7 @@
     "h": "小时",
     "m": "分钟",
     "s": "秒",
+    "alert": "此操作会从下载服务器中删除该任务，但下载文件不会被删除",
     "state": {
       "error": "错误",
       "missingFiles": "文件丢失",
@@ -115,10 +117,7 @@
         "cron": "刷新规则",
         "running": "刷新中",
         "next": "下次刷新",
-        "delete": {
-          "title": "删除 RSS 订阅",
-          "description": "此操作将会永久删除此 RSS 订阅"
-        }
+        "alert": "此操作将会永久删除该 RSS 订阅"
       }
     },
     "sv": {
@@ -156,10 +155,7 @@
         "online": "在线",
         "offline": "离线",
         "version": "版本",
-        "delete": {
-          "title": "删除下载服务器",
-          "description": "此操作将会永久删除此下载服务器"
-        }
+        "alert": "此操作将会永久删除该下载服务器"
       }
     },
     "abt": {
