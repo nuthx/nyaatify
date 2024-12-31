@@ -8,12 +8,12 @@
     "confirm_delete": "确认删除"
   },
   "nav": {
-    "home": "主页",
+    "anime": "动画",
     "download": "下载",
     "settings": "设置",
     "logout": "登出"
   },
-  "home": {
+  "anime": {
     "empty": "请先添加一个 RSS 订阅",
     "load_fail": "加载列表失败",
     "today": "今日",

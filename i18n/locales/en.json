@@ -8,12 +8,12 @@
     "confirm_delete": "Confirm Deletion"
   },
   "nav": {
-    "home": "Home",
+    "anime": "Anime",
     "download": "Download",
     "settings": "Settings",
     "logout": "Logout"
   },
-  "home": {
+  "anime": {
     "empty": "Please add a RSS subscription first.",
     "load_fail": "Failed to load list",
     "today": "Today",

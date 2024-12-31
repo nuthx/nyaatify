@@ -18,8 +18,8 @@ export function NavBar() {
         </Link>
 
         <div className="flex items-center space-x-8">
-          <Link href="/" className={`text-sm transition-all hover:text-primary ${pathname === "/" ? "text-primary" : "text-gray-500"}`}>
-            {t("nav.home")}
+          <Link href="/anime" className={`text-sm transition-all hover:text-primary ${pathname === "/anime" ? "text-primary" : "text-gray-500"}`}>
+            {t("nav.anime")}
           </Link>
           <Link href="/download" className={`text-sm transition-all hover:text-primary ${pathname === "/download" ? "text-primary" : "text-gray-500"}`}>
             {t("nav.download")}
