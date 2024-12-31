@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -21,10 +22,12 @@ import { Download, Pause, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function Home() {
   const animeApi = "/api/anime";
+  const torrentsApi = "/api/torrent";
 
   const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslation();
+  const { toast } = useToast()
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -68,6 +71,41 @@ export default function Home() {
       setError(`${t("home.load_fail")}: ${error.message}`);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleManage = async (action, server, hash) => {
+    try {
+      const response = await fetch(torrentsApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: action,
+          server: server,
+          hash: hash
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: t(`download.toast.add_success`)
+        });
+        fetchAnime(currentPage);
+      } else {
+        toast({
+          title: t(`download.toast.${action}`),
+          description: data.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t(`download.toast.${action}`),
+        description: error.message,
+        variant: "destructive"
+      });
     }
   };
 
@@ -133,7 +171,9 @@ export default function Home() {
                   <a className="text-sm text-zinc-500">1.5GiB / {item.size}</a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" className="font-normal"><Download />{t("glb.download")}</Button>
+                  <Button variant="outline" className="font-normal" onClick={() => handleManage("add", "本地测试服务器", "852ada9beb649d731275691e6a11aef66cd20e78")}>
+                    <Download />{t("glb.download")}
+                  </Button>
                   <Button variant="outline" className="font-normal"><Pause />{t("glb.pause")}</Button>
                   <Button variant="outline" className="font-normal"><RefreshCcw />{t("glb.resume")}</Button>
                   <Button variant="outline" className="font-normal"><Trash2 />{t("glb.cancel")}</Button>

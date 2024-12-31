@@ -1,18 +1,17 @@
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
 import { formatBytes } from "@/lib/bytes";
-import { getQbittorrentTorrents, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
+import { getQbittorrentTorrents, addQbittorrentTorrent, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
 
 // Get torrent list
 // Method: GET
 
-// Edit torrent state
+// Manage torrent state
 // Method: POST
 // Body: {
-//   state: string  (add, pause, resume, delete)
+//   action: string   (add, pause, resume, delete)
 //   server: string
-//   urls: string   (for add only)
-//   hash: string   (for pause, resume, delete only)
+//   hash: string
 // }
 
 export async function GET() {
@@ -81,22 +80,31 @@ export async function POST(request) {
     }
     const server = await db.get("SELECT url, cookie FROM server WHERE name = ?", data.server);
 
-    // Add
-    // TODO: Implement add torrent
+    if (!data.hash) {
+      return Response.json({
+        code: 400,
+        message: "Hash required"
+      }, { status: 400 });
+    }
 
-    // Pause, resume, delete
-    if (data.state === "pause" || data.state === "resume" || data.state === "delete") {
-      if (!data.hash) {
-        return Response.json({
-          code: 400,
-          message: "Hash required"
-        }, { status: 400 });
-      }
-      const result = await manageQbittorrentTorrent(data.state, server.url, server.cookie, data.hash);
+    // Add a torrent
+    if (data.action === "add") {
+      const result = await addQbittorrentTorrent(server.url, server.cookie, data.hash);
       if (!result) {
         return Response.json({
           code: 500,
-          message: `Failed to ${data.state} torrent`
+          message: "Failed to add torrent"
+        }, { status: 500 });
+      }
+    }
+
+    // Pause, Resume, Delete
+    if (data.action === "pause" || data.action === "resume" || data.action === "delete") {
+      const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
+      if (!result) {
+        return Response.json({
+          code: 500,
+          message: `Failed to ${data.action} torrent`
         }, { status: 500 });
       }
     }
@@ -108,7 +116,7 @@ export async function POST(request) {
   }
   
   catch (error) {
-    log.error(`Failed to ${data.state} torrent: ${error.message}`);
+    log.error(`Failed to ${data.action} torrent: ${error.message}`);
     return Response.json({
       code: 500,
       message: error.message

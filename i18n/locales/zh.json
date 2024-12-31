@@ -62,6 +62,8 @@
       "unknown": "未知状态"
     },
     "toast": {
+      "add_success": "添加下载任务成功",
+      "add": "添加下载任务失败",
       "pause": "暂停失败",
       "resume": "恢复失败",
       "delete": "删除失败"

@@ -63,13 +63,13 @@ export default function Home() {
     }
   };
 
-  const handleManage = async (action, hash, server) => {
+  const handleManage = async (action, server, hash) => {
     try {
       const response = await fetch(torrentsApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          state: action,
+          action: action,
           server: server,
           hash: hash
         }),
@@ -130,12 +130,12 @@ export default function Home() {
                 <div className="flex items-center gap-2">
                   {["uploading", "queuedUP", "stalledUP", "allocating", "downloading", "metaDL",
                     "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.state) && (
-                    <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.hash, item.server)}>
+                    <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.server, item.hash)}>
                       <Pause />{t("glb.pause")}
                     </Button>
                   )}
                   {["pausedUP", "pausedDL", "stoppedUP", "stoppedDL"].includes(item.state) && (
-                    <Button className="font-normal" onClick={() => handleManage("resume", item.hash, item.server)}>
+                    <Button className="font-normal" onClick={() => handleManage("resume", item.server, item.hash)}>
                       <RefreshCcw />{t("glb.resume")}
                     </Button>
                   )}
@@ -154,7 +154,7 @@ export default function Home() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => handleManage("delete", item.hash, item.server)}>
+                        <AlertDialogAction onClick={() => handleManage("delete", item.server, item.hash)}>
                           {t("glb.delete")}
                         </AlertDialogAction>
                       </AlertDialogFooter>

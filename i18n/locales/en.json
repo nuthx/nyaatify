@@ -62,6 +62,8 @@
       "unknown": "Unknown"
     },
     "toast": {
+      "add_success": "Add download task successfully",
+      "add": "Failed to download",
       "pause": "Failed to pause",
       "resume": "Failed to resume",
       "delete": "Failed to delete"
