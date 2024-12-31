@@ -13,7 +13,7 @@ export async function GET(request) {
   const db = await getDb();
 
   try {
-    const [anime, total] = await Promise.all([
+    const [anime, total, todayCount, weekCount] = await Promise.all([
       db.all(`
         SELECT a.*, GROUP_CONCAT(r.name) as rss_names
         FROM anime a
@@ -23,13 +23,23 @@ export async function GET(request) {
         ORDER BY a.pub_date DESC 
         LIMIT ? OFFSET ?
       `, [size, offset]),
-      db.get("SELECT COUNT(*) as count FROM anime")
+      // Get total count
+      db.get("SELECT COUNT(*) as count FROM anime"),
+      // Get today's count
+      db.get("SELECT COUNT(*) as count FROM anime WHERE date(pub_date) = date('now')"),
+      // Get this week's count
+      db.get("SELECT COUNT(*) as count FROM anime WHERE pub_date >= date('now', '-7 days')")
     ]);
 
     return Response.json({
       code: 200,
       message: "success",
       data: anime,
+      count: {
+        today: todayCount.count,
+        week: weekCount.count,
+        total: total.count
+      },
       pagination: {
         total: total.count,
         size: size,

@@ -58,7 +58,10 @@ export default function Home() {
         return;
       }
       
-      setItems(data.data);
+      setItems({
+        list: data.data,
+        count: data.count
+      });
       setTotalPages(Math.ceil(data.pagination.total / data.pagination.size));
       setError(null);
     } catch (error) {
@@ -90,12 +93,12 @@ export default function Home() {
         </a>
       ) : (
         <div className="grid gap-3">
-          <div className="flex gap-4 mx-1 mb-3">
-            <a className="text-sm text-zinc-500">{t("home.today")}: 10</a>
-            <a className="text-sm text-zinc-500">{t("home.week")}: 20</a>
-            <a className="text-sm text-zinc-500">{t("home.total")}: 100</a>
+          <div className="flex gap-4 mx-1 mb-2">
+            <a className="text-sm text-zinc-500">{t("home.today")}: {items.count.today}</a>
+            <a className="text-sm text-zinc-500">{t("home.week")}: {items.count.week}</a>
+            <a className="text-sm text-zinc-500">{t("home.total")}: {items.count.total}</a>
           </div>
-          {items.map((item, index) => (
+          {items.list?.map((item, index) => (
             <Card key={index}>
               <CardContent className="flex gap-4">
                 <img 
