@@ -34,10 +34,22 @@ export async function GET() {
           completed: formatBytes(torrent.completed),
           size: formatBytes(torrent.size),
           server: server.name,
-          hash: torrent.hash
+          hash: torrent.hash,
+          added_on: torrent.added_on
         });
       });
     }));
+
+    // Sort by added_on desc, name, server
+    allTorrents.sort((a, b) => {
+      if (a.added_on !== b.added_on) {
+        return b.added_on - a.added_on;
+      }
+      if (a.name !== b.name) {
+        return a.name.localeCompare(b.name);
+      }
+      return a.server.localeCompare(b.server);
+    });
 
     return Response.json({
       code: 200,
