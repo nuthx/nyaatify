@@ -31,7 +31,32 @@
     "load_fail": "加载列表失败",
     "d_speed": "下载速度",
     "u_speed": "上传速度",
-    "eta": "剩余时间"
+    "eta": "剩余时间",
+    "d": "天",
+    "h": "小时",
+    "m": "分钟",
+    "s": "秒",
+    "state": {
+      "error": "错误",
+      "missingFiles": "文件丢失",
+      "uploading": "做种中",
+      "pausedUP": "暂停做种",
+      "queuedUP": "等待做种",
+      "stalledUP": "做种中",
+      "checkingUP": "校验完成",
+      "forcedUP": "做种中",
+      "allocating": "分配空间",
+      "downloading": "下载中",
+      "metaDL": "获取元数据",
+      "pausedDL": "暂停下载",
+      "queuedDL": "等待下载",
+      "stalledDL": "下载中", 
+      "checkingDL": "校验中",
+      "forcedDL": "下载中",
+      "checkingResumeData": "校验恢复数据",
+      "moving": "文件移动",
+      "unknown": "未知状态"
+    }
   },
   "st": {
     "title": "设置",

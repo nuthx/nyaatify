@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Ellipsis, Trash2Icon } from "lucide-react";
+import { Ellipsis, Trash2 } from "lucide-react";
 
 export function Nav({ label, path }) {
   const router = useRouter();
@@ -68,7 +68,7 @@ export function ListCard({ items = [], empty, content, state, onDelete, deleteab
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <AlertDialogTrigger asChild>
-                <DropdownMenuItem disabled={!deleteable(item)}><Trash2Icon />{t("glb.delete")}</DropdownMenuItem>
+                <DropdownMenuItem disabled={!deleteable(item)}><Trash2 />{t("glb.delete")}</DropdownMenuItem>
               </AlertDialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>

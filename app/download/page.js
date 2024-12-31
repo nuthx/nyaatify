@@ -10,6 +10,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"
+import { Pause, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function Home() {
   const torrentsApi = "/api/torrent";
@@ -62,24 +63,29 @@ export default function Home() {
           {items.map((item, index) => (
             <Card key={index} className="overflow-hidden">
               <CardContent className="flex flex-col gap-2">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">{t(`download.state.${item.state}`)}</Badge>
+                  <Badge variant="outline">{item.server}</Badge>
+                </div>
                 <a className="font-medium">{item.name}</a>
                 <div className="flex items-center gap-2">
                   <a className="w-1/6 text-sm text-zinc-500">{t("download.d_speed")}: {item.dlspeed}/s</a>
                   <a className="w-1/6 text-sm text-zinc-500">{t("download.u_speed")}: {item.upspeed}/s</a>
-                  <a className="w-1/6 text-sm text-zinc-500">{t("download.eta")}: {item.eta}</a>
+                  {item.eta !== 8640000 && <a className="w-2/6 text-sm text-zinc-500">
+                    {t("download.eta")}: {Math.floor(item.eta/86400) > 0 && `${Math.floor(item.eta/86400)} ${t("download.d")} `}
+                    {Math.floor((item.eta%86400)/3600) > 0 && `${Math.floor((item.eta%86400)/3600)} ${t("download.h")} `}
+                    {Math.floor((item.eta%3600)/60) > 0 && `${Math.floor((item.eta%3600)/60)} ${t("download.m")} `}
+                    {item.eta%60 > 0 && `${item.eta%60} ${t("download.s")}`}
+                  </a>}
                 </div>
               </CardContent>
               
               <CardFooter className="flex items-center justify-between py-4">
-                <div className="flex items-center gap-4">
-                  {/* <Badge>{item.state}</Badge> */}
-                  <Badge variant="outline">{item.server}</Badge>
-                  <a className="text-sm text-zinc-500">{item.completed} / {item.size} ({item.progress*100}%)</a>
-                </div>
+                <a className="text-sm text-zinc-500">{item.completed} / {item.size} ({item.progress === 1 ? 100 : (item.progress*100).toFixed(1)}%)</a>
                 <div className="flex items-center gap-2">
-                  <Button className="w-auto">{t("glb.download")}</Button>
-                  <Button className="w-auto">{t("glb.pause")}</Button>
-                  <Button>{t("glb.delete")}</Button>
+                  <Button variant="outline" className="font-normal"><Pause />{t("glb.pause")}</Button>
+                  <Button variant="outline" className="font-normal"><RefreshCcw />{t("glb.resume")}</Button>
+                  <Button variant="outline" className="font-normal"><Trash2 />{t("glb.delete")}</Button>
                 </div>
               </CardFooter>
               <Progress 

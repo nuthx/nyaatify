@@ -272,7 +272,7 @@ export default function ServerSettings() {
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("st.sv.add.add")}</Button>
-                <Button type="button" variant="secondary" onClick={form.handleSubmit(handleTestServer)}>{t("st.sv.add.test")}</Button>
+                <Button type="button" variant="outline" onClick={form.handleSubmit(handleTestServer)}>{t("st.sv.add.test")}</Button>
               </div>
             </form>
           </Form>

@@ -1,5 +1,6 @@
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
+import { formatBytes } from "@/lib/bytes";
 import { getQbittorrentTorrents } from "@/lib/api/qbittorrent";
 
 // Get torrent list
@@ -19,16 +20,14 @@ export async function GET() {
           state: torrent.state,
           progress: torrent.progress,
           eta: torrent.eta,
-          dlspeed: torrent.dlspeed,
-          upspeed: torrent.upspeed,
-          completed: torrent.completed,
-          size: torrent.size,
+          dlspeed: formatBytes(torrent.dlspeed),
+          upspeed: formatBytes(torrent.upspeed),
+          completed: formatBytes(torrent.completed),
+          size: formatBytes(torrent.size),
           server: server.name
         });
       });
     }));
-
-    console.log(allTorrents);
 
     return Response.json({
       code: 200,

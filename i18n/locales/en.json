@@ -31,7 +31,32 @@
     "load_fail": "Failed to load list",
     "d_speed": "Download Speed",
     "u_speed": "Upload Speed",
-    "eta": "ETA"
+    "eta": "ETA",
+    "d": "d",
+    "h": "h",
+    "m": "m",
+    "s": "s",
+    "state": {
+      "error": "Error",
+      "missingFiles": "Missing Files",
+      "uploading": "Uploading",
+      "pausedUP": "Paused",
+      "queuedUP": "Queued",
+      "stalledUP": "Uploading",
+      "checkingUP": "Checked",
+      "forcedUP": "Uploading",
+      "allocating": "Allocating Space",
+      "downloading": "Downloading",
+      "metaDL": "Getting Meta",
+      "pausedDL": "Paused",
+      "queuedDL": "Queued",
+      "stalledDL": "Downloading", 
+      "checkingDL": "Checking",
+      "forcedDL": "Downloading",
+      "checkingResumeData": "Checking Resume Data",
+      "moving": "Moved",
+      "unknown": "Unknown"
+    }
   },
   "st": {
     "title": "Settings",
