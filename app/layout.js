@@ -23,15 +23,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={arOneSans.className} suppressHydrationWarning>
       <body className="bg-zinc-50">
-        <NextThemesProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <NextThemesProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <I18nWrapper>
-            <NavBar />
-            {children}
+            <header className="sticky top-0 z-50">
+              <NavBar />
+            </header>
+            <main className="relative">
+              {children}
+            </main>
             <Toaster />
           </I18nWrapper>
         </NextThemesProvider>
