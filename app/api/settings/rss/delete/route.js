@@ -26,26 +26,26 @@ export async function POST(request) {
     // Start transaction
     await db.run("BEGIN TRANSACTION");
 
-    // Find all related anime from anime_rss table
+    // Find all related anime from rss_anime table
     const animesToDelete = await db.all(`
-      SELECT anime_id 
-      FROM anime_rss ar1
+      SELECT anime_hash 
+      FROM rss_anime ra1
       WHERE rss_id = ? 
       AND NOT EXISTS (
         SELECT 1 
-        FROM anime_rss ar2 
-        WHERE ar1.anime_id = ar2.anime_id 
-        AND ar2.rss_id != ?
+        FROM rss_anime ra2 
+        WHERE ra1.anime_hash = ra2.anime_hash 
+        AND ra2.rss_id != ?
       )
     `, [data.id, data.id]);
 
-    // Delete anime from anime_rss table
-    await db.run("DELETE FROM anime_rss WHERE rss_id = ?", [data.id]);
+    // Delete anime from rss_anime table
+    await db.run("DELETE FROM rss_anime WHERE rss_id = ?", [data.id]);
 
     // Delete anime from anime table
     if (animesToDelete.length > 0) {
-      const animeIds = animesToDelete.map(a => a.anime_id).join(",");
-      await db.run(`DELETE FROM anime WHERE id IN (${animeIds})`);
+      const animeHashes = animesToDelete.map(a => `'${a.anime_hash}'`).join(",");
+      await db.run(`DELETE FROM anime WHERE hash IN (${animeHashes})`);
     }
 
     // Delete RSS from RSS table
