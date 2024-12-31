@@ -45,17 +45,24 @@
       "stalledUP": "Uploading",
       "checkingUP": "Checked",
       "forcedUP": "Uploading",
+      "stoppedUP": "Stopped",
       "allocating": "Allocating Space",
       "downloading": "Downloading",
       "metaDL": "Getting Meta",
       "pausedDL": "Paused",
       "queuedDL": "Queued",
-      "stalledDL": "Downloading", 
+      "stalledDL": "Downloading",
       "checkingDL": "Checking",
       "forcedDL": "Downloading",
+      "stoppedDL": "Stopped",
       "checkingResumeData": "Checking Resume Data",
       "moving": "Moved",
       "unknown": "Unknown"
+    },
+    "toast": {
+      "pause": "Failed to pause",
+      "resume": "Failed to resume",
+      "delete": "Failed to delete"
     }
   },
   "st": {

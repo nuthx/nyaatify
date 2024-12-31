@@ -2,7 +2,7 @@
   "glb": {
     "download": "下载",
     "pause": "暂停",
-    "resume": "继续",
+    "resume": "恢复",
     "cancel": "取消",
     "delete": "删除"
   },
@@ -45,17 +45,24 @@
       "stalledUP": "做种中",
       "checkingUP": "校验完成",
       "forcedUP": "做种中",
+      "stoppedUP": "停止做种",
       "allocating": "分配空间",
       "downloading": "下载中",
       "metaDL": "获取元数据",
       "pausedDL": "暂停下载",
       "queuedDL": "等待下载",
-      "stalledDL": "下载中", 
+      "stalledDL": "下载中",
       "checkingDL": "校验中",
       "forcedDL": "下载中",
+      "stoppedDL": "停止下载",
       "checkingResumeData": "校验恢复数据",
       "moving": "文件移动",
       "unknown": "未知状态"
+    },
+    "toast": {
+      "pause": "暂停失败",
+      "resume": "恢复失败",
+      "delete": "删除失败"
     }
   },
   "st": {

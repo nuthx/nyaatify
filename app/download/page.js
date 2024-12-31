@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { 
   Card,
@@ -16,6 +17,7 @@ export default function Home() {
   const torrentsApi = "/api/torrent";
 
   const { t } = useTranslation();
+  const { toast } = useToast()
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,6 +49,38 @@ export default function Home() {
       setError(`${t("download.load_fail")}: ${error.message}`);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleManage = async (action, hash, server) => {
+    try {
+      const response = await fetch(torrentsApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          state: action,
+          server: server,
+          hash: hash
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        fetchTorrents();
+      } else {
+        toast({
+          title: t(`download.toast.${action}`),
+          description: data.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t(`download.toast.${action}`),
+        description: error.message,
+        variant: "destructive"
+      });
     }
   };
 
@@ -83,9 +117,20 @@ export default function Home() {
               <CardFooter className="flex items-center justify-between py-4">
                 <a className="text-sm text-zinc-500">{item.completed} / {item.size} ({item.progress === 1 ? 100 : (item.progress*100).toFixed(1)}%)</a>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" className="font-normal"><Pause />{t("glb.pause")}</Button>
-                  <Button variant="outline" className="font-normal"><RefreshCcw />{t("glb.resume")}</Button>
-                  <Button variant="outline" className="font-normal"><Trash2 />{t("glb.delete")}</Button>
+                  {['uploading', 'queuedUP', 'stalledUP', 'allocating', 'downloading', 'metaDL',
+                    'queuedDL', 'stalledDL', 'forcedDL', 'checkingResumeData'].includes(item.state) && (
+                    <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.hash, item.server)}>
+                      <Pause />{t("glb.pause")}
+                    </Button>
+                  )}
+                  {['pausedUP', 'pausedDL', 'stoppedUP', 'stoppedDL'].includes(item.state) && (
+                    <Button className="font-normal" onClick={() => handleManage("resume", item.hash, item.server)}>
+                      <RefreshCcw />{t("glb.resume")}
+                    </Button>
+                  )}
+                  <Button variant="outline" className="font-normal" onClick={() => handleManage("delete", item.hash, item.server)}>
+                    <Trash2 />{t("glb.delete")}
+                  </Button>
                 </div>
               </CardFooter>
               <Progress 
