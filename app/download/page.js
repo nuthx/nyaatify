@@ -128,13 +128,13 @@ export default function Home() {
               <CardFooter className="flex items-center justify-between py-4">
                 <a className="text-sm text-zinc-500">{item.completed} / {item.size} ({item.progress === 1 ? 100 : (item.progress*100).toFixed(1)}%)</a>
                 <div className="flex items-center gap-2">
-                  {['uploading', 'queuedUP', 'stalledUP', 'allocating', 'downloading', 'metaDL',
-                    'queuedDL', 'stalledDL', 'forcedDL', 'checkingResumeData'].includes(item.state) && (
+                  {["uploading", "queuedUP", "stalledUP", "allocating", "downloading", "metaDL",
+                    "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.state) && (
                     <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.hash, item.server)}>
                       <Pause />{t("glb.pause")}
                     </Button>
                   )}
-                  {['pausedUP', 'pausedDL', 'stoppedUP', 'stoppedDL'].includes(item.state) && (
+                  {["pausedUP", "pausedDL", "stoppedUP", "stoppedDL"].includes(item.state) && (
                     <Button className="font-normal" onClick={() => handleManage("resume", item.hash, item.server)}>
                       <RefreshCcw />{t("glb.resume")}
                     </Button>

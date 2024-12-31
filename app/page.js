@@ -103,7 +103,7 @@ export default function Home() {
                   src={item.cover_bangumi || null}
                   className="w-20 h-28 rounded-md object-cover bg-zinc-200"
                   onError={(e) => {
-                    e.target.classList.remove('object-cover');
+                    e.target.classList.remove("object-cover");
                     e.target.src = null;
                   }}
                 />
