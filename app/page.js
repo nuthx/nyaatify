@@ -171,7 +171,7 @@ export default function Home() {
                   <a className="text-sm text-zinc-500">1.5GiB / {item.size}</a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" className="font-normal" onClick={() => handleManage("add", "本地测试服务器", "852ada9beb649d731275691e6a11aef66cd20e78")}>
+                  <Button variant="outline" className="font-normal" onClick={() => handleManage("add", "本地测试服务器", item.hash)}>
                     <Download />{t("glb.download")}
                   </Button>
                   <Button variant="outline" className="font-normal"><Pause />{t("glb.pause")}</Button>
