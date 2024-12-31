@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"
+import { Download, Pause, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function Home() {
   const animeApi = "/api/anime";
@@ -53,7 +54,7 @@ export default function Home() {
       const data = await response.json();
 
       if (!data.data || data.data.length === 0) {
-        setError(t("home.no_rss"));
+        setError(t("home.empty"));
         return;
       }
       
@@ -102,7 +103,7 @@ export default function Home() {
                   src={item.cover_bangumi || null}
                   className="w-20 h-28 rounded-md object-cover bg-zinc-200"
                   onError={(e) => {
-                    e.target.classList.remove('object-cover');
+                    e.target.classList.remove("object-cover");
                     e.target.src = null;
                   }}
                 />
@@ -129,9 +130,10 @@ export default function Home() {
                   <a className="text-sm text-zinc-500">1.5GiB / {item.size}</a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button className="w-auto">{t("glb.download")}</Button>
-                  <Button className="w-auto">{t("glb.pause")}</Button>
-                  <Button>{t("glb.delete")}</Button>
+                  <Button variant="outline" className="font-normal"><Download />{t("glb.download")}</Button>
+                  <Button variant="outline" className="font-normal"><Pause />{t("glb.pause")}</Button>
+                  <Button variant="outline" className="font-normal"><RefreshCcw />{t("glb.resume")}</Button>
+                  <Button variant="outline" className="font-normal"><Trash2 />{t("glb.cancel")}</Button>
                 </div>
               </CardFooter>
             </Card>

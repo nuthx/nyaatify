@@ -1,4 +1,4 @@
-import parser from 'cron-parser';
+import parser from "cron-parser";
 import RSSParser from "rss-parser";
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";

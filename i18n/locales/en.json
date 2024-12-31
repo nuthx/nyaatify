@@ -4,7 +4,8 @@
     "pause": "Pause",
     "resume": "Resume",
     "cancel": "Cancel",
-    "delete": "Delete"
+    "delete": "Delete",
+    "confirm_delete": "Confirm Deletion"
   },
   "nav": {
     "home": "Home",
@@ -13,7 +14,7 @@
     "logout": "Logout"
   },
   "home": {
-    "no_rss": "Please add a RSS subscription first.",
+    "empty": "Please add a RSS subscription first.",
     "load_fail": "Failed to load list",
     "today": "Today",
     "week": "Week",
@@ -24,6 +25,46 @@
       "completed": "Completed",
       "paused": "Paused",
       "failed": "Failed"
+    }
+  },
+  "download": {
+    "empty": "Please add a download server first.",
+    "load_fail": "Failed to load list",
+    "d_speed": "Download Speed",
+    "u_speed": "Upload Speed",
+    "eta": "ETA",
+    "d": "d",
+    "h": "h",
+    "m": "m",
+    "s": "s",
+    "alert": "This action will delete the task from the download server, but the downloaded files will not be deleted.",
+    "state": {
+      "error": "Error",
+      "missingFiles": "Missing Files",
+      "uploading": "Uploading",
+      "pausedUP": "Paused",
+      "queuedUP": "Queued",
+      "stalledUP": "Uploading",
+      "checkingUP": "Checked",
+      "forcedUP": "Uploading",
+      "stoppedUP": "Stopped",
+      "allocating": "Allocating Space",
+      "downloading": "Downloading",
+      "metaDL": "Getting Meta",
+      "pausedDL": "Paused",
+      "queuedDL": "Queued",
+      "stalledDL": "Downloading",
+      "checkingDL": "Checking",
+      "forcedDL": "Downloading",
+      "stoppedDL": "Stopped",
+      "checkingResumeData": "Checking Resume Data",
+      "moving": "Moved",
+      "unknown": "Unknown"
+    },
+    "toast": {
+      "pause": "Failed to pause",
+      "resume": "Failed to resume",
+      "delete": "Failed to delete"
     }
   },
   "st": {
@@ -76,10 +117,7 @@
         "cron": "Refresh Rule",
         "running": "Refreshing",
         "next": "Next",
-        "delete": {
-          "title": "Delete RSS Subscription",
-          "description": "This action will delete this RSS subscription permanently."
-        }
+        "alert": "This action will delete this RSS subscription permanently."
       }
     },
     "sv": {
@@ -117,10 +155,7 @@
         "online": "Online",
         "offline": "Offline",
         "version": "Server version",
-        "delete": {
-          "title": "Delete Download Server",
-          "description": "This action will delete this download server permanently."
-        }
+        "alert": "This action will delete this download server permanently."
       }
     },
     "abt": {

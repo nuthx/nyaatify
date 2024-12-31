@@ -15,7 +15,7 @@ export async function POST(request) {
   const data = await request.json();
 
   try {
-    const sid = await getQbittorrentCookie(data);
+    const sid = await getQbittorrentCookie(data.url, data.username, data.password);
     if (sid.includes("Error")) {
       return Response.json({
         code: 400,
@@ -38,7 +38,7 @@ export async function POST(request) {
       data: version
     });
   }
-  
+
   catch (error) {
     log.error(`Failed to test download server: ${error.message}`);
     return Response.json({
