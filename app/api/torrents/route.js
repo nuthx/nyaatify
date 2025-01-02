@@ -9,9 +9,9 @@ import { getQbittorrentTorrents, addQbittorrentTorrent, manageQbittorrentTorrent
 // Manage torrent state
 // Method: POST
 // Body: {
-//   action: string   (add, pause, resume, delete)
-//   server: string
-//   hash: string
+//   action: string (required, type: add, pause, resume, delete)
+//   server: string (required)
+//   hash: string (required)
 // }
 
 export async function GET() {

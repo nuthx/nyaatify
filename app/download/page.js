@@ -25,7 +25,7 @@ import { Badge } from "@/components/ui/badge"
 import { Pause, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function Home() {
-  const torrentsApi = "/api/torrent";
+  const torrentsApi = "/api/torrents";
 
   const { t } = useTranslation();
   const { toast } = useToast()

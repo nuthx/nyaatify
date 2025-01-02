@@ -26,9 +26,7 @@ import { Button } from "@/components/ui/button";
 import { ListCard } from "@/components/settings";
 
 export default function RSSSettings() {
-  const rssApi = "/api/settings/rss";
-  const rssAddApi = "/api/settings/rss/add";
-  const rssDeleteApi = "/api/settings/rss/delete";
+  const settingListApi = "/api/settings/list";
 
   const { t } = useTranslation();
   const { toast } = useToast()
@@ -67,7 +65,7 @@ export default function RSSSettings() {
 
   const fetchRSS = async () => {
     try {
-      const response = await fetch(rssApi);
+      const response = await fetch(`${settingListApi}?type=rss`);
       const data = await response.json();
       setRSSList(data.data);
     } catch (error) {
@@ -81,10 +79,14 @@ export default function RSSSettings() {
 
   const handleAddRSS = async (values) => {
     try {
-      const response = await fetch(rssAddApi, {
+      const response = await fetch(settingListApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          type: "rss",
+          action: "add",
+          data: values
+        }),
       });
 
       const data = await response.json();
@@ -108,12 +110,16 @@ export default function RSSSettings() {
     }
   };
 
-  const handleDeleteRSS = async (id, name) => {
+  const handleDeleteRSS = async (name) => {
     try {
-      const response = await fetch(`${rssDeleteApi}`, {
+      const response = await fetch(settingListApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, name }),
+        body: JSON.stringify({
+          type: "rss",
+          action: "delete",
+          data: { name }
+        }),
       });
 
       const data = await response.json();

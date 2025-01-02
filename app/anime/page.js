@@ -28,7 +28,7 @@ import { Download, Pause, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function Anime() {
   const animeApi = "/api/anime";
-  const torrentsApi = "/api/torrent";
+  const torrentsApi = "/api/torrents";
 
   const router = useRouter();
   const searchParams = useSearchParams();

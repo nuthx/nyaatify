@@ -33,10 +33,7 @@ import { Button } from "@/components/ui/button";
 import { ListCard } from "@/components/settings";
 
 export default function ServerSettings() {
-  const serverApi = "/api/settings/server";
-  const serverAddApi = "/api/settings/server/add";
-  const serverDeleteApi = "/api/settings/server/delete";
-  const serverTestApi = "/api/settings/server/test";
+  const settingListApi = "/api/settings/list";
   const urlPlaceholders = {
     qBittorrent: "http://192.168.1.100:8080",
     Transmission: "http://192.168.1.100:9091/transmission/rpc",
@@ -80,7 +77,7 @@ export default function ServerSettings() {
 
   const fetchServer = async () => {
     try {
-      const response = await fetch(serverApi);
+      const response = await fetch(`${settingListApi}?type=server`);
       const data = await response.json();
       setServerList(data.data);
     } catch (error) {
@@ -94,10 +91,14 @@ export default function ServerSettings() {
 
   const handleTestServer = async (values) => {
     try {
-      const response = await fetch(serverTestApi, {
+      const response = await fetch(settingListApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          type: "server",
+          action: "test",
+          data: values
+        }),
       });
 
       const data = await response.json();
@@ -125,10 +126,14 @@ export default function ServerSettings() {
 
   const handleAddServer = async (values) => {
     try {
-      const response = await fetch(serverAddApi, {
+      const response = await fetch(settingListApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          type: "server",
+          action: "add",
+          data: values
+        }),
       });
 
       const data = await response.json();
@@ -152,12 +157,16 @@ export default function ServerSettings() {
     }
   };
 
-  const handleDeleteServer = async (id, name) => {
+  const handleDeleteServer = async (name) => {
     try {
-      const response = await fetch(serverDeleteApi, {
+      const response = await fetch(settingListApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, name }),
+        body: JSON.stringify({
+          type: "server",
+          action: "delete",
+          data: { name }
+        }),
       });
 
       const data = await response.json();
