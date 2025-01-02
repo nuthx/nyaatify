@@ -16,6 +16,12 @@ import {
   CardContent,
   CardFooter
 } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"
 import { Download, Pause, RefreshCcw, Trash2 } from "lucide-react";
@@ -158,9 +164,23 @@ export default function Anime() {
                     </div>
                   )}
                   <div className="w-fit">
-                    <a href={item.torrent} target="_blank" className="font-medium hover:underline">
-                      {item.name_cn || item.name_jp || item.name_en || item.name_title}
-                    </a>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <a href={item.torrent} target="_blank" className="font-medium hover:underline">
+                            {item.name_cn || item.name_jp || item.name_en || item.name_title}
+                          </a>
+                        </TooltipTrigger>
+                        <TooltipContent className="py-2 space-y-1">
+                          {item.name_cn && <p><a className="font-bold">CN: </a>{item.name_cn}</p>}
+                          {item.name_jp && <p><a className="font-bold">JP: </a>{item.name_jp}</p>}
+                          {item.name_en && <p><a className="font-bold">EN: </a>{item.name_en}</p>}
+                          {item.name_romaji && <p><a className="font-bold">Romaji: </a>{item.name_romaji}</p>}
+                          {!item.name_cn && !item.name_jp && !item.name_en && !item.name_romaji && item.name_title && <p><a className="font-bold">Title: </a>{item.name_title}</p>}
+                          {!item.name_cn && !item.name_jp && !item.name_en && !item.name_romaji && !item.name_title && <p>{item.title}</p>}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   </div>
                   <a className="text-sm text-zinc-500">{item.title}</a>
                 </div>
