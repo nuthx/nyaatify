@@ -219,7 +219,11 @@ export default function ServerSettings() {
                         <SelectItem value="Aria2">Aria2</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="font-normal text-zinc-500">
+                      {selectedType === "qBittorrent" && t("st.sv.add.type_notice_qb")}
+                      {selectedType === "Transmission" && t("st.sv.add.type_notice_tr")}
+                      {selectedType === "Aria2" && t("st.sv.add.type_notice_ar")}
+                    </FormMessage>
                   </FormItem>
                 )}
               />
