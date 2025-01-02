@@ -168,42 +168,41 @@ export async function POST(request) {
         return Response.json({ error: `${data.data.name} is running` }, { status: 400 });
       }
 
-      // Start transaction
-      await db.run("BEGIN TRANSACTION");
-
-      // Find all related anime from rss_anime table
-      const animesToDelete = await db.all(`
-        SELECT anime_hash 
-        FROM rss_anime ra1
-        WHERE rss_id = ? 
-        AND NOT EXISTS (
-          SELECT 1 
-          FROM rss_anime ra2 
-          WHERE ra1.anime_hash = ra2.anime_hash 
-          AND ra2.rss_id != ?
-        )
-      `, [rss.id, rss.id]);
-
-      // Delete anime from rss_anime table
-      await db.run("DELETE FROM rss_anime WHERE rss_id = ?", [rss.id]);
-
-      // Delete anime from anime table
-      if (animesToDelete.length > 0) {
-        const animeHashes = animesToDelete.map(a => `'${a.anime_hash}'`).join(",");
-        await db.run(`DELETE FROM anime WHERE hash IN (${animeHashes})`);
-      }
-
-      // Delete RSS from RSS table
-      await db.run("DELETE FROM rss WHERE id = ?", [rss.id]);
-
-      // Commit transaction
-      await db.run("COMMIT");
-      log.info(`RSS subscription deleted successfully, name: ${data.data.name}`);
-
       // Stop RSS task
       stopTask(data.data.name);
 
-      return Response.json({});
+      // Start transaction
+      await db.run("BEGIN TRANSACTION");
+
+      try {
+        // Find and delete isolated anime records
+        await db.run(`
+          DELETE FROM anime 
+          WHERE hash IN (
+            SELECT DISTINCT ra1.anime_hash 
+            FROM rss_anime ra1
+            WHERE ra1.rss_id = ?
+            AND NOT EXISTS (
+              SELECT 1 FROM rss_anime ra2 
+              WHERE ra2.anime_hash = ra1.anime_hash 
+              AND ra2.rss_id != ?
+            )
+          )
+        `, [rss.id, rss.id]);
+
+        // Delete anime from rss and rss_anime table
+        await db.run("DELETE FROM rss WHERE id = ?", [rss.id]);
+        await db.run("DELETE FROM rss_anime WHERE rss_id = ?", [rss.id]);
+
+        // Commit transaction
+        await db.run("COMMIT");
+
+        log.info(`RSS subscription deleted successfully, name: ${data.data.name}`);
+        return Response.json({});
+      } catch (error) {
+        await db.run("ROLLBACK");
+        return Response.json({ error: error.message }, { status: 500 });
+      }
     }
 
     else if (data.action === "delete" && data.type === "server") {
@@ -213,6 +212,7 @@ export async function POST(request) {
     }
 
     else if (data.action === "test" && data.type === "server") {
+      // Get download server cookie
       let cookieResult = null;
       if (data.data.type === "qBittorrent") {
         cookieResult = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
@@ -223,6 +223,7 @@ export async function POST(request) {
         return Response.json({ error: cookieResult || "Failed to connect to server" }, { status: 400 });
       }
 
+      // Get download server version
       const version = await getQbittorrentVersion(data.data.url, cookieResult);
       if (version === "unknown") {
         return Response.json({ error: "Failed to connect to server" }, { status: 400 });
@@ -238,11 +239,6 @@ export async function POST(request) {
   }
 
   catch (error) {
-    // Rollback transaction if rss delete action failed
-    if (data.action === "delete" && data.type === "rss") {
-      await db.run("ROLLBACK");
-    }
-
     log.error(`Failed to ${data.action} ${data.type}: ${error.message}`);
     return Response.json({ error: error.message }, { status: 500 });
   }
