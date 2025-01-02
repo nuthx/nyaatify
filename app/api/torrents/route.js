@@ -81,16 +81,16 @@ export async function POST(request) {
     // Add a torrent
     if (data.action === "add") {
       const result = await addQbittorrentTorrent(server.url, server.cookie, data.hash);
-      if (!result) {
-        return Response.json({ error: "Failed to add torrent" }, { status: 500 });
+      if (result !== "success") {
+        return Response.json({ error: result }, { status: 500 });
       }
     }
 
     // Pause, Resume, Delete a torrent
     if (data.action === "pause" || data.action === "resume" || data.action === "delete") {
       const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
-      if (!result) {
-        return Response.json({ error: `Failed to ${data.action} torrent` }, { status: 500 });
+      if (result !== "success") {
+        return Response.json({ error: result }, { status: 500 });
       }
     }
 
