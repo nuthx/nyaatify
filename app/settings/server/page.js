@@ -190,10 +190,7 @@ export default function ServerSettings() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleAddServer)} className="space-y-6" noValidate>
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
+              <FormField control={form.control} name="name" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.sv.add.name")}</FormLabel>
                     <FormControl>
@@ -203,15 +200,10 @@ export default function ServerSettings() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
+              <FormField control={form.control} name="type" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.sv.add.type")}</FormLabel>
-                    <Select 
-                      defaultValue={field.value} 
-                      onValueChange={(value) => {
+                    <Select defaultValue={field.value} onValueChange={(value) => {
                         field.onChange(value); 
                         setSelectedType(value);
                       }}
@@ -231,10 +223,7 @@ export default function ServerSettings() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="url"
-                render={({ field }) => (
+              <FormField control={form.control} name="url" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.sv.add.url")}</FormLabel>
                     <FormControl>
@@ -244,10 +233,7 @@ export default function ServerSettings() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
+              <FormField control={form.control} name="username" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.sv.add.username")}</FormLabel>
                     <FormControl>
@@ -257,10 +243,7 @@ export default function ServerSettings() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="password" 
-                render={({ field }) => (
+              <FormField control={form.control} name="password" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.sv.add.password")}</FormLabel>
                     <FormControl>
