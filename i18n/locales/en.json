@@ -119,7 +119,7 @@
         "cron": "Refresh Rule",
         "running": "Refreshing",
         "next": "Next",
-        "alert": "This action will delete this RSS subscription permanently."
+        "alert": "This action will delete this RSS subscription permanently. The anime included in this RSS will also be DELETED."
       }
     },
     "sv": {

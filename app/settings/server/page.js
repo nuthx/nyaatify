@@ -34,15 +34,9 @@ import { ListCard } from "@/components/settings";
 
 export default function ServerSettings() {
   const settingListApi = "/api/settings/list";
-  const urlPlaceholders = {
-    qBittorrent: "http://192.168.1.100:8080",
-    Transmission: "http://192.168.1.100:9091/transmission/rpc",
-    Aria2: "http://192.168.1.100:6800/jsonrpc"
-  };
 
   const { t } = useTranslation();
   const { toast } = useToast()
-  const [selectedType, setSelectedType] = useState("qBittorrent");
   const [serverList, setServerList] = useState([]);
 
   const formSchema = z.object({
@@ -71,6 +65,13 @@ export default function ServerSettings() {
     },
   })
 
+  const selectedType = form.watch("type");
+  const urlPlaceholders = {
+    qBittorrent: "http://192.168.1.100:8080",
+    Transmission: "http://192.168.1.100:9091/transmission/rpc",
+    Aria2: "http://192.168.1.100:6800/jsonrpc"
+  };
+
   useEffect(() => {
     fetchServer();
   }, []);
@@ -83,41 +84,6 @@ export default function ServerSettings() {
     } catch (error) {
       toast({
         title: t("st.sv.toast.fetch"),
-        description: error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleTestServer = async (values) => {
-    try {
-      const response = await fetch(settingListApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "server",
-          action: "test",
-          data: values
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
-        toast({
-          title: t("st.sv.toast.testsuccess"),
-          description: `${t("st.sv.toast.version")}: ${data.data}`
-        });
-      } else {
-        toast({
-          title: t("st.sv.toast.testfailed"),
-          description: data.message,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      toast({
-        title: t("st.sv.toast.testfailed"),
         description: error.message,
         variant: "destructive"
       });
@@ -189,6 +155,41 @@ export default function ServerSettings() {
     }
   };
 
+  const handleTestServer = async (values) => {
+    try {
+      const response = await fetch(settingListApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "server",
+          action: "test",
+          data: values
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (response.ok) {
+        toast({
+          title: t("st.sv.toast.testsuccess"),
+          description: `${t("st.sv.toast.version")}: ${data.data}`
+        });
+      } else {
+        toast({
+          title: t("st.sv.toast.testfailed"),
+          description: data.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t("st.sv.toast.testfailed"),
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <>
       <Card>
@@ -212,10 +213,9 @@ export default function ServerSettings() {
               <FormField control={form.control} name="type" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.sv.add.type")}</FormLabel>
-                    <Select defaultValue={field.value} onValueChange={(value) => {
-                        field.onChange(value); 
-                        setSelectedType(value);
-                      }}
+                    <Select 
+                      defaultValue={field.value} 
+                      onValueChange={field.onChange}
                     >
                       <FormControl>
                         <SelectTrigger className="w-72">
