@@ -62,11 +62,16 @@ export default function Anime() {
       const response = await fetch(`${animeApi}?page=${page}`);
       const data = await response.json();
 
-      if (!data.data || data.data.length === 0) {
+      if (!response.ok) {
+        setError(data.error);
+        return;
+      }
+
+      if (data.data.length === 0) {
         setError(t("anime.empty"));
         return;
       }
-      
+
       setItems({
         list: data.data,
         count: data.count

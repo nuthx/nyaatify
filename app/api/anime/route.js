@@ -33,8 +33,6 @@ export async function GET(request) {
     ]);
 
     return Response.json({
-      code: 200,
-      message: "success",
       data: anime,
       count: {
         today: todayCount.count,
@@ -48,12 +46,9 @@ export async function GET(request) {
       }
     });
   }
-  
+
   catch (error) {
     log.error(`Failed to load anime list: ${error.message}`);
-    return Response.json({
-      code: 500,
-      message: error.message
-    }, { status: 500 });
+    return Response.json({ error: error.message }, { status: 500 });
   }
 }

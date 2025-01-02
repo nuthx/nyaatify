@@ -110,7 +110,7 @@ export default function ServerSettings() {
       } else {
         toast({
           title: t("st.sv.toast.add"),
-          description: data.message,
+          description: data.error,
           variant: "destructive"
         });
       }
@@ -142,7 +142,7 @@ export default function ServerSettings() {
       } else {
         toast({
           title: t("st.sv.toast.delete"),
-          description: data.message,
+          description: data.error,
           variant: "destructive"
         });
       }
@@ -177,7 +177,7 @@ export default function ServerSettings() {
       } else {
         toast({
           title: t("st.sv.toast.testfailed"),
-          description: data.message,
+          description: data.error,
           variant: "destructive"
         });
       }

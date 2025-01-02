@@ -41,8 +41,6 @@ export async function GET(request) {
     if (type === "rss") {
       const rss = await db.all("SELECT * FROM rss ORDER BY name ASC");
       return Response.json({
-        code: 200,
-        message: "success",
         data: rss.map(item => ({
           ...item,
           next: tasks.get(item.name)?.nextInvocation() || null
@@ -53,8 +51,6 @@ export async function GET(request) {
     else if (type === "server") {
       const servers = await db.all("SELECT * FROM server ORDER BY name ASC");
       return Response.json({
-        code: 200,
-        message: "success", 
         data: await Promise.all(servers.map(async server => {
           const version = await getQbittorrentVersion(server.url, server.cookie);
           return {
@@ -67,27 +63,19 @@ export async function GET(request) {
     }
 
     else {
-      return Response.json({
-        code: 400,
-        message: "Invalid type"
-      }, { status: 400 });
+      return Response.json({ error: "Invalid type" }, { status: 400 });
     }
   }
 
   catch (error) {
     log.error(`Failed to load ${type} list: ${error.message}`);
-    return Response.json({
-      code: 500,
-      message: error.message
-    }, { status: 500 });
+    return Response.json({ error: error.message }, { status: 500 });
   }
 }
 
 export async function POST(request) {
   const data = await request.json();
   const db = await getDb();
-
-  console.log(data);
 
   try {
     if (data.action === "add" && data.type === "rss") {
@@ -96,19 +84,13 @@ export async function POST(request) {
       // Check if name already exists
       const existingName = await db.get("SELECT name FROM rss WHERE name = ?", data.data.name);
       if (existingName) {
-        return Response.json({
-          code: 400,
-          message: `Name ${data.data.name} already exists`
-        }, { status: 400 });
+        return Response.json({ error: `${data.data.name} already exists` }, { status: 400 });
       }
 
       // Check RSS validity
       const rss = await rssParser.parseURL(data.data.url);
       if (!rss) {
-        return Response.json({
-          code: 400,
-          message: "Invalid RSS URL"
-        }, { status: 400 });
+        return Response.json({ error: "Invalid RSS Subscription" }, { status: 400 });
       }
 
       // Check cron validity
@@ -142,66 +124,48 @@ export async function POST(request) {
         type: rssType
       });
 
-      return Response.json({
-        code: 200,
-        message: "success"
-      });
+      return Response.json({});
     }
 
     else if (data.action === "add" && data.type === "server") {
       // Check if name already exists
       const existingName = await db.get("SELECT name FROM server WHERE name = ?", data.data.name);
       if (existingName) {
-        return Response.json({
-          code: 400,
-          message: "Name already exists"
-        }, { status: 400 });
+        return Response.json({ error: `${data.data.name} already exists` }, { status: 400 });
       }
 
       // Check if URL already exists
       const existingUrl = await db.get("SELECT url FROM server WHERE url = ?", data.data.url);
       if (existingUrl) {
-        return Response.json({
-          code: 400,
-          message: "URL already exists"
-        }, { status: 400 });
+        return Response.json({ error: "URL already exists" }, { status: 400 });
       }
 
       // Get download server cookie
-      let cookie = null;
+      let cookieResult = null;
       if (data.data.type === "qBittorrent") {
-        cookie = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
+        cookieResult = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
       }
 
       // Return if connection failed
-      if (cookie === null || (typeof cookie === 'string' && cookie.includes("Error"))) {
-        return Response.json({
-          code: 400,
-          message: cookie || "Failed to connect to server"
-        }, { status: 400 });
+      if (cookieResult === null || (typeof cookieResult === 'string' && cookieResult.includes("Error"))) {
+        return Response.json({ error: cookieResult || "Failed to connect to server" }, { status: 400 });
       }
 
       // Insert to database
       await db.run(
         "INSERT INTO server (name, url, type, username, password, created_at, cookie) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [data.data.name, data.data.url, data.data.type, data.data.username, data.data.password, new Date().toISOString(), cookie]
+        [data.data.name, data.data.url, data.data.type, data.data.username, data.data.password, new Date().toISOString(), cookieResult]
       );
 
       log.info(`Download server added successfully, name: ${data.data.name}, url: ${data.data.url}`);
-      return Response.json({
-        code: 200,
-        message: "success"
-      });
+      return Response.json({});
     }
 
     else if (data.action === "delete" && data.type === "rss") {
       // Check if RSS is running
       const rss = await db.get("SELECT * FROM rss WHERE name = ?", [data.data.name]);
       if (rss.state === "running") {
-        return Response.json({
-          code: 400,
-          message: "RSS task is running"
-        }, { status: 400 });
+        return Response.json({ error: `${data.data.name} is running` }, { status: 400 });
       }
 
       // Start transaction
@@ -239,70 +203,47 @@ export async function POST(request) {
       // Stop RSS task
       stopTask(data.data.name);
 
-      return Response.json({
-        code: 200,
-        message: "success"
-      });
+      return Response.json({});
     }
 
     else if (data.action === "delete" && data.type === "server") {
       await db.run("DELETE FROM server WHERE name = ?", [data.data.name]);
-
       log.info(`Download server deleted successfully, name: ${data.data.name}`);
-      return Response.json({
-        code: 200,
-        message: "success"
-      });
+      return Response.json({});
     }
 
     else if (data.action === "test" && data.type === "server") {
-      let cookie = null;
+      let cookieResult = null;
       if (data.data.type === "qBittorrent") {
-        cookie = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
+        cookieResult = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
       }
 
       // Return if connection failed
-      if (cookie === null || (typeof cookie === 'string' && cookie.includes("Error"))) {
-        return Response.json({
-          code: 400,
-          message: cookie || "Failed to connect to server"
-        }, { status: 400 });
+      if (cookieResult === null || (typeof cookieResult === 'string' && cookieResult.includes("Error"))) {
+        return Response.json({ error: cookieResult || "Failed to connect to server" }, { status: 400 });
       }
 
-      const version = await getQbittorrentVersion(data.data.url, cookie);
+      const version = await getQbittorrentVersion(data.data.url, cookieResult);
       if (version === "unknown") {
-        return Response.json({
-          code: 400,
-          message: "Error: Failed to connect to server"
-        }, { status: 400 });
+        return Response.json({ error: "Failed to connect to server" }, { status: 400 });
       }
 
       log.info(`Download server test successful, version: ${version}`);
-      return Response.json({
-        code: 200,
-        message: "success",
-        data: version
-      });
+      return Response.json({ data: version });
     }
 
     else {
-      return Response.json({
-        code: 400,
-        message: "Invalid type or action"
-      }, { status: 400 });
+      return Response.json({ error: "Invalid type or action" }, { status: 400 });
     }
   }
-  
+
   catch (error) {
     // Rollback transaction if rss delete action failed
     if (data.action === "delete" && data.type === "rss") {
       await db.run("ROLLBACK");
     }
 
-    log.error(`Failed to ${data.action} a ${data.type}: ${error.message}`);
-    return Response.json({
-      code: 500,
-      message: error.message
-    }, { status: 500 });
+    log.error(`Failed to ${data.action} ${data.type}: ${error.message}`);
+    return Response.json({ error: error.message }, { status: 500 });
   }
 }

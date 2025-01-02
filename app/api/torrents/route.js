@@ -50,19 +50,12 @@ export async function GET() {
       return a.server.localeCompare(b.server);
     });
 
-    return Response.json({
-      code: 200,
-      message: "success", 
-      data: allTorrents
-    });
+    return Response.json({ data: allTorrents });
   }
-  
+
   catch (error) {
     log.error(`Failed to load torrent list: ${error.message}`);
-    return Response.json({
-      code: 500,
-      message: error.message
-    }, { status: 500 });
+    return Response.json({ error: error.message }, { status: 500 });
   }
 }
 
@@ -71,55 +64,41 @@ export async function POST(request) {
   const data = await request.json();
 
   try {
-    // Get server info
+    // Check if server and hash are provided
     if (!data.server) {
-      return Response.json({
-        code: 400,
-        message: "Server required"
-      }, { status: 400 });
+      return Response.json({ error: "Server required" }, { status: 400 });
     }
-    const server = await db.get("SELECT url, cookie FROM server WHERE name = ?", data.server);
-
     if (!data.hash) {
-      return Response.json({
-        code: 400,
-        message: "Hash required"
-      }, { status: 400 });
+      return Response.json({ error: "Hash required" }, { status: 400 });
+    }
+
+    // Get server info
+    const server = await db.get("SELECT url, cookie FROM server WHERE name = ?", data.server);
+    if (!server) {
+      return Response.json({ error: "Server not found" }, { status: 404 });
     }
 
     // Add a torrent
     if (data.action === "add") {
       const result = await addQbittorrentTorrent(server.url, server.cookie, data.hash);
       if (!result) {
-        return Response.json({
-          code: 500,
-          message: "Failed to add torrent"
-        }, { status: 500 });
+        return Response.json({ error: "Failed to add torrent" }, { status: 500 });
       }
     }
 
-    // Pause, Resume, Delete
+    // Pause, Resume, Delete a torrent
     if (data.action === "pause" || data.action === "resume" || data.action === "delete") {
       const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
       if (!result) {
-        return Response.json({
-          code: 500,
-          message: `Failed to ${data.action} torrent`
-        }, { status: 500 });
+        return Response.json({ error: `Failed to ${data.action} torrent` }, { status: 500 });
       }
     }
 
-    return Response.json({
-      code: 200,
-      message: "success"
-    });
+    return Response.json({});
   }
   
   catch (error) {
     log.error(`Failed to ${data.action} torrent: ${error.message}`);
-    return Response.json({
-      code: 500,
-      message: error.message
-    }, { status: 500 });
+    return Response.json({ error: error.message }, { status: 500 });
   }
 }

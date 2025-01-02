@@ -49,7 +49,12 @@ export default function Home() {
       const response = await fetch(torrentsApi);
       const data = await response.json();
 
-      if (!data.data || data.data.length === 0) {
+      if (!response.ok) {
+        setError(data.error);
+        return;
+      }
+
+      if (data.data.length === 0) {
         setError(t("download.empty"));
         return;
       }
@@ -82,7 +87,7 @@ export default function Home() {
       } else {
         toast({
           title: t(`download.toast.${action}`),
-          description: data.message,
+          description: data.error,
           variant: "destructive"
         });
       }
