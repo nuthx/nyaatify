@@ -5,7 +5,15 @@
     "resume": "恢复",
     "cancel": "取消",
     "delete": "删除",
-    "confirm_delete": "确认删除"
+    "confirm_delete": "确认删除",
+    "add": "添加",
+    "save": "保存",
+    "reset": "清空",
+    "test": "测试",
+    "toast": {
+      "save_success": "保存成功",
+      "save_failed": "保存失败"
+    }
   },
   "nav": {
     "anime": "动画",
@@ -71,6 +79,9 @@
   },
   "st": {
     "title": "设置",
+    "toast": {
+      "fetch_failed": "获取用户配置失败"
+    },
     "nav": {
       "general": "常规",
       "rss": "RSS 订阅",
@@ -103,15 +114,17 @@
         "description": "添加一个 Nyaa 或 Mikan 的 RSS 订阅来追踪动画发布情况。添加完成后，您需要等待几分钟来获取所有数据并在首页展示",
         "name": "名称",
         "url": "RSS 地址",
-        "cron": "刷新规则 (CRON)",
-        "add": "添加"
+        "cron": "刷新规则 (CRON)"
       },
       "validate": {
         "name1": "名称至少为 2 个字符",
         "name2": "名称不能超过 40 个字符",
         "url1": "无效的 URL",
         "url2": "URL 必须以 http 或 https 开头",
-        "url3": "URL 不能以 / 结尾"
+        "url3": "URL 不能以 / 结尾",
+        "api1": "无效的 API 地址",
+        "api2": "API 地址必须以 http 或 https 开头",
+        "api3": "API 地址不能以 / 结尾"
       },
       "subscription": {
         "title": "RSS 订阅",
@@ -120,6 +133,16 @@
         "running": "刷新中",
         "next": "下次刷新",
         "alert": "此操作将会永久删除该 RSS 订阅，且该链接下的动画也会被一并删除！"
+      },
+      "ai": {
+        "title": "AI 解析",
+        "description": "解析标题时，优先使用 AI 来更准确的提取动画名称。仅支持兼容 OpenAI 接口的 AI 服务，如通义千问、腾讯混元、Kimi、Gemini 等。每次解析大约会消耗 400 Token。",
+        "priority": "优先级",
+        "local": "仅使用本地解析",
+        "ai": "优先使用 AI 解析",
+        "api": "API 地址",
+        "key": "API Key",
+        "model": "模型名称"
       }
     },
     "sv": {
@@ -141,9 +164,7 @@
         "type_notice_ar": "注意: Aria2 最低兼容版本为 1.0",
         "url": "服务器地址",
         "username": "用户名",
-        "password": "密码",
-        "add": "添加",
-        "test": "测试连接"
+        "password": "密码"
       },
       "validate": {
         "name1": "名称至少为 2 个字符",
