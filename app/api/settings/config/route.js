@@ -18,7 +18,7 @@ export async function GET() {
 
   try {
     const config = await db.get("SELECT * FROM config WHERE id = 1");
-    return Response.json({ data: config });
+    return Response.json(config);
   }
 
   catch (error) {
@@ -48,7 +48,7 @@ export async function POST(request) {
         .join(", ")} WHERE id = 1`,
       Object.values(data)
     );
-    
+
     return Response.json({});
   }
 

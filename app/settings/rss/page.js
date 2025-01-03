@@ -112,10 +112,10 @@ export default function RSSSettings() {
       const response = await fetch(settingApi);
       const data = await response.json();
       aiForm.reset({
-        ai_priority: data.data.ai_priority,
-        ai_api: data.data.ai_api,
-        ai_key: data.data.ai_key,
-        ai_model: data.data.ai_model,
+        ai_priority: data.ai_priority,
+        ai_api: data.ai_api,
+        ai_key: data.ai_key,
+        ai_model: data.ai_model,
       });
     } catch (error) {
       toast({
@@ -329,7 +329,7 @@ export default function RSSSettings() {
                   <FormItem>
                     <FormLabel>{t("st.rss.ai.api")}</FormLabel>
                     <FormControl>
-                      <Input className="w-full" placeholder="https://api.openai.com/v1/chat/completions" required {...field} />
+                      <Input className="w-full" placeholder="https://api.openai.com/v1" required {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
