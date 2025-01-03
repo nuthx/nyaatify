@@ -21,6 +21,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ListCard } from "@/components/settings";
@@ -49,6 +56,28 @@ export default function RSSSettings() {
       name: "",
       url: "",
       cron: "0 */10 * * * *",
+    },
+  })
+
+  const aiFormSchema = z.object({
+    priority: z.string(),
+    api: z.string()
+      .url({ message: t("st.rss.validate.api1") })
+      .startsWith("http", { message: t("st.rss.validate.api2") })
+      .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.api3") }),
+    key: z.string()
+      .min(1, { message: t("st.rss.validate.key") }),
+    model: z.string()
+      .min(1, { message: t("st.rss.validate.model") }),
+  })
+
+  const aiForm = useForm({
+    resolver: zodResolver(aiFormSchema),
+    defaultValues: {
+      priority: "local",
+      api: "",
+      key: "",
+      model: "",
     },
   })
 
@@ -142,6 +171,14 @@ export default function RSSSettings() {
     }
   };
 
+  const handleTestAI = async (values) => {
+    console.log(values);
+  };
+
+  const handleSaveConfig = async (values) => {
+    console.log(values);
+  };
+
   return (
     <>
       <Card>
@@ -182,7 +219,7 @@ export default function RSSSettings() {
                   </FormItem>
                 )}
               />
-              <Button type="submit">{t("st.rss.add.add")}</Button>
+              <Button type="submit">{t("glb.add")}</Button>
             </form>
           </Form>
         </CardContent>
@@ -213,6 +250,71 @@ export default function RSSSettings() {
             deleteable={(rss) => rss.state !== "running"}
             deleteDescription={t("st.rss.subscription.alert")}
           />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.rss.ai.title")}</CardTitle>
+          <CardDescription>{t("st.rss.ai.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+        <Form {...aiForm}>
+            <form onSubmit={aiForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
+              <FormField control={aiForm.control} name="priority" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.rss.ai.priority")}</FormLabel>
+                    <Select defaultValue={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger className="w-72">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="local">{t("st.rss.ai.local")}</SelectItem>
+                        <SelectItem value="ai">{t("st.rss.ai.ai")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField control={aiForm.control} name="api" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.rss.ai.api")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder="https://api.openai.com/v1/chat/completions" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField control={aiForm.control} name="key" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.rss.ai.key")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder="sk-1234567890" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField control={aiForm.control} name="model" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.rss.ai.model")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-72" placeholder="gpt-4o" required {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex gap-2">
+                <Button type="submit">{t("glb.save")}</Button>
+                <Button type="button" variant="outline" onClick={aiForm.handleSubmit(handleTestAI)}>{t("glb.test_connection")}</Button>
+              </div>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </>

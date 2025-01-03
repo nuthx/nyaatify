@@ -213,10 +213,7 @@ export default function ServerSettings() {
               <FormField control={form.control} name="type" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.sv.add.type")}</FormLabel>
-                    <Select 
-                      defaultValue={field.value} 
-                      onValueChange={field.onChange}
-                    >
+                    <Select defaultValue={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger className="w-72">
                           <SelectValue />
@@ -267,8 +264,8 @@ export default function ServerSettings() {
                 )}
               />
               <div className="flex gap-2">
-                <Button type="submit">{t("st.sv.add.add")}</Button>
-                <Button type="button" variant="outline" onClick={form.handleSubmit(handleTestServer)}>{t("st.sv.add.test")}</Button>
+                <Button type="submit">{t("glb.add")}</Button>
+                <Button type="button" variant="outline" onClick={form.handleSubmit(handleTestServer)}>{t("glb.test_connection")}</Button>
               </div>
             </form>
           </Form>
