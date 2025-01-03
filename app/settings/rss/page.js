@@ -308,52 +308,52 @@ export default function RSSSettings() {
         <Form {...aiForm}>
             <form onSubmit={aiForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
               <FormField control={aiForm.control} name="ai_priority" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.rss.ai.priority")}</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <FormControl>
-                        <SelectTrigger className="w-72">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="local">{t("st.rss.ai.local")}</SelectItem>
-                        <SelectItem value="ai">{t("st.rss.ai.ai")}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.rss.ai.priority")}</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="w-72">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="local">{t("st.rss.ai.local")}</SelectItem>
+                      <SelectItem value="ai">{t("st.rss.ai.ai")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <FormField control={aiForm.control} name="ai_api" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.rss.ai.api")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-full" placeholder="https://api.openai.com/v1" required {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.rss.ai.api")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-full" placeholder="https://api.openai.com/v1" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <FormField control={aiForm.control} name="ai_key" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.rss.ai.key")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-full" placeholder="sk-1234567890" required {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.rss.ai.key")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-full" placeholder="sk-1234567890" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <FormField control={aiForm.control} name="ai_model" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.rss.ai.model")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-72" placeholder="gpt-4o" required {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.rss.ai.model")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-72" placeholder="gpt-4o" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.save")}</Button>

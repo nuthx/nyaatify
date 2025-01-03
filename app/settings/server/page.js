@@ -201,67 +201,67 @@ export default function ServerSettings() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleAddServer)} className="space-y-6" noValidate>
               <FormField control={form.control} name="name" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.sv.add.name")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-72" placeholder="Server" required {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.sv.add.name")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-72" placeholder="Server" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <FormField control={form.control} name="type" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.sv.add.type")}</FormLabel>
-                    <Select defaultValue={field.value} onValueChange={field.onChange}>
-                      <FormControl>
-                        <SelectTrigger className="w-72">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="qBittorrent">qBittorrent</SelectItem>
-                        <SelectItem value="Transmission">Transmission</SelectItem>
-                        <SelectItem value="Aria2">Aria2</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage className="font-normal text-zinc-500">
-                      {selectedType === "qBittorrent" && t("st.sv.add.type_notice_qb")}
-                      {selectedType === "Transmission" && t("st.sv.add.type_notice_tr")}
-                      {selectedType === "Aria2" && t("st.sv.add.type_notice_ar")}
-                    </FormMessage>
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.sv.add.type")}</FormLabel>
+                  <Select defaultValue={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="w-72">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="qBittorrent">qBittorrent</SelectItem>
+                      <SelectItem value="Transmission">Transmission</SelectItem>
+                      <SelectItem value="Aria2">Aria2</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="font-normal text-zinc-500">
+                    {selectedType === "qBittorrent" && t("st.sv.add.type_notice_qb")}
+                    {selectedType === "Transmission" && t("st.sv.add.type_notice_tr")}
+                    {selectedType === "Aria2" && t("st.sv.add.type_notice_ar")}
+                  </FormMessage>
+                </FormItem>
+              )}
               />
               <FormField control={form.control} name="url" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.sv.add.url")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-full" placeholder={urlPlaceholders[selectedType]} required {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.sv.add.url")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-full" placeholder={urlPlaceholders[selectedType]} required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <FormField control={form.control} name="username" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.sv.add.username")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-72" placeholder="admin" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.sv.add.username")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-72" placeholder="admin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <FormField control={form.control} name="password" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.sv.add.password")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-72" type="password" placeholder="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.sv.add.password")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-72" type="password" placeholder="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
