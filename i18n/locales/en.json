@@ -137,9 +137,9 @@
       },
       "ai": {
         "title": "AI Parsing",
-        "description": "When analyzing the title, use AI to replace the local parser to extract the anime name more accurately",
+        "description": "When parsing titles, prioritize utilizing AI to accurately extract anime titles. Only supports AI services compatible with OpenAI interface, such as Gemini, Kimi, Qwen, Tencent Hunyuan, etc. Each parsing consumes approximately 400 tokens.",
         "priority": "Priority",
-        "local": "Use local parsing first",
+        "local": "Use local parsing only",
         "ai": "Use AI parsing first",
         "api": "API URL",
         "key": "API Key",

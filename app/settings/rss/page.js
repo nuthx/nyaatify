@@ -325,40 +325,48 @@ export default function RSSSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={aiForm.control} name="ai_api" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.rss.ai.api")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder="https://api.openai.com/v1" required {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              {aiForm.watch("ai_priority") === "ai" && (
+                <>
+                  <FormField control={aiForm.control} name="ai_api" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("st.rss.ai.api")}</FormLabel>
+                      <FormControl>
+                        <Input className="w-full" placeholder="https://api.openai.com/v1" required {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  />
+                  <FormField control={aiForm.control} name="ai_key" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("st.rss.ai.key")}</FormLabel>
+                      <FormControl>
+                        <Input className="w-full" placeholder="sk-1234567890" required {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  />
+                  <FormField control={aiForm.control} name="ai_model" render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("st.rss.ai.model")}</FormLabel>
+                      <FormControl>
+                        <Input className="w-72" placeholder="gpt-4" required {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                  />
+                </>
               )}
-              />
-              <FormField control={aiForm.control} name="ai_key" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.rss.ai.key")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder="sk-1234567890" required {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              />
-              <FormField control={aiForm.control} name="ai_model" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.rss.ai.model")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-72" placeholder="gpt-4o" required {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.save")}</Button>
-                <Button type="button" variant="outline" onClick={() => aiForm.reset()}>{t("glb.reset")}</Button>
-                <Button type="button" variant="outline" onClick={aiForm.handleSubmit(handleTestAI)}>{t("glb.test_connection")}</Button>
+                {aiForm.watch("ai_priority") === "ai" && (
+                  <>
+                    <Button type="button" variant="outline" onClick={() => aiForm.reset()}>{t("glb.reset")}</Button>
+                    <Button type="button" variant="outline" onClick={aiForm.handleSubmit(handleTestAI)}>{t("glb.test_connection")}</Button>
+                  </>
+                )}
               </div>
             </form>
           </Form>

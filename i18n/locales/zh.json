@@ -137,9 +137,9 @@
       },
       "ai": {
         "title": "AI 解析",
-        "description": "在分析标题时，通过介入 AI 代替本地解析器，来更准确的提取动画名称",
+        "description": "解析标题时，优先使用 AI 来更准确的提取动画名称。仅支持兼容 OpenAI 接口的 AI 服务，如通义千问、腾讯混元、Kimi、Gemini 等。每次解析大约会消耗 400 Token。",
         "priority": "优先级",
-        "local": "优先本地解析",
+        "local": "仅使用本地解析",
         "ai": "优先 AI 解析",
         "api": "API 地址",
         "key": "API Key",
