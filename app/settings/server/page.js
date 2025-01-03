@@ -265,7 +265,7 @@ export default function ServerSettings() {
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
-                <Button type="button" variant="outline" onClick={form.handleSubmit(handleTestServer)}>{t("glb.test_connection")}</Button>
+                <Button type="button" variant="outline" onClick={form.handleSubmit(handleTestServer)}>{t("glb.test")}</Button>
               </div>
             </form>
           </Form>

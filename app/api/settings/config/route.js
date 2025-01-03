@@ -1,3 +1,4 @@
+import OpenAI from "openai";
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
 
@@ -31,14 +32,31 @@ export async function POST(request) {
   const data = await request.json();
   const db = await getDb();
 
-  console.log(data);
-
   try {
     // Check if comfig name correct
     const existingConfig = await db.get("SELECT * FROM config WHERE id = 1");
     for (const configName of Object.keys(data)) {
       if (!(configName in existingConfig)) {
         return Response.json({ error: `Invalid config name: ${configName}` }, { status: 400 });
+      }
+    }
+
+    // If save ai config, use a testing title to check if ai config valid
+    if (data.ai_priority === "ai") {
+      try {
+        const openai = new OpenAI({
+          apiKey: data.ai_key,
+          baseURL: data.ai_api,
+        });
+        const completion = await openai.chat.completions.create({
+          model: data.ai_model,
+          messages: [ { role: "user", content: "Hello" } ]
+        });
+        if (completion.choices[0].message.content.includes("error")) {
+          return Response.json({ error: error }, { status: 400 });
+        }
+      } catch (error) {
+        return Response.json({ error: error.message }, { status: 400 });
       }
     }
 

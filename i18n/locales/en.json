@@ -10,7 +10,6 @@
     "save": "Save",
     "reset": "Reset",
     "test": "Test",
-    "test_connection": "Test Connection",
     "toast": {
       "save_success": "Save Success",
       "save_failed": "Save Failed"

@@ -359,15 +359,7 @@ export default function RSSSettings() {
                   />
                 </>
               )}
-              <div className="flex gap-2">
-                <Button type="submit">{t("glb.save")}</Button>
-                {aiForm.watch("ai_priority") === "ai" && (
-                  <>
-                    <Button type="button" variant="outline" onClick={() => aiForm.reset()}>{t("glb.reset")}</Button>
-                    <Button type="button" variant="outline" onClick={aiForm.handleSubmit(handleTestAI)}>{t("glb.test_connection")}</Button>
-                  </>
-                )}
-              </div>
+              <Button type="submit">{t("glb.save")}</Button>
             </form>
           </Form>
         </CardContent>
