@@ -8,8 +8,13 @@
     "confirm_delete": "Confirm Deletion",
     "add": "Add",
     "save": "Save",
+    "reset": "Reset",
     "test": "Test",
-    "test_connection": "Test Connection"
+    "test_connection": "Test Connection",
+    "toast": {
+      "save_success": "Save Success",
+      "save_failed": "Save Failed"
+    }
   },
   "nav": {
     "anime": "Anime",
@@ -117,9 +122,7 @@
         "url3": "URL must not end with /",
         "api1": "Invalid API URL",
         "api2": "API URL must start with http or https",
-        "api3": "API URL must not end with /",
-        "key": "API Key must be at least 1 character",
-        "model": "Model name must be at least 1 character"
+        "api3": "API URL must not end with /"
       },
       "subscription": {
         "title": "RSS Subscription",
@@ -131,7 +134,7 @@
       },
       "ai": {
         "title": "AI Parsing",
-        "description": "Use AI to parse the title of the anime more accurately",
+        "description": "When analyzing the title, use AI to replace the local parser to extract the anime name more accurately",
         "priority": "Priority",
         "local": "Use local parsing first",
         "ai": "Use AI parsing first",

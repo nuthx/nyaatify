@@ -33,6 +33,7 @@ import { Button } from "@/components/ui/button";
 import { ListCard } from "@/components/settings";
 
 export default function RSSSettings() {
+  const settingApi = "/api/settings/config";
   const settingListApi = "/api/settings/list";
 
   const { t } = useTranslation();
@@ -64,11 +65,10 @@ export default function RSSSettings() {
     api: z.string()
       .url({ message: t("st.rss.validate.api1") })
       .startsWith("http", { message: t("st.rss.validate.api2") })
-      .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.api3") }),
-    key: z.string()
-      .min(1, { message: t("st.rss.validate.key") }),
+      .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.api3") })
+      .or(z.literal("")),
+    key: z.string(),
     model: z.string()
-      .min(1, { message: t("st.rss.validate.model") }),
   })
 
   const aiForm = useForm({
@@ -126,7 +126,7 @@ export default function RSSSettings() {
       } else {
         toast({
           title: t("st.rss.toast.add"),
-          description: data.message,
+          description: data.error,
           variant: "destructive"
         });
       }
@@ -158,7 +158,7 @@ export default function RSSSettings() {
       } else {
         toast({
           title: t("st.rss.toast.delete"),
-          description: data.message,
+          description: data.error,
           variant: "destructive"
         });
       }
@@ -176,7 +176,38 @@ export default function RSSSettings() {
   };
 
   const handleSaveConfig = async (values) => {
-    console.log(values);
+    try {
+      const response = await fetch(settingApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ai_priority: values.priority,
+          ai_api: values.api,
+          ai_key: values.key,
+          ai_model: values.model
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: t("glb.toast.save_success")
+        });
+      } else {
+        toast({
+          title: t("glb.toast.save_failed"),
+          description: data.error,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t("glb.toast.save_failed"),
+        description: error.message,
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -311,6 +342,7 @@ export default function RSSSettings() {
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.save")}</Button>
+                <Button type="button" variant="outline" onClick={() => aiForm.reset()}>{t("glb.reset")}</Button>
                 <Button type="button" variant="outline" onClick={aiForm.handleSubmit(handleTestAI)}>{t("glb.test_connection")}</Button>
               </div>
             </form>

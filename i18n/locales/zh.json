@@ -8,8 +8,13 @@
     "confirm_delete": "确认删除",
     "add": "添加",
     "save": "保存",
+    "reset": "清空",
     "test": "测试",
-    "test_connection": "测试连接"
+    "test_connection": "测试连接",
+    "toast": {
+      "save_success": "保存成功",
+      "save_failed": "保存失败"
+    }
   },
   "nav": {
     "anime": "动画",
@@ -117,9 +122,7 @@
         "url3": "URL 不能以 / 结尾",
         "api1": "无效的 API 地址",
         "api2": "API 地址必须以 http 或 https 开头",
-        "api3": "API 地址不能以 / 结尾",
-        "key": "API Key 不能为空",
-        "model": "模型名称不能为空"
+        "api3": "API 地址不能以 / 结尾"
       },
       "subscription": {
         "title": "RSS 订阅",
@@ -131,7 +134,7 @@
       },
       "ai": {
         "title": "AI 解析",
-        "description": "使用 AI 代替本地解析器，更准确的提取标题中的动画名称",
+        "description": "在分析标题时，通过介入 AI 代替本地解析器，来更准确的提取动画名称",
         "priority": "优先级",
         "local": "优先本地解析",
         "ai": "优先 AI 解析",
