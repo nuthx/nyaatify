@@ -61,28 +61,29 @@ export default function RSSSettings() {
   })
 
   const aiFormSchema = z.object({
-    priority: z.string(),
-    api: z.string()
+    ai_priority: z.string(),
+    ai_api: z.string()
       .url({ message: t("st.rss.validate.api1") })
       .startsWith("http", { message: t("st.rss.validate.api2") })
       .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.api3") })
       .or(z.literal("")),
-    key: z.string(),
-    model: z.string()
+    ai_key: z.string(),
+    ai_model: z.string()
   })
 
   const aiForm = useForm({
     resolver: zodResolver(aiFormSchema),
     defaultValues: {
-      priority: "local",
-      api: "",
-      key: "",
-      model: "",
+      ai_priority: "local",
+      ai_api: "",
+      ai_key: "",
+      ai_model: "",
     },
   })
 
   useEffect(() => {
     fetchRSS();
+    fetchConfig();
 
     // Set interval to fetch RSS list every 3 seconds
     const pollingInterval = setInterval(() => {
@@ -100,6 +101,25 @@ export default function RSSSettings() {
     } catch (error) {
       toast({
         title: t("st.rss.toast.fetch"),
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const fetchConfig = async () => {
+    try {
+      const response = await fetch(settingApi);
+      const data = await response.json();
+      aiForm.reset({
+        ai_priority: data.data.ai_priority,
+        ai_api: data.data.ai_api,
+        ai_key: data.data.ai_key,
+        ai_model: data.data.ai_model,
+      });
+    } catch (error) {
+      toast({
+        title: t("st.toast.fetch_failed"),
         description: error.message,
         variant: "destructive"
       });
@@ -180,12 +200,7 @@ export default function RSSSettings() {
       const response = await fetch(settingApi, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ai_priority: values.priority,
-          ai_api: values.api,
-          ai_key: values.key,
-          ai_model: values.model
-        }),
+        body: JSON.stringify(values),
       });
 
       const data = await response.json();
@@ -292,10 +307,10 @@ export default function RSSSettings() {
         <CardContent>
         <Form {...aiForm}>
             <form onSubmit={aiForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
-              <FormField control={aiForm.control} name="priority" render={({ field }) => (
+              <FormField control={aiForm.control} name="ai_priority" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.rss.ai.priority")}</FormLabel>
-                    <Select defaultValue={field.value} onValueChange={field.onChange}>
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger className="w-72">
                           <SelectValue />
@@ -310,7 +325,7 @@ export default function RSSSettings() {
                   </FormItem>
                 )}
               />
-              <FormField control={aiForm.control} name="api" render={({ field }) => (
+              <FormField control={aiForm.control} name="ai_api" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.rss.ai.api")}</FormLabel>
                     <FormControl>
@@ -320,7 +335,7 @@ export default function RSSSettings() {
                   </FormItem>
                 )}
               />
-              <FormField control={aiForm.control} name="key" render={({ field }) => (
+              <FormField control={aiForm.control} name="ai_key" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.rss.ai.key")}</FormLabel>
                     <FormControl>
@@ -330,7 +345,7 @@ export default function RSSSettings() {
                   </FormItem>
                 )}
               />
-              <FormField control={aiForm.control} name="model" render={({ field }) => (
+              <FormField control={aiForm.control} name="ai_model" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.rss.ai.model")}</FormLabel>
                     <FormControl>

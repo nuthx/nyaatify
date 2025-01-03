@@ -80,6 +80,9 @@
   },
   "st": {
     "title": "Settings",
+    "toast": {
+      "fetch_failed": "Failed to fetch user config"
+    },
     "nav": {
       "general": "General",
       "rss": "RSS Subscription",

@@ -80,6 +80,9 @@
   },
   "st": {
     "title": "设置",
+    "toast": {
+      "fetch_failed": "获取用户配置失败"
+    },
     "nav": {
       "general": "常规",
       "rss": "RSS 订阅",
