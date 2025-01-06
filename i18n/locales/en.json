@@ -4,6 +4,7 @@
     "pause": "Pause",
     "resume": "Resume",
     "cancel": "Cancel",
+    "confirm_cancel": "Confirm Cancel",
     "delete": "Delete",
     "confirm_delete": "Confirm Deletion",
     "add": "Add",

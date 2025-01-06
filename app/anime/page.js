@@ -22,6 +22,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge"
 import { Download, Pause, RefreshCcw, Trash2 } from "lucide-react";
@@ -100,9 +111,11 @@ export default function Anime() {
       const data = await response.json();
 
       if (response.ok) {
-        toast({
-          title: t(`download.toast.add_success`)
-        });
+        if (action === "add") {
+          toast({
+            title: t(`download.toast.add_success`)
+          });
+        }
         fetchAnime(currentPage);
       } else {
         toast({
@@ -141,19 +154,19 @@ export default function Anime() {
           {error}
         </a>
       ) : (
-        <div className="grid gap-3">
-          <div className="flex gap-4 mx-1 mb-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
             <a className="text-sm text-zinc-500">{t("anime.today")}: {items.count.today}</a>
             <a className="text-sm text-zinc-500">{t("anime.week")}: {items.count.week}</a>
             <a className="text-sm text-zinc-500">{t("anime.total")}: {items.count.total}</a>
           </div>
           {items.list?.map((item, index) => (
-            <Card key={index}>
-              <CardContent className="flex gap-4">
+            <Card key={index} className="flex flex-col">
+              <CardContent className="flex gap-4 flex-1">
                 <img 
                   key={`${item.cover_bangumi}-${currentPage}`}
                   src={item.cover_bangumi || null}
-                  className="w-20 h-28 rounded-md object-cover bg-zinc-200"
+                  className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md object-cover bg-zinc-200"
                   onError={(e) => {
                     e.target.classList.remove("object-cover");
                     e.target.src = null;
@@ -171,7 +184,7 @@ export default function Anime() {
                   <div className="w-fit">
                     <TooltipProvider>
                       <Tooltip>
-                        <TooltipTrigger>
+                        <TooltipTrigger className="text-left">
                           <a href={item.torrent} target="_blank" className="font-medium hover:underline">
                             {item.name_cn || item.name_jp || item.name_en || item.name_title || item.title}
                           </a>
@@ -196,12 +209,46 @@ export default function Anime() {
                   <a className="text-sm text-zinc-500">{item.server ? `${item.server.completed} / ${item.server.size} (${item.server.progress === 1 ? 100 : (item.server.progress*100).toFixed(1)}%)` : item.size}</a>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" className="font-normal" onClick={() => handleManage("add", "本地测试服务器", item.hash)}>
-                    <Download />{t("glb.download")}
-                  </Button>
-                  <Button variant="outline" className="font-normal"><Pause />{t("glb.pause")}</Button>
-                  <Button variant="outline" className="font-normal"><RefreshCcw />{t("glb.resume")}</Button>
-                  <Button variant="outline" className="font-normal"><Trash2 />{t("glb.cancel")}</Button>
+                  {item.server? (
+                    <>
+                      {["uploading", "queuedUP", "stalledUP", "allocating", "downloading", "metaDL",
+                        "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.server.state) && (
+                        <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.server.name, item.hash)}>
+                          <Pause />{t("glb.pause")}
+                        </Button>
+                      )}
+                      {["pausedUP", "pausedDL", "stoppedUP", "stoppedDL"].includes(item.server.state) && (
+                        <Button className="font-normal" onClick={() => handleManage("resume", item.server.name, item.hash)}>
+                          <RefreshCcw />{t("glb.resume")}
+                        </Button>
+                      )}
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" className="font-normal">
+                            <Trash2 />{t("glb.cancel")}
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>{t("glb.confirm_cancel")}</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              {t("download.alert")}
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleManage("delete", item.server.name, item.hash)}>
+                              {t("glb.cancel")}
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </>
+                  ) : (
+                    <Button variant="outline" className="font-normal" onClick={() => handleManage("add", "123", item.hash)}>
+                      <Download />{t("glb.download")}
+                    </Button>
+                  )}
                 </div>
               </CardFooter>
             </Card>

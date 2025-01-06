@@ -11,7 +11,7 @@ import { getQbittorrentTorrents } from "@/lib/api/qbittorrent";
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1");
-  const size = parseInt(searchParams.get("size") || "25");
+  const size = parseInt(searchParams.get("size") || "24");
   const offset = (page - 1) * size;
   const db = await getDb();
 
