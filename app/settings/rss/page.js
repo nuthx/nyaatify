@@ -236,34 +236,34 @@ export default function RSSSettings() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleAddRSS)} className="space-y-6" noValidate>
               <FormField control={form.control} name="name" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.rss.add.name")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-72" placeholder="Subscription" required {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.rss.add.name")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-72" placeholder="Subscription" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <FormField control={form.control} name="url" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.rss.add.url")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-full" placeholder="https://nyaa.si/?page=rss" required {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.rss.add.url")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-full" placeholder="https://nyaa.si/?page=rss" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <FormField control={form.control} name="cron" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.rss.add.cron")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-72" placeholder="0 */10 * * * *" required {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                <FormItem>
+                  <FormLabel>{t("st.rss.add.cron")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-72" placeholder="0 */10 * * * *" required {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
               />
               <Button type="submit">{t("glb.add")}</Button>
             </form>
@@ -305,7 +305,7 @@ export default function RSSSettings() {
           <CardDescription>{t("st.rss.ai.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-        <Form {...aiForm}>
+          <Form {...aiForm}>
             <form onSubmit={aiForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
               <FormField control={aiForm.control} name="ai_priority" render={({ field }) => (
                 <FormItem>
