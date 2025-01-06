@@ -173,7 +173,7 @@ export default function Anime() {
                       <Tooltip>
                         <TooltipTrigger>
                           <a href={item.torrent} target="_blank" className="font-medium hover:underline">
-                            {item.name_cn || item.name_jp || item.name_en || item.name_title}
+                            {item.name_cn || item.name_jp || item.name_en || item.name_title || item.title}
                           </a>
                         </TooltipTrigger>
                         <TooltipContent className="py-2 space-y-1">
@@ -191,9 +191,9 @@ export default function Anime() {
                 </div>
               </CardContent>
               <CardFooter className="flex items-center justify-between py-4">
-                <div className="flex items-center gap-4">
-                  <StateIndicator state="new"/>
-                  <a className="text-sm text-zinc-500">1.5GiB / {item.size}</a>
+                <div className="flex items-center gap-3">
+                  {item.server && <Badge>{t(`download.state.${item.server.state}`)}</Badge>}
+                  <a className="text-sm text-zinc-500">{item.server ? `${item.server.completed} / ${item.server.size} (${item.server.progress === 1 ? 100 : (item.server.progress*100).toFixed(1)}%)` : item.size}</a>
                 </div>
                 <div className="flex items-center gap-2">
                   <Button variant="outline" className="font-normal" onClick={() => handleManage("add", "本地测试服务器", item.hash)}>
@@ -243,47 +243,6 @@ export default function Anime() {
           </PaginationContent>
         </Pagination>
       )}
-    </div>
-  );
-}
-
-export function StateIndicator({ state }) {
-  const { t } = useTranslation();
-
-  const stateConfig = {
-    new: {
-      color: "bg-purple-500",
-      textColor: "text-zinc-500",
-      label: "anime.state.new"
-    },
-    downloading: {
-      color: "bg-sky-500", 
-      textColor: "text-sky-500",
-      label: "anime.state.downloading"
-    },
-    completed: {
-      color: "bg-green-500",
-      textColor: "text-green-500", 
-      label: "anime.state.completed"
-    },
-    paused: {
-      color: "bg-amber-500",
-      textColor: "text-amber-500",
-      label: "anime.state.paused"
-    },
-    failed: {
-      color: "bg-red-500",
-      textColor: "text-red-500",
-      label: "anime.state.failed"
-    }
-  };
-
-  const config = stateConfig[state] || stateConfig.downloading;
-
-  return (
-    <div className="flex items-center gap-2 border px-2.5 py-1 border-zinc-200 rounded-full">
-      <div className={`w-2.5 h-2.5 rounded-full ${config.color}`}></div>
-      <a className={`text-sm ${config.textColor}`}>{t(config.label)}</a>
     </div>
   );
 }

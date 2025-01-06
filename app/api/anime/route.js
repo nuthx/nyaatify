@@ -1,5 +1,7 @@
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
+import { formatBytes } from "@/lib/bytes";
+import { getQbittorrentTorrents } from "@/lib/api/qbittorrent";
 
 // Get anime list with pagination
 // Method: GET
@@ -14,7 +16,7 @@ export async function GET(request) {
   const db = await getDb();
 
   try {
-    const [anime, total, todayCount, weekCount] = await Promise.all([
+    let [anime, total, todayCount, weekCount] = await Promise.all([
       db.all(`
         SELECT a.*, GROUP_CONCAT(r.name) as rss_names
         FROM anime a
@@ -32,8 +34,27 @@ export async function GET(request) {
       db.get("SELECT COUNT(*) as count FROM anime WHERE pub_date >= date('now', '-7 days')")
     ]);
 
+    // Get all torrents with server name
+    const servers = await db.all("SELECT name, url, cookie FROM server");
+    const allTorrents = (await Promise.all(servers.map(async server => {
+      const torrents = await getQbittorrentTorrents(server.url, server.cookie);
+      return torrents.map(t => ({...t, server_name: server.name}));
+    }))).flat();
+
     return Response.json({
-      data: anime,
+      data: anime.map(item => {
+        const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
+        return {
+          ...item,
+          server: matchingTorrent ? {
+            name: matchingTorrent.server_name,
+            state: matchingTorrent.state,
+            progress: matchingTorrent.progress,
+            completed: formatBytes(matchingTorrent.completed), 
+            size: formatBytes(matchingTorrent.size)
+          } : null
+        };
+      }),
       count: {
         today: todayCount.count,
         week: weekCount.count,
