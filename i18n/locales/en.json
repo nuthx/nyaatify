@@ -136,7 +136,7 @@
       },
       "ai": {
         "title": "AI Parsing",
-        "description": "When parsing titles, prioritize utilizing AI to accurately extract anime titles. Only supports AI services compatible with OpenAI interface, such as Gemini, Kimi, Qwen, Tencent Hunyuan, etc. Each parsing consumes approximately 400 tokens.",
+        "description": "When parsing titles, prioritize utilizing AI to accurately extract anime titles. The selected model should be compatible with OpenAI interfaces, such as ChatGPT, Gemini, DeepSeek, Kimi, etc. To ensure accuracy, try not to use the lowest grade Lite model. Each parsing consumes approximately 200 tokens.",
         "priority": "Priority",
         "local": "Use local parsing only",
         "ai": "Use AI parsing first",

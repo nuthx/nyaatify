@@ -136,7 +136,7 @@
       },
       "ai": {
         "title": "AI 解析",
-        "description": "解析标题时，优先使用 AI 来更准确的提取动画名称。仅支持兼容 OpenAI 接口的 AI 服务，如通义千问、腾讯混元、Kimi、Gemini 等。每次解析大约会消耗 400 Token。",
+        "description": "解析标题时，优先使用 AI 提取动画名称。所选模型需兼容 OpenAI 接口，如 DeepSeek、Kimi、ChatGPT、Gemini 等。为保证准确率，尽量不要使用最低档的 Lite 模型。每次解析大约会消耗 200 Token。",
         "priority": "优先级",
         "local": "仅使用本地解析",
         "ai": "优先使用 AI 解析",
