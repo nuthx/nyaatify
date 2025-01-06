@@ -50,7 +50,10 @@ export async function GET() {
       return a.server.localeCompare(b.server);
     });
 
-    return Response.json({ data: allTorrents });
+    return Response.json({ 
+      data: allTorrents,
+      servers: servers.length 
+    });
   }
 
   catch (error) {

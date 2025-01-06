@@ -37,7 +37,8 @@
     }
   },
   "download": {
-    "empty": "请先添加一个下载服务器",
+    "empty_server": "请先添加一个下载服务器",
+    "empty_torrents": "服务器中没有下载任务",
     "load_fail": "加载列表失败",
     "d_speed": "下载速度",
     "u_speed": "上传速度",

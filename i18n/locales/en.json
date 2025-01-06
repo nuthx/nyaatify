@@ -37,7 +37,8 @@
     }
   },
   "download": {
-    "empty": "Please add a download server first.",
+    "empty_server": "Please add a download server first.",
+    "empty_torrents": "No torrents found",
     "load_fail": "Failed to load list",
     "d_speed": "Download Speed",
     "u_speed": "Upload Speed",
