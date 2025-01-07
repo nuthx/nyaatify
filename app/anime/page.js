@@ -51,6 +51,7 @@ export default function Anime() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [defaultServer, setDefaultServer] = useState(null);
+  const [defaultServerOnline, setDefaultServerOnline] = useState(0);
 
   useEffect(() => {
     // Get initial page from URL on first render
@@ -90,6 +91,7 @@ export default function Anime() {
       });
       setTotalPages(Math.ceil(data.pagination.total / data.pagination.size));
       setDefaultServer(data.default_server);
+      setDefaultServerOnline(data.default_server_online);
       setError(null);
     } catch (error) {
       setError(`${t("anime.load_fail")}: ${error.message}`);
@@ -158,6 +160,8 @@ export default function Anime() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
+            {!defaultServer && <Badge variant="outline">{t("anime.no_server")}</Badge>}
+            {defaultServer && defaultServerOnline === 0 && <Badge variant="destructive">{t("anime.server_offline")}</Badge>}
             <a className="text-sm text-zinc-500">{t("anime.today")}: {items.count.today}</a>
             <a className="text-sm text-zinc-500">{t("anime.week")}: {items.count.week}</a>
             <a className="text-sm text-zinc-500">{t("anime.total")}: {items.count.total}</a>
@@ -247,7 +251,7 @@ export default function Anime() {
                       </AlertDialog>
                     </>
                   ) : (
-                    <Button variant="outline" className="font-normal" onClick={() => handleManage("add", defaultServer, item.hash)} disabled={!defaultServer}>
+                    <Button variant="outline" className="font-normal" onClick={() => handleManage("add", defaultServer, item.hash)} disabled={!defaultServer || defaultServerOnline === 0}>
                       <Download />{t("glb.download")}
                     </Button>
                   )}

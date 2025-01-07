@@ -1,7 +1,7 @@
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
 import { formatBytes } from "@/lib/bytes";
-import { getQbittorrentTorrents, addQbittorrentTorrent, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
+import { getQbittorrentVersion, getQbittorrentTorrents, addQbittorrentTorrent, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
 
 // Get torrent list
 // Method: GET
@@ -17,10 +17,22 @@ import { getQbittorrentTorrents, addQbittorrentTorrent, manageQbittorrentTorrent
 export async function GET() {
   const db = await getDb();
   try {
+    // Check server online status
     const servers = await db.all("SELECT url, cookie, name FROM server");
-    const allTorrents = [];
+    const serverStatuses = await Promise.all(
+      servers.map(async server => {
+        const version = await getQbittorrentVersion(server.url, server.cookie);
+        return {
+          ...server,
+          isOnline: version !== "unknown"
+        };
+      })
+    );
+    const onlineServers = serverStatuses.filter(server => server.isOnline);
 
-    await Promise.all(servers.map(async server => {
+    // Get torrents from online servers
+    const allTorrents = [];
+    await Promise.all(onlineServers.map(async server => {
       const torrents = await getQbittorrentTorrents(server.url, server.cookie);
       torrents.forEach(torrent => {
         allTorrents.push({
@@ -52,7 +64,8 @@ export async function GET() {
 
     return Response.json({ 
       torrents: allTorrents,
-      servers: servers.length 
+      servers: servers.length,
+      online: onlineServers.length
     });
   }
 

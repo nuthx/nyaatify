@@ -25,6 +25,8 @@
   "anime": {
     "empty": "请先添加一个 RSS 订阅",
     "load_fail": "加载列表失败",
+    "no_server": "没有下载服务器",
+    "server_offline": "下载服务器已离线",
     "today": "今日",
     "week": "本周",
     "total": "总数",
@@ -38,7 +40,8 @@
   },
   "download": {
     "empty_server": "请先添加一个下载服务器",
-    "empty_torrents": "服务器中没有下载任务",
+    "empty_online": "当前没有在线的下载服务器",
+    "empty_torrents": "所有下载服务器中没有任务",
     "load_fail": "加载列表失败",
     "d_speed": "下载速度",
     "u_speed": "上传速度",
@@ -149,15 +152,15 @@
     },
     "sv": {
       "toast": {
-        "fetch": "获取服务器列表失败",
+        "fetch": "获取下载服务器列表失败",
         "testsuccess": "测试成功",
         "version": "版本",
-        "testfailed": "无法连接到服务器",
-        "add": "添加服务器失败",
-        "delete": "删除服务器失败"
+        "testfailed": "无法连接到下载服务器",
+        "add": "添加下载服务器失败",
+        "delete": "删除下载服务器失败"
       },
       "add": {
-        "title": "添加新的服务器",
+        "title": "添加新的下载服务器",
         "description": "添加一个下载服务器来管理您的下载任务",
         "name": "名称",
         "type": "服务器类型",
@@ -187,9 +190,9 @@
       },
       "default": {
         "title": "默认下载服务器",
-        "description": "当添加了多个下载服务器时，你可以手动指定默认使用的服务器名称。创建下载任务时，Nyaatify 会优先通过该服务器下载",
+        "description": "当添加了多个下载服务器时，你可以手动指定默认使用的服务器。创建下载任务时，Nyaatify 会优先通过该服务器下载",
         "server": "默认下载服务器",
-        "empty": "无服务器"
+        "empty": "无下载服务器"
       }
     },
     "abt": {

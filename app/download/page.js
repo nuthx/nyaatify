@@ -59,6 +59,11 @@ export default function Home() {
         return;
       }
 
+      if (data.online === 0) {
+        setError(t("download.empty_online"));
+        return;
+      }
+
       if (data.torrents.length === 0) {
         setError(t("download.empty_torrents"));
         return;

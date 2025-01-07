@@ -1,7 +1,7 @@
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
 import { formatBytes } from "@/lib/bytes";
-import { getQbittorrentTorrents } from "@/lib/api/qbittorrent";
+import { getQbittorrentVersion, getQbittorrentTorrents } from "@/lib/api/qbittorrent";
 
 // Get anime list with pagination
 // Method: GET
@@ -34,15 +34,23 @@ export async function GET(request) {
       db.get("SELECT COUNT(*) as count FROM anime WHERE pub_date >= date('now', '-7 days')")
     ]);
 
-    // Get all torrents with server name
+    // Get default server
+    const config = await db.get("SELECT default_server FROM config WHERE id = 1");
+
+    // Check if default server is online
     const servers = await db.all("SELECT name, url, cookie FROM server");
+    let defaultOnline = 0;
+    if (config.default_server) {
+      const defaultServer = servers.find(server => server.name === config.default_server);
+      const version = await getQbittorrentVersion(defaultServer.url, defaultServer.cookie);
+      defaultOnline = version === "unknown" ? 0 : 1;
+    }
+
+    // Get all torrents with server name
     const allTorrents = (await Promise.all(servers.map(async server => {
       const torrents = await getQbittorrentTorrents(server.url, server.cookie);
       return torrents.map(t => ({...t, server_name: server.name}));
     }))).flat();
-
-    // Get default server
-    const config = await db.get("SELECT default_server FROM config WHERE id = 1");
 
     return Response.json({
       anime: anime.map(item => {
@@ -68,7 +76,8 @@ export async function GET(request) {
         size: size,
         current: page
       },
-      default_server: config.default_server
+      default_server: config.default_server,
+      default_server_online: defaultOnline
     });
   }
 

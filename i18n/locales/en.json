@@ -25,6 +25,8 @@
   "anime": {
     "empty": "Please add a RSS subscription first.",
     "load_fail": "Failed to load list",
+    "no_server": "No Download Server",
+    "server_offline": "Download Server Offline",
     "today": "Today",
     "week": "Week",
     "total": "Total",
@@ -38,7 +40,8 @@
   },
   "download": {
     "empty_server": "Please add a download server first.",
-    "empty_torrents": "No torrents found",
+    "empty_online": "No online download server now",
+    "empty_torrents": "No torrents found in all download servers",
     "load_fail": "Failed to load list",
     "d_speed": "Download Speed",
     "u_speed": "Upload Speed",
@@ -189,7 +192,7 @@
         "title": "Default Download Server",
         "description": "When multiple download servers added, you can manually specify the default server. When creating download tasks, Nyaatify will prioritize downloading through this server.",
         "server": "Default Download Server",
-        "empty": "No server"
+        "empty": "No Download Server"
       }
     },
     "abt": {
