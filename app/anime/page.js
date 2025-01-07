@@ -247,7 +247,7 @@ export default function Anime() {
                       </AlertDialog>
                     </>
                   ) : (
-                    <Button variant="outline" className="font-normal" onClick={() => handleManage("add", defaultServer, item.hash)}>
+                    <Button variant="outline" className="font-normal" onClick={() => handleManage("add", defaultServer, item.hash)} disabled={!defaultServer}>
                       <Download />{t("glb.download")}
                     </Button>
                   )}
