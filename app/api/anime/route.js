@@ -41,6 +41,9 @@ export async function GET(request) {
       return torrents.map(t => ({...t, server_name: server.name}));
     }))).flat();
 
+    // Get default server
+    const config = await db.get("SELECT default_server FROM config WHERE id = 1");
+
     return Response.json({
       anime: anime.map(item => {
         const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
@@ -64,7 +67,8 @@ export async function GET(request) {
         total: total.count,
         size: size,
         current: page
-      }
+      },
+      default_server: config.default_server
     });
   }
 

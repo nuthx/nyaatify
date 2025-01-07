@@ -50,6 +50,7 @@ export default function Anime() {
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [defaultServer, setDefaultServer] = useState(null);
 
   useEffect(() => {
     // Get initial page from URL on first render
@@ -88,6 +89,7 @@ export default function Anime() {
         count: data.count
       });
       setTotalPages(Math.ceil(data.pagination.total / data.pagination.size));
+      setDefaultServer(data.default_server);
       setError(null);
     } catch (error) {
       setError(`${t("anime.load_fail")}: ${error.message}`);
@@ -245,7 +247,7 @@ export default function Anime() {
                       </AlertDialog>
                     </>
                   ) : (
-                    <Button variant="outline" className="font-normal" onClick={() => handleManage("add", "123", item.hash)}>
+                    <Button variant="outline" className="font-normal" onClick={() => handleManage("add", defaultServer, item.hash)}>
                       <Download />{t("glb.download")}
                     </Button>
                   )}
