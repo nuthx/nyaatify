@@ -157,8 +157,11 @@ export async function POST(request) {
         [data.data.name, data.data.url, data.data.type, data.data.username, data.data.password, new Date().toISOString(), cookieResult]
       );
 
-      // Update default server
-      await db.run("UPDATE config SET default_server = ? WHERE id = 1", [data.data.name]);
+      // Update default server only if empty
+      const currentConfig = await db.get("SELECT default_server FROM config WHERE id = 1");
+      if (!currentConfig.default_server) {
+        await db.run("UPDATE config SET default_server = ? WHERE id = 1", [data.data.name]);
+      }
 
       log.info(`Download server added successfully, name: ${data.data.name}, url: ${data.data.url}`);
       return Response.json({});
@@ -209,10 +212,34 @@ export async function POST(request) {
     }
 
     else if (data.action === "delete" && data.type === "server") {
-      await db.run("DELETE FROM server WHERE name = ?", [data.data.name]);
-      await db.run("UPDATE config SET default_server = '' WHERE id = 1");
-      log.info(`Download server deleted successfully, name: ${data.data.name}`);
-      return Response.json({});
+      // Start transaction
+      await db.run("BEGIN TRANSACTION");
+
+      try {
+        // Delete server
+        await db.run("DELETE FROM server WHERE name = ?", [data.data.name]);
+
+        // Update default server
+        // If deleted server is default server, update default server to the first server
+        // If no server left, set default server to empty
+        const servers = await db.all("SELECT name FROM server");
+        if (data.data.name === (await db.get("SELECT default_server FROM config WHERE id = 1")).default_server) {
+          if (servers.length === 0) {
+            await db.run("UPDATE config SET default_server = '' WHERE id = 1");
+          } else {
+            await db.run("UPDATE config SET default_server = ? WHERE id = 1", [servers[0].name]);
+          }
+        }
+
+        // Commit transaction
+        await db.run("COMMIT");
+
+        log.info(`Download server deleted successfully, name: ${data.data.name}`);
+        return Response.json({});
+      } catch (error) {
+        await db.run("ROLLBACK");
+        return Response.json({ error: error.message }, { status: 500 });
+      }
     }
 
     else if (data.action === "test" && data.type === "server") {
