@@ -12,6 +12,7 @@
     "reset": "Reset",
     "test": "Test",
     "toast": {
+      "fetch_failed": "Fetch Failed",
       "save_success": "Save Success",
       "save_failed": "Save Failed"
     }
@@ -184,6 +185,12 @@
         "offline": "Offline",
         "version": "Server version",
         "alert": "This action will delete this download server permanently."
+      },
+      "default": {
+        "title": "Default Download Server",
+        "description": "When multiple download servers added, you can manually specify the default server. When creating download tasks, Nyaatify will prioritize downloading through this server.",
+        "server": "Default Download Server",
+        "empty": "No server"
       }
     },
     "abt": {

@@ -12,6 +12,7 @@
     "reset": "清空",
     "test": "测试",
     "toast": {
+      "fetch_failed": "加载失败",
       "save_success": "保存成功",
       "save_failed": "保存失败"
     }
@@ -184,6 +185,12 @@
         "offline": "离线",
         "version": "版本",
         "alert": "此操作将会永久删除该下载服务器"
+      },
+      "default": {
+        "title": "默认下载服务器",
+        "description": "当添加了多个下载服务器时，你可以手动指定默认使用的服务器名称。创建下载任务时，Nyaatify 会优先通过该服务器下载",
+        "server": "默认下载服务器",
+        "empty": "无服务器"
       }
     },
     "abt": {

@@ -157,6 +157,9 @@ export async function POST(request) {
         [data.data.name, data.data.url, data.data.type, data.data.username, data.data.password, new Date().toISOString(), cookieResult]
       );
 
+      // Update default server
+      await db.run("UPDATE config SET default_server = ? WHERE id = 1", [data.data.name]);
+
       log.info(`Download server added successfully, name: ${data.data.name}, url: ${data.data.url}`);
       return Response.json({});
     }
@@ -207,6 +210,7 @@ export async function POST(request) {
 
     else if (data.action === "delete" && data.type === "server") {
       await db.run("DELETE FROM server WHERE name = ?", [data.data.name]);
+      await db.run("UPDATE config SET default_server = '' WHERE id = 1");
       log.info(`Download server deleted successfully, name: ${data.data.name}`);
       return Response.json({});
     }

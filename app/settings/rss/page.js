@@ -191,10 +191,6 @@ export default function RSSSettings() {
     }
   };
 
-  const handleTestAI = async (values) => {
-    console.log(values);
-  };
-
   const handleSaveConfig = async (values) => {
     try {
       const response = await fetch(settingApi, {

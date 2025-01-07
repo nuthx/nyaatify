@@ -33,6 +33,7 @@ import { Button } from "@/components/ui/button";
 import { ListCard } from "@/components/settings";
 
 export default function ServerSettings() {
+  const settingApi = "/api/settings/config";
   const settingListApi = "/api/settings/list";
 
   const { t } = useTranslation();
@@ -65,6 +66,12 @@ export default function ServerSettings() {
     },
   })
 
+  const defaultServerForm = useForm({
+    defaultValues: {
+      default_server: ""
+    }
+  });
+
   const selectedType = form.watch("type");
   const urlPlaceholders = {
     qBittorrent: "http://192.168.1.100:8080",
@@ -74,6 +81,7 @@ export default function ServerSettings() {
 
   useEffect(() => {
     fetchServer();
+    fetchConfig();
   }, []);
 
   const fetchServer = async () => {
@@ -84,6 +92,21 @@ export default function ServerSettings() {
     } catch (error) {
       toast({
         title: t("st.sv.toast.fetch"),
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const fetchConfig = async () => {
+    try {
+      const response = await fetch(settingApi);
+      const data = await response.json();
+
+      defaultServerForm.setValue("default_server", data.default_server || "");
+    } catch (error) {
+      toast({
+        title: t("glb.toast.fetch_failed"),
         description: error.message,
         variant: "destructive"
       });
@@ -190,6 +213,36 @@ export default function ServerSettings() {
     }
   };
 
+  const handleSaveConfig = async (values) => {
+    try {
+      const response = await fetch(settingApi, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: t("glb.toast.save_success")
+        });
+      } else {
+        toast({
+          title: t("glb.toast.save_failed"),
+          description: data.error,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: t("glb.toast.save_failed"),
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
   return (
     <>
       <Card>
@@ -243,26 +296,28 @@ export default function ServerSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={form.control} name="username" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.sv.add.username")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-72" placeholder="admin" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              />
-              <FormField control={form.control} name="password" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.sv.add.password")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-72" type="password" placeholder="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              />
+              <div className="flex gap-6">
+                <FormField control={form.control} name="username" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.sv.add.username")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-72" placeholder="admin" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                />
+                <FormField control={form.control} name="password" render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.sv.add.password")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-72" type="password" placeholder="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+                />
+              </div>
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
                 <Button type="button" variant="outline" onClick={form.handleSubmit(handleTestServer)}>{t("glb.test")}</Button>
@@ -295,6 +350,40 @@ export default function ServerSettings() {
             deleteable={() => true}
             deleteDescription={t("st.sv.servers.alert")}
           />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.sv.default.title")}</CardTitle>
+          <CardDescription>{t("st.sv.default.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...defaultServerForm}>
+            <form onSubmit={defaultServerForm.handleSubmit(handleSaveConfig)} className="space-y-6">
+              <FormField control={defaultServerForm.control} name="default_server" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("st.sv.default.server")}</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange} disabled={serverList.length === 0}>
+                    <FormControl>
+                      <SelectTrigger className="w-72">
+                        <SelectValue placeholder={t("st.sv.default.empty")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {serverList.map((server) => (
+                        <SelectItem key={server.name} value={server.name}>
+                          {server.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
+                )}
+              />
+              <Button type="submit">{t("glb.save")}</Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </>
