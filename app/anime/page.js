@@ -227,12 +227,12 @@ export default function Anime() {
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button variant="outline" className="font-normal">
-                            <Trash2 />{t("glb.cancel")}
+                            <Trash2 />{t("glb.delete")}
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>{t("glb.confirm_cancel")}</AlertDialogTitle>
+                            <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
                             <AlertDialogDescription>
                               {t("download.alert")}
                             </AlertDialogDescription>
@@ -240,7 +240,7 @@ export default function Anime() {
                           <AlertDialogFooter>
                             <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
                             <AlertDialogAction onClick={() => handleManage("delete", item.server.name, item.hash)}>
-                              {t("glb.cancel")}
+                              {t("glb.delete")}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
