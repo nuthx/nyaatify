@@ -102,7 +102,6 @@ export default function ServerSettings() {
     try {
       const response = await fetch(settingApi);
       const data = await response.json();
-
       defaultServerForm.setValue("default_server", data.default_server || "");
     } catch (error) {
       toast({
@@ -130,6 +129,7 @@ export default function ServerSettings() {
       if (response.ok) {
         form.reset();
         fetchServer();
+        fetchConfig();
       } else {
         toast({
           title: t("st.sv.toast.add"),
@@ -162,6 +162,7 @@ export default function ServerSettings() {
 
       if (response.ok) {
         fetchServer();
+        fetchConfig();
       } else {
         toast({
           title: t("st.sv.toast.delete"),
@@ -224,6 +225,8 @@ export default function ServerSettings() {
       const data = await response.json();
 
       if (response.ok) {
+        fetchServer();
+        fetchConfig();
         toast({
           title: t("glb.toast.save_success")
         });
