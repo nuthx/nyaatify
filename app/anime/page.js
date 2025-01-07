@@ -78,13 +78,13 @@ export default function Anime() {
         return;
       }
 
-      if (data.data.length === 0) {
+      if (data.anime.length === 0) {
         setError(t("anime.empty"));
         return;
       }
 
       setItems({
-        list: data.data,
+        list: data.anime,
         count: data.count
       });
       setTotalPages(Math.ceil(data.pagination.total / data.pagination.size));

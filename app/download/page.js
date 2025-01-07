@@ -59,12 +59,12 @@ export default function Home() {
         return;
       }
 
-      if (data.data.length === 0) {
+      if (data.torrents.length === 0) {
         setError(t("download.empty_torrents"));
         return;
       }
 
-      setItems(data.data);
+      setItems(data.torrents);
       setError(null);
     } catch (error) {
       setError(`${t("download.load_fail")}: ${error.message}`);

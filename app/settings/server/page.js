@@ -88,7 +88,7 @@ export default function ServerSettings() {
     try {
       const response = await fetch(`${settingListApi}?type=server`);
       const data = await response.json();
-      setServerList(data.data);
+      setServerList(data.servers);
     } catch (error) {
       toast({
         title: t("st.sv.toast.fetch"),
@@ -196,7 +196,7 @@ export default function ServerSettings() {
       if (response.ok) {
         toast({
           title: t("st.sv.toast.testsuccess"),
-          description: `${t("st.sv.toast.version")}: ${data.data}`
+          description: `${t("st.sv.toast.version")}: ${data.version}`
         });
       } else {
         toast({

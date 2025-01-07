@@ -42,7 +42,7 @@ export async function GET(request) {
     }))).flat();
 
     return Response.json({
-      data: anime.map(item => {
+      anime: anime.map(item => {
         const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
         return {
           ...item,

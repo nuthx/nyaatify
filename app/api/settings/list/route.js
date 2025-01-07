@@ -41,7 +41,7 @@ export async function GET(request) {
     if (type === "rss") {
       const rss = await db.all("SELECT * FROM rss ORDER BY name ASC");
       return Response.json({
-        data: rss.map(item => ({
+        rss: rss.map(item => ({
           ...item,
           next: tasks.get(item.name)?.nextInvocation() || null
         }))
@@ -51,7 +51,7 @@ export async function GET(request) {
     else if (type === "server") {
       const servers = await db.all("SELECT * FROM server ORDER BY name ASC");
       return Response.json({
-        data: await Promise.all(servers.map(async server => {
+        servers: await Promise.all(servers.map(async server => {
           const version = await getQbittorrentVersion(server.url, server.cookie);
           return {
             ...server,
@@ -234,7 +234,7 @@ export async function POST(request) {
       }
 
       log.info(`Download server test successful, version: ${version}`);
-      return Response.json({ data: version });
+      return Response.json({ version: version });
     }
 
     else {

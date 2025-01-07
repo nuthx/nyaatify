@@ -97,7 +97,7 @@ export default function RSSSettings() {
     try {
       const response = await fetch(`${settingListApi}?type=rss`);
       const data = await response.json();
-      setRSSList(data.data);
+      setRSSList(data.rss);
     } catch (error) {
       toast({
         title: t("st.rss.toast.fetch"),

@@ -51,7 +51,7 @@ export async function GET() {
     });
 
     return Response.json({ 
-      data: allTorrents,
+      torrents: allTorrents,
       servers: servers.length 
     });
   }
