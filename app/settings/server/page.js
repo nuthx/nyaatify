@@ -40,7 +40,7 @@ export default function ServerSettings() {
   const { toast } = useToast()
   const [serverList, setServerList] = useState([]);
 
-  const formSchema = z.object({
+  const serverFormSchema = z.object({
     type: z.string(),
     name: z.string()
       .min(2, { message: t("st.sv.validate.name1") })
@@ -55,8 +55,8 @@ export default function ServerSettings() {
       .min(1, { message: t("st.sv.validate.password") }),
   })
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
+  const serverForm = useForm({
+    resolver: zodResolver(serverFormSchema),
     defaultValues: {
       type: "qBittorrent",
       name: "",
@@ -72,7 +72,7 @@ export default function ServerSettings() {
     }
   });
 
-  const selectedType = form.watch("type");
+  const selectedType = serverForm.watch("type");
   const urlPlaceholders = {
     qBittorrent: "http://192.168.1.100:8080",
     Transmission: "http://192.168.1.100:9091/transmission/rpc",
@@ -127,7 +127,7 @@ export default function ServerSettings() {
       const data = await response.json();
 
       if (response.ok) {
-        form.reset();
+        serverForm.reset();
         fetchServer();
         fetchConfig();
       } else {
@@ -254,9 +254,9 @@ export default function ServerSettings() {
           <CardDescription>{t("st.sv.add.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleAddServer)} className="space-y-6" noValidate>
-              <FormField control={form.control} name="name" render={({ field }) => (
+          <Form {...serverForm}>
+            <form onSubmit={serverForm.handleSubmit(handleAddServer)} className="space-y-6" noValidate>
+              <FormField control={serverForm.control} name="name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.sv.add.name")}</FormLabel>
                   <FormControl>
@@ -266,7 +266,7 @@ export default function ServerSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={form.control} name="type" render={({ field }) => (
+              <FormField control={serverForm.control} name="type" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.sv.add.type")}</FormLabel>
                   <Select defaultValue={field.value} onValueChange={field.onChange}>
@@ -289,7 +289,7 @@ export default function ServerSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={form.control} name="url" render={({ field }) => (
+              <FormField control={serverForm.control} name="url" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.sv.add.url")}</FormLabel>
                   <FormControl>
@@ -300,7 +300,7 @@ export default function ServerSettings() {
               )}
               />
               <div className="flex gap-6">
-                <FormField control={form.control} name="username" render={({ field }) => (
+                <FormField control={serverForm.control} name="username" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.sv.add.username")}</FormLabel>
                     <FormControl>
@@ -310,7 +310,7 @@ export default function ServerSettings() {
                   </FormItem>
                 )}
                 />
-                <FormField control={form.control} name="password" render={({ field }) => (
+                <FormField control={serverForm.control} name="password" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.sv.add.password")}</FormLabel>
                     <FormControl>
@@ -323,7 +323,7 @@ export default function ServerSettings() {
               </div>
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
-                <Button type="button" variant="outline" onClick={form.handleSubmit(handleTestServer)}>{t("glb.test")}</Button>
+                <Button type="button" variant="outline" onClick={serverForm.handleSubmit(handleTestServer)}>{t("glb.test")}</Button>
               </div>
             </form>
           </Form>

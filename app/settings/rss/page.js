@@ -40,7 +40,7 @@ export default function RSSSettings() {
   const { toast } = useToast()
   const [rssList, setRSSList] = useState([]);
 
-  const formSchema = z.object({
+  const rssFormSchema = z.object({
     name: z.string()
       .min(2, { message: t("st.rss.validate.name1") })
       .max(40, { message: t("st.rss.validate.name2") }),
@@ -51,8 +51,8 @@ export default function RSSSettings() {
     cron: z.string()
   })
 
-  const form = useForm({
-    resolver: zodResolver(formSchema),
+  const rssForm = useForm({
+    resolver: zodResolver(rssFormSchema),
     defaultValues: {
       name: "",
       url: "",
@@ -141,7 +141,7 @@ export default function RSSSettings() {
       const data = await response.json();
 
       if (response.ok) {
-        form.reset();
+        rssForm.reset();
         fetchRSS();
       } else {
         toast({
@@ -229,9 +229,9 @@ export default function RSSSettings() {
           <CardDescription>{t("st.rss.add.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleAddRSS)} className="space-y-6" noValidate>
-              <FormField control={form.control} name="name" render={({ field }) => (
+          <Form {...rssForm}>
+            <form onSubmit={rssForm.handleSubmit(handleAddRSS)} className="space-y-6" noValidate>
+              <FormField control={rssForm.control} name="name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.rss.add.name")}</FormLabel>
                   <FormControl>
@@ -241,7 +241,7 @@ export default function RSSSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={form.control} name="url" render={({ field }) => (
+              <FormField control={rssForm.control} name="url" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.rss.add.url")}</FormLabel>
                   <FormControl>
@@ -251,7 +251,7 @@ export default function RSSSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={form.control} name="cron" render={({ field }) => (
+              <FormField control={rssForm.control} name="cron" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.rss.add.cron")}</FormLabel>
                   <FormControl>
