@@ -128,14 +128,14 @@ export async function POST(request) {
     }
 
     else if (data.action === "add" && data.type === "server") {
-      // Check if name already exists
-      const existingName = await db.get("SELECT name FROM server WHERE name = ?", data.data.name);
+      // Check if name or URL already exists
+      const [existingName, existingUrl] = await Promise.all([
+        db.get("SELECT name FROM server WHERE name = ?", data.data.name),
+        db.get("SELECT url FROM server WHERE url = ?", data.data.url)
+      ]);
       if (existingName) {
         return Response.json({ error: `${data.data.name} already exists` }, { status: 400 });
       }
-
-      // Check if URL already exists
-      const existingUrl = await db.get("SELECT url FROM server WHERE url = ?", data.data.url);
       if (existingUrl) {
         return Response.json({ error: "URL already exists" }, { status: 400 });
       }
@@ -158,10 +158,14 @@ export async function POST(request) {
       );
 
       // Update default server only if empty
-      const currentConfig = await db.get("SELECT default_server FROM config WHERE id = 1");
-      if (!currentConfig.default_server) {
-        await db.run("UPDATE config SET default_server = ? WHERE id = 1", [data.data.name]);
-      }
+      await db.run(`
+        UPDATE config 
+        SET default_server = CASE 
+          WHEN default_server IS NULL THEN ? 
+          ELSE default_server 
+        END 
+        WHERE id = 1
+      `, [data.data.name]);
 
       log.info(`Download server added successfully, name: ${data.data.name}, url: ${data.data.url}`);
       return Response.json({});
@@ -197,8 +201,10 @@ export async function POST(request) {
         `, [rss.id, rss.id]);
 
         // Delete anime from rss and rss_anime table
-        await db.run("DELETE FROM rss WHERE id = ?", [rss.id]);
-        await db.run("DELETE FROM rss_anime WHERE rss_id = ?", [rss.id]);
+        await Promise.all([
+          db.run("DELETE FROM rss WHERE id = ?", [rss.id]),
+          db.run("DELETE FROM rss_anime WHERE rss_id = ?", [rss.id])
+        ]);
 
         // Commit transaction
         await db.run("COMMIT");
@@ -222,13 +228,16 @@ export async function POST(request) {
         // Update default server
         // If deleted server is default server, update default server to the first server
         // If no server left, set default server to empty
-        const servers = await db.all("SELECT name FROM server");
-        if (data.data.name === (await db.get("SELECT default_server FROM config WHERE id = 1")).default_server) {
-          if (servers.length === 0) {
-            await db.run("UPDATE config SET default_server = '' WHERE id = 1");
-          } else {
-            await db.run("UPDATE config SET default_server = ? WHERE id = 1", [servers[0].name]);
-          }
+        const config = await db.get("SELECT default_server FROM config WHERE id = 1");
+        if (data.data.name === config.default_server) {
+          await db.run(`
+            UPDATE config 
+            SET default_server = CASE 
+              WHEN (SELECT COUNT(*) FROM server) = 0 THEN ''
+              ELSE (SELECT name FROM server LIMIT 1)
+            END 
+            WHERE id = 1
+          `);
         }
 
         // Commit transaction

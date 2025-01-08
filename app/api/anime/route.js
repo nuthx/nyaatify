@@ -16,7 +16,7 @@ export async function GET(request) {
   const db = await getDb();
 
   try {
-    let [anime, total, todayCount, weekCount] = await Promise.all([
+    let [anime, total, todayCount, weekCount, config, servers] = await Promise.all([
       db.all(`
         SELECT a.*, GROUP_CONCAT(r.name) as rss_names
         FROM anime a
@@ -31,18 +31,18 @@ export async function GET(request) {
       // Get today's count
       db.get("SELECT COUNT(*) as count FROM anime WHERE date(pub_date) = date('now')"),
       // Get this week's count
-      db.get("SELECT COUNT(*) as count FROM anime WHERE pub_date >= date('now', '-7 days')")
+      db.get("SELECT COUNT(*) as count FROM anime WHERE pub_date >= date('now', '-7 days')"),
+      // Get default server config
+      db.get("SELECT default_server FROM config WHERE id = 1"),
+      // Get all servers
+      db.all("SELECT name, url, cookie FROM server")
     ]);
 
-    // Get default server
-    const config = await db.get("SELECT default_server FROM config WHERE id = 1");
-
     // Check if default server is online
-    const servers = await db.all("SELECT name, url, cookie FROM server");
     let defaultOnline = 0;
     if (config.default_server) {
-      const defaultServer = servers.find(server => server.name === config.default_server);
-      const version = await getQbittorrentVersion(defaultServer.url, defaultServer.cookie);
+      const defaultServerInfo = servers.find(server => server.name === config.default_server);
+      const version = await getQbittorrentVersion(defaultServerInfo.url, defaultServerInfo.cookie);
       defaultOnline = version === "unknown" ? 0 : 1;
     }
 

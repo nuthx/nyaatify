@@ -1,7 +1,7 @@
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
 import { formatBytes } from "@/lib/bytes";
-import { getQbittorrentVersion, getQbittorrentTorrents, addQbittorrentTorrent, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
+import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
 
 // Get torrent list
 // Method: GET
@@ -16,6 +16,7 @@ import { getQbittorrentVersion, getQbittorrentTorrents, addQbittorrentTorrent, m
 
 export async function GET() {
   const db = await getDb();
+
   try {
     // Check server online status
     const servers = await db.all("SELECT url, cookie, name FROM server");
@@ -94,20 +95,10 @@ export async function POST(request) {
       return Response.json({ error: "Server not found" }, { status: 404 });
     }
 
-    // Add a torrent
-    if (data.action === "add") {
-      const result = await addQbittorrentTorrent(server.url, server.cookie, data.hash);
-      if (result !== "success") {
-        return Response.json({ error: result }, { status: 500 });
-      }
-    }
-
-    // Pause, Resume, Delete a torrent
-    if (data.action === "pause" || data.action === "resume" || data.action === "delete") {
-      const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
-      if (result !== "success") {
-        return Response.json({ error: result }, { status: 500 });
-      }
+    // Add, Pause, Resume, Delete a torrent
+    const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
+    if (result !== "success") {
+      return Response.json({ error: result }, { status: 500 });
     }
 
     return Response.json({});
