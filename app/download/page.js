@@ -3,11 +3,6 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
-import { 
-  Card,
-  CardContent,
-  CardFooter
-} from "@/components/ui/card";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,9 +14,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
+import { 
+  Card,
+  CardContent,
+  CardFooter
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Pause, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function Home() {

@@ -5,24 +5,6 @@ import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink
-} from "@/components/ui/pagination";
-import { 
-  Card,
-  CardContent,
-  CardFooter
-} from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -33,8 +15,26 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+import { 
+  Card,
+  CardContent,
+  CardFooter
+} from "@/components/ui/card";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink
+} from "@/components/ui/pagination";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button";
 import { Download, Pause, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function Anime() {

@@ -1,8 +1,8 @@
 "use client";
 
+import i18n from "@/i18n/config";
 import { useState, useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
-import i18n from "./config";
 
 export function I18nWrapper({ children }) {
   const [mounted, setMounted] = useState(false);

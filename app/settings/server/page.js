@@ -28,8 +28,8 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 
 export default function ServerSettings() {
