@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { handlePost } from "@/lib/handlers";
 import {
   Card,
   CardContent,
@@ -112,135 +113,41 @@ export default function ServerSettings() {
     }
   };
 
-  const handleAddServer = async (values) => {
-    try {
-      const response = await fetch(settingListApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "server",
-          action: "add",
-          data: values
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
+  const handleManageServer = async (action, values) => {
+    const result = await handlePost(settingListApi, JSON.stringify({ type: "server", action, data: values }));
+    console.log(result);
+    if (result === "success") {
+      if (action === "add") {
         serverForm.reset();
-        fetchServer();
-        fetchConfig();
-      } else {
-        toast({
-          title: t("st.sv.toast.add"),
-          description: data.error,
-          variant: "destructive"
-        });
       }
-    } catch (error) {
-      toast({
-        title: t("st.sv.toast.add"),
-        description: error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleDeleteServer = async (name) => {
-    try {
-      const response = await fetch(settingListApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "server",
-          action: "delete",
-          data: { name }
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        fetchServer();
-        fetchConfig();
-      } else {
-        toast({
-          title: t("st.sv.toast.delete"),
-          description: data.error,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      toast({
-        title: t("st.sv.toast.delete"),
-        description: error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleTestServer = async (values) => {
-    try {
-      const response = await fetch(settingListApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "server",
-          action: "test",
-          data: values
-        }),
-      });
-
-      const data = await response.json();
-      
-      if (response.ok) {
+      if (action === "test") {
         toast({
           title: t("st.sv.toast.testsuccess"),
-          description: `${t("st.sv.toast.version")}: ${data.version}`
-        });
-      } else {
-        toast({
-          title: t("st.sv.toast.testfailed"),
-          description: data.error,
-          variant: "destructive"
+          description: `${t("st.sv.toast.version")}: ${result.version}`
         });
       }
-    } catch (error) {
+      fetchServer();
+      fetchConfig();
+    } else {
       toast({
-        title: t("st.sv.toast.testfailed"),
-        description: error.message,
+        title: t(`st.sv.toast.${action}`),
+        description: result,
         variant: "destructive"
       });
     }
   };
 
   const handleSaveConfig = async (values) => {
-    try {
-      const response = await fetch(settingApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+    const result = await handlePost(settingApi, JSON.stringify(values));
+    if (result === "success") {
+      toast({
+        title: t("glb.toast.save_success")
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        fetchServer();
-        fetchConfig();
-        toast({
-          title: t("glb.toast.save_success")
-        });
-      } else {
-        toast({
-          title: t("glb.toast.save_failed"),
-          description: data.error,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
+      fetchConfig();
+    } else {
       toast({
         title: t("glb.toast.save_failed"),
-        description: error.message,
+        description: result,
         variant: "destructive"
       });
     }
@@ -255,7 +162,7 @@ export default function ServerSettings() {
         </CardHeader>
         <CardContent>
           <Form {...serverForm}>
-            <form onSubmit={serverForm.handleSubmit(handleAddServer)} className="space-y-6" noValidate>
+            <form onSubmit={serverForm.handleSubmit((values) => handleManageServer("add", values))} className="space-y-6" noValidate>
               <FormField control={serverForm.control} name="name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.sv.add.name")}</FormLabel>
@@ -323,7 +230,7 @@ export default function ServerSettings() {
               </div>
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
-                <Button type="button" variant="outline" onClick={serverForm.handleSubmit(handleTestServer)}>{t("glb.test")}</Button>
+                <Button type="button" variant="outline" onClick={serverForm.handleSubmit((values) => handleManageServer("test", values))}>{t("glb.test")}</Button>
               </div>
             </form>
           </Form>
@@ -349,7 +256,7 @@ export default function ServerSettings() {
                 {server.state === "online" ? t("st.sv.servers.online") : t("st.sv.servers.offline")}
               </>
             )}
-            onDelete={handleDeleteServer}
+            onDelete={(server) => handleManageServer("delete", server)}
             deleteable={() => true}
             deleteDescription={t("st.sv.servers.alert")}
           />

@@ -81,7 +81,7 @@ export function ListCard({ items = [], empty, content, state, onDelete, deleteab
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onDelete(item.name)}>
+              <AlertDialogAction onClick={() => onDelete(item)}>
                 {t("glb.delete")}
               </AlertDialogAction>
             </AlertDialogFooter>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
+import { handlePost } from "@/lib/handlers";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -101,37 +102,18 @@ export default function Anime() {
   };
 
   const handleManage = async (action, server, hash) => {
-    try {
-      const response = await fetch(torrentsApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: action,
-          server: server,
-          hash: hash
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        if (action === "add") {
-          toast({
-            title: t(`download.toast.add_success`)
-          });
-        }
-        fetchAnime(currentPage);
-      } else {
+    const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
+    if (result === "success") {
+      if (action === "add") {
         toast({
-          title: t(`download.toast.${action}`),
-          description: data.message,
-          variant: "destructive"
+          title: t(`download.toast.add_success`)
         });
       }
-    } catch (error) {
+      fetchAnime(currentPage);
+    } else {
       toast({
         title: t(`download.toast.${action}`),
-        description: error.message,
+        description: result,
         variant: "destructive"
       });
     }

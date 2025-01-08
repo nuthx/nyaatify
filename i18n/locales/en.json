@@ -153,11 +153,11 @@
     "sv": {
       "toast": {
         "fetch": "Failed to fetch download server list",
-        "testsuccess": "Test successful",
-        "version": "Version",
-        "testfailed": "Failed to connect to download server",
         "add": "Failed to add download server",
-        "delete": "Failed to delete download server"
+        "delete": "Failed to delete download server",
+        "test": "Failed to connect to download server",
+        "testsuccess": "Test successful",
+        "version": "Version"
       },
       "add": {
         "title": "Add a New Download Server",

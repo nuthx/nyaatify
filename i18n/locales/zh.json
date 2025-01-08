@@ -153,11 +153,11 @@
     "sv": {
       "toast": {
         "fetch": "获取下载服务器列表失败",
-        "testsuccess": "测试成功",
-        "version": "版本",
-        "testfailed": "无法连接到下载服务器",
         "add": "添加下载服务器失败",
-        "delete": "删除下载服务器失败"
+        "delete": "删除下载服务器失败",
+        "test": "无法连接到下载服务器",
+        "testsuccess": "测试成功",
+        "version": "版本"
       },
       "add": {
         "title": "添加新的下载服务器",

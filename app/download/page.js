@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
+import { handlePost } from "@/lib/handlers";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -79,32 +80,13 @@ export default function Home() {
   };
 
   const handleManage = async (action, server, hash) => {
-    try {
-      const response = await fetch(torrentsApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: action,
-          server: server,
-          hash: hash
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        fetchTorrents();
-      } else {
-        toast({
-          title: t(`download.toast.${action}`),
-          description: data.error,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
+    const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
+    if (result === "success") {
+      fetchTorrents();
+    } else {
       toast({
         title: t(`download.toast.${action}`),
-        description: error.message,
+        description: result,
         variant: "destructive"
       });
     }

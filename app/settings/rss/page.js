@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { handlePost } from "@/lib/handlers";
 import {
   Card,
   CardContent,
@@ -126,96 +127,33 @@ export default function RSSSettings() {
     }
   };
 
-  const handleAddRSS = async (values) => {
-    try {
-      const response = await fetch(settingListApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "rss",
-          action: "add",
-          data: values
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
+  const handleManageRSS = async (action, values) => {
+    const result = await handlePost(settingListApi, JSON.stringify({ type: "rss", action, data: values }));
+    if (result === "success") {
+      if (action === "add") {
         rssForm.reset();
-        fetchRSS();
-      } else {
-        toast({
-          title: t("st.rss.toast.add"),
-          description: data.error,
-          variant: "destructive"
-        });
       }
-    } catch (error) {
+      fetchRSS();
+    } else {
       toast({
-        title: t("st.rss.toast.add"),
-        description: error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleDeleteRSS = async (name) => {
-    try {
-      const response = await fetch(settingListApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "rss",
-          action: "delete",
-          data: { name }
-        }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        fetchRSS();
-      } else {
-        toast({
-          title: t("st.rss.toast.delete"),
-          description: data.error,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
-      toast({
-        title: t("st.rss.toast.delete"),
-        description: error.message,
+        title: t(`st.rss.toast.${action}`),
+        description: result,
         variant: "destructive"
       });
     }
   };
 
   const handleSaveConfig = async (values) => {
-    try {
-      const response = await fetch(settingApi, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+    const result = await handlePost(settingApi, JSON.stringify(values));
+    if (result === "success") {
+      toast({
+        title: t("glb.toast.save_success")
       });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast({
-          title: t("glb.toast.save_success")
-        });
-      } else {
-        toast({
-          title: t("glb.toast.save_failed"),
-          description: data.error,
-          variant: "destructive"
-        });
-      }
-    } catch (error) {
+      fetchConfig();
+    } else {
       toast({
         title: t("glb.toast.save_failed"),
-        description: error.message,
+        description: result,
         variant: "destructive"
       });
     }
@@ -230,7 +168,7 @@ export default function RSSSettings() {
         </CardHeader>
         <CardContent>
           <Form {...rssForm}>
-            <form onSubmit={rssForm.handleSubmit(handleAddRSS)} className="space-y-6" noValidate>
+            <form onSubmit={rssForm.handleSubmit((values) => handleManageRSS("add", values))} className="space-y-6" noValidate>
               <FormField control={rssForm.control} name="name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.rss.add.name")}</FormLabel>
@@ -288,7 +226,7 @@ export default function RSSSettings() {
                 <>{t("st.rss.subscription.next")}: {new Date(rss.next).toLocaleString()}</>
               )
             )}
-            onDelete={handleDeleteRSS}
+            onDelete={(rss) => handleManageRSS("delete", rss)}
             deleteable={(rss) => rss.state !== "running"}
             deleteDescription={t("st.rss.subscription.alert")}
           />
