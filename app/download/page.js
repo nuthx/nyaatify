@@ -81,12 +81,12 @@ export default function Home() {
 
   const handleManage = async (action, server, hash) => {
     const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
-    if (result === "success") {
+    if (result.state === "success") {
       fetchTorrents();
     } else {
       toast({
         title: t(`download.toast.${action}`),
-        description: result,
+        description: result.message,
         variant: "destructive"
       });
     }

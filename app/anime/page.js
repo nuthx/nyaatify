@@ -103,7 +103,7 @@ export default function Anime() {
 
   const handleManage = async (action, server, hash) => {
     const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
-    if (result === "success") {
+    if (result.state === "success") {
       if (action === "add") {
         toast({
           title: t(`download.toast.add_success`)
@@ -113,7 +113,7 @@ export default function Anime() {
     } else {
       toast({
         title: t(`download.toast.${action}`),
-        description: result,
+        description: result.message,
         variant: "destructive"
       });
     }

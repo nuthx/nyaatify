@@ -115,15 +115,14 @@ export default function ServerSettings() {
 
   const handleManageServer = async (action, values) => {
     const result = await handlePost(settingListApi, JSON.stringify({ type: "server", action, data: values }));
-    console.log(result);
-    if (result === "success") {
+    if (result.state === "success") {
       if (action === "add") {
         serverForm.reset();
       }
       if (action === "test") {
         toast({
           title: t("st.sv.toast.testsuccess"),
-          description: `${t("st.sv.toast.version")}: ${result.version}`
+          description: `${t("st.sv.toast.version")}: ${result.message.version}`
         });
       }
       fetchServer();
@@ -131,7 +130,7 @@ export default function ServerSettings() {
     } else {
       toast({
         title: t(`st.sv.toast.${action}`),
-        description: result,
+        description: result.message,
         variant: "destructive"
       });
     }
@@ -139,7 +138,7 @@ export default function ServerSettings() {
 
   const handleSaveConfig = async (values) => {
     const result = await handlePost(settingApi, JSON.stringify(values));
-    if (result === "success") {
+    if (result.state === "success") {
       toast({
         title: t("glb.toast.save_success")
       });
@@ -147,7 +146,7 @@ export default function ServerSettings() {
     } else {
       toast({
         title: t("glb.toast.save_failed"),
-        description: result,
+        description: result.message,
         variant: "destructive"
       });
     }

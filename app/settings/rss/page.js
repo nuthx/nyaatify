@@ -129,7 +129,7 @@ export default function RSSSettings() {
 
   const handleManageRSS = async (action, values) => {
     const result = await handlePost(settingListApi, JSON.stringify({ type: "rss", action, data: values }));
-    if (result === "success") {
+    if (result.state === "success") {
       if (action === "add") {
         rssForm.reset();
       }
@@ -137,7 +137,7 @@ export default function RSSSettings() {
     } else {
       toast({
         title: t(`st.rss.toast.${action}`),
-        description: result,
+        description: result.message,
         variant: "destructive"
       });
     }
@@ -145,7 +145,7 @@ export default function RSSSettings() {
 
   const handleSaveConfig = async (values) => {
     const result = await handlePost(settingApi, JSON.stringify(values));
-    if (result === "success") {
+    if (result.state === "success") {
       toast({
         title: t("glb.toast.save_success")
       });
@@ -153,7 +153,7 @@ export default function RSSSettings() {
     } else {
       toast({
         title: t("glb.toast.save_failed"),
-        description: result,
+        description: result.message,
         variant: "destructive"
       });
     }
