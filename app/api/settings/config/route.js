@@ -18,7 +18,12 @@ export async function GET() {
   const db = await getDb();
 
   try {
-    const config = await db.get("SELECT * FROM config WHERE id = 1");
+    const configRows = await db.all("SELECT key, value FROM config");
+    const config = configRows.reduce((acc, row) => {
+      acc[row.key] = row.value;
+      return acc;
+    }, {});
+    
     return Response.json(config);
   }
 
@@ -34,10 +39,12 @@ export async function POST(request) {
 
   try {
     // Check if config name correct
-    const existingConfig = await db.get("SELECT * FROM config WHERE id = 1");
-    for (const configName of Object.keys(data)) {
-      if (!(configName in existingConfig)) {
-        return Response.json({ error: `Invalid config name: ${configName}` }, { status: 400 });
+    const existingKeys = await db.all("SELECT key FROM config");
+    const validKeys = existingKeys.map(row => row.key);
+    
+    for (const configKey of Object.keys(data)) {
+      if (!validKeys.includes(configKey)) {
+        return Response.json({ error: `Invalid config name: ${configKey}` }, { status: 400 });
       }
     }
 
@@ -49,18 +56,22 @@ export async function POST(request) {
       }
     }
 
-    // Update config
-    await db.run(
-      `UPDATE config SET ${Object.entries(data)
-        .map(([key]) => `${key} = ?`)
-        .join(", ")} WHERE id = 1`,
-      Object.values(data)
-    );
-
+    // Update config with transaction
+    await db.run('BEGIN TRANSACTION');
+    
+    for (const [key, value] of Object.entries(data)) {
+      await db.run(
+        "UPDATE config SET value = ? WHERE key = ?",
+        [value, key]
+      );
+    }
+    
+    await db.run('COMMIT');
     return Response.json({});
   }
 
   catch (error) {
+    await db.run('ROLLBACK');
     log.error(`Failed to edit config: ${error.message}`);
     return Response.json({ error: error.message }, { status: 500 });
   }

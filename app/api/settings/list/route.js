@@ -160,11 +160,11 @@ export async function POST(request) {
       // Update default server only if empty
       await db.run(`
         UPDATE config 
-        SET default_server = CASE 
-          WHEN default_server IS NULL THEN ? 
-          ELSE default_server 
+        SET value = CASE 
+          WHEN value = '' THEN ? 
+          ELSE value 
         END 
-        WHERE id = 1
+        WHERE key = 'default_server'
       `, [data.data.name]);
 
       log.info(`Download server added successfully, name: ${data.data.name}, url: ${data.data.url}`);
@@ -228,15 +228,15 @@ export async function POST(request) {
         // Update default server
         // If deleted server is default server, update default server to the first server
         // If no server left, set default server to empty
-        const config = await db.get("SELECT default_server FROM config WHERE id = 1");
+        const config = await db.get("SELECT value as default_server FROM config WHERE key = 'default_server'");
         if (data.data.name === config.default_server) {
           await db.run(`
             UPDATE config 
-            SET default_server = CASE 
+            SET value = CASE 
               WHEN (SELECT COUNT(*) FROM server) = 0 THEN ''
               ELSE (SELECT name FROM server LIMIT 1)
             END 
-            WHERE id = 1
+            WHERE key = 'default_server'
           `);
         }
 
