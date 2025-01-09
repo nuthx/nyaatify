@@ -112,7 +112,9 @@
       "toast": {
         "fetch": "Failed to fetch RSS list",
         "add": "Failed to add RSS",
-        "delete": "Failed to delete RSS"
+        "delete": "Failed to delete RSS",
+        "refresh": "Failed to refresh RSS",
+        "refreshstart": "Start refreshing RSS"
       },
       "add": {
         "title": "Add a New RSS Subscription",
@@ -137,6 +139,7 @@
         "cron": "Refresh Rule",
         "running": "Refreshing",
         "next": "Next",
+        "refresh": "Refresh Now",
         "alert": "This action will delete this RSS subscription permanently. The anime included in this RSS will also be DELETED."
       },
       "ai": {

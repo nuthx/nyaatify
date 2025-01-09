@@ -2,6 +2,7 @@ import parser from "cron-parser";
 import RSSParser from "rss-parser";
 import { getDb } from "@/lib/db";
 import { log } from "@/lib/log";
+import { parseRSS } from "@/lib/parse";
 import { tasks, startTask, stopTask } from "@/lib/schedule";
 import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorrent";
 
@@ -13,7 +14,7 @@ import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorre
 // Method: POST
 // Body: {
 //   type: string (required, type: rss, server, notification)
-//   action: string (required, type: add, delete, test)
+//   action: string (required, type: add, delete, refresh, test)
 //   data: object (required)
 // }
 // --------------------------------
@@ -29,7 +30,7 @@ import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorre
 //   username: string (required)
 //   password: string (required)
 // --------------------------------
-// Object of delete:
+// Object of refresh/delete:
 //   name: string (required)
 
 export async function GET(request) {
@@ -249,6 +250,12 @@ export async function POST(request) {
         await db.run("ROLLBACK");
         return Response.json({ error: error.message }, { status: 500 });
       }
+    }
+
+    else if (data.action === "refresh" && data.type === "rss") {
+      const rss = await db.get("SELECT * FROM rss WHERE name = ?", [data.data.name]);
+      parseRSS(rss.id, rss.name, rss.url, rss.type);
+      return Response.json({});
     }
 
     else if (data.action === "test" && data.type === "server") {

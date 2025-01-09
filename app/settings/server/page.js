@@ -30,6 +30,7 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 
@@ -254,6 +255,9 @@ export default function ServerSettings() {
               <>
                 {server.state === "online" ? t("st.sv.servers.online") : t("st.sv.servers.offline")}
               </>
+            )}
+            menu={(server) => (
+              <></>
             )}
             onDelete={(server) => handleManageServer("delete", server)}
             deleteable={() => true}

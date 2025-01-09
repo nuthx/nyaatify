@@ -30,8 +30,10 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
+import { RefreshCw } from "lucide-react";
 
 export default function RSSSettings() {
   const settingApi = "/api/settings/config";
@@ -129,6 +131,11 @@ export default function RSSSettings() {
 
   const handleManageRSS = async (action, values) => {
     const result = await handlePost(settingListApi, JSON.stringify({ type: "rss", action, data: values }));
+    if (action === "refresh") {
+      toast({
+        title: t("st.rss.toast.refreshstart")
+      });
+    }
     if (result.state === "success") {
       if (action === "add") {
         rssForm.reset();
@@ -225,6 +232,13 @@ export default function RSSSettings() {
               ) : (
                 <>{t("st.rss.subscription.next")}: {new Date(rss.next).toLocaleString()}</>
               )
+            )}
+            menu={(rss) => (
+              <>
+                <DropdownMenuItem onClick={() => handleManageRSS("refresh", rss)}>
+                  <RefreshCw />{t("st.rss.subscription.refresh")}
+                </DropdownMenuItem>
+              </>
             )}
             onDelete={(rss) => handleManageRSS("delete", rss)}
             deleteable={(rss) => rss.state !== "running"}

@@ -112,7 +112,9 @@
       "toast": {
         "fetch": "获取 RSS 订阅列表失败",
         "add": "添加 RSS 订阅失败",
-        "delete": "删除 RSS 订阅失败"
+        "delete": "删除 RSS 订阅失败",
+        "refresh": "刷新 RSS 订阅失败",
+        "refreshstart": "开始刷新 RSS 订阅"
       },
       "add": {
         "title": "添加新的 RSS 订阅",
@@ -137,6 +139,7 @@
         "cron": "刷新规则",
         "running": "刷新中",
         "next": "下次刷新",
+        "refresh": "立即刷新",
         "alert": "此操作将会永久删除该 RSS 订阅，且该链接下的动画也会被一并删除！"
       },
       "ai": {
