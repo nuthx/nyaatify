@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
+import useSWR, { mutate } from "swr"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { handlePost } from "@/lib/handlers";
@@ -40,7 +41,37 @@ export default function ServerSettings() {
 
   const { t } = useTranslation();
   const { toast } = useToast()
-  const [serverList, setServerList] = useState([]);
+
+  const fetcher = async (...args) => {
+    const res = await fetch(...args);
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+    return res.json();
+  };
+
+  const { data: serverData, error: serverError } = useSWR(`${settingListApi}?type=server`, fetcher);
+  const { data: configData, error: configError } = useSWR(settingApi, fetcher);
+
+  useEffect(() => {
+    if (serverError) {
+      toast({
+        title: t("toast.failed.fetch_server"),
+        description: serverError.message,
+        variant: "destructive"
+      });
+    }
+    if (configError) {
+      toast({
+        title: t("toast.failed.fetch_config"),
+        description: configError.message,
+        variant: "destructive"
+      });
+    }
+    if (configData) {
+      defaultServerForm.setValue("default_server", configData.default_server || "");
+    }
+  }, [serverError, configError, configData]);
 
   const serverFormSchema = z.object({
     type: z.string(),
@@ -81,39 +112,6 @@ export default function ServerSettings() {
     Aria2: "http://192.168.1.100:6800/jsonrpc"
   };
 
-  useEffect(() => {
-    fetchServer();
-    fetchConfig();
-  }, []);
-
-  const fetchServer = async () => {
-    try {
-      const response = await fetch(`${settingListApi}?type=server`);
-      const data = await response.json();
-      setServerList(data.servers);
-    } catch (error) {
-      toast({
-        title: t("toast.failed.fetch_server"),
-        description: error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
-  const fetchConfig = async () => {
-    try {
-      const response = await fetch(settingApi);
-      const data = await response.json();
-      defaultServerForm.setValue("default_server", data.default_server || "");
-    } catch (error) {
-      toast({
-        title: t("toast.failed.fetch_config"),
-        description: error.message,
-        variant: "destructive"
-      });
-    }
-  };
-
   const handleManageServer = async (action, values) => {
     const result = await handlePost(settingListApi, JSON.stringify({ type: "server", action, data: values }));
     if (result.state === "success") {
@@ -126,8 +124,8 @@ export default function ServerSettings() {
           description: `${t("glb.version")}: ${result.message.version}`
         });
       }
-      fetchServer();
-      fetchConfig();
+      mutate(`${settingListApi}?type=server`);
+      mutate(settingApi);
     } else {
       toast({
         title: t(`toast.failed.${action}_server`),
@@ -143,7 +141,7 @@ export default function ServerSettings() {
       toast({
         title: t("toast.success.save")
       });
-      fetchConfig();
+      mutate(settingApi);
     } else {
       toast({
         title: t("toast.failed.save"),
@@ -243,7 +241,7 @@ export default function ServerSettings() {
         </CardHeader>
         <CardContent className="p-0">
           <ListCard
-            items={serverList}
+            items={serverData?.servers || []}
             empty={t("st.sv.servers.empty")}
             content={(server) => (
               <>
@@ -277,14 +275,14 @@ export default function ServerSettings() {
               <FormField control={defaultServerForm.control} name="default_server" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.sv.default.server")}</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange} disabled={serverList.length === 0}>
+                  <Select value={field.value} onValueChange={field.onChange} disabled={serverData?.servers.length === 0}>
                     <FormControl>
                       <SelectTrigger className="w-72">
                         <SelectValue placeholder={t("st.sv.default.empty")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {serverList.map((server) => (
+                      {(serverData?.servers || []).map((server) => (
                         <SelectItem key={server.name} value={server.name}>
                           {server.name}
                         </SelectItem>
