@@ -9,7 +9,7 @@ import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent
 // Manage torrent state
 // Method: POST
 // Body: {
-//   action: string (required, type: add, pause, resume, delete)
+//   action: string (required, type: download, pause, resume, delete)
 //   server: string (required)
 //   hash: string (required)
 // }
@@ -95,7 +95,7 @@ export async function POST(request) {
       return Response.json({ error: "Server not found" }, { status: 404 });
     }
 
-    // Add, Pause, Resume, Delete a torrent
+    // Download, Pause, Resume, Delete a torrent
     const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
     if (result !== "success") {
       return Response.json({ error: result }, { status: 500 });

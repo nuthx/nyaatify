@@ -45,12 +45,12 @@ export default function RSSSettings() {
 
   const rssFormSchema = z.object({
     name: z.string()
-      .min(2, { message: t("st.rss.validate.name1") })
-      .max(40, { message: t("st.rss.validate.name2") }),
+      .min(2, { message: t("validate.name_2") })
+      .max(40, { message: t("validate.name_40") }),
     url: z.string()
-      .url({ message: t("st.rss.validate.url1") })
-      .startsWith("http", { message: t("st.rss.validate.url2") })
-      .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.url3") }),
+      .url({ message: t("validate.url_invalid") })
+      .startsWith("http", { message: t("validate.url_http") })
+      .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
     cron: z.string()
   })
 
@@ -66,9 +66,9 @@ export default function RSSSettings() {
   const aiFormSchema = z.object({
     ai_priority: z.string(),
     ai_api: z.string()
-      .url({ message: t("st.rss.validate.api1") })
-      .startsWith("http", { message: t("st.rss.validate.api2") })
-      .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.api3") })
+      .url({ message: t("validate.api_invalid") })
+      .startsWith("http", { message: t("validate.api_http") })
+      .refine(url => !url.endsWith("/"), { message: t("validate.api_slash") })
       .or(z.literal("")),
     ai_key: z.string(),
     ai_model: z.string()
@@ -103,7 +103,7 @@ export default function RSSSettings() {
       setRSSList(data.rss);
     } catch (error) {
       toast({
-        title: t("st.rss.toast.fetch"),
+        title: t("toast.failed.fetch_rss"),
         description: error.message,
         variant: "destructive"
       });
@@ -122,7 +122,7 @@ export default function RSSSettings() {
       });
     } catch (error) {
       toast({
-        title: t("st.toast.fetch_failed"),
+        title: t("toast.failed.fetch_config"),
         description: error.message,
         variant: "destructive"
       });
@@ -133,7 +133,7 @@ export default function RSSSettings() {
     const result = await handlePost(settingListApi, JSON.stringify({ type: "rss", action, data: values }));
     if (action === "refresh") {
       toast({
-        title: t("st.rss.toast.refreshstart")
+        title: t("toast.start.refresh_rss")
       });
     }
     if (result.state === "success") {
@@ -143,7 +143,7 @@ export default function RSSSettings() {
       fetchRSS();
     } else {
       toast({
-        title: t(`st.rss.toast.${action}`),
+        title: t(`toast.failed.${action}_rss`),
         description: result.message,
         variant: "destructive"
       });
@@ -154,12 +154,12 @@ export default function RSSSettings() {
     const result = await handlePost(settingApi, JSON.stringify(values));
     if (result.state === "success") {
       toast({
-        title: t("glb.toast.save_success")
+        title: t("toast.success.save")
       });
       fetchConfig();
     } else {
       toast({
-        title: t("glb.toast.save_failed"),
+        title: t("toast.failed.save"),
         description: result.message,
         variant: "destructive"
       });

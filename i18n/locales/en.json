@@ -10,11 +10,45 @@
     "save": "Save",
     "reset": "Reset",
     "test": "Test",
-    "toast": {
-      "fetch_failed": "Fetch Failed",
-      "save_success": "Save Success",
-      "save_failed": "Save Failed"
+    "version": "Version"
+  },
+  "toast": {
+    "success": {
+      "save": "Saved Successfully",
+      "test": "Tested Successfully"
+    },
+    "failed": {
+      "save": "Save Failed",
+      "download": "Download Failed",
+      "pause": "Pause Failed",
+      "resume": "Resume Failed",
+      "delete": "Delete Failed",
+      "fetch_config": "Failed to fetch user config",
+      "fetch_rss": "Failed to load RSS subscription",
+      "fetch_server": "Failed to fetch download server list",
+      "add_rss": "Failed to add RSS subscription",
+      "add_server": "Failed to add download server",
+      "delete_rss": "Failed to delete RSS subscription",
+      "delete_server": "Failed to delete download server",
+      "refresh_rss": "Failed to refresh RSS subscription",
+      "test_server": "Failed to connect to download server"
+    },
+    "start": {
+      "download": "Start Downloading",
+      "refresh_rss": "Start Refreshing"
     }
+  },
+  "validate": {
+    "name_2": "Name must be at least 2 characters",
+    "name_40": "Name must be less than 40 characters",
+    "username": "Please enter a valid username",
+    "password": "Please enter a valid password",
+    "url_invalid": "Please enter a valid URL",
+    "url_http": "URL must start with http or https",
+    "url_slash": "URL must not end with /",
+    "api_invalid": "Please enter a valid API URL",
+    "api_http": "API URL must start with http or https",
+    "api_slash": "API URL must not end with /"
   },
   "nav": {
     "anime": "Anime",
@@ -29,14 +63,7 @@
     "server_offline": "Download Server Offline",
     "today": "Today",
     "week": "Week",
-    "total": "Total",
-    "state": {
-      "new": "New",
-      "downloading": "Downloading",
-      "completed": "Completed",
-      "paused": "Paused",
-      "failed": "Failed"
-    }
+    "total": "Total"
   },
   "download": {
     "empty_server": "Please add a download server first.",
@@ -73,20 +100,10 @@
       "checkingResumeData": "Checking Resume Data",
       "moving": "Moved",
       "unknown": "Unknown"
-    },
-    "toast": {
-      "add_success": "Add download task successfully",
-      "add": "Failed to download",
-      "pause": "Failed to pause",
-      "resume": "Failed to resume",
-      "delete": "Failed to delete"
     }
   },
   "st": {
     "title": "Settings",
-    "toast": {
-      "fetch_failed": "Failed to fetch user config"
-    },
     "nav": {
       "general": "General",
       "rss": "RSS Subscription",
@@ -109,29 +126,12 @@
       }
     },
     "rss": {
-      "toast": {
-        "fetch": "Failed to fetch RSS list",
-        "add": "Failed to add RSS",
-        "delete": "Failed to delete RSS",
-        "refresh": "Failed to refresh RSS",
-        "refreshstart": "Start refreshing RSS"
-      },
       "add": {
         "title": "Add a New RSS Subscription",
         "description": "Add a Nyaa or Mikan RSS subscription to track anime publication. After adding, you need to wait a few minutes to parse all data and show on the home page.",
         "name": "Name",
         "url": "RSS URL",
         "cron": "Refresh Rule (CRON)"
-      },
-      "validate": {
-        "name1": "Name must be at least 2 characters",
-        "name2": "Name must be less than 40 characters",
-        "url1": "Invalid URL",
-        "url2": "URL must start with http or https",
-        "url3": "URL must not end with /",
-        "api1": "Invalid API URL",
-        "api2": "API URL must start with http or https",
-        "api3": "API URL must not end with /"
       },
       "subscription": {
         "title": "RSS Subscription",
@@ -154,14 +154,6 @@
       }
     },
     "sv": {
-      "toast": {
-        "fetch": "Failed to fetch download server list",
-        "add": "Failed to add download server",
-        "delete": "Failed to delete download server",
-        "test": "Failed to connect to download server",
-        "testsuccess": "Test successful",
-        "version": "Version"
-      },
       "add": {
         "title": "Add a New Download Server",
         "description": "Add a download server to manage your download tasks.",
@@ -174,21 +166,11 @@
         "username": "Username",
         "password": "Password"
       },
-      "validate": {
-        "name1": "Name must be at least 2 characters",
-        "name2": "Name must be less than 40 characters",
-        "url1": "Invalid URL",
-        "url2": "URL must start with http or https",
-        "url3": "URL must not end with /",
-        "username": "Please enter a valid username",
-        "password": "Please enter a valid password"
-      },
       "servers": {
         "title": "Download Servers",
         "empty": "Please add a download server first.",
         "online": "Online",
         "offline": "Offline",
-        "version": "Server version",
         "alert": "This action will delete this download server permanently."
       },
       "default": {

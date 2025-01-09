@@ -45,16 +45,16 @@ export default function ServerSettings() {
   const serverFormSchema = z.object({
     type: z.string(),
     name: z.string()
-      .min(2, { message: t("st.sv.validate.name1") })
-      .max(40, { message: t("st.sv.validate.name2") }),
+      .min(2, { message: t("validate.name_2") })
+      .max(40, { message: t("validate.name_40") }),
     url: z.string()
-      .url({ message: t("st.sv.validate.url1") })
-      .startsWith("http", { message: t("st.sv.validate.url2") })
-      .refine(url => !url.endsWith("/"), { message: t("st.sv.validate.url3") }),
+      .url({ message: t("validate.url_invalid") })
+      .startsWith("http", { message: t("validate.url_http") })
+      .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
     username: z.string()
-      .min(1, { message: t("st.sv.validate.username") }),
+      .min(1, { message: t("validate.username") }),
     password: z.string()
-      .min(1, { message: t("st.sv.validate.password") }),
+      .min(1, { message: t("validate.password") }),
   })
 
   const serverForm = useForm({
@@ -93,7 +93,7 @@ export default function ServerSettings() {
       setServerList(data.servers);
     } catch (error) {
       toast({
-        title: t("st.sv.toast.fetch"),
+        title: t("toast.failed.fetch_server"),
         description: error.message,
         variant: "destructive"
       });
@@ -107,7 +107,7 @@ export default function ServerSettings() {
       defaultServerForm.setValue("default_server", data.default_server || "");
     } catch (error) {
       toast({
-        title: t("glb.toast.fetch_failed"),
+        title: t("toast.failed.fetch_config"),
         description: error.message,
         variant: "destructive"
       });
@@ -122,15 +122,15 @@ export default function ServerSettings() {
       }
       if (action === "test") {
         toast({
-          title: t("st.sv.toast.testsuccess"),
-          description: `${t("st.sv.toast.version")}: ${result.message.version}`
+          title: t("toast.success.test"),
+          description: `${t("glb.version")}: ${result.message.version}`
         });
       }
       fetchServer();
       fetchConfig();
     } else {
       toast({
-        title: t(`st.sv.toast.${action}`),
+        title: t(`toast.failed.${action}_server`),
         description: result.message,
         variant: "destructive"
       });
@@ -141,12 +141,12 @@ export default function ServerSettings() {
     const result = await handlePost(settingApi, JSON.stringify(values));
     if (result.state === "success") {
       toast({
-        title: t("glb.toast.save_success")
+        title: t("toast.success.save")
       });
       fetchConfig();
     } else {
       toast({
-        title: t("glb.toast.save_failed"),
+        title: t("toast.failed.save"),
         description: result.message,
         variant: "destructive"
       });
@@ -248,7 +248,7 @@ export default function ServerSettings() {
             content={(server) => (
               <>
                 <p className="text-sm text-zinc-500">{server.url}</p>
-                <p className="text-sm text-zinc-500">{t("st.sv.servers.version")}: {server.version}</p>
+                <p className="text-sm text-zinc-500">{t("glb.version")}: {server.version}</p>
               </>
             )}
             state={(server) => (

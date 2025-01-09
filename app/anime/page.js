@@ -106,13 +106,13 @@ export default function Anime() {
     if (result.state === "success") {
       if (action === "add") {
         toast({
-          title: t(`download.toast.add_success`)
+          title: t(`toast.start.download`)
         });
       }
       fetchAnime(currentPage);
     } else {
       toast({
-        title: t(`download.toast.${action}`),
+        title: t(`toast.failed.${action}`),
         description: result.message,
         variant: "destructive"
       });

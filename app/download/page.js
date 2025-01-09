@@ -85,7 +85,7 @@ export default function Home() {
       fetchTorrents();
     } else {
       toast({
-        title: t(`download.toast.${action}`),
+        title: t(`toast.failed.${action}`),
         description: result.message,
         variant: "destructive"
       });
