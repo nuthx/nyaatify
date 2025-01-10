@@ -36,8 +36,8 @@ import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 
 export default function ServerSettings() {
-  const settingApi = "/api/settings/config";
-  const settingListApi = "/api/settings/list";
+  const serversApi = "/api/servers";
+  const configApi = "/api/config";
 
   const { t } = useTranslation();
   const { toast } = useToast()
@@ -88,8 +88,8 @@ export default function ServerSettings() {
     return data;
   };
 
-  const { data: configData, error: configError, isLoading: configLoading } = useSWR(settingApi, fetcher);
-  const { data: serverData, error: serverError, isLoading: serverLoading } = useSWR(`${settingListApi}?type=server`, fetcher);
+  const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
+  const { data: serverData, error: serverError, isLoading: serverLoading } = useSWR(serversApi, fetcher);
 
   useEffect(() => {
     if (serverError) {
@@ -112,7 +112,7 @@ export default function ServerSettings() {
   }, [serverError, configError, configData]);
 
   const handleManageServer = async (action, values) => {
-    const result = await handlePost(settingListApi, JSON.stringify({ type: "server", action, data: values }));
+    const result = await handlePost(serversApi, JSON.stringify({ type: "server", action, data: values }));
     if (result.state === "success") {
       if (action === "add") {
         serverForm.reset();
@@ -123,8 +123,8 @@ export default function ServerSettings() {
           description: `${t("glb.version")}: ${result.message.version}`
         });
       }
-      mutate(`${settingListApi}?type=server`);
-      mutate(settingApi);
+      mutate(serversApi);
+      mutate(configApi);
     } else {
       toast({
         title: t(`toast.failed.${action}_server`),
@@ -135,12 +135,12 @@ export default function ServerSettings() {
   };
 
   const handleSaveConfig = async (values) => {
-    const result = await handlePost(settingApi, JSON.stringify(values));
+    const result = await handlePost(configApi, JSON.stringify(values));
     if (result.state === "success") {
       toast({
         title: t("toast.success.save")
       });
-      mutate(settingApi);
+      mutate(configApi);
     } else {
       toast({
         title: t("toast.failed.save"),

@@ -37,8 +37,8 @@ import { ListCard } from "@/components/settings";
 import { RefreshCw } from "lucide-react";
 
 export default function RSSSettings() {
-  const settingApi = "/api/settings/config";
-  const settingListApi = "/api/settings/list";
+  const rssApi = "/api/rss";
+  const configApi = "/api/config";
 
   const { t } = useTranslation();
   const { toast } = useToast()
@@ -89,8 +89,8 @@ export default function RSSSettings() {
     return data;
   };
 
-  const { data: configData, error: configError, isLoading: configLoading } = useSWR(settingApi, fetcher);
-  const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(`${settingListApi}?type=rss`, fetcher, { refreshInterval: 2000 });
+  const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
+  const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(rssApi, fetcher, { refreshInterval: 2000 });
 
   useEffect(() => {
     if (rssError) {
@@ -116,7 +116,7 @@ export default function RSSSettings() {
   }, [rssError, configError, configData]);
 
   const handleManageRSS = async (action, values) => {
-    const result = await handlePost(settingListApi, JSON.stringify({ type: "rss", action, data: values }));
+    const result = await handlePost(rssApi, JSON.stringify({ action, data: values }));
     if (action === "refresh") {
       toast({
         title: t("toast.start.refresh_rss")
@@ -126,7 +126,7 @@ export default function RSSSettings() {
       if (action === "add") {
         rssForm.reset();
       }
-      mutate(`${settingListApi}?type=rss`);
+      mutate(rssApi);
     } else {
       toast({
         title: t(`toast.failed.${action}_rss`),
@@ -137,12 +137,12 @@ export default function RSSSettings() {
   };
 
   const handleSaveConfig = async (values) => {
-    const result = await handlePost(settingApi, JSON.stringify(values));
+    const result = await handlePost(configApi, JSON.stringify(values));
     if (result.state === "success") {
       toast({
         title: t("toast.success.save")
       });
-      mutate(settingApi);
+      mutate(configApi);
     } else {
       toast({
         title: t("toast.failed.save"),
