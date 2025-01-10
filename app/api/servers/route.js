@@ -26,7 +26,9 @@ export async function GET() {
   try {
     const db = await getDb();
     const servers = await db.all("SELECT * FROM server ORDER BY name ASC");
-    const config = await db.get("SELECT value as default_server FROM config WHERE key = 'default_server'");
+    const config = await db.all("SELECT key, value FROM config").then(rows => 
+      rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
+    );
 
     return Response.json({
       servers: await Promise.all(servers.map(async server => {
@@ -107,7 +109,9 @@ export async function POST(request) {
         // Update default server
         // If deleted server is default server, update default server to the first server
         // If no server left, set default server to empty
-        const config = await db.get("SELECT value as default_server FROM config WHERE key = 'default_server'");
+        const config = await db.all("SELECT key, value FROM config").then(rows => 
+          rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
+        );
         if (data.data.name === config.default_server) {
           await db.run(`
             UPDATE config 

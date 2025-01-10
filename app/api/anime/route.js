@@ -33,7 +33,9 @@ export async function GET(request) {
       // Get this week's count
       db.get("SELECT COUNT(*) as count FROM anime WHERE pub_date >= date('now', '-7 days')"),
       // Get default server config
-      db.get("SELECT value as default_server FROM config WHERE key = 'default_server'"),
+      db.all("SELECT key, value FROM config").then(rows => 
+        rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
+      ),
       // Get all servers
       db.all("SELECT name, url, cookie FROM server")
     ]);

@@ -18,12 +18,10 @@ export async function GET() {
   const db = await getDb();
 
   try {
-    const configRows = await db.all("SELECT key, value FROM config");
-    const config = configRows.reduce((acc, row) => {
-      acc[row.key] = row.value;
-      return acc;
-    }, {});
-    
+    const config = await db.all("SELECT key, value FROM config").then(rows => 
+      rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
+    );
+
     return Response.json(config);
   }
 
