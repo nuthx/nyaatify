@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import useSWR, { mutate } from "swr"
+import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
@@ -41,21 +42,18 @@ export default function RSSSettings() {
 
   const { t } = useTranslation();
   const { toast } = useToast()
-  const [rssList, setRSSList] = useState([]);
-
-  const rssFormSchema = z.object({
-    name: z.string()
-      .min(2, { message: t("st.rss.validate.name1") })
-      .max(40, { message: t("st.rss.validate.name2") }),
-    url: z.string()
-      .url({ message: t("st.rss.validate.url1") })
-      .startsWith("http", { message: t("st.rss.validate.url2") })
-      .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.url3") }),
-    cron: z.string()
-  })
 
   const rssForm = useForm({
-    resolver: zodResolver(rssFormSchema),
+    resolver: zodResolver(z.object({
+      name: z.string()
+        .min(2, { message: t("validate.name_2") })
+        .max(40, { message: t("validate.name_40") }),
+      url: z.string()
+        .url({ message: t("validate.url_invalid") })
+        .startsWith("http", { message: t("validate.url_http") })
+        .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
+      cron: z.string()
+    })),
     defaultValues: {
       name: "",
       url: "",
@@ -63,19 +61,17 @@ export default function RSSSettings() {
     },
   })
 
-  const aiFormSchema = z.object({
-    ai_priority: z.string(),
-    ai_api: z.string()
-      .url({ message: t("st.rss.validate.api1") })
-      .startsWith("http", { message: t("st.rss.validate.api2") })
-      .refine(url => !url.endsWith("/"), { message: t("st.rss.validate.api3") })
-      .or(z.literal("")),
-    ai_key: z.string(),
-    ai_model: z.string()
-  })
-
   const aiForm = useForm({
-    resolver: zodResolver(aiFormSchema),
+    resolver: zodResolver(z.object({
+      ai_priority: z.string(),
+      ai_api: z.string()
+        .url({ message: t("validate.api_invalid") })
+        .startsWith("http", { message: t("validate.api_http") })
+        .refine(url => !url.endsWith("/"), { message: t("validate.api_slash") })
+        .or(z.literal("")),
+      ai_key: z.string(),
+      ai_model: z.string()
+    })),
     defaultValues: {
       ai_priority: "local",
       ai_api: "",
@@ -84,66 +80,56 @@ export default function RSSSettings() {
     },
   })
 
+  const fetcher = async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error);
+    }
+    return data;
+  };
+
+  const { data: configData, error: configError, isLoading: configLoading } = useSWR(settingApi, fetcher);
+  const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(`${settingListApi}?type=rss`, fetcher, { refreshInterval: 2000 });
+
   useEffect(() => {
-    fetchRSS();
-    fetchConfig();
-
-    // Set interval to fetch RSS list every 3 seconds
-    const pollingInterval = setInterval(() => {
-      fetchRSS();
-    }, 3000);
-
-    return () => clearInterval(pollingInterval);
-  }, []);
-
-  const fetchRSS = async () => {
-    try {
-      const response = await fetch(`${settingListApi}?type=rss`);
-      const data = await response.json();
-      setRSSList(data.rss);
-    } catch (error) {
+    if (rssError) {
       toast({
-        title: t("st.rss.toast.fetch"),
-        description: error.message,
+        title: t("toast.failed.fetch_rss"),
+        description: rssError.message,
         variant: "destructive"
       });
     }
-  };
-
-  const fetchConfig = async () => {
-    try {
-      const response = await fetch(settingApi);
-      const data = await response.json();
-      aiForm.reset({
-        ai_priority: data.ai_priority,
-        ai_api: data.ai_api,
-        ai_key: data.ai_key,
-        ai_model: data.ai_model,
-      });
-    } catch (error) {
+    if (configError) {
       toast({
-        title: t("st.toast.fetch_failed"),
-        description: error.message,
+        title: t("toast.failed.fetch_config"),
+        description: configError.message,
         variant: "destructive"
       });
     }
-  };
+    if (configData) {
+      aiForm.setValue("ai_priority", configData?.ai_priority);
+      aiForm.setValue("ai_api", configData?.ai_api);
+      aiForm.setValue("ai_key", configData?.ai_key);
+      aiForm.setValue("ai_model", configData?.ai_model);
+    }
+  }, [rssError, configError, configData]);
 
   const handleManageRSS = async (action, values) => {
     const result = await handlePost(settingListApi, JSON.stringify({ type: "rss", action, data: values }));
     if (action === "refresh") {
       toast({
-        title: t("st.rss.toast.refreshstart")
+        title: t("toast.start.refresh_rss")
       });
     }
     if (result.state === "success") {
       if (action === "add") {
         rssForm.reset();
       }
-      fetchRSS();
+      mutate(`${settingListApi}?type=rss`);
     } else {
       toast({
-        title: t(`st.rss.toast.${action}`),
+        title: t(`toast.failed.${action}_rss`),
         description: result.message,
         variant: "destructive"
       });
@@ -154,17 +140,21 @@ export default function RSSSettings() {
     const result = await handlePost(settingApi, JSON.stringify(values));
     if (result.state === "success") {
       toast({
-        title: t("glb.toast.save_success")
+        title: t("toast.success.save")
       });
-      fetchConfig();
+      mutate(settingApi);
     } else {
       toast({
-        title: t("glb.toast.save_failed"),
+        title: t("toast.failed.save"),
         description: result.message,
         variant: "destructive"
       });
     }
   };
+
+  if (rssLoading || configLoading) {
+    return <></>;
+  }
 
   return (
     <>
@@ -218,7 +208,7 @@ export default function RSSSettings() {
         </CardHeader>
         <CardContent className="p-0">
           <ListCard
-            items={rssList}
+            items={rssData?.rss || []}
             empty={t("st.rss.subscription.empty")}
             content={(rss) => (
               <>
@@ -258,7 +248,7 @@ export default function RSSSettings() {
               <FormField control={aiForm.control} name="ai_priority" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.rss.ai.priority")}</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
+                  <Select defaultValue={configData?.ai_priority || field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-72">
                         <SelectValue />

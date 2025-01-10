@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import useSWR, { mutate } from "swr"
+import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
@@ -40,25 +41,22 @@ export default function ServerSettings() {
 
   const { t } = useTranslation();
   const { toast } = useToast()
-  const [serverList, setServerList] = useState([]);
-
-  const serverFormSchema = z.object({
-    type: z.string(),
-    name: z.string()
-      .min(2, { message: t("st.sv.validate.name1") })
-      .max(40, { message: t("st.sv.validate.name2") }),
-    url: z.string()
-      .url({ message: t("st.sv.validate.url1") })
-      .startsWith("http", { message: t("st.sv.validate.url2") })
-      .refine(url => !url.endsWith("/"), { message: t("st.sv.validate.url3") }),
-    username: z.string()
-      .min(1, { message: t("st.sv.validate.username") }),
-    password: z.string()
-      .min(1, { message: t("st.sv.validate.password") }),
-  })
 
   const serverForm = useForm({
-    resolver: zodResolver(serverFormSchema),
+    resolver: zodResolver(z.object({
+      type: z.string(),
+      name: z.string()
+        .min(2, { message: t("validate.name_2") })
+        .max(40, { message: t("validate.name_40") }),
+      url: z.string()
+        .url({ message: t("validate.url_invalid") })
+        .startsWith("http", { message: t("validate.url_http") })
+        .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
+      username: z.string()
+        .min(1, { message: t("validate.username") }),
+      password: z.string()
+        .min(1, { message: t("validate.password") }),
+    })),
     defaultValues: {
       type: "qBittorrent",
       name: "",
@@ -81,38 +79,37 @@ export default function ServerSettings() {
     Aria2: "http://192.168.1.100:6800/jsonrpc"
   };
 
+  const fetcher = async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error);
+    }
+    return data;
+  };
+
+  const { data: configData, error: configError, isLoading: configLoading } = useSWR(settingApi, fetcher);
+  const { data: serverData, error: serverError, isLoading: serverLoading } = useSWR(`${settingListApi}?type=server`, fetcher);
+
   useEffect(() => {
-    fetchServer();
-    fetchConfig();
-  }, []);
-
-  const fetchServer = async () => {
-    try {
-      const response = await fetch(`${settingListApi}?type=server`);
-      const data = await response.json();
-      setServerList(data.servers);
-    } catch (error) {
+    if (serverError) {
       toast({
-        title: t("st.sv.toast.fetch"),
-        description: error.message,
+        title: t("toast.failed.fetch_server"),
+        description: serverError.message,
         variant: "destructive"
       });
     }
-  };
-
-  const fetchConfig = async () => {
-    try {
-      const response = await fetch(settingApi);
-      const data = await response.json();
-      defaultServerForm.setValue("default_server", data.default_server || "");
-    } catch (error) {
+    if (configError) {
       toast({
-        title: t("glb.toast.fetch_failed"),
-        description: error.message,
+        title: t("toast.failed.fetch_config"),
+        description: configError.message,
         variant: "destructive"
       });
     }
-  };
+    if (configData) {
+      defaultServerForm.setValue("default_server", configData?.default_server);
+    }
+  }, [serverError, configError, configData]);
 
   const handleManageServer = async (action, values) => {
     const result = await handlePost(settingListApi, JSON.stringify({ type: "server", action, data: values }));
@@ -122,15 +119,15 @@ export default function ServerSettings() {
       }
       if (action === "test") {
         toast({
-          title: t("st.sv.toast.testsuccess"),
-          description: `${t("st.sv.toast.version")}: ${result.message.version}`
+          title: t("toast.success.test"),
+          description: `${t("glb.version")}: ${result.message.version}`
         });
       }
-      fetchServer();
-      fetchConfig();
+      mutate(`${settingListApi}?type=server`);
+      mutate(settingApi);
     } else {
       toast({
-        title: t(`st.sv.toast.${action}`),
+        title: t(`toast.failed.${action}_server`),
         description: result.message,
         variant: "destructive"
       });
@@ -141,17 +138,21 @@ export default function ServerSettings() {
     const result = await handlePost(settingApi, JSON.stringify(values));
     if (result.state === "success") {
       toast({
-        title: t("glb.toast.save_success")
+        title: t("toast.success.save")
       });
-      fetchConfig();
+      mutate(settingApi);
     } else {
       toast({
-        title: t("glb.toast.save_failed"),
+        title: t("toast.failed.save"),
         description: result.message,
         variant: "destructive"
       });
     }
   };
+
+  if (serverLoading || configLoading) {
+    return <></>;
+  }
 
   return (
     <>
@@ -243,12 +244,12 @@ export default function ServerSettings() {
         </CardHeader>
         <CardContent className="p-0">
           <ListCard
-            items={serverList}
+            items={serverData?.servers || []}
             empty={t("st.sv.servers.empty")}
             content={(server) => (
               <>
                 <p className="text-sm text-zinc-500">{server.url}</p>
-                <p className="text-sm text-zinc-500">{t("st.sv.servers.version")}: {server.version}</p>
+                <p className="text-sm text-zinc-500">{t("glb.version")}: {server.version}</p>
               </>
             )}
             state={(server) => (
@@ -277,14 +278,14 @@ export default function ServerSettings() {
               <FormField control={defaultServerForm.control} name="default_server" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.sv.default.server")}</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange} disabled={serverList.length === 0}>
+                  <Select defaultValue={serverData?.default_server || field.value} onValueChange={field.onChange} disabled={!serverData?.servers?.length}>
                     <FormControl>
                       <SelectTrigger className="w-72">
                         <SelectValue placeholder={t("st.sv.default.empty")} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {serverList.map((server) => (
+                      {(serverData?.servers || []).map((server) => (
                         <SelectItem key={server.name} value={server.name}>
                           {server.name}
                         </SelectItem>
