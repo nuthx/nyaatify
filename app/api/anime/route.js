@@ -6,12 +6,12 @@ import { getQbittorrentVersion, getQbittorrentTorrents } from "@/lib/api/qbittor
 // Get anime list with pagination
 // Method: GET
 // Params: page (number, optional, default: 1)
-//         size (number, optional, default: 25)
+//         size (number, optional, default: 20)
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const page = parseInt(searchParams.get("page") || "1");
-  const size = parseInt(searchParams.get("size") || "24");
+  const size = parseInt(searchParams.get("size") || "20");
   const offset = (page - 1) * size;
   const db = await getDb();
 

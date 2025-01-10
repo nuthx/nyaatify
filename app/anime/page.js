@@ -23,13 +23,6 @@ import {
   CardFooter
 } from "@/components/ui/card";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink
-} from "@/components/ui/pagination";
-import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -38,6 +31,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button";
 import { Download, Pause, RefreshCcw, Trash2 } from "lucide-react";
+import { PaginationPro } from "@/components/pagination";
 
 export default function Anime() {
   const animeApi = "/api/anime";
@@ -46,14 +40,11 @@ export default function Anime() {
   const { t } = useTranslation();
   const { toast } = useToast();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [currentPage, setCurrentPage] = useState(Number(useSearchParams().get("page")) || 1);
 
   const { data, error, isLoading, mutate } = useSWR(`${animeApi}?page=${currentPage}`, async (url) => {
     const response = await fetch(url);
     const data = await response.json();
-    setTotalPages(Math.ceil(data.pagination.total / data.pagination.size));
     if (!response.ok) {
       throw new Error(data.error);
     }
@@ -88,18 +79,6 @@ export default function Anime() {
       });
     }
   };
-
-  const renderPageItem = (page, isActive = false) => (
-    <PaginationItem key={page}>
-      <PaginationLink className="cursor-pointer" onClick={() => setCurrentPage(page)} isActive={isActive}>
-        {page}
-      </PaginationLink>
-    </PaginationItem>
-  );
-
-  const renderPageItems = (start, count) => (
-    [...Array(count)].map((_, i) => renderPageItem(start + i, start + i === currentPage))
-  );
 
   if (isLoading) {
     return <></>;
@@ -213,41 +192,7 @@ export default function Anime() {
           </Card>
         ))}
       </div>
-      {totalPages > 1 && (
-        <Pagination>
-          <PaginationContent>
-            {totalPages > 7 ? (
-              <>
-                {currentPage <= 4 ? (
-                  <>
-                    {renderPageItems(1, 6)}
-                    <PaginationEllipsis />
-                    {renderPageItem(totalPages)}
-                  </>
-                ) : 
-                currentPage > totalPages - 4 ? (
-                  <>
-                    {renderPageItem(1)}
-                    <PaginationEllipsis />
-                    {renderPageItems(totalPages - 5, 6)}
-                  </>
-                ) : 
-                (
-                  <>
-                    {renderPageItem(1)}
-                    <PaginationEllipsis />
-                    {renderPageItems(currentPage - 2, 5)}
-                    <PaginationEllipsis />
-                    {renderPageItem(totalPages)}
-                  </>
-                )}
-              </>
-            ) : (
-              renderPageItems(1, totalPages)
-            )}
-          </PaginationContent>
-        </Pagination>
-      )}
+      <PaginationPro currentPage={currentPage} totalPages={Math.ceil(data.pagination.total / data.pagination.size)} onPageChange={setCurrentPage} />
     </div>
   );
 }
