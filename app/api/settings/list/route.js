@@ -61,7 +61,7 @@ export async function GET(request) {
             state: version === "unknown" ? "offline" : "online"
           };
         })),
-        default: config.default_server
+        default_server: config.default_server
       });
     }
 

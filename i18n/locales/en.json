@@ -69,7 +69,6 @@
     "empty_server": "Please add a download server first.",
     "empty_online": "No online download server now",
     "empty_torrents": "No torrents found in all download servers",
-    "load_fail": "Failed to load list",
     "d_speed": "Download Speed",
     "u_speed": "Upload Speed",
     "eta": "ETA",

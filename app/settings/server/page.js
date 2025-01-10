@@ -1,10 +1,10 @@
 "use client";
 
+import useSWR, { mutate } from "swr"
 import { useEffect } from "react";
 import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
-import useSWR, { mutate } from "swr"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { handlePost } from "@/lib/handlers";
@@ -79,12 +79,13 @@ export default function ServerSettings() {
     Aria2: "http://192.168.1.100:6800/jsonrpc"
   };
 
-  const fetcher = async (...args) => {
-    const response = await fetch(...args);
+  const fetcher = async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
     if (!response.ok) {
-      throw new Error((await response.json()).error);
+      throw new Error(data.error);
     }
-    return response.json();
+    return data;
   };
 
   const { data: configData, error: configError, isLoading: configLoading } = useSWR(settingApi, fetcher);
@@ -105,7 +106,10 @@ export default function ServerSettings() {
         variant: "destructive"
       });
     }
-  }, [serverError, configError]);
+    if (configData) {
+      defaultServerForm.setValue("default_server", configData?.default_server);
+    }
+  }, [serverError, configError, configData]);
 
   const handleManageServer = async (action, values) => {
     const result = await handlePost(settingListApi, JSON.stringify({ type: "server", action, data: values }));
@@ -274,7 +278,7 @@ export default function ServerSettings() {
               <FormField control={defaultServerForm.control} name="default_server" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.sv.default.server")}</FormLabel>
-                  <Select value={serverData?.default || field.value} onValueChange={field.onChange} disabled={!serverData?.servers || serverData.servers.length === 0}>
+                  <Select defaultValue={serverData?.default_server || field.value} onValueChange={field.onChange} disabled={!serverData?.servers?.length}>
                     <FormControl>
                       <SelectTrigger className="w-72">
                         <SelectValue placeholder={t("st.sv.default.empty")} />

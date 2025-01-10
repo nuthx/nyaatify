@@ -69,7 +69,6 @@
     "empty_server": "请先添加一个下载服务器",
     "empty_online": "当前没有在线的下载服务器",
     "empty_torrents": "所有下载服务器中没有任务",
-    "load_fail": "加载列表失败",
     "d_speed": "下载速度",
     "u_speed": "上传速度",
     "eta": "剩余时间",
