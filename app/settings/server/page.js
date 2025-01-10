@@ -42,54 +42,21 @@ export default function ServerSettings() {
   const { t } = useTranslation();
   const { toast } = useToast()
 
-  const fetcher = async (...args) => {
-    const res = await fetch(...args);
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-    return res.json();
-  };
-
-  const { data: serverData, error: serverError } = useSWR(`${settingListApi}?type=server`, fetcher);
-  const { data: configData, error: configError } = useSWR(settingApi, fetcher);
-
-  useEffect(() => {
-    if (serverError) {
-      toast({
-        title: t("toast.failed.fetch_server"),
-        description: serverError.message,
-        variant: "destructive"
-      });
-    }
-    if (configError) {
-      toast({
-        title: t("toast.failed.fetch_config"),
-        description: configError.message,
-        variant: "destructive"
-      });
-    }
-    if (configData) {
-      defaultServerForm.setValue("default_server", configData.default_server || "");
-    }
-  }, [serverError, configError, configData]);
-
-  const serverFormSchema = z.object({
-    type: z.string(),
-    name: z.string()
-      .min(2, { message: t("validate.name_2") })
-      .max(40, { message: t("validate.name_40") }),
-    url: z.string()
-      .url({ message: t("validate.url_invalid") })
-      .startsWith("http", { message: t("validate.url_http") })
-      .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
-    username: z.string()
-      .min(1, { message: t("validate.username") }),
-    password: z.string()
-      .min(1, { message: t("validate.password") }),
-  })
-
   const serverForm = useForm({
-    resolver: zodResolver(serverFormSchema),
+    resolver: zodResolver(z.object({
+      type: z.string(),
+      name: z.string()
+        .min(2, { message: t("validate.name_2") })
+        .max(40, { message: t("validate.name_40") }),
+      url: z.string()
+        .url({ message: t("validate.url_invalid") })
+        .startsWith("http", { message: t("validate.url_http") })
+        .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
+      username: z.string()
+        .min(1, { message: t("validate.username") }),
+      password: z.string()
+        .min(1, { message: t("validate.password") }),
+    })),
     defaultValues: {
       type: "qBittorrent",
       name: "",
@@ -111,6 +78,34 @@ export default function ServerSettings() {
     Transmission: "http://192.168.1.100:9091/transmission/rpc",
     Aria2: "http://192.168.1.100:6800/jsonrpc"
   };
+
+  const fetcher = async (...args) => {
+    const response = await fetch(...args);
+    if (!response.ok) {
+      throw new Error((await response.json()).error);
+    }
+    return response.json();
+  };
+
+  const { data: configData, error: configError, isLoading: configLoading } = useSWR(settingApi, fetcher);
+  const { data: serverData, error: serverError, isLoading: serverLoading } = useSWR(`${settingListApi}?type=server`, fetcher);
+
+  useEffect(() => {
+    if (serverError) {
+      toast({
+        title: t("toast.failed.fetch_server"),
+        description: serverError.message,
+        variant: "destructive"
+      });
+    }
+    if (configError) {
+      toast({
+        title: t("toast.failed.fetch_config"),
+        description: configError.message,
+        variant: "destructive"
+      });
+    }
+  }, [serverError, configError]);
 
   const handleManageServer = async (action, values) => {
     const result = await handlePost(settingListApi, JSON.stringify({ type: "server", action, data: values }));
@@ -150,6 +145,10 @@ export default function ServerSettings() {
       });
     }
   };
+
+  if (serverLoading || configLoading) {
+    return <></>;
+  }
 
   return (
     <>
@@ -275,7 +274,7 @@ export default function ServerSettings() {
               <FormField control={defaultServerForm.control} name="default_server" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.sv.default.server")}</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange} disabled={serverData?.servers.length === 0}>
+                  <Select value={serverData?.default || field.value} onValueChange={field.onChange} disabled={!serverData?.servers || serverData.servers.length === 0}>
                     <FormControl>
                       <SelectTrigger className="w-72">
                         <SelectValue placeholder={t("st.sv.default.empty")} />

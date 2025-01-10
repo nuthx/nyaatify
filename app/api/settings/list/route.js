@@ -51,6 +51,7 @@ export async function GET(request) {
 
     else if (type === "server") {
       const servers = await db.all("SELECT * FROM server ORDER BY name ASC");
+      const config = await db.get("SELECT value as default_server FROM config WHERE key = 'default_server'");
       return Response.json({
         servers: await Promise.all(servers.map(async server => {
           const version = await getQbittorrentVersion(server.url, server.cookie);
@@ -59,7 +60,8 @@ export async function GET(request) {
             version,
             state: version === "unknown" ? "offline" : "online"
           };
-        }))
+        })),
+        default: config.default_server
       });
     }
 
