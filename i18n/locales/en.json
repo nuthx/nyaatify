@@ -127,19 +127,19 @@
       },
       "sv_state": {
         "title": "Show Download Server State",
-        "description": "Use Badge to show the state of download server on anime page, such as no download server or download server offline."
+        "description": "Show the state of download server on anime page, such as no download server or download server offline."
       }
     },
     "rss": {
       "add": {
         "title": "Add a New RSS Subscription",
-        "description": "Add a Nyaa or Mikan RSS subscription to track anime publication. After adding, you need to wait a few minutes to parse all data and show on the home page.",
+        "description": "Add a Nyaa or Mikan RSS subscription to track anime publication. It may take a few minutes to parse all anime data.",
         "name": "Name",
         "url": "RSS URL",
         "cron": "Refresh Rule (CRON)"
       },
       "subscription": {
-        "title": "RSS Subscription",
+        "title": "RSS Subscription List",
         "empty": "Please add a RSS subscription first.",
         "cron": "Refresh Rule",
         "running": "Refreshing",
@@ -172,7 +172,7 @@
         "password": "Password"
       },
       "servers": {
-        "title": "Download Servers",
+        "title": "Download Servers List",
         "empty": "Please add a download server first.",
         "online": "Online",
         "offline": "Offline",
@@ -180,7 +180,7 @@
       },
       "default": {
         "title": "Default Download Server",
-        "description": "When multiple download servers added, you can manually specify the default server. When creating download tasks, Nyaatify will prioritize downloading through this server.",
+        "description": "When creating download tasks, Nyaatify will prioritize downloading through this server.",
         "server": "Default Download Server",
         "empty": "No Download Server"
       }

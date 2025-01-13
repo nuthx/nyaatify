@@ -127,19 +127,19 @@
       },
       "sv_state": {
         "title": "显示下载服务器状态",
-        "description": "在动画页使用 Badge 显示下载服务器的状态，如未添加下载服务器、下载服务器已离线等"
+        "description": "在动画页左上角显示下载服务器的状态，如未添加下载服务器、下载服务器已离线等"
       }
     },
     "rss": {
       "add": {
         "title": "添加新的 RSS 订阅",
-        "description": "添加一个 Nyaa 或 Mikan 的 RSS 订阅来追踪动画发布情况。添加完成后，您需要等待几分钟来获取所有数据并在首页展示",
+        "description": "添加一个 Nyaa 或 Mikan 的 RSS 订阅来追踪动画发布情况。可能需要几分钟来完成所有数据更新",
         "name": "名称",
         "url": "RSS 地址",
         "cron": "刷新规则 (CRON)"
       },
       "subscription": {
-        "title": "RSS 订阅",
+        "title": "RSS 订阅列表",
         "empty": "请先添加一个 RSS 订阅",
         "cron": "刷新规则",
         "running": "刷新中",
@@ -172,7 +172,7 @@
         "password": "密码"
       },
       "servers": {
-        "title": "下载服务器",
+        "title": "下载服务器列表",
         "empty": "请先添加一个下载服务器",
         "online": "在线",
         "offline": "离线",
@@ -180,7 +180,7 @@
       },
       "default": {
         "title": "默认下载服务器",
-        "description": "当添加了多个下载服务器时，你可以手动指定默认使用的服务器。创建下载任务时，Nyaatify 会优先通过该服务器下载",
+        "description": "创建下载任务时，Nyaatify 会通过指定的服务器进行下载",
         "server": "默认下载服务器",
         "empty": "无下载服务器"
       }
