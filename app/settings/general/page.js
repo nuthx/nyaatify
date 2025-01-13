@@ -52,8 +52,6 @@ export default function Settings() {
   }, [error]);
 
   const handleSaveConfig = async (values) => {
-    console.log(values);
-    
     const result = await handlePost(configApi, JSON.stringify(values));
     if (result.state === "success") {
       toast({
@@ -118,7 +116,7 @@ export default function Settings() {
           <CardDescription>{t("st.gr.sv_state.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={data.show_server_state} onValueChange={(value) => handleSaveConfig({ show_server_state: value })}>
+          <Select defaultValue={data?.show_server_state || "1"} onValueChange={(value) => handleSaveConfig({ show_server_state: value })}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>

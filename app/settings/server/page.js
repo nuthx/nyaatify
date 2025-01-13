@@ -66,12 +66,6 @@ export default function ServerSettings() {
     },
   })
 
-  const defaultServerForm = useForm({
-    defaultValues: {
-      default_server: ""
-    }
-  });
-
   const selectedType = serverForm.watch("type");
   const urlPlaceholders = {
     qBittorrent: "http://192.168.1.100:8080",
@@ -106,10 +100,7 @@ export default function ServerSettings() {
         variant: "destructive"
       });
     }
-    if (configData) {
-      defaultServerForm.setValue("default_server", configData?.default_server);
-    }
-  }, [serverError, configError, configData]);
+  }, [serverError, configError]);
 
   const handleManageServer = async (action, values) => {
     const result = await handlePost(serversApi, JSON.stringify({ type: "server", action, data: values }));
@@ -273,31 +264,18 @@ export default function ServerSettings() {
           <CardDescription>{t("st.sv.default.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...defaultServerForm}>
-            <form onSubmit={defaultServerForm.handleSubmit(handleSaveConfig)} className="space-y-6">
-              <FormField control={defaultServerForm.control} name="default_server" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.sv.default.server")}</FormLabel>
-                  <Select defaultValue={serverData?.default_server || field.value} onValueChange={field.onChange} disabled={!serverData?.servers?.length}>
-                    <FormControl>
-                      <SelectTrigger className="w-72">
-                        <SelectValue placeholder={t("st.sv.default.empty")} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {(serverData?.servers || []).map((server) => (
-                        <SelectItem key={server.name} value={server.name}>
-                          {server.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-                )}
-              />
-              <Button type="submit">{t("glb.save")}</Button>
-            </form>
-          </Form>
+          <Select defaultValue={serverData?.default_server} onValueChange={(value) => handleSaveConfig({ default_server: value })} disabled={!serverData?.servers?.length}>
+            <SelectTrigger className="w-72">
+              <SelectValue placeholder={t("st.sv.default.empty")} />
+            </SelectTrigger>
+            <SelectContent>
+              {(serverData?.servers || []).map((server) => (
+                <SelectItem key={server.name} value={server.name}>
+                  {server.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </CardContent>
       </Card>
     </>
