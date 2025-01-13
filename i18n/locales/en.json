@@ -10,6 +10,8 @@
     "save": "Save",
     "reset": "Reset",
     "test": "Test",
+    "show": "Show",
+    "hide": "Hide",
     "version": "Version"
   },
   "toast": {
@@ -122,6 +124,10 @@
       "language": {
         "title": "Language",
         "description": "This is the language of Nyaatify. This setting is saved in your browser."
+      },
+      "sv_state": {
+        "title": "Show Download Server State",
+        "description": "Use Badge to show the state of download server on anime page, such as no download server or download server offline."
       }
     },
     "rss": {

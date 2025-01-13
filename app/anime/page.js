@@ -92,8 +92,8 @@ export default function Anime() {
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
-          {!data.default_server && <Badge variant="outline">{t("anime.no_server")}</Badge>}
-          {data.default_server && data.default_server_online === 0 && <Badge variant="destructive">{t("anime.server_offline")}</Badge>}
+          {data.show_server_state === "1" && !data.default_server && <Badge variant="outline">{t("anime.no_server")}</Badge>}
+          {data.show_server_state === "1" && data.default_server && data.default_server_online === 0 && <Badge variant="destructive">{t("anime.server_offline")}</Badge>}
           <a className="text-sm text-zinc-500">{t("anime.today")}: {data.count.today}</a>
           <a className="text-sm text-zinc-500">{t("anime.week")}: {data.count.week}</a>
           <a className="text-sm text-zinc-500">{t("anime.total")}: {data.count.total}</a>

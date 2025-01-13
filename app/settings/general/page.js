@@ -1,7 +1,11 @@
 "use client";
 
+import useSWR from "swr"
+import { useEffect } from "react";
+import { useToast } from "@/hooks/use-toast"
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next";
+import { handlePost } from "@/lib/handlers";
 import {
   Card,
   CardContent,
@@ -18,12 +22,56 @@ import {
 } from "@/components/ui/select"
 
 export default function Settings() {
+  const configApi = "/api/config";
+
   const { t, i18n } = useTranslation();
-  const { theme, setTheme } = useTheme()
+  const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
 
   const handleLanguageChange = (value) => {
     i18n.changeLanguage(value);
   };
+
+  const { data, error, isLoading, mutate } = useSWR(configApi, async (url) => {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error);
+    }
+    return data;
+  });
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: t("toast.failed.fetch_config"),
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  }, [error]);
+
+  const handleSaveConfig = async (values) => {
+    console.log(values);
+    
+    const result = await handlePost(configApi, JSON.stringify(values));
+    if (result.state === "success") {
+      toast({
+        title: t("toast.success.save")
+      });
+      mutate(configApi);
+    } else {
+      toast({
+        title: t("toast.failed.save"),
+        description: result.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  if (isLoading) {
+    return <></>;
+  }
 
   return (
     <>
@@ -59,6 +107,24 @@ export default function Settings() {
             <SelectContent>
               <SelectItem value="en">English</SelectItem>
               <SelectItem value="zh">简体中文</SelectItem>
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.gr.sv_state.title")}</CardTitle>
+          <CardDescription>{t("st.gr.sv_state.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Select defaultValue={data.show_server_state} onValueChange={(value) => handleSaveConfig({ show_server_state: value })}>
+            <SelectTrigger className="w-72">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">{t("glb.show")}</SelectItem>
+              <SelectItem value="0">{t("glb.hide")}</SelectItem>
             </SelectContent>
           </Select>
         </CardContent>

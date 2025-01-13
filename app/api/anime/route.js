@@ -79,7 +79,8 @@ export async function GET(request) {
         current: page
       },
       default_server: config.default_server,
-      default_server_online: defaultOnline
+      default_server_online: defaultOnline,
+      show_server_state: config.show_server_state
     });
   }
 

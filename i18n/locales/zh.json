@@ -10,6 +10,8 @@
     "save": "保存",
     "reset": "清空",
     "test": "测试",
+    "show": "显示",
+    "hide": "隐藏",
     "version": "版本"
   },
   "toast": {
@@ -59,7 +61,7 @@
   "anime": {
     "empty": "请先添加一个 RSS 订阅",
     "load_fail": "加载列表失败",
-    "no_server": "没有下载服务器",
+    "no_server": "未添加下载服务器",
     "server_offline": "下载服务器已离线",
     "today": "今日",
     "week": "本周",
@@ -122,6 +124,10 @@
       "language": {
         "title": "语言",
         "description": "选择 Nyaatify 的显示语言，此设置仅会保存在浏览器本地"
+      },
+      "sv_state": {
+        "title": "显示下载服务器状态",
+        "description": "在动画页使用 Badge 显示下载服务器的状态，如未添加下载服务器、下载服务器已离线等"
       }
     },
     "rss": {
