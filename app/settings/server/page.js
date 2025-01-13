@@ -198,28 +198,26 @@ export default function ServerSettings() {
                 </FormItem>
               )}
               />
-              <div className="flex gap-6">
-                <FormField control={serverForm.control} name="username" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.sv.add.username")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-72" placeholder="admin" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                />
-                <FormField control={serverForm.control} name="password" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("st.sv.add.password")}</FormLabel>
-                    <FormControl>
-                      <Input className="w-72" type="password" placeholder="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-                />
-              </div>
+              <FormField control={serverForm.control} name="username" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("st.sv.add.username")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-72" placeholder="admin" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+              <FormField control={serverForm.control} name="password" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("st.sv.add.password")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-72" type="password" placeholder="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
                 <Button type="button" variant="outline" onClick={serverForm.handleSubmit((values) => handleManageServer("test", values))}>{t("glb.test")}</Button>
