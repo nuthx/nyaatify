@@ -32,14 +32,13 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  const data = await request.json();
-  const db = await getDb();
-
   try {
+    const db = await getDb();
+    const data = await request.json();
+
     // Check if config name correct
     const existingKeys = await db.all("SELECT key FROM config");
     const validKeys = existingKeys.map(row => row.key);
-    
     for (const configKey of Object.keys(data)) {
       if (!validKeys.includes(configKey)) {
         return Response.json({ error: `Invalid config name: ${configKey}` }, { status: 400 });
@@ -56,15 +55,14 @@ export async function POST(request) {
 
     // Update config with transaction
     await db.run('BEGIN TRANSACTION');
-    
     for (const [key, value] of Object.entries(data)) {
       await db.run(
         "UPDATE config SET value = ? WHERE key = ?",
         [value, key]
       );
     }
-    
     await db.run('COMMIT');
+
     return Response.json({});
   }
 

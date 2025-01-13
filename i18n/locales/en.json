@@ -188,9 +188,7 @@
     "abt": {
       "version": {
         "title": "Version",
-        "description": "This is the version of Nyaatify. You can check the latest version on GitHub.",
-        "current": "Current Version",
-        "latest": "Latest Version"
+        "description": "Check the running version of Nyaatify."
       }
     }
   }

@@ -104,7 +104,7 @@ export async function POST(request) {
       }
 
       // Stop RSS task
-      stopTask(data.data.name);
+      await stopTask(data.data.name);
 
       // Start transaction
       await db.run("BEGIN TRANSACTION");

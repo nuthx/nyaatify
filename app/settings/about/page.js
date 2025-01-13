@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
+import pkg from '@/package.json';
 import {
   Card,
   CardContent,
@@ -11,6 +12,7 @@ import {
 
 export default function Settings() {
   const { t } = useTranslation();
+  const currentVersion = pkg.version;
 
   return (
     <>
@@ -20,8 +22,7 @@ export default function Settings() {
           <CardDescription>{t("st.abt.version.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <p>{t("st.abt.version.current")}: 0.0.1</p>
-          <p>{t("st.abt.version.latest")}: 0.0.1</p>
+          <a>{t("glb.version")}: {currentVersion}</a>
         </CardContent>
       </Card>
     </>
