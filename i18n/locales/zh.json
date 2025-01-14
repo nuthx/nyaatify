@@ -15,9 +15,9 @@
     "version": "版本"
   },
   "lang": {
-    "chinese": "中文",
-    "japanese": "日语",
-    "english": "英语",
+    "cn": "中文",
+    "jp": "日语",
+    "en": "英语",
     "romaji": "罗马音"
   },
   "toast": {

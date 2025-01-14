@@ -49,9 +49,9 @@ export default function Settings() {
   };
 
   const [items, setItems] = useState([
-    { id: "cn", name: t("lang.chinese") },
-    { id: "jp", name: t("lang.japanese") },
-    { id: "en", name: t("lang.english") },
+    { id: "cn", name: t("lang.cn") },
+    { id: "jp", name: t("lang.jp") },
+    { id: "en", name: t("lang.en") },
     { id: "romaji", name: t("lang.romaji") }
   ]);
 
@@ -69,6 +69,10 @@ export default function Settings() {
   });
 
   useEffect(() => {
+    // Check data?.title_priority to avoid error when drag finished
+    if (data?.title_priority) {
+      setItems(data.title_priority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
+    }
     if (error) {
       toast({
         title: t("toast.failed.fetch_config"),
@@ -76,7 +80,7 @@ export default function Settings() {
         variant: "destructive"
       });
     }
-  }, [error]);
+  }, [data, error]);
 
   const handleSaveConfig = async (values) => {
     const result = await handlePost(configApi, JSON.stringify(values));
@@ -97,10 +101,16 @@ export default function Settings() {
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (active.id !== over.id) {
-      setItems((items) => arrayMove(items,
-        items.findIndex(item => item.id === active.id),
-        items.findIndex(item => item.id === over.id)
-      ));
+      setItems((items) => {
+        const newItems = arrayMove(items,
+          items.findIndex(item => item.id === active.id),
+          items.findIndex(item => item.id === over.id)
+        );
+        handleSaveConfig({ 
+          title_priority: newItems.map(item => item.id).join(",")
+        });
+        return newItems;
+      });
     }
   }
 
