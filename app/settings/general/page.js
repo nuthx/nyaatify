@@ -49,10 +49,10 @@ export default function Settings() {
   };
 
   const [items, setItems] = useState([
-    { id: "cn", name: t("lang.cn") },
     { id: "jp", name: t("lang.jp") },
     { id: "en", name: t("lang.en") },
-    { id: "romaji", name: t("lang.romaji") }
+    { id: "romaji", name: t("lang.romaji") },
+    { id: "cn", name: t("lang.cn") }
   ]);
 
   const sensors = useSensors(
