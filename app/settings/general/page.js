@@ -94,16 +94,15 @@ export default function Settings() {
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (active.id !== over.id) {
-      setItems((items) => {
-        const newItems = arrayMove(items,
-          items.findIndex(item => item.id === active.id),
-          items.findIndex(item => item.id === over.id)
-        );
-        // Save title priority after drag finished
-        handleSaveConfig({ 
-          title_priority: newItems.map(item => item.id).join(",")
-        });
-        return newItems;
+      // Calculate new sort result then update
+      const oldIndex = items.findIndex(item => item.id === active.id);
+      const newIndex = items.findIndex(item => item.id === over.id);
+      const newItems = arrayMove(items, oldIndex, newIndex);
+      setItems(newItems);
+      
+      // Save title priority after drag finished
+      handleSaveConfig({ 
+        title_priority: newItems.map(item => item.id).join(",")
       });
     }
   }
