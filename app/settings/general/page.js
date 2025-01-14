@@ -80,7 +80,7 @@ export default function Settings() {
         variant: "destructive"
       });
     }
-  }, [data, error]);
+  }, [data, error, t]);
 
   const handleSaveConfig = async (values) => {
     const result = await handlePost(configApi, JSON.stringify(values));
