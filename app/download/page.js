@@ -1,7 +1,7 @@
 "use client";
 
 import useSWR from "swr"
-import { useToast } from "@/hooks/use-toast"
+import { toast } from "sonner"
 import { useTranslation } from "react-i18next";
 import { handlePost } from "@/lib/handlers";
 import {
@@ -29,7 +29,6 @@ export default function Home() {
   const torrentsApi = "/api/torrents";
 
   const { t } = useTranslation();
-  const { toast } = useToast()
 
   const { data, error, isLoading, mutate } = useSWR(torrentsApi, async (url) => {
     const response = await fetch(url);
@@ -54,10 +53,8 @@ export default function Home() {
     if (result.state === "success") {
       mutate();
     } else {
-      toast({
-        title: t(`toast.failed.${action}`),
+      toast.error(t(`toast.failed.${action}`), {
         description: result.message,
-        variant: "destructive"
       });
     }
   };

@@ -1,9 +1,9 @@
 "use client";
 
 import useSWR from "swr"
+import { toast } from "sonner"
 import { useEffect, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
-import { useToast } from "@/hooks/use-toast"
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next";
 import { handlePost } from "@/lib/handlers";
@@ -41,7 +41,6 @@ export default function Settings() {
   const configApi = "/api/config";
 
   const { t, i18n } = useTranslation();
-  const { toast } = useToast();
   const { theme, setTheme } = useTheme();
 
   const handleLanguageChange = (value) => {
@@ -74,27 +73,21 @@ export default function Settings() {
       setItems(data.title_priority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
     }
     if (error) {
-      toast({
-        title: t("toast.failed.fetch_config"),
+      toast.error(t("toast.failed.fetch_config"), {
         description: error.message,
-        variant: "destructive"
-      });
+      })
     }
   }, [data, error, t]);
 
   const handleSaveConfig = async (values) => {
     const result = await handlePost(configApi, JSON.stringify(values));
     if (result.state === "success") {
-      toast({
-        title: t("toast.success.save")
-      });
+      toast(t("toast.success.save"));
       mutate(configApi);
     } else {
-      toast({
-        title: t("toast.failed.save"),
+      toast.error(t("toast.failed.save"), {
         description: result.message,
-        variant: "destructive"
-      });
+      })
     }
   };
 

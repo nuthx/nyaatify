@@ -1,8 +1,8 @@
 "use client";
 
 import useSWR from "swr";
+import { toast } from "sonner"
 import { useEffect, useState } from "react";
-import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
 import { handlePost } from "@/lib/handlers";
@@ -38,7 +38,6 @@ export default function Anime() {
   const torrentsApi = "/api/torrents";
 
   const { t } = useTranslation();
-  const { toast } = useToast();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(Number(useSearchParams().get("page")) || 1);
 
@@ -68,16 +67,12 @@ export default function Anime() {
     const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
     if (result.state === "success") {
       if (action === "download") {
-        toast({
-          title: t(`toast.start.download`)
-        });
+        toast(t(`toast.start.download`));
       }
       mutate();
     } else {
-      toast({
-        title: t(`toast.failed.${action}`),
+      toast.error(t(`toast.failed.${action}`), {
         description: result.message,
-        variant: "destructive"
       });
     }
   };

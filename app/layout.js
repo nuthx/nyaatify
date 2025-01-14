@@ -4,7 +4,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { I18nWrapper } from "@/i18n/wrapper";
 import { log } from "@/lib/log";
 import { startAllTasks } from "@/lib/schedule";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/sonner"
 import { NavBar } from "@/components/navbar";
 
 // Use Google Fonts
@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
             <main className="relative">
               {children}
             </main>
-            <Toaster />
+            <Toaster position="top-center" offset={20} />
           </I18nWrapper>
         </NextThemesProvider>
       </body>

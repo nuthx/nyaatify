@@ -1,8 +1,8 @@
 "use client";
 
 import useSWR, { mutate } from "swr"
+import { toast } from "sonner"
 import { useEffect } from "react";
-import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -41,7 +41,6 @@ export default function RSSSettings() {
   const configApi = "/api/config";
 
   const { t } = useTranslation();
-  const { toast } = useToast()
 
   const rssForm = useForm({
     resolver: zodResolver(z.object({
@@ -94,17 +93,13 @@ export default function RSSSettings() {
 
   useEffect(() => {
     if (rssError) {
-      toast({
-        title: t("toast.failed.fetch_rss"),
+      toast.error(t("toast.failed.fetch_rss"), {
         description: rssError.message,
-        variant: "destructive"
       });
     }
     if (configError) {
-      toast({
-        title: t("toast.failed.fetch_config"),
+      toast.error(t("toast.failed.fetch_config"), {
         description: configError.message,
-        variant: "destructive"
       });
     }
     if (configData) {
@@ -118,9 +113,7 @@ export default function RSSSettings() {
   const handleManageRSS = async (action, values) => {
     const result = await handlePost(rssApi, JSON.stringify({ action, data: values }));
     if (action === "refresh") {
-      toast({
-        title: t("toast.start.refresh_rss")
-      });
+      toast(t("toast.start.refresh_rss"));
     }
     if (result.state === "success") {
       if (action === "add") {
@@ -128,10 +121,8 @@ export default function RSSSettings() {
       }
       mutate(rssApi);
     } else {
-      toast({
-        title: t(`toast.failed.${action}_rss`),
+      toast.error(t(`toast.failed.${action}_rss`), {
         description: result.message,
-        variant: "destructive"
       });
     }
   };

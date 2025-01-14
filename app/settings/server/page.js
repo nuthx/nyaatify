@@ -1,8 +1,8 @@
 "use client";
 
 import useSWR, { mutate } from "swr"
+import { toast } from "sonner"
 import { useEffect } from "react";
-import { useToast } from "@/hooks/use-toast"
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -40,7 +40,6 @@ export default function ServerSettings() {
   const configApi = "/api/config";
 
   const { t } = useTranslation();
-  const { toast } = useToast()
 
   const serverForm = useForm({
     resolver: zodResolver(z.object({
@@ -87,17 +86,13 @@ export default function ServerSettings() {
 
   useEffect(() => {
     if (serverError) {
-      toast({
-        title: t("toast.failed.fetch_server"),
+      toast.error(t("toast.failed.fetch_server"), {
         description: serverError.message,
-        variant: "destructive"
       });
     }
     if (configError) {
-      toast({
-        title: t("toast.failed.fetch_config"),
+      toast.error(t("toast.failed.fetch_config"), {
         description: configError.message,
-        variant: "destructive"
       });
     }
   }, [serverError, configError]);
@@ -109,18 +104,15 @@ export default function ServerSettings() {
         serverForm.reset();
       }
       if (action === "test") {
-        toast({
-          title: t("toast.success.test"),
+        toast.success(t("toast.success.test"), {
           description: `${t("glb.version")}: ${result.message.version}`
         });
       }
       mutate(serversApi);
       mutate(configApi);
     } else {
-      toast({
-        title: t(`toast.failed.${action}_server`),
+      toast.error(t(`toast.failed.${action}_server`), {
         description: result.message,
-        variant: "destructive"
       });
     }
   };
@@ -128,15 +120,11 @@ export default function ServerSettings() {
   const handleSaveConfig = async (values) => {
     const result = await handlePost(configApi, JSON.stringify(values));
     if (result.state === "success") {
-      toast({
-        title: t("toast.success.save")
-      });
+      toast(t("toast.success.save"));
       mutate(configApi);
     } else {
-      toast({
-        title: t("toast.failed.save"),
+      toast.error(t("toast.failed.save"), {
         description: result.message,
-        variant: "destructive"
       });
     }
   };
