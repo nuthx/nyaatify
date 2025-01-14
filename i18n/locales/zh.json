@@ -138,6 +138,10 @@
       "title_priority": {
         "title": "标题优先级",
         "description": "页面中的动画标题将按照选择的语言顺序展示"
+      },
+      "cover_source": {
+        "title": "封面来源",
+        "description": "选择你喜欢的动画封面：Bangumi 源使用标准封面，Anilist 源会移除封面上的动画标题"
       }
     },
     "rss": {

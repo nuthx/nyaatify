@@ -106,6 +106,7 @@ export default function Settings() {
           items.findIndex(item => item.id === active.id),
           items.findIndex(item => item.id === over.id)
         );
+        // Save title priority after drag finished
         handleSaveConfig({ 
           title_priority: newItems.map(item => item.id).join(",")
         });
@@ -186,6 +187,24 @@ export default function Settings() {
               {items.map(item => <SortableItem key={item.id} item={item} />)}
             </SortableContext>
           </DndContext>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.gr.cover_source.title")}</CardTitle>
+          <CardDescription>{t("st.gr.cover_source.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Select defaultValue={data?.cover_source || "bangumi"} onValueChange={(value) => handleSaveConfig({ cover_source: value })}>
+            <SelectTrigger className="w-72">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="anilist">Anilist</SelectItem>
+              <SelectItem value="bangumi">Bangumi</SelectItem>
+            </SelectContent>
+          </Select>
         </CardContent>
       </Card>
     </>

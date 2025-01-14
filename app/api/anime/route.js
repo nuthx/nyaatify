@@ -81,7 +81,8 @@ export async function GET(request) {
       default_server: config.default_server,
       default_server_online: defaultOnline,
       show_server_state: config.show_server_state,
-      title_priority: config.title_priority
+      title_priority: config.title_priority,
+      cover_source: config.cover_source
     });
   }
 

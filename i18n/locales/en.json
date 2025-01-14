@@ -138,6 +138,10 @@
       "title_priority": {
         "title": "Title Priority",
         "description": "The anime title will be displayed in the order of the selected language."
+      },
+      "cover_source": {
+        "title": "Cover Source",
+        "description": "Choose your favorite anime cover: Bangumi uses standard covers, Anilist removes the anime title from the cover."
       }
     },
     "rss": {

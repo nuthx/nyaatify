@@ -126,15 +126,15 @@ export default function Anime() {
         {data.anime?.map((item, index) => (
           <Card key={index} className="flex flex-col">
             <CardContent className="flex gap-4 flex-1">
-              <img 
-                key={`${item.cover_bangumi}-${currentPage}`}
-                src={item.cover_bangumi || null}
-                className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md object-cover bg-zinc-200"
-                onError={(e) => {
-                  e.target.classList.remove("object-cover");
-                  e.target.src = null;
-                }}
-              />
+              {(data.cover_source === "anilist" ? item.cover_anilist || item.cover_bangumi : item.cover_bangumi || item.cover_anilist) ? (
+                <img 
+                  src={data.cover_source === "anilist" ? item.cover_anilist || item.cover_bangumi || null : item.cover_bangumi || item.cover_anilist || null}
+                  className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md object-cover bg-muted"
+                  onError={(e) => { e.target.src = "" }}
+                />
+              ) : (
+                <div className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md bg-muted" />
+              )}
               <div className="flex flex-col gap-2 my-1 w-fit">
                 {item.rss_names && (
                   <div className="flex gap-2">
