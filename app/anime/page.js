@@ -54,6 +54,8 @@ export default function Anime() {
     return data;
   });
 
+  // To show url address with correct page
+  // If first page, hide page number
   useEffect(() => {
     if (currentPage > 1) {
       router.push(`/anime?page=${currentPage}`);
@@ -78,6 +80,29 @@ export default function Anime() {
         variant: "destructive"
       });
     }
+  };
+
+  // Get title by priority
+  // If not found, return parsed title, then original title
+  const getTitleByPriority = (item, priority) => {
+    const priorities = priority.split(',');
+    for (const p of priorities) {
+      switch (p) {
+        case 'jp':
+          if (item.name_jp) return item.name_jp;
+          break;
+        case 'romaji':
+          if (item.name_romaji) return item.name_romaji;
+          break;
+        case 'cn':
+          if (item.name_cn) return item.name_cn;
+          break;
+        case 'en':
+          if (item.name_en) return item.name_en;
+          break;
+      }
+    }
+    return item.name_title || item.title;
   };
 
   if (isLoading) {
@@ -124,7 +149,7 @@ export default function Anime() {
                     <Tooltip>
                       <TooltipTrigger className="text-left">
                         <a href={item.torrent} target="_blank" className="font-medium hover:underline">
-                          {item.name_cn || item.name_jp || item.name_en || item.name_title || item.title}
+                          {getTitleByPriority(item, data.title_priority)}
                         </a>
                       </TooltipTrigger>
                       <TooltipContent className="py-2 space-y-1">
@@ -196,3 +221,4 @@ export default function Anime() {
     </div>
   );
 }
+
