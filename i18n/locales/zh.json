@@ -14,6 +14,12 @@
     "hide": "隐藏",
     "version": "版本"
   },
+  "lang": {
+    "chinese": "中文",
+    "japanese": "日语",
+    "english": "英语",
+    "romaji": "罗马音"
+  },
   "toast": {
     "success": {
       "save": "保存成功",
@@ -126,8 +132,12 @@
         "description": "选择 Nyaatify 的显示语言，此设置仅会保存在浏览器本地"
       },
       "sv_state": {
-        "title": "显示下载服务器状态",
+        "title": "服务器状态",
         "description": "在动画页左上角显示下载服务器的状态，如未添加下载服务器、下载服务器已离线等"
+      },
+      "title_priority": {
+        "title": "标题优先级",
+        "description": "页面中的动画标题将按照选择的语言顺序展示"
       }
     },
     "rss": {

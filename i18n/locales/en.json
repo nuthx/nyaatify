@@ -14,6 +14,12 @@
     "hide": "Hide",
     "version": "Version"
   },
+  "lang": {
+    "chinese": "Chinese",
+    "japanese": "Japanese",
+    "english": "English",
+    "romaji": "English (Romaji)"
+  },
   "toast": {
     "success": {
       "save": "Saved Successfully",
@@ -128,6 +134,10 @@
       "sv_state": {
         "title": "Show Download Server State",
         "description": "Show the state of download server on anime page, such as no download server or download server offline."
+      },
+      "title_priority": {
+        "title": "Title Priority",
+        "description": "The anime title will be displayed in the order of the selected language."
       }
     },
     "rss": {

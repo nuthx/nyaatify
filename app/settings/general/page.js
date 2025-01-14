@@ -1,11 +1,25 @@
 "use client";
 
 import useSWR from "swr"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useSortable } from "@dnd-kit/sortable";
 import { useToast } from "@/hooks/use-toast"
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next";
 import { handlePost } from "@/lib/handlers";
+import { CSS } from "@dnd-kit/utilities";
+import {
+  DndContext, 
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import {
   Card,
   CardContent,
@@ -20,6 +34,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Button } from "@/components/ui/button";
+import { GripVertical } from "lucide-react";
 
 export default function Settings() {
   const configApi = "/api/config";
@@ -31,6 +47,17 @@ export default function Settings() {
   const handleLanguageChange = (value) => {
     i18n.changeLanguage(value);
   };
+
+  const [items, setItems] = useState([
+    { id: "cn", name: t("lang.chinese") },
+    { id: "jp", name: t("lang.japanese") },
+    { id: "en", name: t("lang.english") },
+    { id: "romaji", name: t("lang.romaji") }
+  ]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor)
+  );
 
   const { data, error, isLoading, mutate } = useSWR(configApi, async (url) => {
     const response = await fetch(url);
@@ -66,6 +93,16 @@ export default function Settings() {
       });
     }
   };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      setItems((items) => arrayMove(items,
+        items.findIndex(item => item.id === active.id),
+        items.findIndex(item => item.id === over.id)
+      ));
+    }
+  }
 
   if (isLoading) {
     return <></>;
@@ -127,6 +164,44 @@ export default function Settings() {
           </Select>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.gr.title_priority.title")}</CardTitle>
+          <CardDescription>{t("st.gr.title_priority.description")}</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={items} strategy={verticalListSortingStrategy}>
+              {items.map(item => <SortableItem key={item.id} item={item} />)}
+            </SortableContext>
+          </DndContext>
+        </CardContent>
+      </Card>
     </>
   )
+}
+
+function SortableItem({ item }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: item.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div className="flex items-center justify-between h-10 pr-0.5 pl-3 py-2 w-72 text-sm border rounded-md shadow-sm" ref={setNodeRef} style={style}>
+      {item.name}
+      <Button variant="ghost" size="icon" className="cursor-grab hover:cursor-grabbing hover:bg-transparent" {...attributes} {...listeners}>
+        <GripVertical className="h-4 w-4" />
+      </Button>
+    </div>
+  );
 }
