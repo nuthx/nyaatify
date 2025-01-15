@@ -80,19 +80,19 @@ export default function Anime() {
   // Get title by priority
   // If not found, return parsed title, then original title
   const getTitleByPriority = (item, priority) => {
-    const priorities = priority.split(',');
+    const priorities = priority.split(",");
     for (const p of priorities) {
       switch (p) {
-        case 'jp':
+        case "jp":
           if (item.name_jp) return item.name_jp;
           break;
-        case 'romaji':
+        case "romaji":
           if (item.name_romaji) return item.name_romaji;
           break;
-        case 'cn':
+        case "cn":
           if (item.name_cn) return item.name_cn;
           break;
-        case 'en':
+        case "en":
           if (item.name_en) return item.name_en;
           break;
       }

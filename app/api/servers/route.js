@@ -74,7 +74,7 @@ export async function POST(request) {
       }
 
       // Return if connection failed
-      if (cookieResult === null || (typeof cookieResult === 'string' && cookieResult.includes("Error"))) {
+      if (cookieResult === null || (typeof cookieResult === "string" && cookieResult.includes("Error"))) {
         return Response.json({ error: cookieResult || "Failed to connect to server" }, { status: 400 });
       }
 
@@ -88,10 +88,10 @@ export async function POST(request) {
       await db.run(`
         UPDATE config 
         SET value = CASE 
-          WHEN value = '' THEN ? 
+          WHEN value = "" THEN ? 
           ELSE value 
         END 
-        WHERE key = 'default_server'
+        WHERE key = "default_server"
       `, [data.data.name]);
 
       log.info(`Download server added successfully, name: ${data.data.name}, url: ${data.data.url}`);
@@ -116,10 +116,10 @@ export async function POST(request) {
           await db.run(`
             UPDATE config 
             SET value = CASE 
-              WHEN (SELECT COUNT(*) FROM server) = 0 THEN ''
+              WHEN (SELECT COUNT(*) FROM server) = 0 THEN ""
               ELSE (SELECT name FROM server LIMIT 1)
             END 
-            WHERE key = 'default_server'
+            WHERE key = "default_server"
           `);
         }
 
@@ -142,7 +142,7 @@ export async function POST(request) {
       }
 
       // Return if connection failed
-      if (cookieResult === null || (typeof cookieResult === 'string' && cookieResult.includes("Error"))) {
+      if (cookieResult === null || (typeof cookieResult === "string" && cookieResult.includes("Error"))) {
         return Response.json({ error: cookieResult || "Failed to connect to server" }, { status: 400 });
       }
 
