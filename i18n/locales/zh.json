@@ -205,5 +205,10 @@
         "description": "查看正在运行的 Nyaatify 程序版本"
       }
     }
+  },
+  "404": {
+    "title": "404",
+    "description": "您访问的页面不存在",
+    "home": "返回主页"
   }
 }
