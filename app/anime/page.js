@@ -112,8 +112,8 @@ export default function Anime() {
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
-          {data.show_server_state === "1" && !data.default_server && <Badge variant="outline">{t("anime.no_server")}</Badge>}
-          {data.show_server_state === "1" && data.default_server && data.default_server_online === 0 && <Badge variant="destructive">{t("anime.server_offline")}</Badge>}
+          {data.config.show_server_state === "1" && !data.config.default_server && <Badge variant="outline">{t("anime.no_server")}</Badge>}
+          {data.config.show_server_state === "1" && data.config.default_server && data.config.default_server_online === "0" && <Badge variant="destructive">{t("anime.server_offline")}</Badge>}
           <a className="text-sm text-muted-foreground">{t("anime.today")}: {data.count.today}</a>
           <a className="text-sm text-muted-foreground">{t("anime.week")}: {data.count.week}</a>
           <a className="text-sm text-muted-foreground">{t("anime.total")}: {data.count.total}</a>
@@ -121,9 +121,9 @@ export default function Anime() {
         {data.anime?.map((item, index) => (
           <Card key={index} className="flex flex-col">
             <CardContent className="flex gap-4 flex-1">
-              {(data.cover_source === "anilist" ? item.cover_anilist || item.cover_bangumi : item.cover_bangumi || item.cover_anilist) ? (
+              {(data.config.cover_source === "anilist" ? item.cover_anilist || item.cover_bangumi : item.cover_bangumi || item.cover_anilist) ? (
                 <img 
-                  src={data.cover_source === "anilist" ? item.cover_anilist || item.cover_bangumi || null : item.cover_bangumi || item.cover_anilist || null}
+                  src={data.config.cover_source === "anilist" ? item.cover_anilist || item.cover_bangumi || null : item.cover_bangumi || item.cover_anilist || null}
                   className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md object-cover bg-muted"
                   onError={(e) => { e.target.src = "" }}
                 />
@@ -144,7 +144,7 @@ export default function Anime() {
                     <Tooltip>
                       <TooltipTrigger className="text-left">
                         <a href={item.torrent} target="_blank" className="font-medium hover:underline">
-                          {getTitleByPriority(item, data.title_priority)}
+                          {getTitleByPriority(item, data.config.title_priority)}
                         </a>
                       </TooltipTrigger>
                       <TooltipContent className="py-2 space-y-1">
@@ -203,7 +203,7 @@ export default function Anime() {
                     </AlertDialog>
                   </>
                 ) : (
-                  <Button variant="outline" className="font-normal" onClick={() => handleManage("download", data.default_server, item.hash)} disabled={!data.default_server || data.default_server_online === 0}>
+                  <Button variant="outline" className="font-normal" onClick={() => handleManage("download", data.config.default_server, item.hash)} disabled={!data.config.default_server || data.config.default_server_online === "0"}>
                     <Download />{t("glb.download")}
                   </Button>
                 )}
