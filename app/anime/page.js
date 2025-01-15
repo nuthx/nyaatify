@@ -105,7 +105,7 @@ export default function Anime() {
   }
 
   if (error) {
-    return <a className="text-sm text-center text-zinc-500 flex flex-col py-8">{error.message}</a>
+    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8">{error.message}</a>
   }
 
   return (
@@ -114,9 +114,9 @@ export default function Anime() {
         <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
           {data.show_server_state === "1" && !data.default_server && <Badge variant="outline">{t("anime.no_server")}</Badge>}
           {data.show_server_state === "1" && data.default_server && data.default_server_online === 0 && <Badge variant="destructive">{t("anime.server_offline")}</Badge>}
-          <a className="text-sm text-zinc-500">{t("anime.today")}: {data.count.today}</a>
-          <a className="text-sm text-zinc-500">{t("anime.week")}: {data.count.week}</a>
-          <a className="text-sm text-zinc-500">{t("anime.total")}: {data.count.total}</a>
+          <a className="text-sm text-muted-foreground">{t("anime.today")}: {data.count.today}</a>
+          <a className="text-sm text-muted-foreground">{t("anime.week")}: {data.count.week}</a>
+          <a className="text-sm text-muted-foreground">{t("anime.total")}: {data.count.total}</a>
         </div>
         {data.anime?.map((item, index) => (
           <Card key={index} className="flex flex-col">
@@ -158,13 +158,13 @@ export default function Anime() {
                     </Tooltip>
                   </TooltipProvider>
                 </div>
-                <a className="text-sm text-zinc-500">{item.title}</a>
+                <a className="text-sm text-muted-foreground">{item.title}</a>
               </div>
             </CardContent>
             <CardFooter className="flex items-center justify-between py-4">
               <div className="flex items-center gap-3">
                 {item.server && <Badge>{t(`download.state.${item.server.state}`)}</Badge>}
-                <a className="text-sm text-zinc-500">{item.server ? `${item.server.completed} / ${item.server.size} (${item.server.progress === 1 ? 100 : (item.server.progress*100).toFixed(1)}%)` : item.size}</a>
+                <a className="text-sm text-muted-foreground">{item.server ? `${item.server.completed} / ${item.server.size} (${item.server.progress === 1 ? 100 : (item.server.progress*100).toFixed(1)}%)` : item.size}</a>
               </div>
               <div className="flex items-center gap-2">
                 {item.server? (

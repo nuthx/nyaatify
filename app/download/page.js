@@ -64,7 +64,7 @@ export default function Home() {
   }
 
   if (error) {
-    return <a className="text-sm text-center text-zinc-500 flex flex-col py-8">{error.message}</a>
+    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8">{error.message}</a>
   }
 
   return (
@@ -79,9 +79,9 @@ export default function Home() {
               </div>
               <a className="font-medium">{item.name}</a>
               <div className="flex items-center gap-2">
-                <a className="w-1/6 text-sm text-zinc-500">{t("download.d_speed")}: {item.dlspeed}/s</a>
-                <a className="w-1/6 text-sm text-zinc-500">{t("download.u_speed")}: {item.upspeed}/s</a>
-                {item.eta !== 8640000 && <a className="w-2/6 text-sm text-zinc-500">
+                <a className="w-1/6 text-sm text-muted-foreground">{t("download.d_speed")}: {item.dlspeed}/s</a>
+                <a className="w-1/6 text-sm text-muted-foreground">{t("download.u_speed")}: {item.upspeed}/s</a>
+                {item.eta !== 8640000 && <a className="w-2/6 text-sm text-muted-foreground">
                   {t("download.eta")}: {Math.floor(item.eta/86400) > 0 && `${Math.floor(item.eta/86400)} ${t("download.d")} `}
                   {Math.floor((item.eta%86400)/3600) > 0 && `${Math.floor((item.eta%86400)/3600)} ${t("download.h")} `}
                   {Math.floor((item.eta%3600)/60) > 0 && `${Math.floor((item.eta%3600)/60)} ${t("download.m")} `}
@@ -91,7 +91,7 @@ export default function Home() {
             </CardContent>
             
             <CardFooter className="flex items-center justify-between py-4">
-              <a className="text-sm text-zinc-500">{item.completed} / {item.size} ({item.progress === 1 ? 100 : (item.progress*100).toFixed(1)}%)</a>
+              <a className="text-sm text-muted-foreground">{item.completed} / {item.size} ({item.progress === 1 ? 100 : (item.progress*100).toFixed(1)}%)</a>
               <div className="flex items-center gap-2">
                 {["uploading", "queuedUP", "stalledUP", "allocating", "downloading", "metaDL",
                   "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.state) && (

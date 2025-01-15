@@ -168,7 +168,7 @@ export default function ServerSettings() {
                       <SelectItem value="Aria2">Aria2</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage className="font-normal text-zinc-500">
+                  <FormMessage className="font-normal text-muted-foreground">
                     {selectedType === "qBittorrent" && t("st.sv.add.type_notice_qb")}
                     {selectedType === "Transmission" && t("st.sv.add.type_notice_tr")}
                     {selectedType === "Aria2" && t("st.sv.add.type_notice_ar")}
@@ -225,8 +225,8 @@ export default function ServerSettings() {
             empty={t("st.sv.servers.empty")}
             content={(server) => (
               <>
-                <p className="text-sm text-zinc-500">{server.url}</p>
-                <p className="text-sm text-zinc-500">{t("glb.version")}: {server.version}</p>
+                <p className="text-sm text-muted-foreground">{server.url}</p>
+                <p className="text-sm text-muted-foreground">{t("glb.version")}: {server.version}</p>
               </>
             )}
             state={(server) => (

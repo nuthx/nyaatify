@@ -29,7 +29,7 @@ export function Nav({ label, path }) {
   
   return (
     <button
-      className={`w-full text-left px-4 py-2.5 rounded-lg hover:bg-zinc-200/60 ${pathname === path ? "bg-zinc-200/60" : ""}`}
+      className={`w-full text-left px-4 py-2.5 rounded-lg hover:bg-primary/5 dark:hover:bg-muted/60 ${pathname === path ? "bg-primary/5 dark:bg-muted/80" : ""}`}
       onClick={() => router.push(path)}
     >
       {label}
@@ -42,7 +42,7 @@ export function ListCard({ items, empty, content, state, menu, onDelete, deletea
 
   if (items.length === 0) {
     return (
-      <div className="flex items-center justify-center h-20 text-sm text-zinc-500">
+      <div className="flex items-center justify-center h-20 text-sm text-muted-foreground">
         {empty}
       </div>
     );
@@ -58,7 +58,7 @@ export function ListCard({ items, empty, content, state, menu, onDelete, deletea
         {content(item)}
       </div>
       <div className="flex space-x-2 items-center">
-        <p className="text-sm text-zinc-700 bg-zinc-100 px-3 py-2 rounded-md whitespace-nowrap">
+        <p className="text-sm text-muted-foreground bg-secondary px-3 py-2 rounded-md whitespace-nowrap">
           {state(item)}
         </p>
         <AlertDialog>

@@ -203,8 +203,8 @@ export default function RSSSettings() {
             empty={t("st.rss.subscription.empty")}
             content={(rss) => (
               <>
-                <p className="text-sm text-zinc-500">{rss.url}</p>
-                <p className="text-sm text-zinc-500">{t("st.rss.subscription.cron")}: {rss.cron}</p>
+                <p className="text-sm text-muted-foreground">{rss.url}</p>
+                <p className="text-sm text-muted-foreground">{t("st.rss.subscription.cron")}: {rss.cron}</p>
               </>
             )}
             state={(rss) => (

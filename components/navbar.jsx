@@ -18,16 +18,16 @@ export function NavBar() {
         </Link>
 
         <div className="flex items-center space-x-8">
-          <Link href="/anime" className={`text-sm transition-all hover:text-primary ${pathname === "/anime" ? "text-primary" : "text-gray-500"}`}>
+          <Link href="/anime" className={`text-sm transition-all hover:text-primary ${pathname === "/anime" ? "text-primary" : "text-primary/50"}`}>
             {t("nav.anime")}
           </Link>
-          <Link href="/download" className={`text-sm transition-all hover:text-primary ${pathname === "/download" ? "text-primary" : "text-gray-500"}`}>
+          <Link href="/download" className={`text-sm transition-all hover:text-primary ${pathname === "/download" ? "text-primary" : "text-primary/50"}`}>
             {t("nav.download")}
           </Link>
-          <Link href="/settings/general" className={`text-sm text-sm transition-all hover:text-primary ${pathname.startsWith("/settings") ? "text-primary" : "text-gray-500"}`}>
+          <Link href="/settings/general" className={`text-sm text-sm transition-all hover:text-primary ${pathname.startsWith("/settings") ? "text-primary" : "text-primary/50"}`}>
             {t("nav.settings")}
           </Link>
-          <Link href="/logout" className={`text-sm text-sm transition-all hover:text-primary text-gray-500`}>
+          <Link href="/logout" className={`text-sm text-sm transition-all hover:text-primary text-primary/50`}>
             {t("nav.logout")}
           </Link>
         </div>
