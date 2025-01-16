@@ -60,7 +60,7 @@ export async function POST(request) {
     }
     await db.run("COMMIT");
 
-    logger.info(`Saved config successfully: ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "POST /api/config" });
+    logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "POST /api/config" });
     return Response.json({});
   } catch (error) {
     await db.run("ROLLBACK");
