@@ -168,15 +168,15 @@ export async function POST(request) {
 
       // Return if connection failed
       if (!result || result.includes("Error")) {
-        logger.error(`Failed to test ${data.data.name} due to ${result}`, { model: "POST /api/servers" });
-        return Response.json({ error: `Failed to test ${data.data.name} due to ${result}` }, { status: 400 });
+        logger.error(`Failed to test ${data.data.name} due connection failed`, { model: "POST /api/servers" });
+        return Response.json({ error: `Failed to test ${data.data.name} due to connection failed` }, { status: 400 });
       }
 
       // Get download server version
       const version = await getQbittorrentVersion(data.data.url, result);
       if (version === "unknown") {
-        logger.error(`Failed to test ${data.data.name} due to the connection failed`, { model: "POST /api/servers" });
-        return Response.json({ error: `Failed to test ${data.data.name} due to the connection failed` }, { status: 400 });
+        logger.error(`Failed to test ${data.data.name} due to connection failed`, { model: "POST /api/servers" });
+        return Response.json({ error: `Failed to test ${data.data.name} due to connection failed` }, { status: 400 });
       }
 
       logger.info(`${data.data.name} connected successfully, version: ${version}`, { model: "POST /api/servers" });

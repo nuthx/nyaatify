@@ -90,8 +90,8 @@ export async function POST(request) {
     // Manage the torrent
     const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
     if (result !== "success") {
-      logger.error(`Failed to ${data.action} ${data.hash} due to ${result}`, { model: "POST /api/torrents" });
-      return Response.json({ error: `Failed to ${data.action} ${data.hash} due to ${result}` }, { status: 500 });
+      logger.error(`Failed to ${data.action} ${data.hash} due to connection failed`, { model: "POST /api/torrents" });
+      return Response.json({ error: `Failed to ${data.action} ${data.hash} due to connection failed` }, { status: 500 });
     }
 
     logger.info(`${data.action} ${data.hash} successfully`, { model: "POST /api/torrents" });
