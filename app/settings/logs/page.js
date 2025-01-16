@@ -26,6 +26,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { PaginationPro } from "@/components/pagination";
 
 export default function Logs() {
   const logsApi = "/api/logs";
@@ -36,6 +37,8 @@ export default function Logs() {
   const [level, setLevel] = useState("all");
   const [availableDays, setAvailableDays] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 80;
 
   const { data, error, isLoading } = useSWR(
     selectedDate ? `${logsApi}?date=${selectedDate}` : logsApi,
@@ -64,7 +67,15 @@ export default function Logs() {
 
   useEffect(() => {
     setFilteredLogs(level === "all" ? logs : logs.filter(log => log.level === level));
+    setCurrentPage(1);
   }, [level, logs]);
+
+  const paginatedLogs = filteredLogs.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
 
   if (isLoading) {
     return <></>;
@@ -111,7 +122,7 @@ export default function Logs() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredLogs.map((log, index) => (
+              {paginatedLogs.map((log, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     <Badge variant={log.level === "error" ? "destructive" : log.level === "warn" ? "warning" : "outline"}>
@@ -125,6 +136,14 @@ export default function Logs() {
               ))}
             </TableBody>
           </Table>
+          
+          <div className="mt-4">
+            <PaginationPro
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          </div>
         </CardContent>
       </Card>
     </>
