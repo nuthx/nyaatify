@@ -56,10 +56,7 @@ export async function POST(request) {
     // Update config with transaction
     await db.run("BEGIN TRANSACTION");
     for (const [key, value] of Object.entries(data)) {
-      await db.run(
-        "UPDATE config SET value = ? WHERE key = ?",
-        [value, key]
-      );
+      await db.run("UPDATE config SET value = ? WHERE key = ?", [value, key]);
     }
     await db.run("COMMIT");
 

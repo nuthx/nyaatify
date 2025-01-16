@@ -2,7 +2,7 @@ import "./globals.css";
 import { AR_One_Sans } from "next/font/google"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { I18nWrapper } from "@/i18n/wrapper";
-import { log } from "@/lib/log";
+import { logger } from "@/lib/logger";
 import { startAllTasks } from "@/lib/schedule";
 import { Toaster } from "@/components/ui/sonner"
 import { NavBar } from "@/components/navbar";
@@ -16,7 +16,7 @@ const arOneSans = AR_One_Sans({
 
 // Start RSS task (only in production)
 if (process.env.NODE_ENV === "production") {
-  startAllTasks().catch(log.error);
+  startAllTasks().catch(logger.error);
 }
 
 export default function RootLayout({ children }) {

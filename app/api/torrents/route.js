@@ -1,23 +1,15 @@
 import { getDb } from "@/lib/db";
-import { log } from "@/lib/log";
+import { logger } from "@/lib/logger";
 import { formatBytes } from "@/lib/bytes";
 import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
 
 // Get torrent list
 // Method: GET
 
-// Manage torrent state
-// Method: POST
-// Body: {
-//   action: string (required, type: download, pause, resume, delete)
-//   server: string (required)
-//   hash: string (required)
-// }
-
 export async function GET() {
-  const db = await getDb();
-
   try {
+    const db = await getDb();
+
     // Check server online status
     const servers = await db.all("SELECT url, cookie, name FROM server");
     const serverStatuses = await Promise.all(
@@ -63,49 +55,49 @@ export async function GET() {
       return a.server.localeCompare(b.server);
     });
 
+    logger.info(`Fetched torrent list successfully, count: ${allTorrents.length}`, { model: "GET /api/torrents" });
     return Response.json({ 
       torrents: allTorrents,
       servers: servers.length,
       online: onlineServers.length
     });
-  }
-
-  catch (error) {
-    log.error(`Failed to load torrent list: ${error.message}`);
+  } catch (error) {
+    logger.error(error.message, { model: "GET /api/torrents" });
     return Response.json({ error: error.message }, { status: 500 });
   }
 }
 
-export async function POST(request) {
-  const db = await getDb();
-  const data = await request.json();
+// Manage torrent state
+// Method: POST
+// Body: {
+//   action: string, required, type: download, pause, resume, delete
+//   server: string, required
+//   hash: string, required
+// }
 
+export async function POST(request) {
   try {
-    // Check if server and hash are provided
-    if (!data.server) {
-      return Response.json({ error: "Server required" }, { status: 400 });
-    }
-    if (!data.hash) {
-      return Response.json({ error: "Hash required" }, { status: 400 });
-    }
+    const db = await getDb();
+    const data = await request.json();
 
     // Get server info
     const server = await db.get("SELECT url, cookie FROM server WHERE name = ?", data.server);
     if (!server) {
-      return Response.json({ error: "Server not found" }, { status: 404 });
+      logger.error(`Failed to ${data.action} ${data.hash} due to ${data.server} server not found`, { model: "POST /api/torrents" });
+      return Response.json({ error: `Failed to ${data.action} ${data.hash} due to ${data.server} server not found` }, { status: 404 });
     }
 
-    // Download, Pause, Resume, Delete a torrent
+    // Manage the torrent
     const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
     if (result !== "success") {
-      return Response.json({ error: result }, { status: 500 });
+      logger.error(`Failed to ${data.action} ${data.hash} due to ${result}`, { model: "POST /api/torrents" });
+      return Response.json({ error: `Failed to ${data.action} ${data.hash} due to ${result}` }, { status: 500 });
     }
 
+    logger.info(`${data.action} ${data.hash} successfully`, { model: "POST /api/torrents" });
     return Response.json({});
-  }
-  
-  catch (error) {
-    log.error(`Failed to ${data.action} torrent: ${error.message}`);
+  } catch (error) {
+    logger.error(error.message, { model: "POST /api/torrents" });
     return Response.json({ error: error.message }, { status: 500 });
   }
 }
