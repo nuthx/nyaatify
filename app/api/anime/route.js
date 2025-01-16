@@ -10,9 +10,8 @@ import { getQbittorrentVersion, getQbittorrentTorrents } from "@/lib/api/qbittor
 
 export async function GET(request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const size = parseInt(searchParams.get("size") || "20");
+    const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
+    const size = parseInt(request.nextUrl.searchParams.get("size") || "20");
     const offset = (page - 1) * size;
     const db = await getDb();
 
