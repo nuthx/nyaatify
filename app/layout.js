@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === "production") {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={arOneSans.className} suppressHydrationWarning>
-      <body className="bg-secondary/50 dark:bg-background">
+      <body className="bg-secondary/50 dark:bg-background overflow-y-scroll">
         <NextThemesProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <I18nWrapper>
             <header className="sticky top-0 z-50">
