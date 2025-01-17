@@ -13,7 +13,6 @@ export async function GET() {
       rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
     );
 
-    logger.info("Fetched config successfully", { model: "GET /api/config" });
     return Response.json(config);
   } catch (error) {
     logger.error(error.message, { model: "GET /api/config" });

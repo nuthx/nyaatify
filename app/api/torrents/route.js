@@ -55,7 +55,6 @@ export async function GET() {
       return a.server.localeCompare(b.server);
     });
 
-    logger.info(`Fetched torrent list successfully, count: ${allTorrents.length}`, { model: "GET /api/torrents" });
     return Response.json({ 
       torrents: allTorrents,
       servers: servers.length,

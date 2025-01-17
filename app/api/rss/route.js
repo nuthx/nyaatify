@@ -14,7 +14,6 @@ export async function GET() {
     const rss = await db.all("SELECT * FROM rss ORDER BY name ASC");
 
     // Return rss list with next invocation time
-    logger.info(`Fetched rss list successfully, count: ${rss.length}, names: ${rss.map(item => item.name).join(", ")}`, { model: "GET /api/rss" });
     return Response.json({
       rss: rss.map(item => ({
         ...item,

@@ -24,12 +24,6 @@ export async function GET() {
       };
     }));
 
-    // Log server list with each server's online state
-    logger.info(
-      `Fetched server list successfully, count: ${servers.length}, names: ${
-        serversWithState.map(item => `${item.name}(${item.state})`).join(", ")
-      }`, { model: "GET /api/servers" }
-    );
     return Response.json({
       servers: serversWithState,
       default_server: config.default_server

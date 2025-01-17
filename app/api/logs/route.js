@@ -39,7 +39,6 @@ export async function GET(request) {
 
     const logs = logContent.trim().split("\n").map(line => JSON.parse(line)).reverse();
     if (logs) {
-      logger.info(`Fetched system logs successfully, date: ${foundDate}, count: ${logs.length}`, { model: "GET /api/logs" });
       return Response.json({
         logs: logs,
         days: availableDays,

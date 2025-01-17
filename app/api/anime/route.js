@@ -48,7 +48,6 @@ export async function GET(request) {
       return torrents.map(t => ({...t, server_name: server.name}));
     }))).flat();
 
-    logger.info(`Fetched anime list successfully, page: ${page}, size: ${size}, count: ${total.count}`, { model: "GET /api/anime" });
     return Response.json({
       anime: anime.map(item => {
         const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
