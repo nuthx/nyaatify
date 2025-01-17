@@ -2,7 +2,7 @@
 
 import useSWR from "swr";
 import { toast } from "sonner"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
 import { handlePost } from "@/lib/handlers";
@@ -39,7 +39,8 @@ export default function Anime() {
 
   const { t } = useTranslation();
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(Number(useSearchParams().get("page")) || 1);
+  const searchParams = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
 
   const { data, error, isLoading, mutate } = useSWR(`${animeApi}?page=${currentPage}`, async (url) => {
     const response = await fetch(url);
@@ -55,13 +56,10 @@ export default function Anime() {
 
   // To show url address with correct page
   // If first page, hide page number
-  useEffect(() => {
-    if (currentPage > 1) {
-      router.push(`/anime?page=${currentPage}`);
-    } else {
-      router.push("/anime");
-    }
-  }, [currentPage, router]);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    router.push(`/anime${page > 1 ? `?page=${page}` : ""}`);
+  };
 
   const handleManage = async (action, server, hash) => {
     const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
@@ -212,8 +210,7 @@ export default function Anime() {
           </Card>
         ))}
       </div>
-      <PaginationPro currentPage={currentPage} totalPages={Math.ceil(data.pagination.total / data.pagination.size)} onPageChange={setCurrentPage} />
+      <PaginationPro currentPage={currentPage} totalPages={Math.ceil(data.pagination.total / data.pagination.size)} onPageChange={handlePageChange} />
     </div>
   );
 }
-
