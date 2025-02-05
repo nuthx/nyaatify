@@ -37,19 +37,20 @@ export async function GET(request) {
       }
     }
 
-    const logs = logContent.trim().split("\n").map(line => JSON.parse(line)).reverse();
-    if (logs) {
+    // Check if logContent exists and is not empty
+    // Use logContent.trim() to make sure log file is not empty
+    if (logContent && logContent.trim()) {
       return Response.json({
-        logs: logs,
+        logs: logContent.trim().split("\n").map(line => JSON.parse(line)).reverse(),
         days: availableDays,
         date: foundDate
       });
     } else {
-      logger.info(`No system logs found for date: ${foundDate}`, { model: "GET /api/logs" });
+      logger.warn(`No system logs found for date: ${targetDateStr}`, { model: "GET /api/logs" });
       return Response.json({
         logs: [],
         days: availableDays,
-        date: "1970-01-01"
+        date: targetDateStr
       });
     }
   } catch (error) {
