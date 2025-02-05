@@ -50,7 +50,7 @@ export async function GET(request) {
         }
       });
     } else {
-      logger.warn(`No system logs found for date: ${targetDateStr}`, { model: "GET /api/logs" });
+      logger.warn(`No system logs found, date: ${targetDateStr}`, { model: "GET /api/logs" });
       return Response.json({
         code: 404,
         message: "No system logs found",
