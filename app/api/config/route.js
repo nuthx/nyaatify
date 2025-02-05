@@ -47,24 +47,14 @@ export async function POST(request) {
     const validKeysSet = new Set(existingKeys.map(row => row.key));
     const invalidKeys = Object.keys(data).filter(key => !validKeysSet.has(key));
     if (invalidKeys.length > 0) {
-      logger.error(`Failed to save config due to incorrect name: ${invalidKeys.join(", ")}`, { model: "POST /api/config" });
-      return Response.json({
-        code: 400,
-        message: `Failed to save config due to incorrect name: ${invalidKeys.join(", ")}`,
-        data: null
-      }, { status: 400 });
+      throw new Error(`Failed to save config due to incorrect name: ${invalidKeys.join(", ")}`);
     }
 
     // If save ai config, use a testing title to check if ai config valid
     if (data.ai_priority === "ai") {
       const result = await testOpenAI(data);
       if (result !== "success") {
-        logger.error(result, { model: "POST /api/config" });
-        return Response.json({
-          code: 400,
-          message: result,
-          data: null
-        }, { status: 400 });
+        throw new Error(result);
       }
     }
 

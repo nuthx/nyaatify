@@ -67,20 +67,10 @@ export async function POST(request) {
         db.get("SELECT url FROM server WHERE url = ?", data.data.url)
       ]);
       if (existingName) {
-        logger.error(`Failed to add ${data.data.name} due to it already exists`, { model: "POST /api/servers" });
-        return Response.json({
-          code: 400,
-          message: `Failed to add ${data.data.name} due to it already exists`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to add ${data.data.name} due to it already exists`);
       }
       if (existingUrl) {
-        logger.error(`Failed to add ${data.data.name} due to the URL already exists`, { model: "POST /api/servers" });
-        return Response.json({
-          code: 400,
-          message: `Failed to add ${data.data.name} due to the URL already exists`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to add ${data.data.name} due to the URL already exists`);
       }
 
       // Get download server cookie
@@ -89,22 +79,12 @@ export async function POST(request) {
       if (data.data.type === "qBittorrent") {
         result = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
       } else {
-        logger.error(`Failed to add ${data.data.name} due to the server is not supported`, { model: "POST /api/servers" });
-        return Response.json({
-          code: 400,
-          message: `Failed to add ${data.data.name} due to the server is not supported`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to add ${data.data.name} due to the server is not supported`);
       }
 
       // Return if connection failed
       if (!result || result.includes("Error")) {
-        logger.error(`Failed to add ${data.data.name}`, { model: "POST /api/servers" });
-        return Response.json({
-          code: 400,
-          message: `Failed to add ${data.data.name}`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to add ${data.data.name}`);
       }
 
       // Insert to database
@@ -188,33 +168,18 @@ export async function POST(request) {
       if (data.data.type === "qBittorrent") {
         result = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
       } else {
-        logger.error(`Failed to test ${data.data.name} due to the server is not supported`, { model: "POST /api/servers" });
-        return Response.json({
-          code: 400,
-          message: `Failed to test ${data.data.name} due to the server is not supported`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to test ${data.data.name} due to the server is not supported`);
       }
 
       // Return if connection failed
       if (!result || result.includes("Error")) {
-        logger.error(`Failed to test ${data.data.name} due connection failed`, { model: "POST /api/servers" });
-        return Response.json({
-          code: 400,
-          message: `Failed to test ${data.data.name} due to connection failed`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to test ${data.data.name} due to connection failed`);
       }
 
       // Get download server version
       const version = await getQbittorrentVersion(data.data.url, result);
       if (version === "unknown") {
-        logger.error(`Failed to test ${data.data.name} due to connection failed`, { model: "POST /api/servers" });
-        return Response.json({
-          code: 400,
-          message: `Failed to test ${data.data.name} due to connection failed`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to test ${data.data.name} due to connection failed`);
       }
 
       logger.info(`${data.data.name} connected successfully, version: ${version}`, { model: "POST /api/servers" });
@@ -228,12 +193,7 @@ export async function POST(request) {
     }
 
     else {
-      logger.error(`Invalid action for ${data.data.name}: ${data.action}`, { model: "POST /api/servers" });
-      return Response.json({
-        code: 400,
-        message: "Invalid action",
-        data: null
-      }, { status: 400 });
+      throw new Error(`Invalid action: ${data.action}`);
     }
   } catch (error) {
     logger.error(error.message, { model: "POST /api/servers" });

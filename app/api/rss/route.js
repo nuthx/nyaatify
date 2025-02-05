@@ -54,12 +54,7 @@ export async function POST(request) {
       // Check if name already exists
       const existingName = await db.get("SELECT name FROM rss WHERE name = ?", data.data.name);
       if (existingName) {
-        logger.error(`Failed to add ${data.data.name} due to it already exists`, { model: "POST /api/rss" });
-        return Response.json({
-          code: 400,
-          message: `Failed to add ${data.data.name} due to it already exists`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to add ${data.data.name} due to it already exists`);
       }
 
       // Identify RSS type
@@ -71,12 +66,7 @@ export async function POST(request) {
       } else if (urlPrefix.includes("mikan")) {
         rssType = "Mikan";
       } else {
-        logger.error(`Failed to add ${data.data.name} due to the RSS address is not supported`, { model: "POST /api/rss" });
-        return Response.json({
-          code: 400,
-          message: `Failed to add ${data.data.name} due to the RSS address is not supported`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to add ${data.data.name} due to the RSS address is not supported`);
       }
 
       // Check cron validity
@@ -84,24 +74,14 @@ export async function POST(request) {
       try {
         parser.parseExpression(data.data.cron);
       } catch (error) {
-        logger.error(`Failed to add ${data.data.name} due to the cron is invalid`, { model: "POST /api/rss" });
-        return Response.json({
-          code: 400,
-          message: `Failed to add ${data.data.name} due to the cron is invalid`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to add ${data.data.name} due to the cron is invalid`);
       }
 
       // Check RSS address validity
       const rssParser = new RSSParser();
       const rss = await rssParser.parseURL(data.data.url);
       if (!rss) {
-        logger.error(`Failed to add ${data.data.name} due to the RSS address is invalid`, { model: "POST /api/rss" });
-        return Response.json({
-          code: 400,
-          message: `Failed to add ${data.data.name} due to the RSS address is invalid`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to add ${data.data.name} due to the RSS address is invalid`);
       }
 
       // Insert to database
@@ -134,12 +114,7 @@ export async function POST(request) {
       // Check if RSS is running
       const rss = await db.get("SELECT * FROM rss WHERE name = ?", [data.data.name]);
       if (rss.state === "running") {
-        logger.error(`Failed to delete ${data.data.name} due to it is running`, { model: "POST /api/rss" });
-        return Response.json({
-          code: 400,
-          message: `Failed to delete ${data.data.name} due to it is running`,
-          data: null
-        }, { status: 400 });
+        throw new Error(`Failed to delete ${data.data.name} due to it is running`);
       }
 
       // Stop RSS task
@@ -198,12 +173,7 @@ export async function POST(request) {
     }
 
     else {
-      logger.error(`Invalid action for ${data.data.name}: ${data.action}`, { model: "POST /api/rss" });
-      return Response.json({
-        code: 400,
-        message: "Invalid action",
-        data: null
-      }, { status: 400 });
+      throw new Error(`Invalid action: ${data.action}`);
     }
   } catch (error) {
     logger.error(error.message, { model: "POST /api/rss" });

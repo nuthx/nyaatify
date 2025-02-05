@@ -90,23 +90,13 @@ export async function POST(request) {
     // Get server info
     const server = await db.get("SELECT url, cookie FROM server WHERE name = ?", data.server);
     if (!server) {
-      logger.error(`Failed to ${data.action} ${data.hash} due to ${data.server} server not found`, { model: "POST /api/torrents" });
-      return Response.json({
-        code: 404,
-        message: `Failed to ${data.action} ${data.hash} due to ${data.server} server not found`,
-        data: null
-      }, { status: 404 });
+      throw new Error(`Failed to ${data.action} ${data.hash} due to ${data.server} server not found`);
     }
 
     // Manage the torrent
     const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
     if (result !== "success") {
-      logger.error(`Failed to ${data.action} ${data.hash} due to connection failed`, { model: "POST /api/torrents" });
-      return Response.json({
-        code: 500,
-        message: `Failed to ${data.action} ${data.hash} due to connection failed`,
-        data: null
-      }, { status: 500 });
+      throw new Error(`Failed to ${data.action} ${data.hash} due to connection failed`);
     }
 
     logger.info(`${data.action} ${data.hash} successfully`, { model: "POST /api/torrents" });
