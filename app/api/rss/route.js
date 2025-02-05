@@ -15,14 +15,22 @@ export async function GET() {
 
     // Return rss list with next invocation time
     return Response.json({
-      rss: rss.map(item => ({
-        ...item,
-        next: tasks.get(item.name)?.nextInvocation() || null
-      }))
+      code: 200,
+      message: "success",
+      data: {
+        rss: rss.map(item => ({
+          ...item,
+          next: tasks.get(item.name)?.nextInvocation() || null
+        }))
+      }
     });
   } catch (error) {
     logger.error(error.message, { model: "GET /api/rss" });
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
   }
 }
 
@@ -47,7 +55,11 @@ export async function POST(request) {
       const existingName = await db.get("SELECT name FROM rss WHERE name = ?", data.data.name);
       if (existingName) {
         logger.error(`Failed to add ${data.data.name} due to it already exists`, { model: "POST /api/rss" });
-        return Response.json({ error: `Failed to add ${data.data.name} due to it already exists` }, { status: 400 });
+        return Response.json({
+          code: 400,
+          message: `Failed to add ${data.data.name} due to it already exists`,
+          data: null
+        }, { status: 400 });
       }
 
       // Check RSS address validity
@@ -55,7 +67,11 @@ export async function POST(request) {
       const rss = await rssParser.parseURL(data.data.url);
       if (!rss) {
         logger.error(`Failed to add ${data.data.name} due to the RSS address is invalid`, { model: "POST /api/rss" });
-        return Response.json({ error: `Failed to add ${data.data.name} due to the RSS address is invalid` }, { status: 400 });
+        return Response.json({
+          code: 400,
+          message: `Failed to add ${data.data.name} due to the RSS address is invalid`,
+          data: null
+        }, { status: 400 });
       }
 
       // Check cron validity
@@ -64,7 +80,11 @@ export async function POST(request) {
         parser.parseExpression(data.data.cron);
       } catch (error) {
         logger.error(`Failed to add ${data.data.name} due to the cron is invalid`, { model: "POST /api/rss" });
-        return Response.json({ error: `Failed to add ${data.data.name} due to the cron is invalid` }, { status: 400 });
+        return Response.json({
+          code: 400,
+          message: `Failed to add ${data.data.name} due to the cron is invalid`,
+          data: null
+        }, { status: 400 });
       }
 
       // Identify RSS type
@@ -77,7 +97,11 @@ export async function POST(request) {
         rssType = "Mikan";
       } else {
         logger.error(`Failed to add ${data.data.name} due to the RSS address is not supported`, { model: "POST /api/rss" });
-        return Response.json({ error: `Failed to add ${data.data.name} due to the RSS address is not supported` }, { status: 400 });
+        return Response.json({
+          code: 400,
+          message: `Failed to add ${data.data.name} due to the RSS address is not supported`,
+          data: null
+        }, { status: 400 });
       }
 
       // Insert to database
@@ -99,7 +123,11 @@ export async function POST(request) {
         type: rssType
       });
 
-      return Response.json({});
+      return Response.json({
+        code: 200,
+        message: "success",
+        data: null
+      });
     }
 
     else if (data.action === "delete") {
@@ -107,7 +135,11 @@ export async function POST(request) {
       const rss = await db.get("SELECT * FROM rss WHERE name = ?", [data.data.name]);
       if (rss.state === "running") {
         logger.error(`Failed to delete ${data.data.name} due to it is running`, { model: "POST /api/rss" });
-        return Response.json({ error: `Failed to delete ${data.data.name} due to it is running` }, { status: 400 });
+        return Response.json({
+          code: 400,
+          message: `Failed to delete ${data.data.name} due to it is running`,
+          data: null
+        }, { status: 400 });
       }
 
       // Stop RSS task
@@ -143,7 +175,11 @@ export async function POST(request) {
         await db.run("COMMIT");
 
         logger.info(`${data.data.name} deleted successfully`, { model: "POST /api/rss" });
-        return Response.json({});
+        return Response.json({
+          code: 200,
+          message: "success",
+          data: null
+        });
       } catch (error) {
         await db.run("ROLLBACK");
         throw error;
@@ -154,15 +190,27 @@ export async function POST(request) {
       const rss = await db.get("SELECT * FROM rss WHERE name = ?", [data.data.name]);
       parseRSS(rss.id, rss.name, rss.url, rss.type);
       logger.info(`Start refreshing ${data.data.name} manually by user`, { model: "POST /api/rss" });
-      return Response.json({});
+      return Response.json({
+        code: 200,
+        message: "success",
+        data: null
+      });
     }
 
     else {
       logger.error(`Invalid action for ${data.data.name}: ${data.action}`, { model: "POST /api/rss" });
-      return Response.json({ error: "Invalid action" }, { status: 400 });
+      return Response.json({
+        code: 400,
+        message: "Invalid action",
+        data: null
+      }, { status: 400 });
     }
   } catch (error) {
     logger.error(error.message, { model: "POST /api/rss" });
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
   }
 }

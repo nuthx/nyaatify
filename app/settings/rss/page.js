@@ -81,11 +81,11 @@ export default function RSSSettings() {
 
   const fetcher = async (url) => {
     const response = await fetch(url);
-    const data = await response.json();
+    const result = await response.json();
     if (!response.ok) {
-      throw new Error(data.error);
+      throw new Error(result.message);
     }
-    return data;
+    return result.data;
   };
 
   const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
@@ -115,7 +115,7 @@ export default function RSSSettings() {
     if (action === "refresh") {
       toast(t("toast.start.refresh_rss"));
     }
-    if (result.state === "success") {
+    if (result.code === 200) {
       if (action === "add") {
         rssForm.reset();
       }
@@ -129,7 +129,7 @@ export default function RSSSettings() {
 
   const handleSaveConfig = async (values) => {
     const result = await handlePost(configApi, JSON.stringify(values));
-    if (result.state === "success") {
+    if (result.code === 200) {
       toast({
         title: t("toast.success.save")
       });

@@ -44,11 +44,11 @@ export default function Logs() {
     selectedDate ? `${logsApi}?date=${selectedDate}` : logsApi,
     async (url) => {
       const response = await fetch(url);
-      const data = await response.json();
+      const result = await response.json();
       if (!response.ok) {
-        throw new Error(data.error);
+        throw new Error(result.message);
       }
-      return data;
+      return result.data;
     }
   );
 

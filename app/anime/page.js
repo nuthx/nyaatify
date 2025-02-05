@@ -44,14 +44,14 @@ export default function Anime() {
 
   const { data, error, isLoading, mutate } = useSWR(`${animeApi}?page=${currentPage}`, async (url) => {
     const response = await fetch(url);
-    const data = await response.json();
+    const result = await response.json();
     if (!response.ok) {
-      throw new Error(data.error);
+      throw new Error(result.message);
     }
-    if (data.anime.length === 0) {
+    if (result.data.anime.length === 0) {
       throw new Error(t("anime.empty"));
     }
-    return data;
+    return result.data;
   });
 
   // To show url address with correct page
@@ -63,7 +63,7 @@ export default function Anime() {
 
   const handleManage = async (action, server, hash) => {
     const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
-    if (result.state === "success") {
+    if (result.code === 200) {
       if (action === "download") {
         toast(t(`toast.start.download`));
       }

@@ -55,14 +55,22 @@ export async function GET() {
       return a.server.localeCompare(b.server);
     });
 
-    return Response.json({ 
-      torrents: allTorrents,
-      servers: servers.length,
-      online: onlineServers.length
+    return Response.json({
+      code: 200,
+      message: "success",
+      data: {
+        torrents: allTorrents,
+        servers: servers.length,
+        online: onlineServers.length
+      }
     });
   } catch (error) {
     logger.error(error.message, { model: "GET /api/torrents" });
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
   }
 }
 
@@ -83,20 +91,36 @@ export async function POST(request) {
     const server = await db.get("SELECT url, cookie FROM server WHERE name = ?", data.server);
     if (!server) {
       logger.error(`Failed to ${data.action} ${data.hash} due to ${data.server} server not found`, { model: "POST /api/torrents" });
-      return Response.json({ error: `Failed to ${data.action} ${data.hash} due to ${data.server} server not found` }, { status: 404 });
+      return Response.json({
+        code: 404,
+        message: `Failed to ${data.action} ${data.hash} due to ${data.server} server not found`,
+        data: null
+      }, { status: 404 });
     }
 
     // Manage the torrent
     const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
     if (result !== "success") {
       logger.error(`Failed to ${data.action} ${data.hash} due to connection failed`, { model: "POST /api/torrents" });
-      return Response.json({ error: `Failed to ${data.action} ${data.hash} due to connection failed` }, { status: 500 });
+      return Response.json({
+        code: 500,
+        message: `Failed to ${data.action} ${data.hash} due to connection failed`,
+        data: null
+      }, { status: 500 });
     }
 
     logger.info(`${data.action} ${data.hash} successfully`, { model: "POST /api/torrents" });
-    return Response.json({});
+    return Response.json({
+      code: 200,
+      message: "success",
+      data: null
+    });
   } catch (error) {
     logger.error(error.message, { model: "POST /api/torrents" });
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
   }
 }

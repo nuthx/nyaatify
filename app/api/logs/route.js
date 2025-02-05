@@ -41,20 +41,32 @@ export async function GET(request) {
     // Use logContent.trim() to make sure log file is not empty
     if (logContent && logContent.trim()) {
       return Response.json({
-        logs: logContent.trim().split("\n").map(line => JSON.parse(line)).reverse(),
-        days: availableDays,
-        date: foundDate
+        code: 200,
+        message: "success",
+        data: {
+          logs: logContent.trim().split("\n").map(line => JSON.parse(line)).reverse(),
+          days: availableDays,
+          date: foundDate
+        }
       });
     } else {
       logger.warn(`No system logs found for date: ${targetDateStr}`, { model: "GET /api/logs" });
       return Response.json({
-        logs: [],
-        days: availableDays,
-        date: targetDateStr
+        code: 404,
+        message: "No system logs found",
+        data: {
+          logs: [],
+          days: availableDays,
+          date: targetDateStr
+        }
       });
     }
   } catch (error) {
     logger.error(error.message, { model: "GET /api/logs" });
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
   }
 }

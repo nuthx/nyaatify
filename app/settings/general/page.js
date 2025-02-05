@@ -57,11 +57,11 @@ export default function Settings() {
 
   const { data, error, isLoading, mutate } = useSWR(configApi, async (url) => {
     const response = await fetch(url);
-    const data = await response.json();
+    const result = await response.json();
     if (!response.ok) {
-      throw new Error(data.error);
+      throw new Error(result.message);
     }
-    return data;
+    return result.data;
   });
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export default function Settings() {
 
   const handleSaveConfig = async (values) => {
     const result = await handlePost(configApi, JSON.stringify(values));
-    if (result.state === "success") {
+    if (result.code === 200) {
       toast(t("toast.success.save"));
       mutate(configApi);
     } else {

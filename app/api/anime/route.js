@@ -49,39 +49,47 @@ export async function GET(request) {
     }))).flat();
 
     return Response.json({
-      anime: anime.map(item => {
-        const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
-        return {
-          ...item,
-          server: matchingTorrent ? {
-            name: matchingTorrent.server_name,
-            state: matchingTorrent.state,
-            progress: matchingTorrent.progress,
-            completed: formatBytes(matchingTorrent.completed), 
-            size: formatBytes(matchingTorrent.size)
-          } : null
-        };
-      }),
-      count: {
-        today: todayCount.count,
-        week: weekCount.count,
-        total: total.count
-      },
-      pagination: {
-        total: total.count,
-        size: size,
-        current: page
-      },
-      config: {
-        default_server: config.default_server,
-        default_server_online: defaultOnline,
-        show_server_state: config.show_server_state,
-        title_priority: config.title_priority,
-        cover_source: config.cover_source
+      code: 200,
+      message: "success",
+      data: {
+        anime: anime.map(item => {
+          const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
+          return {
+            ...item,
+            server: matchingTorrent ? {
+              name: matchingTorrent.server_name,
+              state: matchingTorrent.state,
+              progress: matchingTorrent.progress,
+              completed: formatBytes(matchingTorrent.completed), 
+              size: formatBytes(matchingTorrent.size)
+            } : null
+          };
+        }),
+        count: {
+          today: todayCount.count,
+          week: weekCount.count,
+          total: total.count
+        },
+        pagination: {
+          total: total.count,
+          size: size,
+          current: page
+        },
+        config: {
+          default_server: config.default_server,
+          default_server_online: defaultOnline,
+          show_server_state: config.show_server_state,
+          title_priority: config.title_priority,
+          cover_source: config.cover_source
+        }
       }
     });
   } catch (error) {
     logger.error(error.message, { model: "GET /api/anime" });
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
   }
 }

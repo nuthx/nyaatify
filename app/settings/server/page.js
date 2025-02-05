@@ -74,11 +74,11 @@ export default function ServerSettings() {
 
   const fetcher = async (url) => {
     const response = await fetch(url);
-    const data = await response.json();
+    const result = await response.json();
     if (!response.ok) {
-      throw new Error(data.error);
+      throw new Error(result.message);
     }
-    return data;
+    return result.data;
   };
 
   const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
@@ -99,7 +99,7 @@ export default function ServerSettings() {
 
   const handleManageServer = async (action, values) => {
     const result = await handlePost(serversApi, JSON.stringify({ type: "server", action, data: values }));
-    if (result.state === "success") {
+    if (result.code === 200) {
       if (action === "add") {
         serverForm.reset();
       }
@@ -119,7 +119,7 @@ export default function ServerSettings() {
 
   const handleSaveConfig = async (values) => {
     const result = await handlePost(configApi, JSON.stringify(values));
-    if (result.state === "success") {
+    if (result.code === 200) {
       toast(t("toast.success.save"));
       mutate(configApi);
     } else {
