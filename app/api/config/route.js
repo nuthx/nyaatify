@@ -53,8 +53,8 @@ export async function POST(request) {
     // If save ai config, use a testing title to check if ai config valid
     if (data.ai_priority === "ai") {
       const result = await testOpenAI(data);
-      if (result !== "success") {
-        throw new Error(result);
+      if (!result.success) {
+        throw new Error(result.message);
       }
     }
 
