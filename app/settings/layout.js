@@ -22,7 +22,7 @@ export default function SettingsLayout({ children }) {
           <Nav label={t("st.nav.about")} path="/settings/about" />
         </nav>
 
-        <div className="flex-1 space-y-6">
+        <div className="flex-1 space-y-6 min-w-0">
           {children}
         </div>
       </div>
