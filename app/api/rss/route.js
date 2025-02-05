@@ -62,14 +62,19 @@ export async function POST(request) {
         }, { status: 400 });
       }
 
-      // Check RSS address validity
-      const rssParser = new RSSParser();
-      const rss = await rssParser.parseURL(data.data.url);
-      if (!rss) {
-        logger.error(`Failed to add ${data.data.name} due to the RSS address is invalid`, { model: "POST /api/rss" });
+      // Identify RSS type
+      // Extract the first 20 characters of the RSS address to identify the RSS type
+      let rssType = null;
+      const urlPrefix = data.data.url.toLowerCase().substring(0, 20);
+      if (urlPrefix.includes("nyaa")) {
+        rssType = "Nyaa";
+      } else if (urlPrefix.includes("mikan")) {
+        rssType = "Mikan";
+      } else {
+        logger.error(`Failed to add ${data.data.name} due to the RSS address is not supported`, { model: "POST /api/rss" });
         return Response.json({
           code: 400,
-          message: `Failed to add ${data.data.name} due to the RSS address is invalid`,
+          message: `Failed to add ${data.data.name} due to the RSS address is not supported`,
           data: null
         }, { status: 400 });
       }
@@ -87,19 +92,14 @@ export async function POST(request) {
         }, { status: 400 });
       }
 
-      // Identify RSS type
-      // Extract the first 20 characters of the RSS address to identify the RSS type
-      let rssType = null;
-      const urlPrefix = data.data.url.toLowerCase().substring(0, 20);
-      if (urlPrefix.includes("nyaa")) {
-        rssType = "Nyaa";
-      } else if (urlPrefix.includes("mikan")) {
-        rssType = "Mikan";
-      } else {
-        logger.error(`Failed to add ${data.data.name} due to the RSS address is not supported`, { model: "POST /api/rss" });
+      // Check RSS address validity
+      const rssParser = new RSSParser();
+      const rss = await rssParser.parseURL(data.data.url);
+      if (!rss) {
+        logger.error(`Failed to add ${data.data.name} due to the RSS address is invalid`, { model: "POST /api/rss" });
         return Response.json({
           code: 400,
-          message: `Failed to add ${data.data.name} due to the RSS address is not supported`,
+          message: `Failed to add ${data.data.name} due to the RSS address is invalid`,
           data: null
         }, { status: 400 });
       }
