@@ -17,7 +17,7 @@ export async function GET() {
         const version = await getQbittorrentVersion(server.url, server.cookie);
         return {
           ...server,
-          isOnline: version !== "unknown"
+          isOnline: version.success
         };
       })
     );
@@ -26,8 +26,8 @@ export async function GET() {
     // Get torrents from online servers
     const allTorrents = [];
     await Promise.all(onlineServers.map(async server => {
-      const torrents = await getQbittorrentTorrents(server.url, server.cookie);
-      torrents.forEach(torrent => {
+      const torrentsResult = await getQbittorrentTorrents(server.url, server.cookie);
+      torrentsResult.data.forEach(torrent => {
         allTorrents.push({
           name: torrent.name,
           state: torrent.state,
@@ -94,9 +94,9 @@ export async function POST(request) {
     }
 
     // Manage the torrent
-    const result = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
-    if (result !== "success") {
-      throw new Error(`Failed to ${data.action} ${data.hash} due to connection failed`);
+    const manageResult = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
+    if (!manageResult.success) {
+      throw new Error(manageResult.message);
     }
 
     logger.info(`${data.action} ${data.hash} successfully`, { model: "POST /api/torrents" });

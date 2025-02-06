@@ -39,13 +39,13 @@ export async function GET(request) {
     if (config.default_server) {
       const defaultServerInfo = servers.find(server => server.name === config.default_server);
       const version = await getQbittorrentVersion(defaultServerInfo.url, defaultServerInfo.cookie);
-      defaultOnline = version === "unknown" ? "0" : "1";
+      defaultOnline = version.success ? "1" : "0";
     }
 
     // Get all torrents to match anime download status
     const allTorrents = (await Promise.all(servers.map(async server => {
-      const torrents = await getQbittorrentTorrents(server.url, server.cookie);
-      return torrents.map(t => ({...t, server_name: server.name}));
+      const torrentsResult = await getQbittorrentTorrents(server.url, server.cookie);
+      return torrentsResult.data.map(t => ({...t, server_name: server.name}));
     }))).flat();
 
     return Response.json({

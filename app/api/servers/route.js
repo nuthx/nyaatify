@@ -16,10 +16,10 @@ export async function GET() {
     // Get all servers' version and online state
     const serversWithState = await Promise.all(servers.map(async server => {
       const version = await getQbittorrentVersion(server.url, server.cookie);
-      const state = version === "unknown" ? "offline" : "online";
+      const state = version.success ? "online" : "offline";
       return {
         ...server,
-        version,
+        version: version.data,
         state
       };
     }));
@@ -75,22 +75,22 @@ export async function POST(request) {
 
       // Get download server cookie
       // This will check if the connection is successful
-      let result = null;
+      let cookieResult = null;
       if (data.data.type === "qBittorrent") {
-        result = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
+        cookieResult = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
       } else {
         throw new Error(`Failed to add ${data.data.name} due to the server is not supported`);
       }
 
       // Return if connection failed
-      if (!result || result.includes("Error")) {
-        throw new Error(`Failed to add ${data.data.name}`);
+      if (!cookieResult.success) {
+        throw new Error(`Failed to add ${data.data.name}, error: ${cookieResult.message}`);
       }
 
       // Insert to database
       await db.run(
         "INSERT INTO server (name, url, type, username, password, created_at, cookie) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [data.data.name, data.data.url, data.data.type, data.data.username, data.data.password, new Date().toISOString(), result]
+        [data.data.name, data.data.url, data.data.type, data.data.username, data.data.password, new Date().toISOString(), cookieResult.data]
       );
       logger.info(`${data.data.name} added successfully, type: ${data.data.type}, url: ${data.data.url}`, { model: "POST /api/servers" });
 
@@ -164,30 +164,35 @@ export async function POST(request) {
 
     else if (data.action === "test") {
       // Get download server cookie
-      let result = null;
+      let cookieResult = null;
       if (data.data.type === "qBittorrent") {
-        result = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
+        cookieResult = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
       } else {
         throw new Error(`Failed to test ${data.data.name} due to the server is not supported`);
       }
 
       // Return if connection failed
-      if (!result || result.includes("Error")) {
-        throw new Error(`Failed to test ${data.data.name} due to connection failed`);
+      if (!cookieResult.success) {
+        throw new Error(`Failed to test ${data.data.name}, error: ${cookieResult.message}`);
       }
 
       // Get download server version
-      const version = await getQbittorrentVersion(data.data.url, result);
-      if (version === "unknown") {
-        throw new Error(`Failed to test ${data.data.name} due to connection failed`);
+      let versionResult = null;
+      if (data.data.type === "qBittorrent") {
+        versionResult = await getQbittorrentVersion(data.data.url, cookieResult.data);
       }
 
-      logger.info(`${data.data.name} connected successfully, version: ${version}`, { model: "POST /api/servers" });
+      // Return if connection failed
+      if (!versionResult.success) {
+        throw new Error(`Failed to test ${data.data.name}, error: ${versionResult.message}`);
+      }
+
+      logger.info(`${data.data.name} connected successfully, version: ${versionResult.data}`, { model: "POST /api/servers" });
       return Response.json({
         code: 200,
         message: "success",
         data: {
-          version: version
+          version: versionResult.data
         }
       });
     }

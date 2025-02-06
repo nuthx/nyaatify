@@ -105,7 +105,7 @@ export default function ServerSettings() {
       }
       if (action === "test") {
         toast.success(t("toast.success.test"), {
-          description: `${t("glb.version")}: ${result.message.version}`
+          description: `${t("glb.version")}: ${result.data.version}`
         });
       }
       mutate(serversApi);
