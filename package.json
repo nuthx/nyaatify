@@ -28,6 +28,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cron-parser": "^4.9.0",
+    "date-fns": "^4.1.0",
     "i18next": "^24.1.2",
     "i18next-browser-languagedetector": "^8.0.2",
     "js-yaml": "^4.1.0",
@@ -48,6 +49,8 @@
     "swr": "^2.3.0",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {

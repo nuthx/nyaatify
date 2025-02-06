@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
-import pkg from '@/package.json';
+import pkg from "@/package.json";
 import {
   Card,
   CardContent,

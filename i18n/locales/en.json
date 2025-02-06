@@ -34,6 +34,7 @@
       "fetch_config": "Failed to fetch user config",
       "fetch_rss": "Failed to load RSS subscription",
       "fetch_server": "Failed to fetch download server list",
+      "fetch_logs": "Failed to fetch system logs",
       "add_rss": "Failed to add RSS subscription",
       "add_server": "Failed to add download server",
       "delete_rss": "Failed to delete RSS subscription",
@@ -116,7 +117,8 @@
       "rss": "RSS Subscription",
       "server": "Download Server",
       "notification": "Notification",
-      "user": "User Account",
+      "user": "Account",
+      "logs": "System Logs",
       "about": "About Nyaatify"
     },
     "gr": {
@@ -197,6 +199,21 @@
         "description": "When creating download tasks, Nyaatify will prioritize downloading through this server.",
         "server": "Default Download Server",
         "empty": "No Download Server"
+      }
+    },
+    "logs": {
+      "title": "System Logs",
+      "select_date": "Select Date",
+      "log_level": "Log Level",
+      "all": "All Logs",
+      "error": "Error",
+      "warn": "Warn",
+      "info": "Info",
+      "table": {
+        "level": "Level",
+        "time": "Time",
+        "model": "Model",
+        "message": "Message"
       }
     },
     "abt": {

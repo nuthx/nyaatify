@@ -34,6 +34,7 @@
       "fetch_config": "无法获取用户配置",
       "fetch_rss": "无法获取 RSS 订阅列表",
       "fetch_server": "无法获取下载服务器列表",
+      "fetch_logs": "无法获取日志信息",
       "add_rss": "添加 RSS 订阅失败",
       "add_server": "添加下载服务器失败",
       "delete_rss": "删除 RSS 订阅失败",
@@ -117,6 +118,7 @@
       "server": "下载服务器",
       "notification": "通知",
       "user": "用户",
+      "logs": "日志",
       "about": "关于"
     },
     "gr": {
@@ -197,6 +199,21 @@
         "description": "创建下载任务时，Nyaatify 会通过指定的服务器进行下载",
         "server": "默认下载服务器",
         "empty": "无下载服务器"
+      }
+    },
+    "logs": {
+      "title": "系统日志",
+      "select_date": "选择日期",
+      "log_level": "日志等级",
+      "all": "全部日志",
+      "error": "Error",
+      "warn": "Warn",
+      "info": "Info",
+      "table": {
+        "level": "级别",
+        "time": "时间",
+        "model": "模块",
+        "message": "详情"
       }
     },
     "abt": {

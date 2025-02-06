@@ -32,25 +32,25 @@ export default function Home() {
 
   const { data, error, isLoading, mutate } = useSWR(torrentsApi, async (url) => {
     const response = await fetch(url);
-    const data = await response.json();
+    const result = await response.json();
     if (!response.ok) {
-      throw new Error(data.error);
+      throw new Error(result.message);
     }
-    if (data.servers === 0) {
+    if (result.data.servers === 0) {
       throw new Error(t("download.empty_server"));
     }
-    if (data.online === 0) {
+    if (result.data.online === 0) {
       throw new Error(t("download.empty_online"));
     }
-    if (data.torrents.length === 0) {
+    if (result.data.torrents.length === 0) {
       throw new Error(t("download.empty_torrents"));
     }
-    return data;
+    return result.data;
   }, { refreshInterval: 2000 });
 
   const handleManage = async (action, server, hash) => {
     const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
-    if (result.state === "success") {
+    if (result.code === 200) {
       mutate();
     } else {
       toast.error(t(`toast.failed.${action}`), {
