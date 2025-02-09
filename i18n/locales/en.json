@@ -52,6 +52,7 @@
     }
   },
   "validate": {
+    "required": "Please enter content",
     "name_2": "Name must be at least 2 characters",
     "name_40": "Name must be less than 40 characters",
     "username": "Please enter a valid username",

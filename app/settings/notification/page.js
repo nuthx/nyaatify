@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { handlePost, handleRequest } from "@/lib/handlers";
+import { handleRequest } from "@/lib/handlers";
 import {
   Card,
   CardContent,
@@ -54,9 +54,12 @@ export default function NotificationSettings() {
         .url({ message: t("validate.url_invalid") })
         .startsWith("http", { message: t("validate.url_http") })
         .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
-      token: z.string(),
-      title: z.string(),
-      message: z.string(),
+      token: z.string()
+        .min(1, { message: t("validate.required") }),
+      title: z.string()
+        .min(1, { message: t("validate.required") }),
+      message: z.string()
+        .min(1, { message: t("validate.required") }),
       extra: z.string()
     })),
     defaultValues: {
