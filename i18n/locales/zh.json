@@ -34,13 +34,17 @@
       "fetch_config": "无法获取用户配置",
       "fetch_rss": "无法获取 RSS 订阅列表",
       "fetch_server": "无法获取下载服务器列表",
+      "fetch_notification": "无法获取通知列表",
       "fetch_logs": "无法获取日志信息",
       "add_rss": "添加 RSS 订阅失败",
       "add_server": "添加下载服务器失败",
+      "add_notification": "添加通知失败",
       "delete_rss": "删除 RSS 订阅失败",
       "delete_server": "删除下载服务器失败",
+      "delete_notification": "删除通知失败",
       "refresh_rss": "刷新 RSS 订阅失败",
-      "test_server": "无法连接到下载服务器"
+      "test_server": "无法连接到下载服务器",
+      "test_notification": "无法发送通知"
     },
     "start": {
       "download": "开始下载",

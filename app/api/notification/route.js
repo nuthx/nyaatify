@@ -1,0 +1,85 @@
+import { getDb } from "@/lib/db";
+import { logger } from "@/lib/logger";
+
+// Get notification list
+
+export async function GET() {
+  try {
+    const db = await getDb();
+    const notification = await db.all("SELECT * FROM notification ORDER BY name ASC");
+
+    return Response.json({
+      code: 200,
+      message: "success",
+      data: {
+        notification
+      }
+    });
+  } catch (error) {
+    logger.error(error.message, { model: "GET /api/notification" });
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
+  }
+}
+
+// Add a new notification
+// Body: {
+//   values: {
+//     name: string, required
+//     trigger: string, required
+//     condition: string, required
+//     type: string, required
+//     url: string, required
+//     token: string, required
+//     title: string, required
+//     message: string, required
+//     extra: string, required
+//   }
+// }
+
+export async function POST(request) {
+  try {
+    const db = await getDb();
+    const data = await request.json();
+
+    // Check if name already exists
+    const existingName = await db.get("SELECT name FROM notification WHERE name = ?", data.values.name);
+    if (existingName) {
+      throw new Error(`Failed to add ${data.values.name} due to it already exists`);
+    }
+
+    // Insert to database
+    await db.run(
+      "INSERT INTO notification (name, trigger, condition, type, url, token, title, message, extra, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        data.values.name,
+        data.values.trigger, 
+        data.values.condition,
+        data.values.type,
+        data.values.url,
+        data.values.token,
+        data.values.title,
+        data.values.message,
+        data.values.extra,
+        new Date().toISOString()
+      ]
+    );
+
+    logger.info(`Notification added successfully, name: ${data.values.name}`, { model: "POST /api/notification" });
+    return Response.json({
+      code: 200,
+      message: "success",
+      data: null
+    });
+  } catch (error) {
+    logger.error(error.message, { model: "POST /api/notification" });
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
+  }
+}

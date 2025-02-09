@@ -34,13 +34,17 @@
       "fetch_config": "Failed to fetch user config",
       "fetch_rss": "Failed to load RSS subscription",
       "fetch_server": "Failed to fetch download server list",
+      "fetch_notification": "Failed to fetch notification list",
       "fetch_logs": "Failed to fetch system logs",
       "add_rss": "Failed to add RSS subscription",
       "add_server": "Failed to add download server",
+      "add_notification": "Failed to add notification",
       "delete_rss": "Failed to delete RSS subscription",
       "delete_server": "Failed to delete download server",
+      "delete_notification": "Failed to delete notification",
       "refresh_rss": "Failed to refresh RSS subscription",
-      "test_server": "Failed to connect to download server"
+      "test_server": "Failed to connect to download server",
+      "test_notification": "Failed to send notification"
     },
     "start": {
       "download": "Start Downloading",
