@@ -243,7 +243,7 @@ export default function NotificationSettings() {
               />
               <FormField control={notificationFrom.control} name="title" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>标题</FormLabel>
+                  <FormLabel>推送标题</FormLabel>
                   <FormControl>
                     <Input className="w-full" placeholder="Title" required {...field} />
                   </FormControl>
@@ -253,7 +253,7 @@ export default function NotificationSettings() {
               />
               <FormField control={notificationFrom.control} name="message" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>内容</FormLabel>
+                  <FormLabel>推送内容</FormLabel>
                   <FormControl>
                     <Input className="w-full" placeholder="Message" required {...field} />
                   </FormControl>
@@ -293,7 +293,9 @@ export default function NotificationSettings() {
             content={(notification) => (
               <>
                 <p className="text-sm text-muted-foreground">{notification.url}</p>
-                <p className="text-sm text-muted-foreground">{notification.token}</p>
+                <p className="text-sm text-muted-foreground">推送标题: {notification.title}</p>
+                <p className="text-sm text-muted-foreground">推送内容: {notification.message}</p>
+                {notification.extra && (<p className="text-sm text-muted-foreground">额外参数: {notification.extra}</p>)}
               </>
             )}
             state={(notification) => (
