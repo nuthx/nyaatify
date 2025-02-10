@@ -48,7 +48,7 @@ export async function POST(request) {
     // Check if name already exists
     const existingName = await db.get("SELECT name FROM notification WHERE name = ?", data.values.name);
     if (existingName) {
-      throw new Error(`Failed to add ${data.values.name} due to it already exists`);
+      throw new Error(`Notification already exists, name: ${data.values.name}`);
     }
 
     // Insert to database
