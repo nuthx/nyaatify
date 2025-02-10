@@ -23,7 +23,8 @@
   "toast": {
     "success": {
       "save": "保存成功",
-      "test": "测试成功"
+      "test": "测试成功",
+      "send": "通知已发送"
     },
     "failed": {
       "save": "保存失败",
@@ -44,7 +45,7 @@
       "delete_notification": "删除通知失败",
       "refresh_rss": "刷新 RSS 订阅失败",
       "test_server": "无法连接到下载服务器",
-      "test_notification": "无法发送通知"
+      "send_notification": "通知发送失败"
     },
     "start": {
       "download": "开始下载",

@@ -1,12 +1,9 @@
-import { getDb } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { dispatchNotification } from "@/lib/notification";
 
 // Test a notification push
 // Body: {
 //   values: {
-//     name: string
-//     trigger: string
-//     condition: string
 //     type: string, required
 //     url: string, required
 //     token: string, required
@@ -18,10 +15,14 @@ import { logger } from "@/lib/logger";
 
 export async function POST(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
 
-    console.log(data);
+    // Dispatch test notification
+    const notificationResult = await dispatchNotification(data.values);
+
+    if (!notificationResult.success) {
+      throw new Error(notificationResult.message);
+    }
 
     logger.info(`Notification test successfully, name: ${data.values.name}`, { model: "POST /api/notification/test" });
     return Response.json({
@@ -30,7 +31,7 @@ export async function POST(request) {
       data: null
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/notification/test" });
+    // logger.error(error.message, { model: "POST /api/notification/test" });
     return Response.json({
       code: 500,
       message: error.message,

@@ -125,9 +125,9 @@ export default function NotificationSettings() {
   const handleTest = async (values) => {
     const result = await handleRequest("POST", `${notificationApi}/test`, JSON.stringify({ values }));
     if (result.success) {
-      toast.success(t("toast.success.test"));
+      toast.success(t("toast.success.send"));
     } else {
-      toast.error(t("toast.failed.test_notification"), {
+      toast.error(t("toast.failed.send_notification"), {
         description: result.message,
       });
     }

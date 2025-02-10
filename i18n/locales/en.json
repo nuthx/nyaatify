@@ -23,7 +23,8 @@
   "toast": {
     "success": {
       "save": "Saved Successfully",
-      "test": "Tested Successfully"
+      "test": "Tested Successfully",
+      "send": "Notification Sent"
     },
     "failed": {
       "save": "Save Failed",
@@ -44,7 +45,7 @@
       "delete_notification": "Failed to delete notification",
       "refresh_rss": "Failed to refresh RSS subscription",
       "test_server": "Failed to connect to download server",
-      "test_notification": "Failed to send notification"
+      "send_notification": "Failed to send notification"
     },
     "start": {
       "download": "Start Downloading",
