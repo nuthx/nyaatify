@@ -82,6 +82,12 @@ export default function NotificationSettings() {
     ServerChan: "https://sctapi.ftqq.com",
   };
 
+  const selectedTrigger = notificationFrom.watch("trigger");
+  const conditionNotice = {
+    NewAnimeRelease: t("st.nt.add.condition_notice_rss"),
+    DownloadFinished: t("st.nt.add.condition_notice_download"),
+  };
+
   const fetcher = async (url) => {
     const response = await fetch(url);
     const result = await response.json();
@@ -152,15 +158,15 @@ export default function NotificationSettings() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>添加新的通知</CardTitle>
-          <CardDescription>添加一个消息推送服务，用于在指定条件触发时接受通知</CardDescription>
+          <CardTitle>{t("st.nt.add.title")}</CardTitle>
+          <CardDescription>{t("st.nt.add.description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...notificationFrom}>
             <form onSubmit={notificationFrom.handleSubmit((values) => handleAdd(values))} className="space-y-6" noValidate>
               <FormField control={notificationFrom.control} name="name" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>名称</FormLabel>
+                  <FormLabel>{t("st.nt.add.name")}</FormLabel>
                   <FormControl>
                     <Input className="w-72" placeholder="Notification" required {...field} />
                   </FormControl>
@@ -170,7 +176,7 @@ export default function NotificationSettings() {
               />
               <FormField control={notificationFrom.control} name="trigger" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>触发条件</FormLabel>
+                  <FormLabel>{t("st.nt.add.trigger")}</FormLabel>
                   <Select defaultValue={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-72">
@@ -178,8 +184,8 @@ export default function NotificationSettings() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="NewAnimeRelease">订阅更新时</SelectItem>
-                      <SelectItem value="DownloadFinished">下载完成时</SelectItem>
+                      <SelectItem value="NewAnimeRelease">{t("st.nt.trigger.release")}</SelectItem>
+                      <SelectItem value="DownloadFinished">{t("st.nt.trigger.download")}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -188,19 +194,19 @@ export default function NotificationSettings() {
               />
               <FormField control={notificationFrom.control} name="condition" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>包含项目（可选）</FormLabel>
+                  <FormLabel>{t("st.nt.add.condition")}</FormLabel>
                   <FormControl>
                     <Input className="w-72" placeholder="name1, name2" required {...field} />
                   </FormControl>
                   <FormMessage className="font-normal text-muted-foreground">
-                    填写后则仅接收指定项目的通知，多个项目使用英文逗号分隔。默认接收所有通知
+                    {conditionNotice[selectedTrigger]}
                   </FormMessage>
                 </FormItem>
               )}
               />
               <FormField control={notificationFrom.control} name="type" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>推送服务</FormLabel>
+                  <FormLabel>{t("st.nt.add.type")}</FormLabel>
                   <Select defaultValue={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-72">
@@ -208,22 +214,22 @@ export default function NotificationSettings() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Bark">Bark</SelectItem>
-                      <SelectItem value="Gotify">Gotify</SelectItem>
-                      <SelectItem value="ServerChan">ServerChan</SelectItem>
+                      <SelectItem value="Bark">{t("st.nt.add.type_bark")}</SelectItem>
+                      <SelectItem value="Gotify">{t("st.nt.add.type_gotify")}</SelectItem>
+                      <SelectItem value="ServerChan">{t("st.nt.add.type_serverchan")}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage className="font-normal text-muted-foreground">
-                    {selectedType === "Bark" && <a href="https://bark.day.app/#/tutorial" target="_blank" className="hover:underline">查看使用文档</a>}
-                    {selectedType === "Gotify" && <a href="https://gotify.net/docs/pushmsg" target="_blank" className="hover:underline">查看使用文档</a>}
-                    {selectedType === "ServerChan" && <a href="https://sct.ftqq.com/sendkey" target="_blank" className="hover:underline">查看使用文档</a>}
+                    {selectedType === "Bark" && <a href="https://bark.day.app/#/tutorial" target="_blank" className="hover:underline">{t("st.nt.add.type_notice")}</a>}
+                    {selectedType === "Gotify" && <a href="https://gotify.net/docs/pushmsg" target="_blank" className="hover:underline">{t("st.nt.add.type_notice")}</a>}
+                    {selectedType === "ServerChan" && <a href="https://sct.ftqq.com/sendkey" target="_blank" className="hover:underline">{t("st.nt.add.type_notice")}</a>}
                   </FormMessage>
                 </FormItem>
               )}
               />
               <FormField control={notificationFrom.control} name="url" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>推送地址</FormLabel>
+                  <FormLabel>{t("st.nt.add.url")}</FormLabel>
                   <FormControl>
                     <Input className="w-full" placeholder={urlPlaceholders[selectedType]} required {...field} />
                   </FormControl>
@@ -233,7 +239,7 @@ export default function NotificationSettings() {
               />
               <FormField control={notificationFrom.control} name="token" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Token</FormLabel>
+                  <FormLabel>{t("st.nt.add.token")}</FormLabel>
                   <FormControl>
                     <Input className="w-full" placeholder="Token" required {...field} />
                   </FormControl>
@@ -243,7 +249,7 @@ export default function NotificationSettings() {
               />
               <FormField control={notificationFrom.control} name="title" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>推送标题</FormLabel>
+                  <FormLabel>{t("st.nt.add.push_title")}</FormLabel>
                   <FormControl>
                     <Input className="w-full" placeholder="Title" required {...field} />
                   </FormControl>
@@ -253,7 +259,7 @@ export default function NotificationSettings() {
               />
               <FormField control={notificationFrom.control} name="message" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>推送内容</FormLabel>
+                  <FormLabel>{t("st.nt.add.push_message")}</FormLabel>
                   <FormControl>
                     <Input className="w-full" placeholder="Message" required {...field} />
                   </FormControl>
@@ -263,12 +269,12 @@ export default function NotificationSettings() {
               />
               <FormField control={notificationFrom.control} name="extra" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>额外参数（可选）</FormLabel>
+                  <FormLabel>{t("st.nt.add.extra")}</FormLabel>
                   <FormControl>
                     <Input className="w-full" placeholder="icon=https://example.com/icon.png&sound=default" required {...field} />
                   </FormControl>
                   <FormMessage className="font-normal text-muted-foreground">
-                    添加额外参数后将在 POST 请求中一并发送，多个参数使用 & 分隔
+                    {t("st.nt.add.extra_notice")}
                   </FormMessage>
                 </FormItem>
               )}
@@ -284,37 +290,38 @@ export default function NotificationSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>通知列表</CardTitle>
+          <CardTitle>{t("st.nt.list.title")}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <ListCard
             items={notificationData?.notification || []}
-            empty={"请先添加一个通知"}
+            empty={t("st.nt.list.empty")}
             content={(notification) => (
               <>
                 <p className="text-sm text-muted-foreground">{notification.url}</p>
-                <p className="text-sm text-muted-foreground">推送标题: {notification.title}</p>
-                <p className="text-sm text-muted-foreground">推送内容: {notification.message}</p>
-                {notification.extra && (<p className="text-sm text-muted-foreground">额外参数: {notification.extra}</p>)}
+                {notification.condition && (<p className="text-sm text-muted-foreground">{t("st.nt.list.condition")}: {notification.condition}</p>)}
+                <p className="text-sm text-muted-foreground">{t("st.nt.list.push_title")}: {notification.title}</p>
+                <p className="text-sm text-muted-foreground">{t("st.nt.list.push_message")}: {notification.message}</p>
+                {notification.extra && (<p className="text-sm text-muted-foreground">{t("st.nt.list.extra")}: {notification.extra}</p>)}
               </>
             )}
             state={(notification) => (
               notification.trigger === "NewAnimeRelease" ? (
-                <>订阅更新时</>
+                <>{t("st.nt.trigger.release")}</>
               ) : (
-                <>下载完成时</>
+                <>{t("st.nt.trigger.download")}</>
               )
             )}
             menu={(notification) => (
               <>
                 <DropdownMenuItem onClick={() => handleManageNotification("refresh", notification)}>
-                  <RefreshCw />{t("st.rss.subscription.refresh")}
+                  <RefreshCw />{t("st.rss.list.refresh")}
                 </DropdownMenuItem>
               </>
             )}
             onDelete={(notification) => handleDelete(notification.name)}
             deleteable={() => true}
-            deleteDescription={"删除后无法恢复，请谨慎操作"}
+            deleteDescription={t("st.nt.list.alert")}
           />
         </CardContent>
       </Card>

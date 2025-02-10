@@ -160,7 +160,7 @@
         "url": "RSS URL",
         "cron": "Refresh Rule (CRON)"
       },
-      "subscription": {
+      "list": {
         "title": "RSS Subscription List",
         "empty": "Please add a RSS subscription first.",
         "cron": "Refresh Rule",
@@ -193,7 +193,7 @@
         "username": "Username",
         "password": "Password"
       },
-      "servers": {
+      "list": {
         "title": "Download Servers List",
         "empty": "Please add a download server first.",
         "online": "Online",
@@ -205,6 +205,41 @@
         "description": "When creating download tasks, Nyaatify will prioritize downloading through this server.",
         "server": "Default Download Server",
         "empty": "No Download Server"
+      }
+    },
+    "nt": {
+      "trigger": {
+        "release": "New Release Available",
+        "download": "Download Complete"
+      },
+      "add": {
+        "title": "Add a New Notification",
+        "description": "Add a notification service to receive message pushes when conditions are triggered.",
+        "name": "Name",
+        "trigger": "Trigger",
+        "condition": "Filter Rules (Optional)",
+        "condition_notice_rss": "Enter the RSS subscription name to receive notifications only for new anime releases from this subscription. For multiple subscriptions, separate them with commas. Leave it blank to receive all notifications.",
+        "condition_notice_download": "Enter the download server name to receive notifications only for completed downloads from this server. For multiple servers, separate them with commas. Leave it blank to receive all notifications.",
+        "type": "Push Service",
+        "type_notice": "View Documentation",
+        "type_bark": "Bark",
+        "type_gotify": "Gotify",
+        "type_serverchan": "ServerChan",
+        "url": "Push URL",
+        "token": "Token",
+        "push_title": "Push Title",
+        "push_message": "Push Message",
+        "extra": "Extra Parameters (Optional)",
+        "extra_notice": "After adding extra parameters, they will be sent together in the POST request, separated by “&”."
+      },
+      "list": {
+        "title": "Notification List",
+        "empty": "Please add a notification service first.",
+        "condition": "Filter Rules",
+        "push_title": "Push Title",
+        "push_message": "Push Message",
+        "extra": "Extra Parameters",
+        "alert": "This action will delete this notification service permanently."
       }
     },
     "logs": {
