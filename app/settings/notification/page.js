@@ -67,7 +67,7 @@ export default function NotificationSettings() {
       trigger: "NewAnimeRelease",
       condition: "",
       type: "Bark",
-      url: "",
+      url: "https://api.day.app",
       token: "",
       title: "",
       message: "",
@@ -115,6 +115,16 @@ export default function NotificationSettings() {
       });
     }
   }, [configError]);
+
+  // Set default url for notification type
+  useEffect(() => {
+    const defaultUrls = {
+      Bark: "https://api.day.app",
+      Gotify: "",
+      ServerChan: "https://sctapi.ftqq.com"
+    };
+    notificationFrom.setValue("url", defaultUrls[selectedType]);
+  }, [selectedType]);
 
   const handleAdd = async (values) => {
     const result = await handleRequest("POST", notificationApi, JSON.stringify({ values }));
