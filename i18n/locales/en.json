@@ -239,6 +239,7 @@
         "push_title": "Push Title",
         "push_message": "Push Message",
         "extra": "Extra Parameters",
+        "test": "Send Test Notification",
         "alert": "This action will delete this notification service permanently."
       }
     },

@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
-import { RefreshCw } from "lucide-react";
+import { BellRing } from "lucide-react";
 
 export default function NotificationSettings() {
   const notificationApi = "/api/notification";
@@ -324,8 +324,8 @@ export default function NotificationSettings() {
             )}
             menu={(notification) => (
               <>
-                <DropdownMenuItem onClick={() => handleManageNotification("refresh", notification)}>
-                  <RefreshCw />{t("st.rss.list.refresh")}
+                <DropdownMenuItem onClick={() => handleTest(notification)}>
+                  <BellRing />{t("st.nt.list.test")}
                 </DropdownMenuItem>
               </>
             )}
