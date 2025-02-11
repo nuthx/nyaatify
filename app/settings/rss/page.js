@@ -89,7 +89,7 @@ export default function RSSSettings() {
   };
 
   const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
-  const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(rssApi, fetcher, { refreshInterval: 2000 });
+  const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(rssApi, fetcher);
 
   useEffect(() => {
     if (rssError) {
