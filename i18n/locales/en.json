@@ -221,7 +221,7 @@
         "filter_notice_rss": "Enter the RSS subscription name to receive notifications only for new anime releases from this subscription. For multiple subscriptions, separate them with commas. Leave it blank to receive all notifications.",
         "filter_notice_download": "Enter the download server name to receive notifications only for completed downloads from this server. For multiple servers, separate them with commas. Leave it blank to receive all notifications.",
         "type": "Push Service",
-        "type_notice": "View Documentation",
+        "type_notice": "View Official Documentation",
         "type_bark": "Bark",
         "type_gotify": "Gotify",
         "type_serverchan": "ServerChan",

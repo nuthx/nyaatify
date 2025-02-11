@@ -221,7 +221,7 @@
         "filter_notice_rss": "在此处填写 RSS 订阅名称，则仅接收来自此订阅的动画发布通知，多个订阅请以英文逗号分隔。留空则接收所有通知",
         "filter_notice_download": "在此处填写下载服务器的名称，则仅接收来自此服务器的下载完成通知，多个服务器请以英文逗号分隔。留空则接收所有通知",
         "type": "推送服务",
-        "type_notice": "查看使用文档",
+        "type_notice": "查看官方文档",
         "type_bark": "Bark",
         "type_gotify": "Gotify",
         "type_serverchan": "Server酱",

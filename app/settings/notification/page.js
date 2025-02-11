@@ -230,9 +230,9 @@ export default function NotificationSettings() {
                     </SelectContent>
                   </Select>
                   <FormMessage className="font-normal text-muted-foreground">
-                    {selectedType === "Bark" && <a href="https://bark.day.app/#/tutorial" target="_blank" className="hover:underline">{t("st.nt.add.type_notice")}</a>}
-                    {selectedType === "Gotify" && <a href="https://gotify.net/docs/pushmsg" target="_blank" className="hover:underline">{t("st.nt.add.type_notice")}</a>}
-                    {selectedType === "ServerChan" && <a href="https://sct.ftqq.com/sendkey" target="_blank" className="hover:underline">{t("st.nt.add.type_notice")}</a>}
+                    {selectedType === "Bark" && <a href="https://bark.day.app/#/tutorial" target="_blank" className="underline">{t("st.nt.add.type_notice")}</a>}
+                    {selectedType === "Gotify" && <a href="https://gotify.net/docs/pushmsg" target="_blank" className="underline">{t("st.nt.add.type_notice")}</a>}
+                    {selectedType === "ServerChan" && <a href="https://sct.ftqq.com/sendkey" target="_blank" className="underline">{t("st.nt.add.type_notice")}</a>}
                   </FormMessage>
                 </FormItem>
               )}
