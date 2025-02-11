@@ -48,7 +48,7 @@ export default function NotificationSettings() {
         .min(2, { message: t("validate.name_2") })
         .max(40, { message: t("validate.name_40") }),
       trigger: z.string(),
-      condition: z.string(),
+      filter: z.string(),
       type: z.string(),
       url: z.string()
         .url({ message: t("validate.url_invalid") })
@@ -65,7 +65,7 @@ export default function NotificationSettings() {
     defaultValues: {
       name: "",
       trigger: "NewAnimeRelease",
-      condition: "",
+      filter: "",
       type: "Bark",
       url: "https://api.day.app",
       token: "",
@@ -83,9 +83,9 @@ export default function NotificationSettings() {
   };
 
   const selectedTrigger = notificationFrom.watch("trigger");
-  const conditionNotice = {
-    NewAnimeRelease: t("st.nt.add.condition_notice_rss"),
-    DownloadFinished: t("st.nt.add.condition_notice_download"),
+  const filterNotice = {
+    NewAnimeRelease: t("st.nt.add.filter_notice_rss"),
+    DownloadFinished: t("st.nt.add.filter_notice_download"),
   };
 
   const fetcher = async (url) => {
@@ -202,14 +202,14 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="condition" render={({ field }) => (
+              <FormField control={notificationFrom.control} name="filter" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("st.nt.add.condition")}</FormLabel>
+                  <FormLabel>{t("st.nt.add.filter")}</FormLabel>
                   <FormControl>
                     <Input className="w-72" placeholder="name1, name2" required {...field} />
                   </FormControl>
                   <FormMessage className="font-normal text-muted-foreground">
-                    {conditionNotice[selectedTrigger]}
+                    {filterNotice[selectedTrigger]}
                   </FormMessage>
                 </FormItem>
               )}
@@ -309,7 +309,7 @@ export default function NotificationSettings() {
             content={(notification) => (
               <>
                 <p className="text-sm text-muted-foreground">{notification.url}</p>
-                {notification.condition && (<p className="text-sm text-muted-foreground">{t("st.nt.list.condition")}: {notification.condition}</p>)}
+                {notification.filter && (<p className="text-sm text-muted-foreground">{t("st.nt.list.filter")}: {notification.filter}</p>)}
                 <p className="text-sm text-muted-foreground">{t("st.nt.list.push_title")}: {notification.title}</p>
                 <p className="text-sm text-muted-foreground">{t("st.nt.list.push_message")}: {notification.message}</p>
                 {notification.extra && (<p className="text-sm text-muted-foreground">{t("st.nt.list.extra")}: {notification.extra}</p>)}
