@@ -2,7 +2,7 @@ import parser from "cron-parser";
 import RSSParser from "rss-parser";
 import { getDb } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { parseRSS } from "@/lib/parse";
+import { refreshRSS } from "@/lib/parse";
 import { tasks, startTask, stopTask } from "@/lib/schedule";
 
 // Get rss list with next invocation time
@@ -163,7 +163,7 @@ export async function POST(request) {
 
     else if (data.action === "refresh") {
       const rss = await db.get("SELECT * FROM rss WHERE name = ?", [data.data.name]);
-      parseRSS(rss.id, rss.name, rss.url, rss.type);
+      refreshRSS(rss.id, rss.name, rss.url, rss.type);
       logger.info(`Start refreshing ${data.data.name} manually by user`, { model: "POST /api/rss" });
       return Response.json({
         code: 200,
