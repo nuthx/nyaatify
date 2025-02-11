@@ -52,7 +52,7 @@ export async function POST(request) {
 
     if (data.action === "add") {
       // Check if name already exists
-      const existingName = await db.get("SELECT name FROM rss WHERE name = ?", data.data.name);
+      const existingName = await db.get("SELECT name FROM rss WHERE name = ?", data.data.name.trim());
       if (existingName) {
         throw new Error(`Failed to add ${data.data.name} due to it already exists`);
       }
@@ -87,7 +87,14 @@ export async function POST(request) {
       // Insert to database
       await db.run(
         "INSERT INTO rss (name, url, cron, type, state, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-        [data.data.name, data.data.url, data.data.cron, rssType, "completed", new Date().toISOString()]
+        [
+          data.data.name.trim(),
+          data.data.url.trim(),
+          data.data.cron.trim(),
+          rssType,
+          "completed",
+          new Date().toISOString()
+        ]
       );
 
       // Log info here because startTask will log another message

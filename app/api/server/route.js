@@ -63,8 +63,8 @@ export async function POST(request) {
     if (data.action === "add") {
       // Check if name or URL already exists
       const [existingName, existingUrl] = await Promise.all([
-        db.get("SELECT name FROM server WHERE name = ?", data.data.name),
-        db.get("SELECT url FROM server WHERE url = ?", data.data.url)
+        db.get("SELECT name FROM server WHERE name = ?", data.data.name.trim()),
+        db.get("SELECT url FROM server WHERE url = ?", data.data.url.trim())
       ]);
       if (existingName) {
         throw new Error(`Failed to add ${data.data.name} due to it already exists`);
@@ -90,7 +90,15 @@ export async function POST(request) {
       // Insert to database
       await db.run(
         "INSERT INTO server (name, url, type, username, password, created_at, cookie) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [data.data.name, data.data.url, data.data.type, data.data.username, data.data.password, new Date().toISOString(), cookieResult.data]
+        [
+          data.data.name.trim(),
+          data.data.url.trim(),
+          data.data.type,
+          data.data.username,
+          data.data.password,
+          new Date().toISOString(),
+          cookieResult.data
+        ]
       );
       logger.info(`${data.data.name} added successfully, type: ${data.data.type}, url: ${data.data.url}`, { model: "POST /api/server" });
 

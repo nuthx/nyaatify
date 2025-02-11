@@ -45,7 +45,7 @@ export async function POST(request) {
     const data = await request.json();
 
     // Check if name already exists
-    const existingName = await db.get("SELECT name FROM notification WHERE name = ?", data.values.name);
+    const existingName = await db.get("SELECT name FROM notification WHERE name = ?", data.values.name.trim());
     if (existingName) {
       throw new Error(`Notification already exists, name: ${data.values.name}`);
     }
@@ -54,14 +54,14 @@ export async function POST(request) {
     await db.run(
       "INSERT INTO notification (name, filter, type, url, token, title, message, extra, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
-        data.values.name,
-        data.values.filter,
-        data.values.type,
-        data.values.url,
-        data.values.token,
-        data.values.title,
-        data.values.message,
-        data.values.extra,
+        data.values.name.trim(),
+        data.values.filter.trim(),
+        data.values.type.trim(),
+        data.values.url.trim(),
+        data.values.token.trim(),
+        data.values.title.trim(),
+        data.values.message.trim(),
+        data.values.extra.trim(),
         new Date().toISOString()
       ]
     );
