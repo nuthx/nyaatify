@@ -1,6 +1,7 @@
 /database/
 /logs/
 /test/
+/app/api/test
 
 # dependencies
 /node_modules

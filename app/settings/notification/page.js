@@ -129,7 +129,7 @@ export default function NotificationSettings() {
   };
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${notificationApi}/test`, JSON.stringify({ values }));
+    const result = await handleRequest("POST", `${notificationApi}/${values.name}/test`, JSON.stringify({ values }));
     if (result.success) {
       toast.success(t("toast.success.send"));
     } else {

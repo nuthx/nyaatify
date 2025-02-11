@@ -24,7 +24,7 @@ export async function POST(request) {
       throw new Error(notificationResult.message);
     }
 
-    logger.info(`Notification test successfully, name: ${data.values.name}`, { model: "POST /api/notification/test" });
+    logger.info(`Notification test successfully, name: ${data.values.name}`, { model: "POST /api/notification/name/test" });
     return Response.json({
       code: 200,
       message: "success",

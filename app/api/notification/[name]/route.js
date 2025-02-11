@@ -18,7 +18,7 @@ export async function DELETE(_, { params }) {
     // Delete notification by name
     await db.run("DELETE FROM notification WHERE name = ?", name);
 
-    logger.info(`Notification deleted successfully, name: ${name}`, { model: "DELETE /api/notification/[name]" });
+    logger.info(`Notification deleted successfully, name: ${name}`, { model: "DELETE /api/notification/name" });
     return Response.json({
       code: 200,
       message: "success",
