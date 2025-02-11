@@ -17,7 +17,7 @@ export async function POST(request) {
   try {
     const data = await request.json();
 
-    // Generate demo values
+    // Generate demo variable
     const demo_variable = {
       rss: "Demo Subscription",
       title_original: "[Moozzi2] Gimai Seikatsu [ 義妹生活 ] (BD 1920x1080 x265-10Bit Flac) - TV + SP + 4K",
