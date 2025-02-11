@@ -221,7 +221,7 @@
         "filter_notice_rss": "Enter the RSS subscription name to receive notifications only for new anime releases from this subscription. For multiple subscriptions, separate them with commas. Leave it blank to receive all notifications.",
         "filter_notice_download": "Enter the download server name to receive notifications only for completed downloads from this server. For multiple servers, separate them with commas. Leave it blank to receive all notifications.",
         "type": "Push Service",
-        "type_notice": "View Official Documentation",
+        "type_notice": "View official documentation",
         "type_bark": "Bark",
         "type_gotify": "Gotify",
         "type_serverchan": "ServerChan",
@@ -230,7 +230,9 @@
         "push_title": "Push Title",
         "push_message": "Push Message",
         "extra": "Extra Parameters (Optional)",
-        "extra_notice": "After adding extra parameters, they will be sent together in the POST request, separated by “&”."
+        "extra_notice": "After adding extra parameters, they will be sent together in the POST request, separated by “&”. ",
+        "variable": "Custom variables supported, ",
+        "variable_view": "view details"
       },
       "list": {
         "title": "Notification List",
@@ -239,7 +241,7 @@
         "push_title": "Push Title",
         "push_message": "Push Message",
         "extra": "Extra Parameters",
-        "test": "Send Test Notification",
+        "test": "Test Notification",
         "alert": "This action will delete this notification service permanently."
       }
     },

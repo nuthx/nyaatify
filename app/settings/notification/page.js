@@ -22,6 +22,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form"
 import {
   Select,
@@ -208,9 +209,10 @@ export default function NotificationSettings() {
                   <FormControl>
                     <Input className="w-72" placeholder="name1, name2" required {...field} />
                   </FormControl>
-                  <FormMessage className="font-normal text-muted-foreground">
+                  <FormMessage />
+                  <FormDescription>
                     {filterNotice[selectedTrigger]}
-                  </FormMessage>
+                  </FormDescription>
                 </FormItem>
               )}
               />
@@ -229,11 +231,12 @@ export default function NotificationSettings() {
                       <SelectItem value="ServerChan">{t("st.nt.add.type_serverchan")}</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage className="font-normal text-muted-foreground">
+                  <FormMessage />
+                  <FormDescription>
                     {selectedType === "Bark" && <a href="https://bark.day.app/#/tutorial" target="_blank" className="underline">{t("st.nt.add.type_notice")}</a>}
                     {selectedType === "Gotify" && <a href="https://gotify.net/docs/pushmsg" target="_blank" className="underline">{t("st.nt.add.type_notice")}</a>}
                     {selectedType === "ServerChan" && <a href="https://sct.ftqq.com/sendkey" target="_blank" className="underline">{t("st.nt.add.type_notice")}</a>}
-                  </FormMessage>
+                  </FormDescription>
                 </FormItem>
               )}
               />
@@ -264,6 +267,7 @@ export default function NotificationSettings() {
                     <Input className="w-full" placeholder="Title" required {...field} />
                   </FormControl>
                   <FormMessage />
+                  <FormDescription>{t("st.nt.add.variable")}{t("st.nt.add.variable_view")}</FormDescription>
                 </FormItem>
               )}
               />
@@ -274,6 +278,7 @@ export default function NotificationSettings() {
                     <Input className="w-full" placeholder="Message" required {...field} />
                   </FormControl>
                   <FormMessage />
+                  <FormDescription>{t("st.nt.add.variable")}{t("st.nt.add.variable_view")}</FormDescription>
                 </FormItem>
               )}
               />
@@ -283,9 +288,8 @@ export default function NotificationSettings() {
                   <FormControl>
                     <Input className="w-full" placeholder="icon=https://example.com/icon.png&sound=default" required {...field} />
                   </FormControl>
-                  <FormMessage className="font-normal text-muted-foreground">
-                    {t("st.nt.add.extra_notice")}
-                  </FormMessage>
+                  <FormMessage />
+                  <FormDescription>{t("st.nt.add.extra_notice")}{t("st.nt.add.variable")}{t("st.nt.add.variable_view")}</FormDescription>
                 </FormItem>
               )}
               />

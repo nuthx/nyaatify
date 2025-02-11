@@ -230,7 +230,9 @@
         "push_title": "推送标题",
         "push_message": "推送内容",
         "extra": "额外参数（可选）",
-        "extra_notice": "添加额外参数后将在 POST 请求中一并发送，多个参数使用 & 分隔"
+        "extra_notice": "添加额外参数后将在 POST 请求中一并发送，多个参数使用 & 分隔。",
+        "variable": "支持自定义变量，",
+        "variable_view": "查看详情"
       },
       "list": {
         "title": "通知列表",
@@ -239,7 +241,7 @@
         "push_title": "推送标题",
         "push_message": "推送内容",
         "extra": "额外参数",
-        "test": "发送测试通知",
+        "test": "测试通知",
         "alert": "此操作将会永久删除该通知服务"
       }
     },
