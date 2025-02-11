@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 
 export default function ServerSettings() {
-  const serversApi = "/api/servers";
+  const serversApi = "/api/server";
   const configApi = "/api/config";
 
   const { t } = useTranslation();

@@ -33,7 +33,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/servers" });
+    logger.error(error.message, { model: "GET /api/server" });
     return Response.json({
       code: 500,
       message: error.message,
@@ -92,7 +92,7 @@ export async function POST(request) {
         "INSERT INTO server (name, url, type, username, password, created_at, cookie) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [data.data.name, data.data.url, data.data.type, data.data.username, data.data.password, new Date().toISOString(), cookieResult.data]
       );
-      logger.info(`${data.data.name} added successfully, type: ${data.data.type}, url: ${data.data.url}`, { model: "POST /api/servers" });
+      logger.info(`${data.data.name} added successfully, type: ${data.data.type}, url: ${data.data.url}`, { model: "POST /api/server" });
 
       // Update default server only if empty
       // Get the current value to determine if update is needed
@@ -108,7 +108,7 @@ export async function POST(request) {
 
       // Log if default server is empty before update
       if (prevDefaultServer.value === "") {
-        logger.info(`Default server set to ${data.data.name}`, { model: "POST /api/servers" });
+        logger.info(`Default server set to ${data.data.name}`, { model: "POST /api/server" });
       }
 
       return Response.json({
@@ -147,9 +147,9 @@ export async function POST(request) {
         // Commit transaction
         await db.run("COMMIT");
 
-        logger.info(`${data.data.name} deleted successfully`, { model: "POST /api/servers" });
+        logger.info(`${data.data.name} deleted successfully`, { model: "POST /api/server" });
         if (nextServerName) {
-          logger.info(`Default server changed from ${data.data.name} to ${nextServerName}`, { model: "POST /api/servers" });
+          logger.info(`Default server changed from ${data.data.name} to ${nextServerName}`, { model: "POST /api/server" });
         }
         return Response.json({
           code: 200,
@@ -187,7 +187,7 @@ export async function POST(request) {
         throw new Error(`Failed to test ${data.data.name}, error: ${versionResult.message}`);
       }
 
-      logger.info(`${data.data.name} connected successfully, version: ${versionResult.data}`, { model: "POST /api/servers" });
+      logger.info(`${data.data.name} connected successfully, version: ${versionResult.data}`, { model: "POST /api/server" });
       return Response.json({
         code: 200,
         message: "success",
@@ -201,7 +201,7 @@ export async function POST(request) {
       throw new Error(`Invalid action: ${data.action}`);
     }
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/servers" });
+    logger.error(error.message, { model: "POST /api/server" });
     return Response.json({
       code: 500,
       message: error.message,
