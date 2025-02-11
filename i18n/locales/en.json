@@ -208,18 +208,12 @@
       }
     },
     "nt": {
-      "trigger": {
-        "release": "New Release Available",
-        "download": "Download Complete"
-      },
       "add": {
         "title": "Add a New Notification",
-        "description": "Add a notification service to receive message pushes when conditions are triggered.",
+        "description": "Add a notification service to receive message pushes when new anime releases.",
         "name": "Name",
-        "trigger": "Trigger",
         "filter": "Filter Rules (Optional)",
-        "filter_notice_rss": "Enter the RSS subscription name to receive notifications only for new anime releases from this subscription. For multiple subscriptions, separate them with commas. Leave it blank to receive all notifications.",
-        "filter_notice_download": "Enter the download server name to receive notifications only for completed downloads from this server. For multiple servers, separate them with commas. Leave it blank to receive all notifications.",
+        "filter_notice": "Enter the RSS subscription name to receive notifications only for new anime releases from this subscription. For multiple subscriptions, separate them with commas. Leave it blank to receive all notifications.",
         "type": "Push Service",
         "type_notice": "View official documentation",
         "type_bark": "Bark",
@@ -230,7 +224,7 @@
         "push_title": "Push Title",
         "push_message": "Push Message",
         "extra": "Extra Parameters (Optional)",
-        "extra_notice": "After adding extra parameters, they will be sent together in the POST request, separated by “&”. ",
+        "extra_notice": "The extra parameters added will be sent together in the POST request. For multiple parameters, separate them with “&”. ",
         "variable": "Custom variables supported, ",
         "variable_view": "view details"
       },
@@ -238,6 +232,7 @@
         "title": "Notification List",
         "empty": "Please add a notification service first.",
         "filter": "Filter Rules",
+        "filter_all": "All",
         "push_title": "Push Title",
         "push_message": "Push Message",
         "extra": "Extra Parameters",

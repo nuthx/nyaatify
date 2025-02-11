@@ -48,7 +48,6 @@ export default function NotificationSettings() {
       name: z.string()
         .min(2, { message: t("validate.name_2") })
         .max(40, { message: t("validate.name_40") }),
-      trigger: z.string(),
       filter: z.string(),
       type: z.string(),
       url: z.string()
@@ -65,7 +64,6 @@ export default function NotificationSettings() {
     })),
     defaultValues: {
       name: "",
-      trigger: "NewAnimeRelease",
       filter: "",
       type: "Bark",
       url: "https://api.day.app",
@@ -81,12 +79,6 @@ export default function NotificationSettings() {
     Bark: "https://api.day.app",
     Gotify: "https://your-server.com",
     ServerChan: "https://sctapi.ftqq.com",
-  };
-
-  const selectedTrigger = notificationFrom.watch("trigger");
-  const filterNotice = {
-    NewAnimeRelease: t("st.nt.add.filter_notice_rss"),
-    DownloadFinished: t("st.nt.add.filter_notice_download"),
   };
 
   const fetcher = async (url) => {
@@ -185,24 +177,6 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="trigger" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.nt.add.trigger")}</FormLabel>
-                  <Select defaultValue={field.value} onValueChange={field.onChange}>
-                    <FormControl>
-                      <SelectTrigger className="w-72">
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="NewAnimeRelease">{t("st.nt.trigger.release")}</SelectItem>
-                      <SelectItem value="DownloadFinished">{t("st.nt.trigger.download")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-              />
               <FormField control={notificationFrom.control} name="filter" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.filter")}</FormLabel>
@@ -210,9 +184,7 @@ export default function NotificationSettings() {
                     <Input className="w-72" placeholder="name1, name2" required {...field} />
                   </FormControl>
                   <FormMessage />
-                  <FormDescription>
-                    {filterNotice[selectedTrigger]}
-                  </FormDescription>
+                  <FormDescription>{t("st.nt.add.filter_notice")}</FormDescription>
                 </FormItem>
               )}
               />
@@ -313,18 +285,11 @@ export default function NotificationSettings() {
             content={(notification) => (
               <>
                 <p className="text-sm text-muted-foreground">{notification.url}</p>
-                {notification.filter && (<p className="text-sm text-muted-foreground">{t("st.nt.list.filter")}: {notification.filter}</p>)}
+                <p className="text-sm text-muted-foreground">{t("st.nt.list.filter")}: {notification.filter || t("st.nt.list.filter_all")}</p>
                 <p className="text-sm text-muted-foreground">{t("st.nt.list.push_title")}: {notification.title}</p>
                 <p className="text-sm text-muted-foreground">{t("st.nt.list.push_message")}: {notification.message}</p>
                 {notification.extra && (<p className="text-sm text-muted-foreground">{t("st.nt.list.extra")}: {notification.extra}</p>)}
               </>
-            )}
-            state={(notification) => (
-              notification.trigger === "NewAnimeRelease" ? (
-                <>{t("st.nt.trigger.release")}</>
-              ) : (
-                <>{t("st.nt.trigger.download")}</>
-              )
             )}
             menu={(notification) => (
               <>

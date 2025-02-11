@@ -29,7 +29,6 @@ export async function GET() {
 // Body: {
 //   values: {
 //     name: string, required
-//     trigger: string, required
 //     filter: string, required
 //     type: string, required
 //     url: string, required
@@ -53,10 +52,9 @@ export async function POST(request) {
 
     // Insert to database
     await db.run(
-      "INSERT INTO notification (name, trigger, filter, type, url, token, title, message, extra, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO notification (name, filter, type, url, token, title, message, extra, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         data.values.name,
-        data.values.trigger, 
         data.values.filter,
         data.values.type,
         data.values.url,
