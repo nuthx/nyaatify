@@ -346,6 +346,11 @@ export default function NotificationSettings() {
                 {notification.extra && (<p className="text-sm text-muted-foreground">{t("st.nt.list.extra")}: {notification.extra}</p>)}
               </>
             )}
+            state={(notification) => (
+              <>
+                {notification.state === 1 ? t("st.nt.list.enabled") : t("st.nt.list.disabled")}
+              </>
+            )}
             menu={(notification) => (
               <>
                 <DropdownMenuItem onClick={() => handleTest(notification)}>

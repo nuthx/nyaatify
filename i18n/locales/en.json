@@ -252,6 +252,8 @@
         "push_title": "Push Title",
         "push_message": "Push Message",
         "extra": "Extra Parameters",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
         "test": "Test Notification",
         "alert": "This action will delete this notification service permanently."
       }

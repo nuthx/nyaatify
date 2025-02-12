@@ -57,7 +57,7 @@ export async function POST(request) {
 
     // Insert to database
     await db.run(
-      "INSERT INTO notification (name, filter, type, url, token, title, message, extra, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO notification (name, filter, type, url, token, title, message, extra, state, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       [
         data.values.name.trim(),
         data.values.filter.trim(),
@@ -67,6 +67,7 @@ export async function POST(request) {
         data.values.title.trim(),
         data.values.message.trim(),
         data.values.extra.trim(),
+        1,
         new Date().toISOString()
       ]
     );
