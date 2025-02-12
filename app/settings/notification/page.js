@@ -176,23 +176,23 @@ export default function NotificationSettings() {
     }
   };
 
-  const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${notificationApi}/${values.name}/test`, JSON.stringify({ values }));
-    if (result.success) {
-      toast.success(t("toast.success.send"));
-    } else {
-      toast.error(t("toast.failed.send_notification"), {
-        description: result.message,
-      });
-    }
-  };
-
   const handleDelete = async (name) => {
     const result = await handleRequest("DELETE", `${notificationApi}/${name}`);
     if (result.success) {
       mutate(notificationApi);
     } else {
       toast.error(t("toast.failed.delete_notification"), {
+        description: result.message,
+      });
+    }
+  };
+
+  const handleTest = async (values) => {
+    const result = await handleRequest("POST", `${notificationApi}/${values.name}/test`, JSON.stringify({ values }));
+    if (result.success) {
+      toast(t("toast.success.send"));
+    } else {
+      toast.error(t("toast.failed.send_notification"), {
         description: result.message,
       });
     }

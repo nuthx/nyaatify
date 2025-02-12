@@ -3,7 +3,7 @@
 import useSWR from "swr"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next";
-import { handlePost } from "@/lib/handlers";
+import { handleRequest } from "@/lib/handlers";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -49,8 +49,8 @@ export default function Home() {
   }, { refreshInterval: 2000 });
 
   const handleManage = async (action, downloader, hash) => {
-    const result = await handlePost(torrentsApi, JSON.stringify({ action, downloader, hash }));
-    if (result.code === 200) {
+    const result = await handleRequest("POST", torrentsApi, JSON.stringify({ action, downloader, hash }));
+    if (result.success) {
       mutate();
     } else {
       toast.error(t(`toast.failed.${action}`), {

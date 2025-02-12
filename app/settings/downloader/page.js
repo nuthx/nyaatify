@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { handlePost, handleRequest } from "@/lib/handlers";
+import { handleRequest } from "@/lib/handlers";
 import {
   Card,
   CardContent,
@@ -22,6 +22,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form"
 import {
   Select,
@@ -31,7 +32,6 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 
@@ -81,8 +81,8 @@ export default function DownloaderSettings() {
     return result.data;
   };
 
-  const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
   const { data: downloaderData, error: downloaderError, isLoading: downloaderLoading } = useSWR(downloadersApi, fetcher);
+  const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
 
   useEffect(() => {
     if (downloaderError) {
@@ -90,28 +90,47 @@ export default function DownloaderSettings() {
         description: downloaderError.message,
       });
     }
+  }, [downloaderError]);
+
+  useEffect(() => {
     if (configError) {
       toast.error(t("toast.failed.fetch_config"), {
         description: configError.message,
       });
     }
-  }, [downloaderError, configError]);
+  }, [configError]);
 
-  const handleManageDownloader = async (action, values) => {
-    const result = await handlePost(downloadersApi, JSON.stringify({ type: "downloader", action, data: values }));
-    if (result.code === 200) {
-      if (action === "add") {
-        downloaderForm.reset();
-      }
-      if (action === "test") {
-        toast.success(t("toast.success.test"), {
-          description: `${t("glb.version")}: ${result.data.version}`
-        });
-      }
+  const handleAdd = async (values) => {
+    const result = await handleRequest("POST", downloadersApi, JSON.stringify({ values }));
+    if (result.success) {
+      downloaderForm.reset();
       mutate(downloadersApi);
-      mutate(configApi);
     } else {
-      toast.error(t(`toast.failed.${action}_downloader`), {
+      toast.error(t("toast.failed.add_downloader"), {
+        description: result.message,
+      });
+    }
+  };
+
+  const handleDelete = async (name) => {
+    const result = await handleRequest("DELETE", `${downloadersApi}/${name}`);
+    if (result.success) {
+      mutate(downloadersApi);
+    } else {
+      toast.error(t("toast.failed.delete_downloader"), {
+        description: result.message,
+      });
+    }
+  };
+
+  const handleTest = async (values) => {
+    const result = await handleRequest("POST", `${downloadersApi}/${values.name}/test`, JSON.stringify({ values }));
+    if (result.success) {
+      toast.success(t("toast.success.test"), {
+        description: `${t("glb.version")}: ${result.data.version}`
+      });
+    } else {
+      toast.error(t("toast.failed.test_downloader"), {
         description: result.message,
       });
     }
@@ -125,7 +144,7 @@ export default function DownloaderSettings() {
     } else {
       toast.error(t("toast.failed.save"), {
         description: result.message,
-      });
+      })
     }
   };
 
@@ -142,7 +161,7 @@ export default function DownloaderSettings() {
         </CardHeader>
         <CardContent>
           <Form {...downloaderForm}>
-            <form onSubmit={downloaderForm.handleSubmit((values) => handleManageDownloader("add", values))} className="space-y-6" noValidate>
+            <form onSubmit={downloaderForm.handleSubmit((values) => handleAdd(values))} className="space-y-6" noValidate>
               <FormField control={downloaderForm.control} name="name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.dl.add.name")}</FormLabel>
@@ -168,11 +187,12 @@ export default function DownloaderSettings() {
                       <SelectItem value="Aria2">Aria2</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage className="font-normal text-muted-foreground">
+                  <FormMessage />
+                  <FormDescription>
                     {selectedType === "qBittorrent" && t("st.dl.add.type_notice_qb")}
                     {selectedType === "Transmission" && t("st.dl.add.type_notice_tr")}
                     {selectedType === "Aria2" && t("st.dl.add.type_notice_ar")}
-                  </FormMessage>
+                    </FormDescription>
                 </FormItem>
               )}
               />
@@ -208,7 +228,7 @@ export default function DownloaderSettings() {
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
-                <Button type="button" variant="outline" onClick={downloaderForm.handleSubmit((values) => handleManageDownloader("test", values))}>{t("glb.test")}</Button>
+                <Button type="button" variant="outline" onClick={downloaderForm.handleSubmit((values) => handleTest(values))}>{t("glb.test")}</Button>
               </div>
             </form>
           </Form>
@@ -237,7 +257,7 @@ export default function DownloaderSettings() {
             menu={(downloader) => (
               <></>
             )}
-            onDelete={(downloader) => handleManageDownloader("delete", downloader)}
+            onDelete={(downloader) => handleDelete(downloader.name)}
             deleteable={() => true}
             deleteDescription={t("st.dl.list.alert")}
           />

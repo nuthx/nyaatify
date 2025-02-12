@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
-import { handlePost } from "@/lib/handlers";
+import { handleRequest } from "@/lib/handlers";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,8 +62,8 @@ export default function Anime() {
   };
 
   const handleManage = async (action, downloader, hash) => {
-    const result = await handlePost(torrentsApi, JSON.stringify({ action, downloader, hash }));
-    if (result.code === 200) {
+    const result = await handleRequest("POST", torrentsApi, JSON.stringify({ action, downloader, hash }));
+    if (result.success) {
       if (action === "download") {
         toast(t(`toast.start.download`));
       }

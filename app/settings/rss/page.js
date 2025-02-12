@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { handlePost, handleRequest } from "@/lib/handlers";
+import { handleRequest } from "@/lib/handlers";
 import {
   Card,
   CardContent,
@@ -89,8 +89,8 @@ export default function RSSSettings() {
     return result.data;
   };
 
-  const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
   const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(rssApi, fetcher);
+  const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
 
   useEffect(() => {
     if (rssError) {
@@ -98,6 +98,9 @@ export default function RSSSettings() {
         description: rssError.message,
       });
     }
+  }, [rssError]);
+
+  useEffect(() => {
     if (configError) {
       toast.error(t("toast.failed.fetch_config"), {
         description: configError.message,
@@ -109,20 +112,38 @@ export default function RSSSettings() {
       aiForm.setValue("ai_key", configData?.ai_key);
       aiForm.setValue("ai_model", configData?.ai_model);
     }
-  }, [rssError, configError, configData]);
+  }, [configError, configData]);
 
-  const handleManageRSS = async (action, values) => {
-    const result = await handlePost(rssApi, JSON.stringify({ action, data: values }));
-    if (action === "refresh") {
-      toast(t("toast.start.refresh_rss"));
-    }
-    if (result.code === 200) {
-      if (action === "add") {
-        rssForm.reset();
-      }
+  const handleAdd = async (values) => {
+    const result = await handleRequest("POST", rssApi, JSON.stringify({ values }));
+    if (result.success) {
+      rssForm.reset();
       mutate(rssApi);
     } else {
-      toast.error(t(`toast.failed.${action}_rss`), {
+      toast.error(t("toast.failed.add_rss"), {
+        description: result.message,
+      });
+    }
+  };
+
+  const handleDelete = async (name) => {
+    const result = await handleRequest("DELETE", `${rssApi}/${name}`);
+    if (result.success) {
+      mutate(rssApi);
+    } else {
+      toast.error(t("toast.failed.delete_rss"), {
+        description: result.message,
+      });
+    }
+  };
+
+  const handleRefresh = async (name) => {
+    const result = await handleRequest("POST", `${rssApi}/${name}/refresh`);
+    if (result.success) {
+      toast(t("toast.start.refresh_rss"));
+      mutate(rssApi);
+    } else {
+      toast.error(t("toast.failed.refresh_rss"), {
         description: result.message,
       });
     }
@@ -131,16 +152,12 @@ export default function RSSSettings() {
   const handleSaveConfig = async (values) => {
     const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
     if (result.success) {
-      toast({
-        title: t("toast.success.save")
-      });
+      toast(t("toast.success.save"));
       mutate(configApi);
     } else {
-      toast({
-        title: t("toast.failed.save"),
+      toast.error(t("toast.failed.save"), {
         description: result.message,
-        variant: "destructive"
-      });
+      })
     }
   };
 
@@ -157,7 +174,7 @@ export default function RSSSettings() {
         </CardHeader>
         <CardContent>
           <Form {...rssForm}>
-            <form onSubmit={rssForm.handleSubmit((values) => handleManageRSS("add", values))} className="space-y-6" noValidate>
+            <form onSubmit={rssForm.handleSubmit((values) => handleAdd(values))} className="space-y-6" noValidate>
               <FormField control={rssForm.control} name="name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.rss.add.name")}</FormLabel>
@@ -217,12 +234,12 @@ export default function RSSSettings() {
             )}
             menu={(rss) => (
               <>
-                <DropdownMenuItem onClick={() => handleManageRSS("refresh", rss)}>
+                <DropdownMenuItem onClick={() => handleRefresh(rss.name)}>
                   <RefreshCw />{t("st.rss.list.refresh")}
                 </DropdownMenuItem>
               </>
             )}
-            onDelete={(rss) => handleManageRSS("delete", rss)}
+            onDelete={(rss) => handleDelete(rss.name)}
             deleteable={(rss) => rss.state !== "running"}
             deleteDescription={t("st.rss.list.alert")}
           />
