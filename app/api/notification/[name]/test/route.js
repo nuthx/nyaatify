@@ -2,9 +2,10 @@ import { logger } from "@/lib/logger";
 import { dispatchNotification } from "@/lib/notification";
 
 // Test a notification push
-// Params: name, string, required
+// Params: name, string, not used
 // Body: {
 //   values: {
+//     name: string, required
 //     type: string, required
 //     url: string, required
 //     token: string, required

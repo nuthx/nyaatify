@@ -25,7 +25,7 @@ export async function DELETE(_, { params }) {
       data: null
     });
   } catch (error) {
-    logger.error(error.message, { model: "DELETE /api/notification/[name]" });
+    logger.error(error.message, { model: "DELETE /api/notification/name" });
     return Response.json({
       code: 500,
       message: error.message,

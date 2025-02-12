@@ -4,13 +4,13 @@ import { formatBytes } from "@/lib/bytes";
 import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
 
 // Get torrent list
-// Method: GET
 
 export async function GET() {
   try {
     const db = await getDb();
 
     // Check downloader online status
+    // If version returns success, then the downloader is online
     const downloaders = await db.all("SELECT url, cookie, name FROM downloader");
     const downloaderStatuses = await Promise.all(
       downloaders.map(async downloader => {
@@ -30,6 +30,7 @@ export async function GET() {
       torrentsResult.data.forEach(torrent => {
         allTorrents.push({
           name: torrent.name,
+          hash: torrent.hash,
           state: torrent.state,
           progress: torrent.progress,
           eta: torrent.eta,
@@ -37,9 +38,8 @@ export async function GET() {
           upspeed: formatBytes(torrent.upspeed),
           completed: formatBytes(torrent.completed),
           size: formatBytes(torrent.size),
-          downloader: downloader.name,
-          hash: torrent.hash,
-          added_on: torrent.added_on
+          added_on: torrent.added_on,
+          downloader: downloader.name
         });
       });
     }));
@@ -60,8 +60,8 @@ export async function GET() {
       message: "success",
       data: {
         torrents: allTorrents,
-        downloaders: downloaders.length,
-        online: onlineDownloaders.length
+        downloaders: downloaders.length,  // Total downloaders count
+        online: onlineDownloaders.length  // Online downloaders count
       }
     });
   } catch (error) {
@@ -74,8 +74,7 @@ export async function GET() {
   }
 }
 
-// Manage torrent state
-// Method: POST
+// Manage a torrent
 // Body: {
 //   action: string, required, type: download, pause, resume, delete
 //   downloader: string, required
@@ -90,7 +89,7 @@ export async function POST(request) {
     // Get downloader info
     const downloader = await db.get("SELECT url, cookie FROM downloader WHERE name = ?", data.downloader);
     if (!downloader) {
-      throw new Error(`Failed to ${data.action} ${data.hash} due to ${data.downloader} downloader not found`);
+      throw new Error(`Downloader not found, name: ${data.downloader}`);
     }
 
     // Manage the torrent
@@ -99,7 +98,7 @@ export async function POST(request) {
       throw new Error(manageResult.message);
     }
 
-    logger.info(`${data.action} ${data.hash} successfully`, { model: "POST /api/torrents" });
+    logger.info(`Torrent ${data.action}ed successfully, hash: ${data.hash}`.replace('eed', 'ed'), { model: "POST /api/torrents" });
     return Response.json({
       code: 200,
       message: "success",
