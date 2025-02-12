@@ -25,6 +25,11 @@ import {
   FormDescription,
 } from "@/components/ui/form"
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -32,10 +37,50 @@ import {
   SelectValue
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 import { BellRing } from "lucide-react";
+
+function VariableItem({ name, description }) {
+  return (
+    <div className="flex items-center gap-2">
+      <Badge variant="outline">{name}</Badge>
+      <p className="text-sm text-muted-foreground">{description}</p>
+    </div>
+  )
+}
+
+function VariablePopover() {
+  const { t } = useTranslation();
+
+  return (
+    <Popover>
+      <PopoverTrigger className="underline">
+        {t("st.nt.add.variable_view")}
+      </PopoverTrigger>
+      <PopoverContent className="w-96">
+        <div className="space-y-2">
+          <p className="text-sm mb-3">{t("st.nt.variable.description")}</p>
+          <VariableItem name="rss" description={t("st.nt.variable.rss")} />
+          <VariableItem name="title_original" description={t("st.nt.variable.title_original")} />
+          <VariableItem name="title_jp" description={t("st.nt.variable.title_jp")} />
+          <VariableItem name="title_cn" description={t("st.nt.variable.title_cn")} />
+          <VariableItem name="title_en" description={t("st.nt.variable.title_en")} />
+          <VariableItem name="title_romaji" description={t("st.nt.variable.title_romaji")} />
+          <VariableItem name="torrent_link" description={t("st.nt.variable.torrent_link")} />
+          <VariableItem name="torrent_hash" description={t("st.nt.variable.torrent_hash")} />
+          <VariableItem name="torrent_size" description={t("st.nt.variable.torrent_size")} />
+          <VariableItem name="cover_anilist" description={t("st.nt.variable.cover_anilist")} />
+          <VariableItem name="cover_bangumi" description={t("st.nt.variable.cover_bangumi")} />
+          <VariableItem name="link_anilist" description={t("st.nt.variable.link_anilist")} />
+          <VariableItem name="link_bangumi" description={t("st.nt.variable.link_bangumi")} />
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
 
 export default function NotificationSettings() {
   const notificationApi = "/api/notification";
@@ -239,7 +284,10 @@ export default function NotificationSettings() {
                     <Input className="w-full" placeholder="Title" required {...field} />
                   </FormControl>
                   <FormMessage />
-                  <FormDescription>{t("st.nt.add.variable")}{t("st.nt.add.variable_view")}</FormDescription>
+                  <FormDescription>
+                    {t("st.nt.add.variable")}
+                    <VariablePopover />
+                  </FormDescription>
                 </FormItem>
               )}
               />
@@ -250,7 +298,10 @@ export default function NotificationSettings() {
                     <Input className="w-full" placeholder="Message" required {...field} />
                   </FormControl>
                   <FormMessage />
-                  <FormDescription>{t("st.nt.add.variable")}{t("st.nt.add.variable_view")}</FormDescription>
+                  <FormDescription>
+                    {t("st.nt.add.variable")}
+                    <VariablePopover />
+                  </FormDescription>
                 </FormItem>
               )}
               />
@@ -261,7 +312,11 @@ export default function NotificationSettings() {
                     <Input className="w-full" placeholder="icon=https://example.com/icon.png&sound=default" required {...field} />
                   </FormControl>
                   <FormMessage />
-                  <FormDescription>{t("st.nt.add.extra_notice")}{t("st.nt.add.variable")}{t("st.nt.add.variable_view")}</FormDescription>
+                  <FormDescription>
+                    {t("st.nt.add.extra_notice")}
+                    {t("st.nt.add.variable")}
+                    <VariablePopover />
+                  </FormDescription>
                 </FormItem>
               )}
               />

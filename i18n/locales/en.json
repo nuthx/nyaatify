@@ -228,6 +228,22 @@
         "variable": "Custom variables supported, ",
         "variable_view": "view details"
       },
+      "variable": {
+        "description": "Custom variables must be wrapped in double curly braces like {{title_jp}}. Please check the spelling carefully, otherwise empty content will be returned.",
+        "rss": "RSS subscription name of this anime",
+        "title_original": "Original title",
+        "title_jp": "Japanese title",
+        "title_cn": "Chinese title",
+        "title_en": "English title",
+        "title_romaji": "Romaji title",
+        "torrent_link": "Torrent download link",
+        "torrent_hash": "Torrent hash",
+        "torrent_size": "Torrent size",
+        "cover_anilist": "Anilist cover image link",
+        "cover_bangumi": "Bangumi cover image link",
+        "link_anilist": "Anilist detail page link",
+        "link_bangumi": "Bangumi detail page link"
+      },
       "list": {
         "title": "Notification List",
         "empty": "Please add a notification service first.",
