@@ -57,6 +57,11 @@ export async function POST(request) {
     const db = await getDb();
     const data = await request.json();
 
+    // Check if name is empty
+    if (data.values.name.trim() === "") {
+      throw new Error("Name is required");
+    }
+
     // Check if name or URL already exists
     const [existingName, existingUrl] = await Promise.all([
       db.get("SELECT name FROM downloader WHERE name = ?", data.values.name.trim()),

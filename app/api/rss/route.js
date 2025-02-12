@@ -46,6 +46,11 @@ export async function POST(request) {
     const db = await getDb();
     const data = await request.json();
 
+    // Check if name is empty
+    if (data.values.name.trim() === "") {
+      throw new Error("Name is required");
+    }
+
     // Check if name already exists
     const existingName = await db.get("SELECT name FROM rss WHERE name = ?", data.values.name.trim());
     if (existingName) {
