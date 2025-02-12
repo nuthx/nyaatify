@@ -36,8 +36,8 @@ export default function Home() {
     if (!response.ok) {
       throw new Error(result.message);
     }
-    if (result.data.servers === 0) {
-      throw new Error(t("download.empty_server"));
+    if (result.data.downloaders === 0) {
+      throw new Error(t("download.empty_downloader"));
     }
     if (result.data.online === 0) {
       throw new Error(t("download.empty_online"));
@@ -48,8 +48,8 @@ export default function Home() {
     return result.data;
   }, { refreshInterval: 2000 });
 
-  const handleManage = async (action, server, hash) => {
-    const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
+  const handleManage = async (action, downloader, hash) => {
+    const result = await handlePost(torrentsApi, JSON.stringify({ action, downloader, hash }));
     if (result.code === 200) {
       mutate();
     } else {
@@ -75,7 +75,7 @@ export default function Home() {
             <CardContent className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <Badge variant="outline">{t(`download.state.${item.state}`)}</Badge>
-                <Badge variant="outline">{item.server}</Badge>
+                <Badge variant="outline">{item.downloader}</Badge>
               </div>
               <a className="font-medium">{item.name}</a>
               <div className="flex items-center gap-2">
@@ -95,12 +95,12 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 {["uploading", "queuedUP", "stalledUP", "allocating", "downloading", "metaDL",
                   "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.state) && (
-                  <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.server, item.hash)}>
+                  <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.downloader, item.hash)}>
                     <Pause />{t("glb.pause")}
                   </Button>
                 )}
                 {["pausedUP", "pausedDL", "stoppedUP", "stoppedDL"].includes(item.state) && (
-                  <Button className="font-normal" onClick={() => handleManage("resume", item.server, item.hash)}>
+                  <Button className="font-normal" onClick={() => handleManage("resume", item.downloader, item.hash)}>
                     <RefreshCcw />{t("glb.resume")}
                   </Button>
                 )}
@@ -119,7 +119,7 @@ export default function Home() {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleManage("delete", item.server, item.hash)}>
+                      <AlertDialogAction onClick={() => handleManage("delete", item.downloader, item.hash)}>
                         {t("glb.delete")}
                       </AlertDialogAction>
                     </AlertDialogFooter>

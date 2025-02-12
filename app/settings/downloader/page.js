@@ -35,13 +35,13 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 
-export default function ServerSettings() {
-  const serversApi = "/api/server";
+export default function DownloaderSettings() {
+  const downloadersApi = "/api/downloader";
   const configApi = "/api/config";
 
   const { t } = useTranslation();
 
-  const serverForm = useForm({
+  const downloaderForm = useForm({
     resolver: zodResolver(z.object({
       type: z.string(),
       name: z.string()
@@ -65,7 +65,7 @@ export default function ServerSettings() {
     },
   })
 
-  const selectedType = serverForm.watch("type");
+  const selectedType = downloaderForm.watch("type");
   const urlPlaceholders = {
     qBittorrent: "http://192.168.1.100:8080",
     Transmission: "http://192.168.1.100:9091/transmission/rpc",
@@ -82,12 +82,12 @@ export default function ServerSettings() {
   };
 
   const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
-  const { data: serverData, error: serverError, isLoading: serverLoading } = useSWR(serversApi, fetcher);
+  const { data: downloaderData, error: downloaderError, isLoading: downloaderLoading } = useSWR(downloadersApi, fetcher);
 
   useEffect(() => {
-    if (serverError) {
-      toast.error(t("toast.failed.fetch_server"), {
-        description: serverError.message,
+    if (downloaderError) {
+      toast.error(t("toast.failed.fetch_downloader"), {
+        description: downloaderError.message,
       });
     }
     if (configError) {
@@ -95,23 +95,23 @@ export default function ServerSettings() {
         description: configError.message,
       });
     }
-  }, [serverError, configError]);
+  }, [downloaderError, configError]);
 
-  const handleManageServer = async (action, values) => {
-    const result = await handlePost(serversApi, JSON.stringify({ type: "server", action, data: values }));
+  const handleManageDownloader = async (action, values) => {
+    const result = await handlePost(downloadersApi, JSON.stringify({ type: "downloader", action, data: values }));
     if (result.code === 200) {
       if (action === "add") {
-        serverForm.reset();
+        downloaderForm.reset();
       }
       if (action === "test") {
         toast.success(t("toast.success.test"), {
           description: `${t("glb.version")}: ${result.data.version}`
         });
       }
-      mutate(serversApi);
+      mutate(downloadersApi);
       mutate(configApi);
     } else {
-      toast.error(t(`toast.failed.${action}_server`), {
+      toast.error(t(`toast.failed.${action}_downloader`), {
         description: result.message,
       });
     }
@@ -129,7 +129,7 @@ export default function ServerSettings() {
     }
   };
 
-  if (serverLoading || configLoading) {
+  if (downloaderLoading || configLoading) {
     return <></>;
   }
 
@@ -137,25 +137,25 @@ export default function ServerSettings() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.sv.add.title")}</CardTitle>
-          <CardDescription>{t("st.sv.add.description")}</CardDescription>
+          <CardTitle>{t("st.dl.add.title")}</CardTitle>
+          <CardDescription>{t("st.dl.add.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...serverForm}>
-            <form onSubmit={serverForm.handleSubmit((values) => handleManageServer("add", values))} className="space-y-6" noValidate>
-              <FormField control={serverForm.control} name="name" render={({ field }) => (
+          <Form {...downloaderForm}>
+            <form onSubmit={downloaderForm.handleSubmit((values) => handleManageDownloader("add", values))} className="space-y-6" noValidate>
+              <FormField control={downloaderForm.control} name="name" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("st.sv.add.name")}</FormLabel>
+                  <FormLabel>{t("st.dl.add.name")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="Server" required {...field} />
+                    <Input className="w-72" placeholder="Downloader" required {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
               />
-              <FormField control={serverForm.control} name="type" render={({ field }) => (
+              <FormField control={downloaderForm.control} name="type" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("st.sv.add.type")}</FormLabel>
+                  <FormLabel>{t("st.dl.add.type")}</FormLabel>
                   <Select defaultValue={field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-72">
@@ -169,16 +169,16 @@ export default function ServerSettings() {
                     </SelectContent>
                   </Select>
                   <FormMessage className="font-normal text-muted-foreground">
-                    {selectedType === "qBittorrent" && t("st.sv.add.type_notice_qb")}
-                    {selectedType === "Transmission" && t("st.sv.add.type_notice_tr")}
-                    {selectedType === "Aria2" && t("st.sv.add.type_notice_ar")}
+                    {selectedType === "qBittorrent" && t("st.dl.add.type_notice_qb")}
+                    {selectedType === "Transmission" && t("st.dl.add.type_notice_tr")}
+                    {selectedType === "Aria2" && t("st.dl.add.type_notice_ar")}
                   </FormMessage>
                 </FormItem>
               )}
               />
-              <FormField control={serverForm.control} name="url" render={({ field }) => (
+              <FormField control={downloaderForm.control} name="url" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("st.sv.add.url")}</FormLabel>
+                  <FormLabel>{t("st.dl.add.url")}</FormLabel>
                   <FormControl>
                     <Input className="w-full" placeholder={urlPlaceholders[selectedType]} required {...field} />
                   </FormControl>
@@ -186,9 +186,9 @@ export default function ServerSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={serverForm.control} name="username" render={({ field }) => (
+              <FormField control={downloaderForm.control} name="username" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("st.sv.add.username")}</FormLabel>
+                  <FormLabel>{t("st.dl.add.username")}</FormLabel>
                   <FormControl>
                     <Input className="w-72" placeholder="admin" {...field} />
                   </FormControl>
@@ -196,9 +196,9 @@ export default function ServerSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={serverForm.control} name="password" render={({ field }) => (
+              <FormField control={downloaderForm.control} name="password" render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("st.sv.add.password")}</FormLabel>
+                  <FormLabel>{t("st.dl.add.password")}</FormLabel>
                   <FormControl>
                     <Input className="w-72" type="password" placeholder="password" {...field} />
                   </FormControl>
@@ -208,7 +208,7 @@ export default function ServerSettings() {
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
-                <Button type="button" variant="outline" onClick={serverForm.handleSubmit((values) => handleManageServer("test", values))}>{t("glb.test")}</Button>
+                <Button type="button" variant="outline" onClick={downloaderForm.handleSubmit((values) => handleManageDownloader("test", values))}>{t("glb.test")}</Button>
               </div>
             </form>
           </Form>
@@ -217,47 +217,47 @@ export default function ServerSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.sv.list.title")}</CardTitle>
+          <CardTitle>{t("st.dl.list.title")}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <ListCard
-            items={serverData?.servers || []}
-            empty={t("st.sv.list.empty")}
-            content={(server) => (
+            items={downloaderData?.downloaders || []}
+            empty={t("st.dl.list.empty")}
+            content={(downloader) => (
               <>
-                <p className="text-sm text-muted-foreground">{server.url}</p>
-                <p className="text-sm text-muted-foreground">{t("glb.version")}: {server.version}</p>
+                <p className="text-sm text-muted-foreground">{downloader.url}</p>
+                <p className="text-sm text-muted-foreground">{t("glb.version")}: {downloader.version}</p>
               </>
             )}
-            state={(server) => (
+            state={(downloader) => (
               <>
-                {server.state === "online" ? t("st.sv.list.online") : t("st.sv.list.offline")}
+                {downloader.state === "online" ? t("st.dl.list.online") : t("st.dl.list.offline")}
               </>
             )}
-            menu={(server) => (
+            menu={(downloader) => (
               <></>
             )}
-            onDelete={(server) => handleManageServer("delete", server)}
+            onDelete={(downloader) => handleManageDownloader("delete", downloader)}
             deleteable={() => true}
-            deleteDescription={t("st.sv.list.alert")}
+            deleteDescription={t("st.dl.list.alert")}
           />
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.sv.default.title")}</CardTitle>
-          <CardDescription>{t("st.sv.default.description")}</CardDescription>
+          <CardTitle>{t("st.dl.default.title")}</CardTitle>
+          <CardDescription>{t("st.dl.default.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={serverData?.default_server} onValueChange={(value) => handleSaveConfig({ default_server: value })} disabled={!serverData?.servers?.length}>
+          <Select defaultValue={downloaderData?.default_downloader} onValueChange={(value) => handleSaveConfig({ default_downloader: value })} disabled={!downloaderData?.downloaders?.length}>
             <SelectTrigger className="w-72">
-              <SelectValue placeholder={t("st.sv.default.empty")} />
+              <SelectValue placeholder={t("st.dl.default.empty")} />
             </SelectTrigger>
             <SelectContent>
-              {(serverData?.servers || []).map((server) => (
-                <SelectItem key={server.name} value={server.name}>
-                  {server.name}
+              {(downloaderData?.downloaders || []).map((downloader) => (
+                <SelectItem key={downloader.name} value={downloader.name}>
+                  {downloader.name}
                 </SelectItem>
               ))}
             </SelectContent>

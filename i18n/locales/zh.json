@@ -34,17 +34,17 @@
       "delete": "删除失败",
       "fetch_config": "无法获取用户配置",
       "fetch_rss": "无法获取 RSS 订阅列表",
-      "fetch_server": "无法获取下载服务器列表",
+      "fetch_downloader": "无法获取下载器列表",
       "fetch_notification": "无法获取通知列表",
       "fetch_logs": "无法获取日志信息",
       "add_rss": "添加 RSS 订阅失败",
-      "add_server": "添加下载服务器失败",
+      "add_downloader": "添加下载器失败",
       "add_notification": "添加通知失败",
       "delete_rss": "删除 RSS 订阅失败",
-      "delete_server": "删除下载服务器失败",
+      "delete_downloader": "删除下载器失败",
       "delete_notification": "删除通知失败",
       "refresh_rss": "刷新 RSS 订阅失败",
-      "test_server": "无法连接到下载服务器",
+      "test_downloader": "无法连接到下载器",
       "send_notification": "通知发送失败"
     },
     "start": {
@@ -74,16 +74,16 @@
   "anime": {
     "empty": "请先添加一个 RSS 订阅",
     "load_fail": "加载列表失败",
-    "no_server": "未添加下载服务器",
-    "server_offline": "下载服务器已离线",
+    "no_downloader": "未添加下载器",
+    "downloader_offline": "下载器已离线",
     "today": "今日",
     "week": "本周",
     "total": "总数"
   },
   "download": {
-    "empty_server": "请先添加一个下载服务器",
-    "empty_online": "当前没有在线的下载服务器",
-    "empty_torrents": "所有下载服务器中没有任务",
+    "empty_downloader": "请先添加一个下载器",
+    "empty_online": "当前没有在线的下载器",
+    "empty_torrents": "所有下载器中没有任务",
     "d_speed": "下载速度",
     "u_speed": "上传速度",
     "eta": "剩余时间",
@@ -91,7 +91,7 @@
     "h": "小时",
     "m": "分钟",
     "s": "秒",
-    "alert": "此操作会从下载服务器中删除该任务，但下载完成的文件不会被删除",
+    "alert": "此操作会从下载器中删除该任务，但下载完成的文件不会被删除",
     "state": {
       "error": "错误",
       "missingFiles": "文件丢失",
@@ -121,7 +121,7 @@
     "nav": {
       "general": "常规",
       "rss": "RSS 订阅",
-      "server": "下载服务器",
+      "downloader": "下载器",
       "notification": "通知",
       "user": "用户",
       "logs": "日志",
@@ -139,9 +139,9 @@
         "title": "语言",
         "description": "选择 Nyaatify 的显示语言，此设置仅会保存在浏览器本地"
       },
-      "sv_state": {
-        "title": "服务器状态",
-        "description": "在动画页左上角显示下载服务器的状态，如未添加下载服务器、下载服务器已离线等"
+      "dl_state": {
+        "title": "下载器状态",
+        "description": "在动画页左上角显示下载器的状态，如未添加下载器、下载器已离线等"
       },
       "title_priority": {
         "title": "标题优先级",
@@ -180,31 +180,31 @@
         "model": "模型名称"
       }
     },
-    "sv": {
+    "dl": {
       "add": {
-        "title": "添加新的下载服务器",
-        "description": "添加一个下载服务器来管理您的下载任务",
+        "title": "添加新的下载器",
+        "description": "添加一个下载器来管理您的下载任务",
         "name": "名称",
-        "type": "服务器类型",
+        "type": "下载器类型",
         "type_notice_qb": "注意: qBittorrent 最低兼容版本为 4.1.0",
         "type_notice_tr": "注意: Transmission 最低兼容版本为 1.0",
         "type_notice_ar": "注意: Aria2 最低兼容版本为 1.0",
-        "url": "服务器地址",
+        "url": "下载器地址",
         "username": "用户名",
         "password": "密码"
       },
       "list": {
-        "title": "下载服务器列表",
-        "empty": "请先添加一个下载服务器",
+        "title": "下载器列表",
+        "empty": "请先添加一个下载器",
         "online": "在线",
         "offline": "离线",
-        "alert": "此操作将会永久删除该下载服务器"
+        "alert": "此操作将会永久删除该下载器"
       },
       "default": {
-        "title": "默认下载服务器",
-        "description": "创建下载任务时，Nyaatify 会通过指定的服务器进行下载",
-        "server": "默认下载服务器",
-        "empty": "无下载服务器"
+        "title": "默认下载器",
+        "description": "创建下载任务时，Nyaatify 会通过指定的下载器进行下载",
+        "downloader": "默认下载器",
+        "empty": "无下载器"
       }
     },
     "nt": {

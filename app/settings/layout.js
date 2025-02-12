@@ -15,7 +15,7 @@ export default function SettingsLayout({ children }) {
         <nav className="w-72 pr-8 space-y-2">
           <Nav label={t("st.nav.general")} path="/settings/general" />
           <Nav label={t("st.nav.rss")} path="/settings/rss" />
-          <Nav label={t("st.nav.server")} path="/settings/server" />
+          <Nav label={t("st.nav.downloader")} path="/settings/downloader" />
           <Nav label={t("st.nav.notification")} path="/settings/notification" />
           <Nav label={t("st.nav.user")} path="/settings/user" />
           <Nav label={t("st.nav.logs")} path="/settings/logs" />

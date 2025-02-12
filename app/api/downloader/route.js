@@ -2,23 +2,23 @@ import { getDb } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorrent";
 
-// Get server list with server version, online state and default server
+// Get downloader list with downloader version, online state and default downloader
 // Method: GET
 
 export async function GET() {
   try {
     const db = await getDb();
-    const servers = await db.all("SELECT * FROM server ORDER BY name ASC");
+    const downloaders = await db.all("SELECT * FROM downloader ORDER BY name ASC");
     const config = await db.all("SELECT key, value FROM config").then(rows => 
       rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
     );
 
-    // Get all servers' version and online state
-    const serversWithState = await Promise.all(servers.map(async server => {
-      const version = await getQbittorrentVersion(server.url, server.cookie);
+    // Get all downloaders' version and online state
+    const downloadersWithState = await Promise.all(downloaders.map(async downloader => {
+      const version = await getQbittorrentVersion(downloader.url, downloader.cookie);
       const state = version.success ? "online" : "offline";
       return {
-        ...server,
+        ...downloader,
         version: version.data,
         state
       };
@@ -28,12 +28,12 @@ export async function GET() {
       code: 200,
       message: "success",
       data: {
-        servers: serversWithState,
-        default_server: config.default_server
+        downloaders: downloadersWithState,
+        default_downloader: config.default_downloader
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/server" });
+    logger.error(error.message, { model: "GET /api/downloader" });
     return Response.json({
       code: 500,
       message: error.message,
@@ -42,7 +42,7 @@ export async function GET() {
   }
 }
 
-// Add, delete or test a download server 
+// Add, delete or test a downloader 
 // Method: POST
 // Body: {
 //   action: string, required, type: add, delete, test
@@ -63,8 +63,8 @@ export async function POST(request) {
     if (data.action === "add") {
       // Check if name or URL already exists
       const [existingName, existingUrl] = await Promise.all([
-        db.get("SELECT name FROM server WHERE name = ?", data.data.name.trim()),
-        db.get("SELECT url FROM server WHERE url = ?", data.data.url.trim())
+        db.get("SELECT name FROM downloader WHERE name = ?", data.data.name.trim()),
+        db.get("SELECT url FROM downloader WHERE url = ?", data.data.url.trim())
       ]);
       if (existingName) {
         throw new Error(`Failed to add ${data.data.name} due to it already exists`);
@@ -73,13 +73,13 @@ export async function POST(request) {
         throw new Error(`Failed to add ${data.data.name} due to the URL already exists`);
       }
 
-      // Get download server cookie
+      // Get downloader cookie
       // This will check if the connection is successful
       let cookieResult = null;
       if (data.data.type === "qBittorrent") {
         cookieResult = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
       } else {
-        throw new Error(`Failed to add ${data.data.name} due to the server is not supported`);
+        throw new Error(`Failed to add ${data.data.name} due to the downloader is not supported`);
       }
 
       // Return if connection failed
@@ -89,7 +89,7 @@ export async function POST(request) {
 
       // Insert to database
       await db.run(
-        "INSERT INTO server (name, url, type, username, password, created_at, cookie) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO downloader (name, url, type, username, password, created_at, cookie) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [
           data.data.name.trim(),
           data.data.url.trim(),
@@ -100,23 +100,23 @@ export async function POST(request) {
           cookieResult.data
         ]
       );
-      logger.info(`${data.data.name} added successfully, type: ${data.data.type}, url: ${data.data.url}`, { model: "POST /api/server" });
+      logger.info(`${data.data.name} added successfully, type: ${data.data.type}, url: ${data.data.url}`, { model: "POST /api/downloader" });
 
-      // Update default server only if empty
+      // Update default downloader only if empty
       // Get the current value to determine if update is needed
-      const prevDefaultServer = await db.get("SELECT value FROM config WHERE key = 'default_server'");
+      const prevDefaultDownloader = await db.get("SELECT value FROM config WHERE key = 'default_downloader'");
       await db.run(`
         UPDATE config 
         SET value = CASE 
           WHEN value = "" THEN ? 
           ELSE value 
         END 
-        WHERE key = "default_server"
+        WHERE key = "default_downloader"
       `, [data.data.name]);
 
-      // Log if default server is empty before update
-      if (prevDefaultServer.value === "") {
-        logger.info(`Default server set to ${data.data.name}`, { model: "POST /api/server" });
+      // Log if default downloader is empty before update
+      if (prevDefaultDownloader.value === "") {
+        logger.info(`Default downloader set to ${data.data.name}`, { model: "POST /api/downloader" });
       }
 
       return Response.json({
@@ -132,32 +132,32 @@ export async function POST(request) {
 
       // Use try-catch because we need to monitor the transaction result
       try {
-        // Delete server
-        await db.run("DELETE FROM server WHERE name = ?", [data.data.name]);
+        // Delete downloader
+        await db.run("DELETE FROM downloader WHERE name = ?", [data.data.name]);
 
-        // Get default server of config
+        // Get default downloader of config
         const config = await db.all("SELECT key, value FROM config").then(rows => 
           rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
         );
 
-        // Update default server
-        // If deleted server is default server, update default server to the first server
-        // If no server left, set default server to empty
-        let nextServerName = null;
-        if (data.data.name === config.default_server) {
-          // Find next available server, excluding the one being deleted
-          // If no server left, nextServerName will be null
-          const nextServer = await db.get("SELECT name FROM server WHERE name != ? LIMIT 1", [data.data.name]);
-          nextServerName = nextServer?.name || "";
-          await db.run("UPDATE config SET value = ? WHERE key = 'default_server'", [nextServerName]);
+        // Update default downloader
+        // If deleted downloader is default downloader, update default downloader to the first downloader
+        // If no downloader left, set default downloader to empty
+        let nextDownloaderName = null;
+        if (data.data.name === config.default_downloader) {
+          // Find next available downloader, excluding the one being deleted
+          // If no downloader left, nextDownloaderName will be null
+          const nextDownloader = await db.get("SELECT name FROM downloader WHERE name != ? LIMIT 1", [data.data.name]);
+          nextDownloaderName = nextDownloader?.name || "";
+          await db.run("UPDATE config SET value = ? WHERE key = 'default_downloader'", [nextDownloaderName]);
         }
 
         // Commit transaction
         await db.run("COMMIT");
 
-        logger.info(`${data.data.name} deleted successfully`, { model: "POST /api/server" });
-        if (nextServerName) {
-          logger.info(`Default server changed from ${data.data.name} to ${nextServerName}`, { model: "POST /api/server" });
+        logger.info(`${data.data.name} deleted successfully`, { model: "POST /api/downloader" });
+        if (nextDownloaderName) {
+          logger.info(`Default downloader changed from ${data.data.name} to ${nextDownloaderName}`, { model: "POST /api/downloader" });
         }
         return Response.json({
           code: 200,
@@ -171,12 +171,12 @@ export async function POST(request) {
     }
 
     else if (data.action === "test") {
-      // Get download server cookie
+      // Get downloader cookie
       let cookieResult = null;
       if (data.data.type === "qBittorrent") {
         cookieResult = await getQbittorrentCookie(data.data.url, data.data.username, data.data.password);
       } else {
-        throw new Error(`Failed to test ${data.data.name} due to the server is not supported`);
+        throw new Error(`Failed to test ${data.data.name} due to the downloader is not supported`);
       }
 
       // Return if connection failed
@@ -184,7 +184,7 @@ export async function POST(request) {
         throw new Error(`Failed to test ${data.data.name}, error: ${cookieResult.message}`);
       }
 
-      // Get download server version
+      // Get downloader version
       let versionResult = null;
       if (data.data.type === "qBittorrent") {
         versionResult = await getQbittorrentVersion(data.data.url, cookieResult.data);
@@ -195,7 +195,7 @@ export async function POST(request) {
         throw new Error(`Failed to test ${data.data.name}, error: ${versionResult.message}`);
       }
 
-      logger.info(`${data.data.name} connected successfully, version: ${versionResult.data}`, { model: "POST /api/server" });
+      logger.info(`${data.data.name} connected successfully, version: ${versionResult.data}`, { model: "POST /api/downloader" });
       return Response.json({
         code: 200,
         message: "success",
@@ -209,7 +209,7 @@ export async function POST(request) {
       throw new Error(`Invalid action: ${data.action}`);
     }
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/server" });
+    logger.error(error.message, { model: "POST /api/downloader" });
     return Response.json({
       code: 500,
       message: error.message,

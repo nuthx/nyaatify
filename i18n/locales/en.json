@@ -34,17 +34,17 @@
       "delete": "Delete Failed",
       "fetch_config": "Failed to fetch user config",
       "fetch_rss": "Failed to load RSS subscription",
-      "fetch_server": "Failed to fetch download server list",
+      "fetch_downloader": "Failed to fetch downloader list",
       "fetch_notification": "Failed to fetch notification list",
       "fetch_logs": "Failed to fetch system logs",
       "add_rss": "Failed to add RSS subscription",
-      "add_server": "Failed to add download server",
+      "add_downloader": "Failed to add downloader",
       "add_notification": "Failed to add notification",
       "delete_rss": "Failed to delete RSS subscription",
-      "delete_server": "Failed to delete download server",
+      "delete_downloader": "Failed to delete downloader",
       "delete_notification": "Failed to delete notification",
       "refresh_rss": "Failed to refresh RSS subscription",
-      "test_server": "Failed to connect to download server",
+      "test_downloader": "Failed to connect to downloader",
       "send_notification": "Failed to send notification"
     },
     "start": {
@@ -74,16 +74,16 @@
   "anime": {
     "empty": "Please add a RSS subscription first.",
     "load_fail": "Failed to load list",
-    "no_server": "No Download Server",
-    "server_offline": "Download Server Offline",
+    "no_downloader": "No Downloader",
+    "downloader_offline": "Downloader Offline",
     "today": "Today",
     "week": "Week",
     "total": "Total"
   },
   "download": {
-    "empty_server": "Please add a download server first.",
-    "empty_online": "No online download server now",
-    "empty_torrents": "No torrents found in all download servers",
+    "empty_downloader": "Please add a downloader first.",
+    "empty_online": "No online downloader now",
+    "empty_torrents": "No torrents found in all downloaders",
     "d_speed": "Download Speed",
     "u_speed": "Upload Speed",
     "eta": "ETA",
@@ -91,7 +91,7 @@
     "h": "h",
     "m": "m",
     "s": "s",
-    "alert": "This action will delete the task from the download server, but the downloaded files will not be deleted.",
+    "alert": "This action will delete the task from the downloader, but the downloaded files will not be deleted.",
     "state": {
       "error": "Error",
       "missingFiles": "Missing Files",
@@ -121,7 +121,7 @@
     "nav": {
       "general": "General",
       "rss": "RSS Subscription",
-      "server": "Download Server",
+      "downloader": "Downloader",
       "notification": "Notification",
       "user": "Account",
       "logs": "System Logs",
@@ -139,9 +139,9 @@
         "title": "Language",
         "description": "This is the language of Nyaatify. This setting is saved in your browser."
       },
-      "sv_state": {
-        "title": "Show Download Server State",
-        "description": "Show the state of download server on anime page, such as no download server or download server offline."
+      "dl_state": {
+        "title": "Show Downloader State",
+        "description": "Show the state of downloader on anime page, such as no downloader or downloader offline."
       },
       "title_priority": {
         "title": "Title Priority",
@@ -180,31 +180,31 @@
         "model": "Model"
       }
     },
-    "sv": {
+    "dl": {
       "add": {
-        "title": "Add a New Download Server",
-        "description": "Add a download server to manage your download tasks.",
+        "title": "Add a New Downloader",
+        "description": "Add a downloader to manage your download tasks.",
         "name": "Name",
-        "type": "Server Type",
+        "type": "Downloader Type",
         "type_notice_qb": "Notice: qBittorrent minimum compatible version is 4.1.0",
         "type_notice_tr": "Notice: Transmission minimum compatible version is 1.0",
         "type_notice_ar": "Notice: Aria2 minimum compatible version is 1.0",
-        "url": "Server URL",
+        "url": "Downloader URL",
         "username": "Username",
         "password": "Password"
       },
       "list": {
-        "title": "Download Servers List",
-        "empty": "Please add a download server first.",
+        "title": "Downloaders List",
+        "empty": "Please add a downloader first.",
         "online": "Online",
         "offline": "Offline",
-        "alert": "This action will delete this download server permanently."
+        "alert": "This action will delete this downloader permanently."
       },
       "default": {
-        "title": "Default Download Server",
-        "description": "When creating download tasks, Nyaatify will prioritize downloading through this server.",
-        "server": "Default Download Server",
-        "empty": "No Download Server"
+        "title": "Default Downloader",
+        "description": "When creating download tasks, Nyaatify will prioritize downloading through this downloader.",
+        "downloader": "Default Downloader",
+        "empty": "No Downloader"
       }
     },
     "nt": {

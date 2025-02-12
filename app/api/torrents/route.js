@@ -10,23 +10,23 @@ export async function GET() {
   try {
     const db = await getDb();
 
-    // Check server online status
-    const servers = await db.all("SELECT url, cookie, name FROM server");
-    const serverStatuses = await Promise.all(
-      servers.map(async server => {
-        const version = await getQbittorrentVersion(server.url, server.cookie);
+    // Check downloader online status
+    const downloaders = await db.all("SELECT url, cookie, name FROM downloader");
+    const downloaderStatuses = await Promise.all(
+      downloaders.map(async downloader => {
+        const version = await getQbittorrentVersion(downloader.url, downloader.cookie);
         return {
-          ...server,
+          ...downloader,
           isOnline: version.success
         };
       })
     );
-    const onlineServers = serverStatuses.filter(server => server.isOnline);
+    const onlineDownloaders = downloaderStatuses.filter(downloader => downloader.isOnline);
 
-    // Get torrents from online servers
+    // Get torrents from online downloaders
     const allTorrents = [];
-    await Promise.all(onlineServers.map(async server => {
-      const torrentsResult = await getQbittorrentTorrents(server.url, server.cookie);
+    await Promise.all(onlineDownloaders.map(async downloader => {
+      const torrentsResult = await getQbittorrentTorrents(downloader.url, downloader.cookie);
       torrentsResult.data.forEach(torrent => {
         allTorrents.push({
           name: torrent.name,
@@ -37,14 +37,14 @@ export async function GET() {
           upspeed: formatBytes(torrent.upspeed),
           completed: formatBytes(torrent.completed),
           size: formatBytes(torrent.size),
-          server: server.name,
+          downloader: downloader.name,
           hash: torrent.hash,
           added_on: torrent.added_on
         });
       });
     }));
 
-    // Sort by added_on desc, name, server
+    // Sort by added_on desc, name, downloader
     allTorrents.sort((a, b) => {
       if (a.added_on !== b.added_on) {
         return b.added_on - a.added_on;
@@ -52,7 +52,7 @@ export async function GET() {
       if (a.name !== b.name) {
         return a.name.localeCompare(b.name);
       }
-      return a.server.localeCompare(b.server);
+      return a.downloader.localeCompare(b.downloader);
     });
 
     return Response.json({
@@ -60,8 +60,8 @@ export async function GET() {
       message: "success",
       data: {
         torrents: allTorrents,
-        servers: servers.length,
-        online: onlineServers.length
+        downloaders: downloaders.length,
+        online: onlineDownloaders.length
       }
     });
   } catch (error) {
@@ -78,7 +78,7 @@ export async function GET() {
 // Method: POST
 // Body: {
 //   action: string, required, type: download, pause, resume, delete
-//   server: string, required
+//   downloader: string, required
 //   hash: string, required
 // }
 
@@ -87,14 +87,14 @@ export async function POST(request) {
     const db = await getDb();
     const data = await request.json();
 
-    // Get server info
-    const server = await db.get("SELECT url, cookie FROM server WHERE name = ?", data.server);
-    if (!server) {
-      throw new Error(`Failed to ${data.action} ${data.hash} due to ${data.server} server not found`);
+    // Get downloader info
+    const downloader = await db.get("SELECT url, cookie FROM downloader WHERE name = ?", data.downloader);
+    if (!downloader) {
+      throw new Error(`Failed to ${data.action} ${data.hash} due to ${data.downloader} downloader not found`);
     }
 
     // Manage the torrent
-    const manageResult = await manageQbittorrentTorrent(data.action, server.url, server.cookie, data.hash);
+    const manageResult = await manageQbittorrentTorrent(data.action, downloader.url, downloader.cookie, data.hash);
     if (!manageResult.success) {
       throw new Error(manageResult.message);
     }

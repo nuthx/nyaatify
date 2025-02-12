@@ -15,7 +15,7 @@ export async function GET(request) {
     const offset = (page - 1) * size;
     const db = await getDb();
 
-    let [anime, total, todayCount, weekCount, servers, config] = await Promise.all([
+    let [anime, total, todayCount, weekCount, downloaders, config] = await Promise.all([
       db.all(`
         SELECT a.*, GROUP_CONCAT(r.name) as rss_names
         FROM anime a
@@ -28,24 +28,24 @@ export async function GET(request) {
       db.get("SELECT COUNT(*) as count FROM anime"),
       db.get("SELECT COUNT(*) as count FROM anime WHERE date(pub_date) = date('now')"),
       db.get("SELECT COUNT(*) as count FROM anime WHERE pub_date >= date('now', '-7 days')"),
-      db.all("SELECT name, url, cookie FROM server"),
+      db.all("SELECT name, url, cookie FROM downloader"),
       db.all("SELECT key, value FROM config").then(rows => 
         rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
       )
     ]);
 
-    // Check if default server is online
+    // Check if default downloader is online
     let defaultOnline = "0";
-    if (config.default_server) {
-      const defaultServerInfo = servers.find(server => server.name === config.default_server);
-      const version = await getQbittorrentVersion(defaultServerInfo.url, defaultServerInfo.cookie);
+    if (config.default_downloader) {
+      const defaultDownloaderInfo = downloaders.find(downloader => downloader.name === config.default_downloader);
+      const version = await getQbittorrentVersion(defaultDownloaderInfo.url, defaultDownloaderInfo.cookie);
       defaultOnline = version.success ? "1" : "0";
     }
 
     // Get all torrents to match anime download status
-    const allTorrents = (await Promise.all(servers.map(async server => {
-      const torrentsResult = await getQbittorrentTorrents(server.url, server.cookie);
-      return torrentsResult.data.map(t => ({...t, server_name: server.name}));
+    const allTorrents = (await Promise.all(downloaders.map(async downloader => {
+      const torrentsResult = await getQbittorrentTorrents(downloader.url, downloader.cookie);
+      return torrentsResult.data.map(t => ({...t, downloader_name: downloader.name}));
     }))).flat();
 
     return Response.json({
@@ -56,8 +56,8 @@ export async function GET(request) {
           const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
           return {
             ...item,
-            server: matchingTorrent ? {
-              name: matchingTorrent.server_name,
+            downloader: matchingTorrent ? {
+              name: matchingTorrent.downloader_name,
               state: matchingTorrent.state,
               progress: matchingTorrent.progress,
               completed: formatBytes(matchingTorrent.completed), 
@@ -76,9 +76,9 @@ export async function GET(request) {
           current: page
         },
         config: {
-          default_server: config.default_server,
-          default_server_online: defaultOnline,
-          show_server_state: config.show_server_state,
+          default_downloader: config.default_downloader,
+          default_downloader_online: defaultOnline,
+          show_downloader_state: config.show_downloader_state,
           title_priority: config.title_priority,
           cover_source: config.cover_source
         }

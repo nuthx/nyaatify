@@ -149,11 +149,11 @@ export default function Settings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.gr.sv_state.title")}</CardTitle>
-          <CardDescription>{t("st.gr.sv_state.description")}</CardDescription>
+          <CardTitle>{t("st.gr.dl_state.title")}</CardTitle>
+          <CardDescription>{t("st.gr.dl_state.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={data?.show_server_state || "1"} onValueChange={(value) => handleSaveConfig({ show_server_state: value })}>
+          <Select defaultValue={data?.show_downloader_state || "1"} onValueChange={(value) => handleSaveConfig({ show_downloader_state: value })}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>

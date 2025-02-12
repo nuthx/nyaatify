@@ -61,8 +61,8 @@ export default function Anime() {
     router.push(`/anime${page > 1 ? `?page=${page}` : ""}`);
   };
 
-  const handleManage = async (action, server, hash) => {
-    const result = await handlePost(torrentsApi, JSON.stringify({ action, server, hash }));
+  const handleManage = async (action, downloader, hash) => {
+    const result = await handlePost(torrentsApi, JSON.stringify({ action, downloader, hash }));
     if (result.code === 200) {
       if (action === "download") {
         toast(t(`toast.start.download`));
@@ -110,8 +110,8 @@ export default function Anime() {
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
-          {data.config.show_server_state === "1" && !data.config.default_server && <Badge variant="outline">{t("anime.no_server")}</Badge>}
-          {data.config.show_server_state === "1" && data.config.default_server && data.config.default_server_online === "0" && <Badge variant="destructive">{t("anime.server_offline")}</Badge>}
+          {data.config.show_downloader_state === "1" && !data.config.default_downloader && <Badge variant="outline">{t("anime.no_downloader")}</Badge>}
+          {data.config.show_downloader_state === "1" && data.config.default_downloader && data.config.default_downloader_online === "0" && <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>}
           <a className="text-sm text-muted-foreground">{t("anime.today")}: {data.count.today}</a>
           <a className="text-sm text-muted-foreground">{t("anime.week")}: {data.count.week}</a>
           <a className="text-sm text-muted-foreground">{t("anime.total")}: {data.count.total}</a>
@@ -161,20 +161,20 @@ export default function Anime() {
             </CardContent>
             <CardFooter className="flex items-center justify-between py-4">
               <div className="flex items-center gap-3">
-                {item.server && <Badge>{t(`download.state.${item.server.state}`)}</Badge>}
-                <a className="text-sm text-muted-foreground">{item.server ? `${item.server.completed} / ${item.server.size} (${item.server.progress === 1 ? 100 : (item.server.progress*100).toFixed(1)}%)` : item.size}</a>
+                {item.downloader && <Badge>{t(`download.state.${item.downloader.state}`)}</Badge>}
+                <a className="text-sm text-muted-foreground">{item.downloader ? `${item.downloader.completed} / ${item.downloader.size} (${item.downloader.progress === 1 ? 100 : (item.downloader.progress*100).toFixed(1)}%)` : item.size}</a>
               </div>
               <div className="flex items-center gap-2">
-                {item.server? (
+                {item.downloader? (
                   <>
                     {["uploading", "queuedUP", "stalledUP", "allocating", "downloading", "metaDL",
-                      "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.server.state) && (
-                      <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.server.name, item.hash)}>
+                      "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.downloader.state) && (
+                      <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.downloader.name, item.hash)}>
                         <Pause />{t("glb.pause")}
                       </Button>
                     )}
-                    {["pausedUP", "pausedDL", "stoppedUP", "stoppedDL"].includes(item.server.state) && (
-                      <Button className="font-normal" onClick={() => handleManage("resume", item.server.name, item.hash)}>
+                    {["pausedUP", "pausedDL", "stoppedUP", "stoppedDL"].includes(item.downloader.state) && (
+                      <Button className="font-normal" onClick={() => handleManage("resume", item.downloader.name, item.hash)}>
                         <RefreshCcw />{t("glb.resume")}
                       </Button>
                     )}
@@ -193,7 +193,7 @@ export default function Anime() {
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
-                          <AlertDialogAction onClick={() => handleManage("delete", item.server.name, item.hash)}>
+                          <AlertDialogAction onClick={() => handleManage("delete", item.downloader.name, item.hash)}>
                             {t("glb.delete")}
                           </AlertDialogAction>
                         </AlertDialogFooter>
@@ -201,7 +201,7 @@ export default function Anime() {
                     </AlertDialog>
                   </>
                 ) : (
-                  <Button variant="outline" className="font-normal" onClick={() => handleManage("download", data.config.default_server, item.hash)} disabled={!data.config.default_server || data.config.default_server_online === "0"}>
+                  <Button variant="outline" className="font-normal" onClick={() => handleManage("download", data.config.default_downloader, item.hash)} disabled={!data.config.default_downloader || data.config.default_downloader_online === "0"}>
                     <Download />{t("glb.download")}
                   </Button>
                 )}
