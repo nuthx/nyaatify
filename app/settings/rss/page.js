@@ -127,7 +127,7 @@ export default function RSSSettings() {
   };
 
   const handleDelete = async (name) => {
-    const result = await handleRequest("DELETE", `${rssApi}/${name}`);
+    const result = await handleRequest("DELETE", `${rssApi}/delete`, JSON.stringify({ values: { name } }));
     if (result.success) {
       mutate(rssApi);
     } else {
@@ -138,7 +138,7 @@ export default function RSSSettings() {
   };
 
   const handleRefresh = async (name) => {
-    const result = await handleRequest("POST", `${rssApi}/${name}/refresh`);
+    const result = await handleRequest("POST", `${rssApi}/refresh`, JSON.stringify({ values: { name } }));
     if (result.success) {
       toast(t("toast.start.refresh_rss"));
       mutate(rssApi);

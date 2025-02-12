@@ -2,7 +2,6 @@ import { logger } from "@/lib/logger";
 import { dispatchNotification } from "@/lib/notification";
 
 // Test a notification push
-// Params: name, string, not used
 // Body: {
 //   values: {
 //     name: string, required
@@ -43,7 +42,7 @@ export async function POST(request) {
       throw new Error(notificationResult.message);
     }
 
-    logger.info(`Notification test successfully, name: ${data.values.name}`, { model: "POST /api/notification/name/test" });
+    logger.info(`Notification test successfully, name: ${data.values.name}`, { model: "POST /api/notification/test" });
     return Response.json({
       code: 200,
       message: "success",

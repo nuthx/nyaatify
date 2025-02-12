@@ -177,7 +177,7 @@ export default function NotificationSettings() {
   };
 
   const handleDelete = async (name) => {
-    const result = await handleRequest("DELETE", `${notificationApi}/${name}`);
+    const result = await handleRequest("DELETE", `${notificationApi}/delete`, JSON.stringify({ values: { name } }));
     if (result.success) {
       mutate(notificationApi);
     } else {
@@ -188,7 +188,7 @@ export default function NotificationSettings() {
   };
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${notificationApi}/${values.name}/test`, JSON.stringify({ values }));
+    const result = await handleRequest("POST", `${notificationApi}/test`, JSON.stringify({ values }));
     if (result.success) {
       toast(t("toast.success.send"));
     } else {

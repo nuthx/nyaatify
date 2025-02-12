@@ -2,7 +2,6 @@ import { logger } from "@/lib/logger";
 import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorrent";
 
 // Test a downloader connection
-// Params: name, string, not used
 // Body: {
 //   values: {
 //     name: string, required
@@ -41,7 +40,7 @@ export async function POST(request) {
       throw new Error(versionResult.message);
     }
 
-    logger.info(`Downloader connected successfully, name: ${data.values.name}, version: ${versionResult.data}`, { model: "POST /api/downloader/name/test" });
+    logger.info(`Downloader connected successfully, name: ${data.values.name}, version: ${versionResult.data}`, { model: "POST /api/downloader/test" });
     return Response.json({
       code: 200,
       message: "success",
@@ -50,7 +49,7 @@ export async function POST(request) {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/downloader/name/test" });
+    logger.error(error.message, { model: "POST /api/downloader/test" });
     return Response.json({
       code: 500,
       message: error.message,

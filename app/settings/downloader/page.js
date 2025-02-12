@@ -114,7 +114,7 @@ export default function DownloaderSettings() {
   };
 
   const handleDelete = async (name) => {
-    const result = await handleRequest("DELETE", `${downloadersApi}/${name}`);
+    const result = await handleRequest("DELETE", `${downloadersApi}/delete`, JSON.stringify({ values: { name } }));
     if (result.success) {
       mutate(downloadersApi);
       mutate(configApi);
@@ -126,7 +126,7 @@ export default function DownloaderSettings() {
   };
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${downloadersApi}/${values.name}/test`, JSON.stringify({ values }));
+    const result = await handleRequest("POST", `${downloadersApi}/test`, JSON.stringify({ values }));
     if (result.success) {
       toast.success(t("toast.success.test"), {
         description: `${t("glb.version")}: ${result.data.version}`
