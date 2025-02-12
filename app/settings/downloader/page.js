@@ -105,6 +105,7 @@ export default function DownloaderSettings() {
     if (result.success) {
       downloaderForm.reset();
       mutate(downloadersApi);
+      mutate(configApi);
     } else {
       toast.error(t("toast.failed.add_downloader"), {
         description: result.message,
@@ -116,6 +117,7 @@ export default function DownloaderSettings() {
     const result = await handleRequest("DELETE", `${downloadersApi}/${name}`);
     if (result.success) {
       mutate(downloadersApi);
+      mutate(configApi);
     } else {
       toast.error(t("toast.failed.delete_downloader"), {
         description: result.message,
@@ -270,7 +272,7 @@ export default function DownloaderSettings() {
           <CardDescription>{t("st.dl.default.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={downloaderData?.default_downloader} onValueChange={(value) => handleSaveConfig({ default_downloader: value })} disabled={!downloaderData?.downloaders?.length}>
+          <Select value={configData?.default_downloader} onValueChange={(value) => handleSaveConfig({ default_downloader: value })} disabled={!downloaderData?.downloaders?.length}>
             <SelectTrigger className="w-72">
               <SelectValue placeholder={t("st.dl.default.empty")} />
             </SelectTrigger>

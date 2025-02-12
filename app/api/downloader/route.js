@@ -2,15 +2,12 @@ import { getDb } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorrent";
 
-// Get downloader list with downloader version, online state and default downloader
+// Get downloader list with downloader version and online state
 
 export async function GET() {
   try {
     const db = await getDb();
     const downloaders = await db.all("SELECT * FROM downloader ORDER BY name ASC");
-    const config = await db.all("SELECT key, value FROM config").then(rows => 
-      rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
-    );
 
     // Get all downloaders' version and online state
     const downloadersWithState = await Promise.all(downloaders.map(async downloader => {
@@ -27,8 +24,7 @@ export async function GET() {
       code: 200,
       message: "success",
       data: {
-        downloaders: downloadersWithState,
-        default_downloader: config.default_downloader
+        downloaders: downloadersWithState
       }
     });
   } catch (error) {
