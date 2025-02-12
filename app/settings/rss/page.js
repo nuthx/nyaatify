@@ -52,6 +52,7 @@ export default function RSSSettings() {
         .startsWith("http", { message: t("validate.url_http") })
         .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
       cron: z.string()
+        .min(1, { message: t("validate.required") })
     })),
     defaultValues: {
       name: "",
