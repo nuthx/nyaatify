@@ -2,7 +2,7 @@ import parser from "cron-parser";
 import RSSParser from "rss-parser";
 import { getDb } from "@/lib/db";
 import { logger } from "@/lib/logger";
-import { parseRSS } from "@/lib/parse";
+import { refreshRSS } from "@/lib/parse";
 import { tasks, startTask, stopTask } from "@/lib/schedule";
 
 // Get rss list with next invocation time
@@ -52,7 +52,7 @@ export async function POST(request) {
 
     if (data.action === "add") {
       // Check if name already exists
-      const existingName = await db.get("SELECT name FROM rss WHERE name = ?", data.data.name);
+      const existingName = await db.get("SELECT name FROM rss WHERE name = ?", data.data.name.trim());
       if (existingName) {
         throw new Error(`Failed to add ${data.data.name} due to it already exists`);
       }
@@ -87,7 +87,14 @@ export async function POST(request) {
       // Insert to database
       await db.run(
         "INSERT INTO rss (name, url, cron, type, state, created_at) VALUES (?, ?, ?, ?, ?, ?)",
-        [data.data.name, data.data.url, data.data.cron, rssType, "completed", new Date().toISOString()]
+        [
+          data.data.name.trim(),
+          data.data.url.trim(),
+          data.data.cron.trim(),
+          rssType,
+          "completed",
+          new Date().toISOString()
+        ]
       );
 
       // Log info here because startTask will log another message
@@ -163,7 +170,7 @@ export async function POST(request) {
 
     else if (data.action === "refresh") {
       const rss = await db.get("SELECT * FROM rss WHERE name = ?", [data.data.name]);
-      parseRSS(rss.id, rss.name, rss.url, rss.type);
+      refreshRSS(rss.id, rss.name, rss.url, rss.type);
       logger.info(`Start refreshing ${data.data.name} manually by user`, { model: "POST /api/rss" });
       return Response.json({
         code: 200,

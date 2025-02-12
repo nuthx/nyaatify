@@ -89,7 +89,7 @@ export default function RSSSettings() {
   };
 
   const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
-  const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(rssApi, fetcher, { refreshInterval: 2000 });
+  const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(rssApi, fetcher);
 
   useEffect(() => {
     if (rssError) {
@@ -195,35 +195,35 @@ export default function RSSSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.rss.subscription.title")}</CardTitle>
+          <CardTitle>{t("st.rss.list.title")}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <ListCard
             items={rssData?.rss || []}
-            empty={t("st.rss.subscription.empty")}
+            empty={t("st.rss.list.empty")}
             content={(rss) => (
               <>
                 <p className="text-sm text-muted-foreground">{rss.url}</p>
-                <p className="text-sm text-muted-foreground">{t("st.rss.subscription.cron")}: {rss.cron}</p>
+                <p className="text-sm text-muted-foreground">{t("st.rss.list.cron")}: {rss.cron}</p>
               </>
             )}
             state={(rss) => (
               rss.state === "running" ? (
-                <>{t("st.rss.subscription.running")}</>
+                <>{t("st.rss.list.running")}</>
               ) : (
-                <>{t("st.rss.subscription.next")}: {new Date(rss.next).toLocaleString()}</>
+                <>{t("st.rss.list.next")}: {new Date(rss.next).toLocaleString()}</>
               )
             )}
             menu={(rss) => (
               <>
                 <DropdownMenuItem onClick={() => handleManageRSS("refresh", rss)}>
-                  <RefreshCw />{t("st.rss.subscription.refresh")}
+                  <RefreshCw />{t("st.rss.list.refresh")}
                 </DropdownMenuItem>
               </>
             )}
             onDelete={(rss) => handleManageRSS("delete", rss)}
             deleteable={(rss) => rss.state !== "running"}
-            deleteDescription={t("st.rss.subscription.alert")}
+            deleteDescription={t("st.rss.list.alert")}
           />
         </CardContent>
       </Card>

@@ -23,7 +23,8 @@
   "toast": {
     "success": {
       "save": "保存成功",
-      "test": "测试成功"
+      "test": "测试成功",
+      "send": "通知已发送"
     },
     "failed": {
       "save": "保存失败",
@@ -34,13 +35,17 @@
       "fetch_config": "无法获取用户配置",
       "fetch_rss": "无法获取 RSS 订阅列表",
       "fetch_server": "无法获取下载服务器列表",
+      "fetch_notification": "无法获取通知列表",
       "fetch_logs": "无法获取日志信息",
       "add_rss": "添加 RSS 订阅失败",
       "add_server": "添加下载服务器失败",
+      "add_notification": "添加通知失败",
       "delete_rss": "删除 RSS 订阅失败",
       "delete_server": "删除下载服务器失败",
+      "delete_notification": "删除通知失败",
       "refresh_rss": "刷新 RSS 订阅失败",
-      "test_server": "无法连接到下载服务器"
+      "test_server": "无法连接到下载服务器",
+      "send_notification": "通知发送失败"
     },
     "start": {
       "download": "开始下载",
@@ -48,6 +53,7 @@
     }
   },
   "validate": {
+    "required": "请填写内容",
     "name_2": "名称至少为 2 个字符",
     "name_40": "名称不能超过 40 个字符",
     "username": "请输入用户名",
@@ -154,7 +160,7 @@
         "url": "RSS 地址",
         "cron": "刷新规则 (CRON)"
       },
-      "subscription": {
+      "list": {
         "title": "RSS 订阅列表",
         "empty": "请先添加一个 RSS 订阅",
         "cron": "刷新规则",
@@ -187,7 +193,7 @@
         "username": "用户名",
         "password": "密码"
       },
-      "servers": {
+      "list": {
         "title": "下载服务器列表",
         "empty": "请先添加一个下载服务器",
         "online": "在线",
@@ -199,6 +205,55 @@
         "description": "创建下载任务时，Nyaatify 会通过指定的服务器进行下载",
         "server": "默认下载服务器",
         "empty": "无下载服务器"
+      }
+    },
+    "nt": {
+      "add": {
+        "title": "添加新的通知",
+        "description": "添加一个通知服务，用于在新动画发布时接受消息推送",
+        "name": "名称",
+        "filter": "过滤规则（可选）",
+        "filter_notice": "填写 RSS 订阅名称后，则仅接收来自此订阅的动画发布通知，多个订阅请以英文逗号分隔。留空会接收所有通知",
+        "type": "推送服务",
+        "type_notice": "查看官方文档",
+        "type_bark": "Bark",
+        "type_gotify": "Gotify",
+        "type_serverchan": "Server酱",
+        "url": "推送地址",
+        "token": "Token",
+        "push_title": "推送标题",
+        "push_message": "推送内容",
+        "extra": "额外参数（可选）",
+        "extra_notice": "添加的额外参数将在 POST 请求中一并发送，多个参数使用 & 分隔。",
+        "variable": "支持自定义变量，",
+        "variable_view": "查看详情"
+      },
+      "variable": {
+        "description": "自定义变量需使用双花括号包裹，例如: {{title_jp}} 。注意检查变量拼写，否则会返回空内容",
+        "rss": "动画的 RSS 订阅名称",
+        "title_original": "原始标题",
+        "title_jp": "日文标题",
+        "title_cn": "中文标题",
+        "title_en": "英文标题",
+        "title_romaji": "罗马音标题",
+        "torrent_link": "种子文件下载链接",
+        "torrent_hash": "种子文件哈希值",
+        "torrent_size": "种子文件大小",
+        "cover_anilist": "Anilist 封面链接",
+        "cover_bangumi": "Bangumi 封面链接",
+        "link_anilist": "Anilist 详情页链接",
+        "link_bangumi": "Bangumi 详情页链接"
+      },
+      "list": {
+        "title": "通知列表",
+        "empty": "请先添加一个通知服务",
+        "filter": "过滤规则",
+        "filter_all": "全部",
+        "push_title": "推送标题",
+        "push_message": "推送内容",
+        "extra": "额外参数",
+        "test": "测试通知",
+        "alert": "此操作将会永久删除该通知服务"
       }
     },
     "logs": {

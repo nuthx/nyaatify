@@ -61,9 +61,11 @@ export function ListCard({ items, empty, content, state, menu, onDelete, deletea
         {content(item)}
       </div>
       <div className="flex space-x-2 items-center">
-        <p className="text-sm text-muted-foreground bg-secondary px-3 py-2 rounded-md whitespace-nowrap">
-          {state(item)}
-        </p>
+        {state && (
+          <p className="text-sm text-muted-foreground bg-secondary px-3 py-2 rounded-md whitespace-nowrap">
+            {state(item)}
+          </p>
+        )}
         <AlertDialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

@@ -36,7 +36,7 @@ import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 
 export default function ServerSettings() {
-  const serversApi = "/api/servers";
+  const serversApi = "/api/server";
   const configApi = "/api/config";
 
   const { t } = useTranslation();
@@ -217,12 +217,12 @@ export default function ServerSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.sv.servers.title")}</CardTitle>
+          <CardTitle>{t("st.sv.list.title")}</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <ListCard
             items={serverData?.servers || []}
-            empty={t("st.sv.servers.empty")}
+            empty={t("st.sv.list.empty")}
             content={(server) => (
               <>
                 <p className="text-sm text-muted-foreground">{server.url}</p>
@@ -231,7 +231,7 @@ export default function ServerSettings() {
             )}
             state={(server) => (
               <>
-                {server.state === "online" ? t("st.sv.servers.online") : t("st.sv.servers.offline")}
+                {server.state === "online" ? t("st.sv.list.online") : t("st.sv.list.offline")}
               </>
             )}
             menu={(server) => (
@@ -239,7 +239,7 @@ export default function ServerSettings() {
             )}
             onDelete={(server) => handleManageServer("delete", server)}
             deleteable={() => true}
-            deleteDescription={t("st.sv.servers.alert")}
+            deleteDescription={t("st.sv.list.alert")}
           />
         </CardContent>
       </Card>
