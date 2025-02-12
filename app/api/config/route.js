@@ -56,21 +56,29 @@ export async function PATCH(request) {
       }
     }
 
-    // Update config with transaction
+    // Start transaction
     await db.run("BEGIN TRANSACTION");
-    for (const [key, value] of Object.entries(data)) {
-      await db.run("UPDATE config SET value = ? WHERE key = ?", [value, key]);
-    }
-    await db.run("COMMIT");
 
-    logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "POST /api/config" });
-    return Response.json({
-      code: 200,
-      message: "success",
-      data: null
-    });
+    // Use try-catch because we need to monitor the transaction result
+    try {
+      for (const [key, value] of Object.entries(data)) {
+        await db.run("UPDATE config SET value = ? WHERE key = ?", [value, key]);
+      }
+      
+      // Commit transaction
+      await db.run("COMMIT");
+
+      logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "POST /api/config" });
+      return Response.json({
+        code: 200,
+        message: "success",
+        data: null
+      });
+    } catch (error) {
+      await db.run("ROLLBACK");
+      throw error;
+    }
   } catch (error) {
-    await db.run("ROLLBACK");
     logger.error(error.message, { model: "POST /api/config" });
     return Response.json({
       code: 500,
