@@ -101,18 +101,18 @@ export default function RSSSettings() {
   }, [rssError]);
 
   useEffect(() => {
-    if (configError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: configError.message,
-      });
-    }
     if (configData) {
       aiForm.setValue("ai_priority", configData?.ai_priority);
       aiForm.setValue("ai_api", configData?.ai_api);
       aiForm.setValue("ai_key", configData?.ai_key);
       aiForm.setValue("ai_model", configData?.ai_model);
     }
-  }, [configError, configData]);
+    if (configError) {
+      toast.error(t("toast.failed.fetch_config"), {
+        description: configError.message,
+      });
+    }
+  }, [configData, configError]);
 
   const handleAdd = async (values) => {
     const result = await handleRequest("POST", rssApi, JSON.stringify({ values }));
