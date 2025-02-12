@@ -3,8 +3,7 @@ import { readFile, readdir } from "fs/promises";
 import { logger } from "@/lib/logger";
 
 // Get system logs
-// Method: GET
-// Params: date, string, optional, default: today
+// Params: date, string, optional, default: today, format: 2025-01-01
 
 export async function GET(request) {
   try {

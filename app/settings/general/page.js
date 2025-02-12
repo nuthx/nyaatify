@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next";
-import { handlePost } from "@/lib/handlers";
+import { handleRequest } from "@/lib/handlers";
 import {
   DndContext, 
   closestCenter,
@@ -77,8 +77,8 @@ export default function Settings() {
   }, [data, error, t]);
 
   const handleSaveConfig = async (values) => {
-    const result = await handlePost(configApi, JSON.stringify(values));
-    if (result.code === 200) {
+    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
+    if (result.success) {
       toast(t("toast.success.save"));
       mutate(configApi);
     } else {

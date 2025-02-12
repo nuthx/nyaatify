@@ -2,6 +2,7 @@ import { logger } from "@/lib/logger";
 import { dispatchNotification } from "@/lib/notification";
 
 // Test a notification push
+// Params: name, string, required
 // Body: {
 //   values: {
 //     type: string, required

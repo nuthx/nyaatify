@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { handlePost } from "@/lib/handlers";
+import { handlePost, handleRequest } from "@/lib/handlers";
 import {
   Card,
   CardContent,
@@ -118,8 +118,8 @@ export default function DownloaderSettings() {
   };
 
   const handleSaveConfig = async (values) => {
-    const result = await handlePost(configApi, JSON.stringify(values));
-    if (result.code === 200) {
+    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
+    if (result.success) {
       toast(t("toast.success.save"));
       mutate(configApi);
     } else {

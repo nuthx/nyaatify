@@ -4,7 +4,6 @@ import { formatBytes } from "@/lib/bytes";
 import { getQbittorrentVersion, getQbittorrentTorrents } from "@/lib/api/qbittorrent";
 
 // Get anime list with pagination
-// Method: GET
 // Params: page, number, optional, default: 1
 //         size, number, optional, default: 20
 

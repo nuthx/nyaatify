@@ -2,8 +2,7 @@ import { getDb } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { testOpenAI } from "@/lib/api/openai";
 
-// Get all nyaatify config
-// Method: GET
+// Get all config
 
 export async function GET() {
   try {
@@ -29,7 +28,6 @@ export async function GET() {
 }
 
 // Edit one or more config
-// Method: POST
 // Body: {
 //   config_key: config_value,
 //   config_key: config_value,
@@ -37,7 +35,7 @@ export async function GET() {
 //   ...
 // }
 
-export async function POST(request) {
+export async function PATCH(request) {
   try {
     const db = await getDb();
     const data = await request.json();
