@@ -37,14 +37,13 @@ export async function GET(request) {
       }
     }
 
-    // Check if logContent exists and is not empty
-    // Use logContent.trim() to make sure log file is not empty
-    if (logContent && logContent.trim()) {
+    // Check if log file exists
+    if (foundDate) {
       return Response.json({
         code: 200,
         message: "success",
         data: {
-          logs: logContent.trim().split("\n").map(line => JSON.parse(line)).reverse(),
+          logs: logContent ? logContent.trim().split("\n").map(line => JSON.parse(line)).reverse() : [],
           days: availableDays,
           date: foundDate
         }

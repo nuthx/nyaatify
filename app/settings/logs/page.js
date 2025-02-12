@@ -105,9 +105,9 @@ export default function Logs() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t("st.logs.all")}</SelectItem>
-                <SelectItem value="error">{t("st.logs.error")}</SelectItem>
-                <SelectItem value="warn">{t("st.logs.warn")}</SelectItem>
                 <SelectItem value="info">{t("st.logs.info")}</SelectItem>
+                <SelectItem value="warn">{t("st.logs.warn")}</SelectItem>
+                <SelectItem value="error">{t("st.logs.error")}</SelectItem>                
               </SelectContent>
             </Select>
           </div>
@@ -122,18 +122,26 @@ export default function Logs() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedLogs.map((log, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <Badge variant={log.level === "error" ? "destructive" : log.level === "warn" ? "warning" : "outline"}>
-                      {log.level.charAt(0).toUpperCase() + log.level.slice(1)}
-                    </Badge>
+              {paginatedLogs.length === 0 ? (
+                <TableRow className="hover:bg-transparent">
+                  <TableCell colSpan={4} className="text-center h-28 text-muted-foreground">
+                    {t("st.logs.no_logs")}
                   </TableCell>
-                  <TableCell>{new Date(log.timestamp).toLocaleString()}</TableCell>
-                  <TableCell>{log.model}</TableCell>
-                  <TableCell>{log.message}</TableCell>
                 </TableRow>
-              ))}
+              ) : (
+                paginatedLogs.map((log, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Badge variant={log.level === "error" ? "destructive" : log.level === "warn" ? "warning" : "outline"}>
+                        {log.level.charAt(0).toUpperCase() + log.level.slice(1)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{new Date(log.timestamp).toLocaleString()}</TableCell>
+                    <TableCell>{log.model}</TableCell>
+                    <TableCell>{log.message}</TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
           
