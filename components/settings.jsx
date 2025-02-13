@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { usePathname, useRouter } from "next/navigation";
 import { useSortable } from "@dnd-kit/sortable";
@@ -13,7 +14,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   DropdownMenu,
@@ -23,8 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Ellipsis, Trash2 } from "lucide-react";
-import { GripVertical } from "lucide-react";
+import { Ellipsis, Trash2, GripVertical } from "lucide-react";
 
 export function Nav({ label, path }) {
   const router = useRouter();
@@ -40,8 +39,9 @@ export function Nav({ label, path }) {
   );
 }
 
-export function ListCard({ items, empty, content, state, menu, onDelete, deleteable, deleteDescription }) {
+export function ListCard({ items, empty, content, state, menu, deleteable, deleteDesc, onDelete }) {
   const { t } = useTranslation();
+  const [openAlert, setopenAlert] = useState(false);
 
   if (items.length === 0) {
     return (
@@ -61,27 +61,27 @@ export function ListCard({ items, empty, content, state, menu, onDelete, deletea
         {content(item)}
       </div>
       <div className="flex space-x-2 items-center">
-        {state && (
-          <p className="text-sm text-muted-foreground bg-secondary px-3 py-2 rounded-md whitespace-nowrap">
-            {state(item)}
-          </p>
-        )}
-        <AlertDialog>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon"><Ellipsis /></Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {menu(item)}
-              <AlertDialogTrigger asChild>
-                <DropdownMenuItem className="text-destructive" disabled={!deleteable(item)}><Trash2 />{t("glb.delete")}</DropdownMenuItem>
-              </AlertDialogTrigger>
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <p className="text-sm text-muted-foreground bg-secondary px-3 py-2 rounded-md whitespace-nowrap">
+          {state(item)}
+        </p>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon"><Ellipsis /></Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {menu(item)}
+            <DropdownMenuItem className="text-destructive" disabled={!deleteable(item)} onClick={() => setopenAlert(true)}>
+              <Trash2 />{t("glb.delete")}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <AlertDialog open={openAlert} onOpenChange={setopenAlert}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
-              <AlertDialogDescription>{deleteDescription}</AlertDialogDescription>
+              <AlertDialogDescription>{deleteDesc}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>

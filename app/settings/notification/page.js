@@ -38,7 +38,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 import { BellDot, BellMinus, BellRing } from "lucide-react";
@@ -368,16 +368,14 @@ export default function NotificationSettings() {
                   {notification.state === 1 ? <BellMinus /> : <BellDot />}
                   {notification.state === 1 ? t("glb.disabled") : t("glb.enabled")}
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => handleTest(notification)}>
                   <BellRing />{t("st.nt.list.test")}
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
               </>
             )}
-            onDelete={(notification) => handleDelete(notification.id)}
             deleteable={() => true}
-            deleteDescription={t("st.nt.list.alert")}
+            deleteDesc={t("st.nt.list.alert")}
+            onDelete={(notification) => handleDelete(notification.id)}
           />
         </CardContent>
       </Card>

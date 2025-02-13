@@ -58,7 +58,7 @@ export async function PATCH(request, { params }) {
 
     // Extract valid values
     const validValues = {};
-    const fields = ["state", "name", "url"];
+    const fields = ["state"];
     fields.forEach(field => {
       if (data.values[field] !== undefined) validValues[field] = data.values[field];
     });

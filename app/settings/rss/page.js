@@ -239,9 +239,9 @@ export default function RSSSettings() {
                 </DropdownMenuItem>
               </>
             )}
-            onDelete={(rss) => handleDelete(rss.name)}
             deleteable={(rss) => rss.state !== "running"}
-            deleteDescription={t("st.rss.list.alert")}
+            deleteDesc={t("st.rss.list.alert")}
+            onDelete={(rss) => handleDelete(rss.name)}
           />
         </CardContent>
       </Card>

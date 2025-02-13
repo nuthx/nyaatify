@@ -259,9 +259,9 @@ export default function DownloaderSettings() {
             menu={(downloader) => (
               <></>
             )}
-            onDelete={(downloader) => handleDelete(downloader.name)}
             deleteable={() => true}
-            deleteDescription={t("st.dl.list.alert")}
+            deleteDesc={t("st.dl.list.alert")}
+            onDelete={(downloader) => handleDelete(downloader.name)}
           />
         </CardContent>
       </Card>
