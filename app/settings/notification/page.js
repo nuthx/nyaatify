@@ -38,10 +38,10 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
-import { BellRing } from "lucide-react";
+import { BellRing, Pause, RefreshCcw } from "lucide-react";
 
 function VariableItem({ name, description }) {
   return (
@@ -176,12 +176,23 @@ export default function NotificationSettings() {
     }
   };
 
-  const handleDelete = async (name) => {
-    const result = await handleRequest("DELETE", `${notificationApi}/delete`, JSON.stringify({ values: { name } }));
+  const handleDelete = async (id) => {
+    const result = await handleRequest("DELETE", `${notificationApi}/${id}`);
     if (result.success) {
       mutate(notificationApi);
     } else {
       toast.error(t("toast.failed.delete_notification"), {
+        description: result.message,
+      });
+    }
+  };
+
+  const handleEdit = async (id, values) => {
+    const result = await handleRequest("PATCH", `${notificationApi}/${id}`, JSON.stringify({ values }));
+    if (result.success) {
+      mutate(notificationApi);
+    } else {
+      toast.error(t("toast.failed.edit_notification"), {
         description: result.message,
       });
     }
@@ -348,17 +359,29 @@ export default function NotificationSettings() {
             )}
             state={(notification) => (
               <>
-                {notification.state === 1 ? t("st.nt.list.enabled") : t("st.nt.list.disabled")}
+                {notification.state === 1 ? t("glb.enabled") : t("glb.disabled")}
               </>
             )}
             menu={(notification) => (
               <>
+                {notification.state === 0 && (
+                  <DropdownMenuItem onClick={() => handleEdit(notification.id, { state: 1 })}>
+                    <RefreshCcw />{t("glb.resume")}
+                  </DropdownMenuItem>
+                )}
+                {notification.state === 1 && (
+                  <DropdownMenuItem onClick={() => handleEdit(notification.id, { state: 0 })}>
+                    <Pause />{t("glb.pause")}
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => handleTest(notification)}>
                   <BellRing />{t("st.nt.list.test")}
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
               </>
             )}
-            onDelete={(notification) => handleDelete(notification.name)}
+            onDelete={(notification) => handleDelete(notification.id)}
             deleteable={() => true}
             deleteDescription={t("st.nt.list.alert")}
           />

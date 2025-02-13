@@ -6,12 +6,15 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "confirm_delete": "Confirm Deletion",
+    "edit": "Edit",
     "add": "Add",
     "save": "Save",
     "reset": "Reset",
     "test": "Test",
     "show": "Show",
     "hide": "Hide",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
     "version": "Version"
   },
   "lang": {
@@ -43,6 +46,7 @@
       "delete_rss": "Failed to delete RSS subscription",
       "delete_downloader": "Failed to delete downloader",
       "delete_notification": "Failed to delete notification",
+      "edit_notification": "Failed to edit notification",
       "refresh_rss": "Failed to refresh RSS subscription",
       "test_downloader": "Failed to connect to downloader",
       "send_notification": "Failed to send notification"
@@ -252,9 +256,7 @@
         "push_title": "Push Title",
         "push_message": "Push Message",
         "extra": "Extra Parameters",
-        "enabled": "Enabled",
-        "disabled": "Disabled",
-        "test": "Test Notification",
+        "test": "Test notification",
         "alert": "This action will delete this notification service permanently."
       }
     },
