@@ -56,10 +56,17 @@ export async function PATCH(request, { params }) {
       throw new Error(`Notification not found, id: ${id}`);
     }
 
+    // Extract valid values
+    const validValues = {};
+    const fields = ["state", "name", "url"];
+    fields.forEach(field => {
+      if (data.values[field] !== undefined) validValues[field] = data.values[field];
+    });
+
     // Use try-catch because we need to monitor the transaction result
     await db.run("BEGIN TRANSACTION");
     try {
-      for (const [key, value] of Object.entries(data.values)) {
+      for (const [key, value] of Object.entries(validValues)) {
         await db.run(`UPDATE notification SET ${key} = ? WHERE id = ?`, [value, id]);
       }
       await db.run("COMMIT");
