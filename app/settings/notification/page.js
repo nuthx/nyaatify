@@ -41,7 +41,7 @@ import { Badge } from "@/components/ui/badge";
 import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
-import { BellRing, Pause, RefreshCcw } from "lucide-react";
+import { BellDot, BellMinus, BellRing } from "lucide-react";
 
 function VariableItem({ name, description }) {
   return (
@@ -364,16 +364,10 @@ export default function NotificationSettings() {
             )}
             menu={(notification) => (
               <>
-                {notification.state === 0 && (
-                  <DropdownMenuItem onClick={() => handleEdit(notification.id, { state: 1 })}>
-                    <RefreshCcw />{t("glb.resume")}
-                  </DropdownMenuItem>
-                )}
-                {notification.state === 1 && (
-                  <DropdownMenuItem onClick={() => handleEdit(notification.id, { state: 0 })}>
-                    <Pause />{t("glb.pause")}
-                  </DropdownMenuItem>
-                )}
+                <DropdownMenuItem onClick={() => handleEdit(notification.id, { state: notification.state === 1 ? 0 : 1 })}>
+                  {notification.state === 1 ? <BellMinus /> : <BellDot />}
+                  {notification.state === 1 ? t("glb.disabled") : t("glb.enabled")}
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => handleTest(notification)}>
                   <BellRing />{t("st.nt.list.test")}
