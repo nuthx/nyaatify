@@ -168,7 +168,7 @@ export default function DownloaderSettings() {
                 <FormItem>
                   <FormLabel>{t("st.dl.add.name")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="Downloader" required {...field} />
+                    <Input className="w-72" placeholder="Downloader" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -202,7 +202,7 @@ export default function DownloaderSettings() {
                 <FormItem>
                   <FormLabel>{t("st.dl.add.url")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full" placeholder={urlPlaceholders[selectedType]} required {...field} />
+                    <Input className="w-full" placeholder={urlPlaceholders[selectedType]} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

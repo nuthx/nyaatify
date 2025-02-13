@@ -179,7 +179,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.rss.add.name")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="Subscription" required {...field} />
+                    <Input className="w-72" placeholder="Subscription" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -189,7 +189,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.rss.add.url")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full" placeholder="https://nyaa.si/?page=rss" required {...field} />
+                    <Input className="w-full" placeholder="https://nyaa.si/?page=rss" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -199,7 +199,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.rss.add.cron")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="0 */10 * * * *" required {...field} />
+                    <Input className="w-72" placeholder="0 */10 * * * *" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -278,7 +278,7 @@ export default function RSSSettings() {
                     <FormItem>
                       <FormLabel>{t("st.rss.ai.api")}</FormLabel>
                       <FormControl>
-                        <Input className="w-full" placeholder="https://api.openai.com/v1" required {...field} />
+                        <Input className="w-full" placeholder="https://api.openai.com/v1" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -288,7 +288,7 @@ export default function RSSSettings() {
                     <FormItem>
                       <FormLabel>{t("st.rss.ai.key")}</FormLabel>
                       <FormControl>
-                        <Input className="w-full" placeholder="sk-1234567890" required {...field} />
+                        <Input className="w-full" placeholder="sk-1234567890" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -298,7 +298,7 @@ export default function RSSSettings() {
                     <FormItem>
                       <FormLabel>{t("st.rss.ai.model")}</FormLabel>
                       <FormControl>
-                        <Input className="w-72" placeholder="gpt-4" required {...field} />
+                        <Input className="w-72" placeholder="gpt-4" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -227,7 +227,7 @@ export default function NotificationSettings() {
                 <FormItem>
                   <FormLabel>{t("st.nt.add.name")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="Notification" required {...field} />
+                    <Input className="w-72" placeholder="Notification" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -237,7 +237,7 @@ export default function NotificationSettings() {
                 <FormItem>
                   <FormLabel>{t("st.nt.add.filter")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="name1, name2" required {...field} />
+                    <Input className="w-72" placeholder="name1, name2" {...field} />
                   </FormControl>
                   <FormMessage />
                   <FormDescription>{t("st.nt.add.filter_notice")}</FormDescription>
@@ -272,7 +272,7 @@ export default function NotificationSettings() {
                 <FormItem>
                   <FormLabel>{t("st.nt.add.url")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full" placeholder={urlPlaceholders[selectedType]} required {...field} />
+                    <Input className="w-full" placeholder={urlPlaceholders[selectedType]} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -282,7 +282,7 @@ export default function NotificationSettings() {
                 <FormItem>
                   <FormLabel>{t("st.nt.add.token")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full" placeholder="Token" required {...field} />
+                    <Input className="w-full" placeholder="Token" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -292,7 +292,7 @@ export default function NotificationSettings() {
                 <FormItem>
                   <FormLabel>{t("st.nt.add.push_title")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full" placeholder="Title" required {...field} />
+                    <Input className="w-full" placeholder="Title" {...field} />
                   </FormControl>
                   <FormMessage />
                   <FormDescription>
@@ -306,7 +306,7 @@ export default function NotificationSettings() {
                 <FormItem>
                   <FormLabel>{t("st.nt.add.push_message")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full" placeholder="Message" required {...field} />
+                    <Input className="w-full" placeholder="Message" {...field} />
                   </FormControl>
                   <FormMessage />
                   <FormDescription>
@@ -320,7 +320,7 @@ export default function NotificationSettings() {
                 <FormItem>
                   <FormLabel>{t("st.nt.add.extra")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full" placeholder="icon=https://example.com/icon.png&sound=default" required {...field} />
+                    <Input className="w-full" placeholder="icon=https://example.com/icon.png&sound=default" {...field} />
                   </FormControl>
                   <FormMessage />
                   <FormDescription>
