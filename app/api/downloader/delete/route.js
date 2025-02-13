@@ -13,10 +13,8 @@ export async function DELETE(request) {
     const db = await getDb();
     const data = await request.json();
 
-    // Start transaction
-    await db.run("BEGIN TRANSACTION");
-
     // Use try-catch because we need to monitor the transaction result
+    await db.run("BEGIN TRANSACTION");
     try {
       // Delete downloader
       await db.run("DELETE FROM downloader WHERE name = ?", [data.values.name]);
@@ -45,17 +43,17 @@ export async function DELETE(request) {
       if (nextDownloaderName) {
         logger.info(`Default downloader changed from ${data.values.name} to ${nextDownloaderName}`, { model: "DELETE /api/downloader/delete" });
       }
-
-      logger.info(`Downloader deleted successfully, name: ${data.values.name}`, { model: "DELETE /api/downloader/delete" });
-      return Response.json({
-        code: 200,
-        message: "success",
-        data: null
-      });
     } catch (error) {
       await db.run("ROLLBACK");
       throw error;
     }
+
+    logger.info(`Downloader deleted successfully, name: ${data.values.name}`, { model: "DELETE /api/downloader/delete" });
+    return Response.json({
+      code: 200,
+      message: "success",
+      data: null
+    });
   } catch (error) {
     logger.error(error.message, { model: "DELETE /api/downloader/delete" });
     return Response.json({

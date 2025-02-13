@@ -23,10 +23,8 @@ export async function DELETE(request) {
     // Stop RSS task
     await stopTask(data.values.name);
 
-    // Start transaction
-    await db.run("BEGIN TRANSACTION");
-
     // Use try-catch because we need to monitor the transaction result
+    await db.run("BEGIN TRANSACTION");
     try {
       // Find and delete isolated anime records
       await db.run(`
@@ -49,19 +47,18 @@ export async function DELETE(request) {
         db.run("DELETE FROM rss_anime WHERE rss_id = ?", [rss.id])
       ]);
 
-      // Commit transaction
       await db.run("COMMIT");
-
-      logger.info(`RSS subscription deleted successfully, name: ${data.values.name}`, { model: "DELETE /api/rss/delete" });
-      return Response.json({
-        code: 200,
-        message: "success",
-        data: null
-      });
     } catch (error) {
       await db.run("ROLLBACK");
       throw error;
     }
+
+    logger.info(`RSS subscription deleted successfully, name: ${data.values.name}`, { model: "DELETE /api/rss/delete" });
+    return Response.json({
+      code: 200,
+      message: "success",
+      data: null
+    });
   } catch (error) {
     logger.error(error.message, { model: "DELETE /api/rss/delete" });
     return Response.json({

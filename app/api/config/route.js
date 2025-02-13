@@ -40,12 +40,12 @@ export async function PATCH(request) {
     const db = await getDb();
     const data = await request.json();
 
-    // Check if config key correct
+    // Check if key name valid
     const existingKeys = await db.all("SELECT key FROM config");
     const validKeysSet = new Set(existingKeys.map(row => row.key));
     const invalidKeys = Object.keys(data).filter(key => !validKeysSet.has(key));
     if (invalidKeys.length > 0) {
-      throw new Error(`Failed to save config due to incorrect name: ${invalidKeys.join(", ")}`);
+      throw new Error(`Invalid key: ${invalidKeys.join(", ")}`);
     }
 
     // If save ai config, use a testing title to check if ai config valid
@@ -56,28 +56,24 @@ export async function PATCH(request) {
       }
     }
 
-    // Start transaction
-    await db.run("BEGIN TRANSACTION");
-
     // Use try-catch because we need to monitor the transaction result
+    await db.run("BEGIN TRANSACTION");
     try {
       for (const [key, value] of Object.entries(data)) {
         await db.run("UPDATE config SET value = ? WHERE key = ?", [value, key]);
       }
-      
-      // Commit transaction
       await db.run("COMMIT");
-
-      logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "POST /api/config" });
-      return Response.json({
-        code: 200,
-        message: "success",
-        data: null
-      });
     } catch (error) {
       await db.run("ROLLBACK");
       throw error;
     }
+
+    logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "POST /api/config" });
+    return Response.json({
+      code: 200,
+      message: "success",
+      data: null
+    });
   } catch (error) {
     logger.error(error.message, { model: "POST /api/config" });
     return Response.json({
