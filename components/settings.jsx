@@ -41,7 +41,7 @@ export function Nav({ label, path }) {
 
 export function ListCard({ items, empty, content, state, menu, deleteable, deleteDesc, onDelete }) {
   const { t } = useTranslation();
-  const [openAlert, setopenAlert] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   if (items.length === 0) {
     return (
@@ -71,21 +71,25 @@ export function ListCard({ items, empty, content, state, menu, deleteable, delet
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {menu(item)}
-            <DropdownMenuItem className="text-destructive" disabled={!deleteable(item)} onClick={() => setopenAlert(true)}>
+            <DropdownMenuItem className="text-destructive" disabled={!deleteable(item)} onClick={() => setItemToDelete(item)}>
               <Trash2 />{t("glb.delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <AlertDialog open={openAlert} onOpenChange={setopenAlert}>
+        <AlertDialog open={itemToDelete?.id === item.id} onOpenChange={(open) => !open && setItemToDelete(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
+              <AlertDialogTitle>{t("glb.confirm_delete")} {item.name}</AlertDialogTitle>
               <AlertDialogDescription>{deleteDesc}</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
-              <AlertDialogAction onClick={() => onDelete(item)}>{t("glb.delete")}</AlertDialogAction>
+              <AlertDialogCancel>
+                {t("glb.cancel")}
+              </AlertDialogCancel>
+              <AlertDialogAction onClick={() => { onDelete(item); setItemToDelete(null); }}>
+                {t("glb.delete")}
+              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
