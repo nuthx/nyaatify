@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { getDb, getConfig } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { testOpenAI } from "@/lib/api/openai";
 
@@ -6,11 +6,7 @@ import { testOpenAI } from "@/lib/api/openai";
 
 export async function GET() {
   try {
-    const db = await getDb();
-
-    const config = await db.all("SELECT key, value FROM config").then(rows => 
-      rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
-    );
+    const config = await getConfig();
 
     return Response.json({
       code: 200,
