@@ -86,14 +86,15 @@ export async function POST(request) {
 
     // Insert to database
     await db.run(
-      "INSERT INTO rss (name, url, cron, type, state, created_at) VALUES (?, ?, ?, ?, ?, ?)",
+      "INSERT INTO rss (name, url, cron, type, state, created_at, refresh_count) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
         data.values.name.trim(),
         data.values.url.trim(),
         data.values.cron.trim(),
         rssType,
         "completed",
-        new Date().toISOString()
+        new Date().toISOString(),
+        0
       ]
     );
 
