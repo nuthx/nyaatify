@@ -21,7 +21,7 @@ export async function POST(request) {
     // Generate demo variable
     const demo_variable = {
       rss: "Demo Subscription",
-      title_original: "[Moozzi2] Gimai Seikatsu [ 義妹生活 ] (BD 1920x1080 x265-10Bit Flac) - TV + SP + 4K",
+      title_publish: "[Moozzi2] Gimai Seikatsu [ 義妹生活 ] (BD 1920x1080 x265-10Bit Flac) - TV + SP + 4K",
       title_jp: "義妹生活",
       title_cn: "义妹生活",
       title_en: "Days with My Stepsister",

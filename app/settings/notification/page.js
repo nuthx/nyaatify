@@ -64,7 +64,7 @@ function VariablePopover() {
         <div className="space-y-2">
           <p className="text-sm mb-3">{t("st.nt.variable.description")}</p>
           <VariableItem name="rss" description={t("st.nt.variable.rss")} />
-          <VariableItem name="title_original" description={t("st.nt.variable.title_original")} />
+          <VariableItem name="title_publish" description={t("st.nt.variable.title_publish")} />
           <VariableItem name="title_jp" description={t("st.nt.variable.title_jp")} />
           <VariableItem name="title_cn" description={t("st.nt.variable.title_cn")} />
           <VariableItem name="title_en" description={t("st.nt.variable.title_en")} />

@@ -235,7 +235,7 @@
       "variable": {
         "description": "自定义变量需使用双花括号包裹，例如: {{title_jp}} 。注意检查变量拼写，否则会返回空内容",
         "rss": "动画的 RSS 订阅名称",
-        "title_original": "原始标题",
+        "title_publish": "发布的原始标题",
         "title_jp": "日文标题",
         "title_cn": "中文标题",
         "title_en": "英文标题",

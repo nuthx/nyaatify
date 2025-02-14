@@ -235,7 +235,7 @@
       "variable": {
         "description": "Custom variables must be wrapped in double curly braces like {{title_jp}}. Please check the spelling carefully, otherwise empty content will be returned.",
         "rss": "RSS subscription name of this anime",
-        "title_original": "Original title",
+        "title_publish": "Published original title",
         "title_jp": "Japanese title",
         "title_cn": "Chinese title",
         "title_en": "English title",
