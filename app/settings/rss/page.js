@@ -234,12 +234,12 @@ export default function RSSSettings() {
             )}
             menu={(rss) => (
               <>
-                <DropdownMenuItem onClick={() => handleRefresh(rss.name)} disabled={rss.state === "running"}>
+                <DropdownMenuItem onClick={() => handleRefresh(rss.name)}>
                   <RefreshCw />{t("st.rss.list.refresh")}
                 </DropdownMenuItem>
               </>
             )}
-            deleteable={(rss) => rss.state === "running"}
+            deleteable={(rss) => rss.state !== "running"}
             deleteDesc={t("st.rss.list.alert")}
             onDelete={(rss) => handleDelete(rss.id)}
           />
