@@ -71,7 +71,7 @@ export function ListCard({ items, empty, content, state, menu, deleteable, delet
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {menu(item)}
-            <DropdownMenuItem className="text-destructive" disabled={!deleteable(item)} onClick={() => setopenAlert(true)}>
+            <DropdownMenuItem className="text-destructive" disabled={deleteable(item)} onClick={() => setopenAlert(true)}>
               <Trash2 />{t("glb.delete")}
             </DropdownMenuItem>
           </DropdownMenuContent>
