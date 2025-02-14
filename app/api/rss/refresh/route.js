@@ -1,4 +1,3 @@
-import { getDb } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { refreshRSS } from "@/lib/parse";
 
@@ -11,12 +10,10 @@ import { refreshRSS } from "@/lib/parse";
 
 export async function POST(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
 
     // Refresh RSS
-    const rss = await db.get("SELECT * FROM rss WHERE name = ?", [data.values.name]);
-    refreshRSS(rss.id, rss.name, rss.url, rss.type);
+    refreshRSS(data.values.name);
 
     logger.info(`RSS subscription refreshed manually, name: ${data.values.name}`, { model: "POST /api/rss/refresh" });
     return Response.json({
