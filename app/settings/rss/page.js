@@ -126,8 +126,8 @@ export default function RSSSettings() {
     }
   };
 
-  const handleDelete = async (name) => {
-    const result = await handleRequest("DELETE", `${rssApi}/delete`, JSON.stringify({ values: { name } }));
+  const handleDelete = async (id) => {
+    const result = await handleRequest("DELETE", `${rssApi}/${id}`);
     if (result.success) {
       mutate(rssApi);
     } else {
@@ -241,7 +241,7 @@ export default function RSSSettings() {
             )}
             deleteable={(rss) => rss.state !== "running"}
             deleteDesc={t("st.rss.list.alert")}
-            onDelete={(rss) => handleDelete(rss.name)}
+            onDelete={(rss) => handleDelete(rss.id)}
           />
         </CardContent>
       </Card>

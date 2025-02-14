@@ -3,25 +3,21 @@ import { logger } from "@/lib/logger";
 import { stopTask } from "@/lib/schedule";
 
 // Delete a rss subscription
-// Body: {
-//   values: {
-//     name: string, required
-//   }
-// }
+// Params: id, string, required
 
-export async function DELETE(request) {
+export async function DELETE(_, { params }) {
   try {
     const db = await getDb();
-    const data = await request.json();
+    const id = (await params).id;
 
     // Check if RSS is running
-    const rss = await db.get("SELECT * FROM rss WHERE name = ?", [data.values.name]);
+    const rss = await db.get("SELECT * FROM rss WHERE id = ?", [id]);
     if (rss.state === "running") {
-      throw new Error(`Delete cancelled due to RSS subscription is running, name: ${data.values.name}`);
+      throw new Error(`Delete cancelled due to RSS subscription is running, id: ${id}`);
     }
 
     // Stop RSS task
-    await stopTask(data.values.name);
+    await stopTask(rss.name);
 
     // Use try-catch because we need to monitor the transaction result
     await db.run("BEGIN TRANSACTION");
@@ -53,14 +49,14 @@ export async function DELETE(request) {
       throw error;
     }
 
-    logger.info(`RSS subscription deleted successfully, name: ${data.values.name}`, { model: "DELETE /api/rss/delete" });
+    logger.info(`RSS subscription deleted successfully, id: ${id}`, { model: "DELETE /api/rss/[id]" });
     return Response.json({
       code: 200,
       message: "success",
       data: null
     });
   } catch (error) {
-    logger.error(error.message, { model: "DELETE /api/rss/delete" });
+    logger.error(error.message, { model: "DELETE /api/rss/[id]" });
     return Response.json({
       code: 500,
       message: error.message,

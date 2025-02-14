@@ -113,8 +113,8 @@ export default function DownloaderSettings() {
     }
   };
 
-  const handleDelete = async (name) => {
-    const result = await handleRequest("DELETE", `${downloadersApi}/delete`, JSON.stringify({ values: { name } }));
+  const handleDelete = async (id) => {
+    const result = await handleRequest("DELETE", `${downloadersApi}/${id}`);
     if (result.success) {
       mutate(downloadersApi);
       mutate(configApi);
@@ -261,7 +261,7 @@ export default function DownloaderSettings() {
             )}
             deleteable={() => true}
             deleteDesc={t("st.dl.list.alert")}
-            onDelete={(downloader) => handleDelete(downloader.name)}
+            onDelete={(downloader) => handleDelete(downloader.id)}
           />
         </CardContent>
       </Card>
