@@ -24,9 +24,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Init DB when running in development
-if (process.env.NODE_ENV === "development") {
-  initDb().catch(logger.error);
-}
+// initDb().catch(logger.error);
 
 export default function RootLayout({ children }) {
   return (
