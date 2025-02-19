@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { UAParser } from "ua-parser-js";
 import { getDb } from "@/lib/db";
 import { cookies } from "next/headers";
 import { logger } from "@/lib/logger";
@@ -40,11 +41,27 @@ export async function POST(request) {
     // Create user token
     const token = crypto.createHash("sha256").update(user.password + user.username + Date.now().toString()).digest("hex");
 
+    // Get user agent
+    const ua = UAParser(request.headers.get("user-agent"));
+
+    // Check if client is browser
     // Write new token to database
-    await db.run(
-      "INSERT INTO token (token, user_id, user_agent, created_at, last_used_at) VALUES (?, ?, ?, ?, ?)",
-      [token, user.id, request.headers.get("user-agent") || "", new Date().toISOString(), new Date().toISOString()]
-    );
+    if (ua.browser.name) {
+      await db.run(
+        "INSERT INTO token (token, user_id, browser, os, ip, created_at, last_used_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [
+          token,
+          user.id,
+          `${ua.browser.name || ""} ${ua.browser.version || ""}`,
+          `${ua.os.name || ""} ${ua.os.version || ""}`,
+          request.headers.get("x-forwarded-for") || "",
+          new Date().toISOString(),
+          new Date().toISOString()
+        ]
+      );
+    } else {
+      logger.warn(`Token will not be stored in database due to non-browser login, user agent: ${ua.ua}`, { model: "POST /api/auth" });
+    }
 
     // Set cookie
     const cookieStore = await cookies()
