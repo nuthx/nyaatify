@@ -44,6 +44,16 @@ export default function Devices() {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
 
+  const usernameFrom = useForm({
+    resolver: zodResolver(z.object({
+      new_username: z.string()
+        .min(1, { message: t("validate.username") })
+    })),
+    defaultValues: {
+      new_username: ""
+    },
+  })
+
   const passwordFrom = useForm({
     resolver: zodResolver(z.object({
       current_password: z.string()
@@ -73,6 +83,18 @@ export default function Devices() {
       });
     }
   }, [error]);
+
+  const handleUsername = async (values) => {
+    const result = await handleRequest("PATCH", usernameApi, JSON.stringify({ values: values }));
+    if (result.success) {
+      usernameFrom.reset();
+      toast(t("toast.success.edit"));
+    } else {
+      toast.error(t("toast.failed.edit"), {
+        description: result.message,
+      });
+    }
+  };
 
   const handlePassword = async (values) => {
     const hashedPassword = crypto.createHash("sha256").update(values.new_password).digest("hex");
@@ -104,6 +126,30 @@ export default function Devices() {
 
   return (
     <>
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.user.username.title")}</CardTitle>
+          <CardDescription>{t("st.user.username.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...usernameFrom}>
+            <form onSubmit={usernameFrom.handleSubmit((values) => handleUsername(values))} className="space-y-6" noValidate>
+              <FormField control={usernameFrom.control} name="new_username" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("st.dl.add.username")}</FormLabel>
+                  <FormControl>
+                    <Input className="w-72" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+              <Button type="submit">{t("glb.save")}</Button>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>{t("st.user.password.title")}</CardTitle>
