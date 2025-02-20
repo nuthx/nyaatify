@@ -27,7 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
-  const loginApi = "/api/auth";
+  const loginApi = "/api/auth/login";
 
   const { t } = useTranslation();
   const router = useRouter();

@@ -8,14 +8,14 @@ import { handleRequest } from "@/lib/handlers";
 import { Logo } from "@/components/icons/logo";
 
 export function NavBar() {
-  const authApi = "/api/auth";
+  const logoutApi = "/api/auth/logout";
 
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslation();
 
   const handleLogout = async () => {
-    const result = await handleRequest("DELETE", authApi);
+    const result = await handleRequest("DELETE", logoutApi);
     if (result.success) {
       router.push("/login");
       router.refresh();

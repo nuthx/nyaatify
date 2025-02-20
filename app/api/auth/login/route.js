@@ -20,7 +20,7 @@ export async function POST(request) {
 
     // Check user
     if (!user) {
-      logger.error(`Invalid username: ${data.values.username}`, { model: "POST /api/auth" });
+      logger.error(`Invalid username: ${data.values.username}`, { model: "POST /api/auth/login" });
       return Response.json({
         code: 401,
         message: "Invalid username or password",
@@ -30,7 +30,7 @@ export async function POST(request) {
 
     // Check password
     if (user.password !== data.values.password) {
-      logger.error(`Invalid password, username: ${data.values.username}`, { model: "POST /api/auth" });
+      logger.error(`Invalid password, username: ${data.values.username}`, { model: "POST /api/auth/login" });
       return Response.json({
         code: 401,
         message: "Invalid username or password",
@@ -60,7 +60,7 @@ export async function POST(request) {
         ]
       );
     } else {
-      logger.warn(`Token will not be stored in database due to non-browser login, user agent: ${ua.ua}`, { model: "POST /api/auth" });
+      logger.warn(`Token will not be stored in database due to non-browser login, user agent: ${ua.ua}`, { model: "POST /api/auth/login" });
     }
 
     // Set cookie
@@ -71,7 +71,7 @@ export async function POST(request) {
       sameSite: "strict"
     });
 
-    logger.info(`User logged in, username: ${user.username}`, { model: "POST /api/auth" });
+    logger.info(`User logged in, username: ${user.username}`, { model: "POST /api/auth/login" });
     return Response.json({
       code: 200,
       message: "success",
@@ -80,29 +80,7 @@ export async function POST(request) {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/auth" });
-    return Response.json({
-      code: 500,
-      message: error.message,
-      data: null
-    }, { status: 500 });
-  }
-}
-
-// Logout
-
-export async function DELETE() {
-  try {
-    const cookieStore = await cookies()
-    cookieStore.delete("auth_token");
-
-    return Response.json({
-      code: 200,
-      message: "success",
-      data: null
-    });
-  } catch (error) {
-    logger.error(error.message, { model: "DELETE /api/auth" });
+    logger.error(error.message, { model: "POST /api/auth/login" });
     return Response.json({
       code: 500,
       message: error.message,
