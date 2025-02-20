@@ -2,22 +2,24 @@ import { NextResponse } from "next/server";
 import { handleRequest } from "@/lib/handlers";
 
 export async function middleware(request) {
+  const token = request.cookies.get("auth_token");
+  const isAuthenticated = await verifyToken(token, request.nextUrl.origin);
+
+  // If logged in, redirect login page to homepage
+  if (request.nextUrl.pathname === "/login") {
+    return isAuthenticated
+      ? NextResponse.redirect(new URL("/", request.url))
+      : NextResponse.next();
+  }
+
   // Do not need to authenticate paths
   const publicPaths = ["/login", "/api/auth"];
   if (publicPaths.some(path => request.nextUrl.pathname.startsWith(path))) {
     return NextResponse.next();
   }
 
-  // Check if the token exists
-  const token = request.cookies.get("auth_token");
-  if (!token) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
   // Check login status
-  const verifyUrl = `${request.nextUrl.origin}/api/auth/verify`;
-  const result = await handleRequest("POST", verifyUrl, JSON.stringify({ token }));
-  if (result.success) {
+  if (isAuthenticated) {
     return NextResponse.next();
   }
 
@@ -29,6 +31,13 @@ export async function middleware(request) {
     // For other routes, redirect to login page
     return NextResponse.redirect(new URL("/login", request.url));
   }
+}
+
+// Check token availability
+async function verifyToken(token, origin) {
+  if (!token) return false;
+  const result = await handleRequest("POST", `${origin}/api/auth/verify`, JSON.stringify({ token }));
+  return result.success;
 }
 
 export const config = {
