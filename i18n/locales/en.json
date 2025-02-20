@@ -17,7 +17,8 @@
     "disabled": "Disabled",
     "version": "Version",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "confirm_logout": "Confirm Logout"
   },
   "lang": {
     "cn": "Chinese",
@@ -283,7 +284,8 @@
         "browser": "Browser",
         "ip": "IP Address",
         "last": "Last Used",
-        "current": "This Device"
+        "current": "This Device",
+        "alert": "After logging out, you will need to log in again the next time you use the device."
       }
     },
     "logs": {

@@ -10,6 +10,16 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { handleRequest } from "@/lib/handlers";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -43,6 +53,7 @@ export default function Devices() {
 
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
+  const [logoutDevice, setLogoutDevice] = useState(null);
 
   const usernameFrom = useForm({
     resolver: zodResolver(z.object({
@@ -232,7 +243,7 @@ export default function Devices() {
                     )}
                   </TableCell>
                   <TableCell className="px-3 py-4 w-4">
-                    <Button variant="ghost" size="icon" disabled={deviceData.current_device === device.id} onClick={() => handleDelete(device.id)}>
+                    <Button variant="ghost" size="icon" disabled={deviceData.current_device === device.id} onClick={() => setLogoutDevice(device)}>
                       <Trash2 className="text-muted-foreground"/>
                     </Button>
                   </TableCell>
@@ -240,6 +251,23 @@ export default function Devices() {
               ))}
             </TableBody>
           </Table>
+
+          <AlertDialog open={logoutDevice !== null} onOpenChange={(open) => !open && setLogoutDevice(null)}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{t("glb.confirm_logout")}</AlertDialogTitle>
+                <AlertDialogDescription>{t("st.user.devices.alert")}</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>
+                  {t("glb.cancel")}
+                </AlertDialogCancel>
+                <AlertDialogAction onClick={() => { handleDelete(logoutDevice.id); setLogoutDevice(null); }}>
+                  {t("glb.logout")}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </CardContent>
       </Card>
     </>
