@@ -41,7 +41,7 @@
       "delete": "Delete Failed",
       "login": "Login Failed",
       "logout": "Logout Failed",
-      "fetch_config": "Failed to fetch user config",
+      "fetch_config": "Failed to fetch config",
       "fetch_rss": "Failed to load RSS subscription",
       "fetch_downloader": "Failed to fetch downloader list",
       "fetch_notification": "Failed to fetch notification list",

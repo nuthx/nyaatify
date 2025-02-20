@@ -41,7 +41,7 @@
       "delete": "删除失败",
       "login": "登陆失败",
       "logout": "登出失败",
-      "fetch_config": "无法获取用户配置",
+      "fetch_config": "配置获取失败",
       "fetch_rss": "无法获取 RSS 订阅列表",
       "fetch_downloader": "无法获取下载器列表",
       "fetch_notification": "无法获取通知列表",

@@ -67,27 +67,41 @@ export default function Devices() {
     },
   })
 
-  const { data, error, isLoading } = useSWR(deviceApi, async (url) => {
+  const fetcher = async (url) => {
     const response = await fetch(url);
     const result = await response.json();
     if (!response.ok) {
       throw new Error(result.message);
     }
     return result.data;
-  });
+  };
+
+  const { data: usernameData, error: usernameError, isLoading: usernameLoading } = useSWR(usernameApi, fetcher);
+  const { data: deviceData, error: deviceError, isLoading: deviceLoading } = useSWR(deviceApi, fetcher);
 
   useEffect(() => {
-    if (error) {
-      toast.error(t("toast.failed.fetch_devices"), {
-        description: error.message,
+    if (usernameData?.username) {
+      usernameFrom.setValue('new_username', usernameData.username);
+    }
+    if (usernameError) {
+      toast.error(t("toast.failed.fetch_config"), {
+        description: usernameError.message,
       });
     }
-  }, [error]);
+  }, [usernameData, usernameError]);
+
+  useEffect(() => {
+    if (deviceError) {
+      toast.error(t("toast.failed.fetch_config"), {
+        description: deviceError.message,
+      });
+    }
+  }, [deviceError]);
 
   const handleUsername = async (values) => {
     const result = await handleRequest("PATCH", usernameApi, JSON.stringify({ values: values }));
     if (result.success) {
-      usernameFrom.reset();
+      mutate(usernameApi);
       toast(t("toast.success.edit"));
     } else {
       toast.error(t("toast.failed.edit"), {
@@ -120,7 +134,7 @@ export default function Devices() {
     }
   };
 
-  if (isLoading) {
+  if (usernameLoading || deviceLoading) {
     return <></>;
   }
 
@@ -138,7 +152,7 @@ export default function Devices() {
                 <FormItem>
                   <FormLabel>{t("st.dl.add.username")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" {...field} />
+                    <Input className="w-72" placeholder={usernameData?.username || "username"} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -205,20 +219,20 @@ export default function Devices() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data?.devices.map((device) => (
+              {deviceData?.devices.map((device) => (
                 <TableRow key={device.id} className="hover:bg-transparent">
                   <TableCell className="px-2 py-4">{device.os}</TableCell>
                   <TableCell className="px-2 py-4">{device.browser}</TableCell>
                   <TableCell className="px-2 py-4">{device.ip}</TableCell>
                   <TableCell className="px-2 py-4">
-                    {data.current_device === device.id ? (
+                    {deviceData.current_device === device.id ? (
                       t("st.user.devices.current")
                     ) : (
                       new Date(device.last_used_at).toLocaleString()
                     )}
                   </TableCell>
                   <TableCell className="px-3 py-4 w-4">
-                    <Button variant="ghost" size="icon" disabled={data.current_device === device.id} onClick={() => handleDelete(device.id)}>
+                    <Button variant="ghost" size="icon" disabled={deviceData.current_device === device.id} onClick={() => handleDelete(device.id)}>
                       <Trash2 className="text-muted-foreground"/>
                     </Button>
                   </TableCell>

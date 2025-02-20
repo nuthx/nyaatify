@@ -1,6 +1,31 @@
-import crypto from "crypto";
 import { getDb } from "@/lib/db";
 import { logger } from "@/lib/logger";
+
+// Get current username
+
+export async function GET() {
+  try {
+    const db = await getDb();
+
+    // Get current username
+    const user = await db.get("SELECT username FROM user WHERE id = 1");
+
+    return Response.json({
+      code: 200,
+      message: "success",
+      data: {
+        username: user.username
+      }
+    });
+  } catch (error) {
+    logger.error(error.message, { model: "GET /api/user/username" });
+    return Response.json({
+      code: 500,
+      message: error.message,
+      data: null
+    }, { status: 500 });
+  }
+}
 
 // Change username
 // Body: {
