@@ -39,6 +39,12 @@ export async function PATCH(request) {
     const db = await getDb();
     const data = await request.json();
 
+    // Check if the new username is the same as the current username
+    const user = await db.get("SELECT username FROM user WHERE id = 1");
+    if (user.username === data.values.new_username) {
+      throw new Error("New username is the same as the current username");
+    }
+
     // Update username
     await db.run("UPDATE user SET username = ? WHERE id = 1", [data.values.new_username]);
 
