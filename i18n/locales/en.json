@@ -15,7 +15,9 @@
     "hide": "Hide",
     "enabled": "Enabled",
     "disabled": "Disabled",
-    "version": "Version"
+    "version": "Version",
+    "login": "Login",
+    "logout": "Logout"
   },
   "lang": {
     "cn": "Chinese",
@@ -35,6 +37,7 @@
       "pause": "Pause Failed",
       "resume": "Resume Failed",
       "delete": "Delete Failed",
+      "login": "Login Failed",
       "logout": "Logout Failed",
       "fetch_config": "Failed to fetch user config",
       "fetch_rss": "Failed to load RSS subscription",
@@ -73,8 +76,7 @@
   "nav": {
     "anime": "Anime",
     "download": "Download",
-    "settings": "Settings",
-    "logout": "Logout"
+    "settings": "Settings"
   },
   "anime": {
     "empty": "Please add a RSS subscription first.",

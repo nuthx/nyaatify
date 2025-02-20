@@ -46,7 +46,7 @@ export function NavBar() {
           </Link>
           {pathname !== "/login" && (
             <button onClick={handleLogout} className="text-sm text-sm transition-all hover:text-primary text-primary/50">
-              {t("nav.logout")}
+              {t("glb.logout")}
             </button>
           )}
         </div>
