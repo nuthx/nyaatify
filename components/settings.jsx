@@ -67,7 +67,7 @@ export function ListCard({ items, empty, content, state, menu, deleteable, delet
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon"><Ellipsis /></Button>
+            <Button variant="ghost" size="icon"><Ellipsis className="text-muted-foreground" /></Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             {menu(item)}
