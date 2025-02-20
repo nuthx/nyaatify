@@ -68,6 +68,7 @@
     "name_40": "Name must be less than 40 characters",
     "username": "Please enter a valid username",
     "password": "Please enter a valid password",
+    "password_8": "Password must be at least 8 characters",
     "url_invalid": "Please enter a valid URL",
     "url_http": "URL must start with http or https",
     "url_slash": "URL must not end with /",

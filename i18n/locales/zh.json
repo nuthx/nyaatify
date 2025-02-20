@@ -68,6 +68,7 @@
     "name_40": "名称不能超过 40 个字符",
     "username": "请输入用户名",
     "password": "请输入密码",
+    "password_8": "密码至少为 8 个字符",
     "url_invalid": "无效的 URL",
     "url_http": "URL 必须以 http 或 https 开头",
     "url_slash": "URL 不能以 / 结尾",

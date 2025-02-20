@@ -59,7 +59,7 @@ export default function Devices() {
       current_password: z.string()
         .min(1, { message: t("validate.password") }),
       new_password: z.string()
-        .min(1, { message: t("validate.password") })
+        .min(8, { message: t("validate.password_8") })
     })),
     defaultValues: {
       current_password: "",
