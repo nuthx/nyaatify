@@ -25,7 +25,7 @@ export async function PATCH(request) {
     // Update password
     await db.run("UPDATE user SET password = ? WHERE id = 1", [data.values.new_password]);
 
-    logger.info("password changed successfully", { model: "PATCH /api/user/password" });
+    logger.info("Password changed successfully", { model: "PATCH /api/user/password" });
     return Response.json({
       code: 200,
       message: "success",
