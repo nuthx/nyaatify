@@ -18,6 +18,9 @@ export async function POST(request) {
       throw new Error(`Invalid token, token: ${data.token}`);
     }
 
+    // Update last used time with ISO timestamp
+    await db.run("UPDATE token SET last_used_at = ? WHERE token = ?", [new Date().toISOString(), data.token.value]);
+
     return Response.json({
       code: 200,
       message: "success",

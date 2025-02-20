@@ -17,7 +17,8 @@
     "disabled": "Disabled",
     "version": "Version",
     "login": "Login",
-    "logout": "Logout"
+    "logout": "Logout",
+    "confirm_logout": "Confirm Logout"
   },
   "lang": {
     "cn": "Chinese",
@@ -29,17 +30,19 @@
     "success": {
       "save": "Saved Successfully",
       "test": "Tested Successfully",
-      "send": "Notification Sent"
+      "send": "Notification Sent",
+      "edit": "Edited Successfully"
     },
     "failed": {
       "save": "Save Failed",
       "download": "Download Failed",
       "pause": "Pause Failed",
       "resume": "Resume Failed",
+      "edit": "Edit Failed",
       "delete": "Delete Failed",
       "login": "Login Failed",
       "logout": "Logout Failed",
-      "fetch_config": "Failed to fetch user config",
+      "fetch_config": "Failed to fetch config",
       "fetch_rss": "Failed to load RSS subscription",
       "fetch_downloader": "Failed to fetch downloader list",
       "fetch_notification": "Failed to fetch notification list",
@@ -66,6 +69,7 @@
     "name_40": "Name must be less than 40 characters",
     "username": "Please enter a valid username",
     "password": "Please enter a valid password",
+    "password_8": "Password must be at least 8 characters",
     "url_invalid": "Please enter a valid URL",
     "url_http": "URL must start with http or https",
     "url_slash": "URL must not end with /",
@@ -261,6 +265,27 @@
         "extra": "Extra Parameters",
         "test": "Test Notification",
         "alert": "This action will delete this notification service permanently."
+      }
+    },
+    "user": {
+      "username": {
+        "title": "Change Username",
+        "description": "Change the username of your account."
+      },
+      "password": {
+        "title": "Change Password",
+        "description": "Change the password of your account. The new password will not be confirmed twice, please ensure the password correct.",
+        "current": "Current Password",
+        "new": "New Password"
+      },
+      "devices": {
+        "title": "Logged in Devices",
+        "os": "Operating System",
+        "browser": "Browser",
+        "ip": "IP Address",
+        "last": "Last Used",
+        "current": "This Device",
+        "alert": "After logging out, you will need to log in again the next time you use the device."
       }
     },
     "logs": {
