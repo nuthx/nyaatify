@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { getDb, getConfig } from "@/lib/db";
 import { logger } from "@/lib/logger";
 
 // Delete a downloader 
@@ -7,6 +7,7 @@ import { logger } from "@/lib/logger";
 export async function DELETE(_, { params }) {
   try {
     const db = await getDb();
+    const config = await getConfig();
     const id = (await params).id;
 
     // Use try-catch because we need to monitor the transaction result
@@ -17,11 +18,6 @@ export async function DELETE(_, { params }) {
 
       // Delete downloader
       await db.run("DELETE FROM downloader WHERE id = ?", [id]);
-
-      // Get default downloader of config
-      const config = await db.all("SELECT key, value FROM config").then(rows => 
-        rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
-      );
 
       // Update default downloader
       // If deleted downloader is default downloader, update default downloader to the first downloader

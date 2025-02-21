@@ -2,6 +2,7 @@ import "./globals.css";
 import { AR_One_Sans } from "next/font/google"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import { I18nWrapper } from "@/i18n/wrapper";
+import { initDb } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { startAllTasks } from "@/lib/schedule";
 import { Toaster } from "@/components/ui/sonner"
@@ -14,10 +15,16 @@ const arOneSans = AR_One_Sans({
   fallback: ["-apple-system", "system-ui", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "Arial", "sans-serif"]
 })
 
-// Start RSS task (only in production)
+// Start RSS task and init DB when running in production
 if (process.env.NODE_ENV === "production") {
-  startAllTasks().catch(logger.error);
+  Promise.all([
+    initDb(),
+    startAllTasks()
+  ]).catch(logger.error);
 }
+
+// Init DB when running in development
+// initDb().catch(logger.error);
 
 export default function RootLayout({ children }) {
   return (

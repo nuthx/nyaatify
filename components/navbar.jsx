@@ -1,13 +1,30 @@
 "use client";
 
 import Link from "next/link";
+import { toast } from "sonner"
 import { useTranslation } from "react-i18next";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { handleRequest } from "@/lib/handlers";
 import { Logo } from "@/components/icons/logo";
 
 export function NavBar() {
+  const logoutApi = "/api/auth/logout";
+
+  const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslation();
+
+  const handleLogout = async () => {
+    const result = await handleRequest("DELETE", logoutApi);
+    if (result.success) {
+      router.push("/login");
+      router.refresh();
+    } else {
+      toast.error(t(`toast.failed.logout`), {
+        description: result.message,
+      });
+    }
+  };
 
   return (
     <nav className="border-b bg-background">
@@ -27,9 +44,11 @@ export function NavBar() {
           <Link href="/settings/general" className={`text-sm text-sm transition-all hover:text-primary ${pathname.startsWith("/settings") ? "text-primary" : "text-primary/50"}`}>
             {t("nav.settings")}
           </Link>
-          <Link href="/logout" className={`text-sm text-sm transition-all hover:text-primary text-primary/50`}>
-            {t("nav.logout")}
-          </Link>
+          {pathname !== "/login" && (
+            <button onClick={handleLogout} className="text-sm text-sm transition-all hover:text-primary text-primary/50">
+              {t("glb.logout")}
+            </button>
+          )}
         </div>
       </div>
     </nav>
