@@ -1,3 +1,4 @@
+import { getDb } from "@/lib/db";
 import { cookies } from "next/headers";
 import { logger } from "@/lib/logger";
 
@@ -5,9 +6,19 @@ import { logger } from "@/lib/logger";
 
 export async function DELETE() {
   try {
-    const cookieStore = await cookies()
+    const db = await getDb();
+
+    // Get the auth token from the cookies
+    const cookieStore = await cookies();
+    const authToken = cookieStore.get("auth_token");
+
+    // Delete the auth token from the database
+    await db.run("DELETE FROM token WHERE token = ?", [authToken.value]);
+
+    // Delete the auth token on browser
     cookieStore.delete("auth_token");
 
+    logger.info("Logout success", { model: "DELETE /api/auth/logout" });
     return Response.json({
       code: 200,
       message: "success",
