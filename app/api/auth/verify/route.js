@@ -12,14 +12,14 @@ export async function POST(request) {
     const data = await request.json();
 
     // Check if this token in the database
-    const result = await db.get("SELECT * FROM token WHERE token = ?", [data.token.value]);
+    const result = await db.get("SELECT * FROM device WHERE token = ?", [data.token.value]);
 
     if (!result) {
       throw new Error(`Invalid token, token: ${data.token}`);
     }
 
     // Update last used time with ISO timestamp
-    await db.run("UPDATE token SET last_used_at = ? WHERE token = ?", [new Date().toISOString(), data.token.value]);
+    await db.run("UPDATE device SET last_used_at = ? WHERE token = ?", [new Date().toISOString(), data.token.value]);
 
     return Response.json({
       code: 200,

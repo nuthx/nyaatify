@@ -13,7 +13,7 @@ export async function DELETE() {
     const authToken = cookieStore.get("auth_token");
 
     // Delete the auth token from the database
-    await db.run("DELETE FROM token WHERE token = ?", [authToken.value]);
+    await db.run("DELETE FROM device WHERE token = ?", [authToken.value]);
 
     // Delete the auth token on browser
     cookieStore.delete("auth_token");

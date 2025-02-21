@@ -7,7 +7,7 @@ import { logger } from "@/lib/logger";
 export async function GET() {
   try {
     const db = await getDb();
-    const devices = await db.all("SELECT * FROM token ORDER BY last_used_at DESC");
+    const devices = await db.all("SELECT * FROM device ORDER BY last_used_at DESC");
 
     // Find current device index
     const cookieStore = await cookies();
