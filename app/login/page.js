@@ -3,7 +3,7 @@
 import crypto from "crypto";
 import Image from "next/image"
 import { toast } from "sonner"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
@@ -45,6 +45,11 @@ export default function LoginPage() {
       password: ""
     },
   })
+
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("glb.login")} - Nyaatify`;
+  }, [t]);
 
   const handleLogin = async (values) => {
     const hashedPassword = crypto.createHash("sha256").update(values.password).digest("hex");

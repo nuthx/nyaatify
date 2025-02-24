@@ -138,6 +138,15 @@
       "logs": "日志",
       "about": "关于"
     },
+    "metadata": {
+      "general": "常规设置",
+      "rss": "RSS 订阅设置",
+      "downloader": "下载器设置",
+      "notification": "通知设置",
+      "user": "用户设置",
+      "logs": "系统日志",
+      "about": "关于"
+    },
     "gr": {
       "theme": {
         "title": "主题",

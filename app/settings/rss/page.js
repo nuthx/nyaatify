@@ -92,6 +92,11 @@ export default function RSSSettings() {
   const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(rssApi, fetcher);
   const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
 
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("st.metadata.rss")} - Nyaatify`;
+  }, [t]);
+
   useEffect(() => {
     if (rssError) {
       toast.error(t("toast.failed.fetch_rss"), {

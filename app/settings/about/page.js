@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import pkg from "@/package.json";
 import {
@@ -13,6 +14,11 @@ import {
 export default function Settings() {
   const { t } = useTranslation();
   const currentVersion = pkg.version;
+
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("st.metadata.about")} - Nyaatify`;
+  }, [t]);
 
   return (
     <>

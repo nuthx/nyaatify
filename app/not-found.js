@@ -2,11 +2,17 @@
 
 import Link from "next/link"
 import Image from "next/image"
+import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 
 export default function NotFound() {
   const { t } = useTranslation();
+
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("404.title")} - Nyaatify`;
+  }, [t]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-72px)] gap-12">

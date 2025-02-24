@@ -52,6 +52,11 @@ export default function Logs() {
     }
   );
 
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("st.metadata.logs")} - Nyaatify`;
+  }, [t]);
+
   useEffect(() => {
     if (error) {
       toast.error(t("toast.failed.fetch_logs"), {

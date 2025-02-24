@@ -138,6 +138,11 @@ export default function NotificationSettings() {
   const { data: notificationData, error: notificationError, isLoading: notificationLoading } = useSWR(notificationApi, fetcher);
   const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
 
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("st.metadata.notification")} - Nyaatify`;
+  }, [t]);
+
   useEffect(() => {
     if (notificationError) {
       toast.error(t("toast.failed.fetch_notification"), {

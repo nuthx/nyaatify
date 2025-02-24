@@ -138,6 +138,15 @@
       "logs": "System Logs",
       "about": "About Nyaatify"
     },
+    "metadata": {
+      "general": "General Setting",
+      "rss": "RSS Subscription Setting",
+      "downloader": "Downloader Setting",
+      "notification": "Notification Setting",
+      "user": "Account Setting",
+      "logs": "System Logs",
+      "about": "About"
+    },
     "gr": {
       "theme": {
         "title": "Theme",

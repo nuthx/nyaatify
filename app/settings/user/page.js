@@ -90,6 +90,11 @@ export default function Devices() {
   const { data: usernameData, error: usernameError, isLoading: usernameLoading } = useSWR(usernameApi, fetcher);
   const { data: deviceData, error: deviceError, isLoading: deviceLoading } = useSWR(deviceApi, fetcher);
 
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("st.metadata.user")} - Nyaatify`;
+  }, [t]);
+
   useEffect(() => {
     if (usernameData?.username) {
       usernameFrom.setValue('new_username', usernameData.username);

@@ -2,7 +2,7 @@
 
 import useSWR from "swr";
 import { toast } from "sonner"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
 import { handleRequest } from "@/lib/handlers";
@@ -53,6 +53,11 @@ export default function Anime() {
     }
     return result.data;
   });
+
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("nav.anime")} - Nyaatify`;
+  }, [t]);
 
   // To show url address with correct page
   // If first page, hide page number

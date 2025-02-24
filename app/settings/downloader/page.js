@@ -84,6 +84,11 @@ export default function DownloaderSettings() {
   const { data: downloaderData, error: downloaderError, isLoading: downloaderLoading } = useSWR(downloadersApi, fetcher);
   const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
 
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("st.metadata.downloader")} - Nyaatify`;
+  }, [t]);
+
   useEffect(() => {
     if (downloaderError) {
       toast.error(t("toast.failed.fetch_downloader"), {

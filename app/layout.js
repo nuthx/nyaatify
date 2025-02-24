@@ -26,6 +26,11 @@ if (process.env.NODE_ENV === "production") {
 // Init DB when running in development
 // initDb().catch(logger.error);
 
+export const metadata = {
+  title: "Nyaatify",
+  description: "A awesome subscription reminder and download management tool for Nyaa.",
+}
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={arOneSans.className} suppressHydrationWarning>

@@ -2,6 +2,7 @@
 
 import useSWR from "swr"
 import { toast } from "sonner"
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { handleRequest } from "@/lib/handlers";
 import {
@@ -47,6 +48,11 @@ export default function Home() {
     }
     return result.data;
   }, { refreshInterval: 2000 });
+
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("nav.download")} - Nyaatify`;
+  }, [t]);
 
   const handleManage = async (action, downloader, hash) => {
     const result = await handleRequest("POST", torrentsApi, JSON.stringify({ action, downloader, hash }));

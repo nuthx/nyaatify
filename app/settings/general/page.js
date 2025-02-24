@@ -64,6 +64,11 @@ export default function Settings() {
     return result.data;
   });
 
+  // Set page title
+  useEffect(() => {
+    document.title = `${t("st.metadata.general")} - Nyaatify`;
+  }, [t]);
+
   useEffect(() => {
     // Check data?.title_priority to avoid error when drag finished
     if (data?.title_priority) {
