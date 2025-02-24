@@ -43,6 +43,6 @@ async function verifyToken(token, origin) {
 export const config = {
   // Match all paths except _next/static and favicon.ico
   matcher: [
-    "/((?!_next/static|favicon.ico).*)",
+    "/((?!_next/static|favicon.ico|logo).*)",
   ],
 }
