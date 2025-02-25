@@ -79,7 +79,7 @@
   },
   "nav": {
     "anime": "动画",
-    "download": "下载",
+    "downloads": "下载",
     "settings": "设置"
   },
   "anime": {
@@ -91,7 +91,7 @@
     "week": "本周",
     "total": "总数"
   },
-  "download": {
+  "downloads": {
     "empty_downloader": "请先添加一个下载器",
     "empty_online": "当前没有在线的下载器",
     "empty_torrents": "所有下载器中没有任务",

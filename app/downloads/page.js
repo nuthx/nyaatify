@@ -38,13 +38,13 @@ export default function Home() {
       throw new Error(result.message);
     }
     if (result.data.downloaders === 0) {
-      throw new Error(t("download.empty_downloader"));
+      throw new Error(t("downloads.empty_downloader"));
     }
     if (result.data.online === 0) {
-      throw new Error(t("download.empty_online"));
+      throw new Error(t("downloads.empty_online"));
     }
     if (result.data.torrents.length === 0) {
-      throw new Error(t("download.empty_torrents"));
+      throw new Error(t("downloads.empty_torrents"));
     }
     return result.data;
   }, { refreshInterval: 2000 });
@@ -80,18 +80,18 @@ export default function Home() {
           <Card key={index} className="overflow-hidden">
             <CardContent className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
-                <Badge variant="outline">{t(`download.state.${item.state}`)}</Badge>
+                <Badge variant="outline">{t(`downloads.state.${item.state}`)}</Badge>
                 <Badge variant="outline">{item.downloader}</Badge>
               </div>
               <a className="font-medium">{item.name}</a>
               <div className="flex items-center gap-2">
-                <a className="w-1/6 text-sm text-muted-foreground">{t("download.d_speed")}: {item.dlspeed}/s</a>
-                <a className="w-1/6 text-sm text-muted-foreground">{t("download.u_speed")}: {item.upspeed}/s</a>
+                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.d_speed")}: {item.dlspeed}/s</a>
+                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.u_speed")}: {item.upspeed}/s</a>
                 {item.eta !== 8640000 && <a className="w-2/6 text-sm text-muted-foreground">
-                  {t("download.eta")}: {Math.floor(item.eta/86400) > 0 && `${Math.floor(item.eta/86400)} ${t("download.d")} `}
-                  {Math.floor((item.eta%86400)/3600) > 0 && `${Math.floor((item.eta%86400)/3600)} ${t("download.h")} `}
-                  {Math.floor((item.eta%3600)/60) > 0 && `${Math.floor((item.eta%3600)/60)} ${t("download.m")} `}
-                  {item.eta%60 > 0 && `${item.eta%60} ${t("download.s")}`}
+                  {t("downloads.eta")}: {Math.floor(item.eta/86400) > 0 && `${Math.floor(item.eta/86400)} ${t("downloads.d")} `}
+                  {Math.floor((item.eta%86400)/3600) > 0 && `${Math.floor((item.eta%86400)/3600)} ${t("downloads.h")} `}
+                  {Math.floor((item.eta%3600)/60) > 0 && `${Math.floor((item.eta%3600)/60)} ${t("downloads.m")} `}
+                  {item.eta%60 > 0 && `${item.eta%60} ${t("downloads.s")}`}
                 </a>}
               </div>
             </CardContent>
@@ -120,7 +120,7 @@ export default function Home() {
                     <AlertDialogHeader>
                       <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
                       <AlertDialogDescription>
-                        {t("download.alert")}
+                        {t("downloads.alert")}
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>

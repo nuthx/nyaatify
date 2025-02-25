@@ -79,7 +79,7 @@
   },
   "nav": {
     "anime": "Anime",
-    "download": "Download",
+    "downloads": "Downloads",
     "settings": "Settings"
   },
   "anime": {
@@ -91,7 +91,7 @@
     "week": "Week",
     "total": "Total"
   },
-  "download": {
+  "downloads": {
     "empty_downloader": "Please add a downloader first.",
     "empty_online": "No online downloader now",
     "empty_torrents": "No torrents found in all downloaders",

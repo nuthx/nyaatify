@@ -166,7 +166,7 @@ export default function Anime() {
             </CardContent>
             <CardFooter className="flex items-center justify-between py-4">
               <div className="flex items-center gap-3">
-                {item.downloader && <Badge>{t(`download.state.${item.downloader.state}`)}</Badge>}
+                {item.downloader && <Badge>{t(`downloads.state.${item.downloader.state}`)}</Badge>}
                 <a className="text-sm text-muted-foreground">{item.downloader ? `${item.downloader.completed} / ${item.downloader.size} (${item.downloader.progress === 1 ? 100 : (item.downloader.progress*100).toFixed(1)}%)` : item.size}</a>
               </div>
               <div className="flex items-center gap-2">
@@ -193,7 +193,7 @@ export default function Anime() {
                         <AlertDialogHeader>
                           <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
                           <AlertDialogDescription>
-                            {t("download.alert")}
+                            {t("downloads.alert")}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>

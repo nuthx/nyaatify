@@ -38,8 +38,8 @@ export function NavBar() {
           <Link href="/anime" className={`text-sm transition-all hover:text-primary ${pathname === "/anime" ? "text-primary" : "text-primary/50"}`}>
             {t("nav.anime")}
           </Link>
-          <Link href="/download" className={`text-sm transition-all hover:text-primary ${pathname === "/download" ? "text-primary" : "text-primary/50"}`}>
-            {t("nav.download")}
+          <Link href="/downloads" className={`text-sm transition-all hover:text-primary ${pathname === "/downloads" ? "text-primary" : "text-primary/50"}`}>
+            {t("nav.downloads")}
           </Link>
           <Link href="/settings/general" className={`text-sm text-sm transition-all hover:text-primary ${pathname.startsWith("/settings") ? "text-primary" : "text-primary/50"}`}>
             {t("nav.settings")}
