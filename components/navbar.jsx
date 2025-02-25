@@ -30,7 +30,7 @@ export function NavBar() {
     <nav className="border-b bg-background">
       <div className="container mx-auto max-w-screen-xl flex h-20 items-center justify-between">
         <Link href="/" className="flex items-center gap-4">
-          <Image src="/logo/nyaatify.svg" alt="Nyaatify Logo" width={50} height={40} priority />
+          <Image src="/logo/nyaatify.svg" alt="Nyaatify Logo" className="dark:invert" width={50} height={40} priority />
           <span className="text-xl font-bold">Nyaatify</span>
         </Link>
 
