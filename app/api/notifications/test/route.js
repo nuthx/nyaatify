@@ -1,5 +1,5 @@
 import { logger } from "@/lib/logger";
-import { dispatchNotification } from "@/lib/notification";
+import { dispatchNotification } from "@/lib/notifications";
 
 // Test a notification push
 // Body: {
@@ -42,13 +42,13 @@ export async function POST(request) {
       throw new Error(notificationResult.message);
     }
 
-    logger.info(`Notification test successfully, name: ${data.values.name}`, { model: "POST /api/notification/test" });
+    logger.info(`Notification test successfully, name: ${data.values.name}`, { model: "POST /api/notifications/test" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/notification/test" });
+    logger.error(error.message, { model: "POST /api/notifications/test" });
     return Response.json({
       code: 500,
       message: error.message

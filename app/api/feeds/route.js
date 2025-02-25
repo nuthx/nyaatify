@@ -23,7 +23,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/rss" });
+    logger.error(error.message, { model: "GET /api/feeds" });
     return Response.json({
       code: 500,
       message: error.message
@@ -98,7 +98,7 @@ export async function POST(request) {
     );
 
     // Log info here because startTask will log another message
-    logger.info(`RSS subscription added successfully, name: ${data.values.name}, type: ${rssType}`, { model: "POST /api/rss" });
+    logger.info(`RSS subscription added successfully, name: ${data.values.name}, type: ${rssType}`, { model: "POST /api/feeds" });
 
     // Start RSS task
     const { lastID } = await db.get("SELECT last_insert_rowid() as lastID");
@@ -115,7 +115,7 @@ export async function POST(request) {
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/rss" });
+    logger.error(error.message, { model: "POST /api/feeds" });
     return Response.json({
       code: 500,
       message: error.message

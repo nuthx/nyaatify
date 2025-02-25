@@ -16,7 +16,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/notification" });
+    logger.error(error.message, { model: "GET /api/notifications" });
     return Response.json({
       code: 500,
       message: error.message
@@ -71,13 +71,13 @@ export async function POST(request) {
       ]
     );
 
-    logger.info(`Notification added successfully, name: ${data.values.name}`, { model: "POST /api/notification" });
+    logger.info(`Notification added successfully, name: ${data.values.name}`, { model: "POST /api/notifications" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/notification" });
+    logger.error(error.message, { model: "POST /api/notifications" });
     return Response.json({
       code: 500,
       message: error.message

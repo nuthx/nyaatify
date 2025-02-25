@@ -15,13 +15,13 @@ export async function POST(request) {
     // Refresh RSS
     refreshRSS(data.values.name);
 
-    logger.info(`RSS subscription refreshed manually, name: ${data.values.name}`, { model: "POST /api/rss/refresh" });
+    logger.info(`RSS subscription refreshed manually, name: ${data.values.name}`, { model: "POST /api/feeds/refresh" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/rss/refresh" });
+    logger.error(error.message, { model: "POST /api/feeds/refresh" });
     return Response.json({
       code: 500,
       message: error.message

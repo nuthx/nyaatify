@@ -49,13 +49,13 @@ export async function DELETE(_, { params }) {
       throw error;
     }
 
-    logger.info(`RSS subscription deleted successfully, id: ${id}`, { model: "DELETE /api/rss/[id]" });
+    logger.info(`RSS subscription deleted successfully, id: ${id}`, { model: "DELETE /api/feeds/[id]" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "DELETE /api/rss/[id]" });
+    logger.error(error.message, { model: "DELETE /api/feeds/[id]" });
     return Response.json({
       code: 500,
       message: error.message

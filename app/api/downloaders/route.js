@@ -28,7 +28,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/downloader" });
+    logger.error(error.message, { model: "GET /api/downloaders" });
     return Response.json({
       code: 500,
       message: error.message
@@ -111,16 +111,16 @@ export async function POST(request) {
 
     // Log if default downloader is empty before update
     if (prevDefaultDownloader.value === "") {
-      logger.info(`Default downloader set to ${data.values.name}`, { model: "POST /api/downloader" });
+      logger.info(`Default downloader set to ${data.values.name}`, { model: "POST /api/downloaders" });
     }
 
-    logger.info(`Downloader added successfully, name: ${data.values.name}, type: ${data.values.type}`, { model: "POST /api/downloader" });
+    logger.info(`Downloader added successfully, name: ${data.values.name}, type: ${data.values.type}`, { model: "POST /api/downloaders" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/downloader" });
+    logger.error(error.message, { model: "POST /api/downloaders" });
     return Response.json({
       code: 500,
       message: error.message

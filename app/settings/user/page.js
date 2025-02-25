@@ -47,9 +47,9 @@ import { Input } from "@/components/ui/input";
 import { Trash2, Eye, EyeOff } from "lucide-react"
 
 export default function Devices() {
-  const deviceApi = "/api/user/device";
-  const usernameApi = "/api/user/username";
-  const passwordApi = "/api/user/password";
+  const deviceApi = "/api/users/device";
+  const usernameApi = "/api/users/username";
+  const passwordApi = "/api/users/password";
 
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);

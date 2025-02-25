@@ -18,13 +18,13 @@ export async function DELETE(_, { params }) {
     // Delete notification by id
     await db.run("DELETE FROM notification WHERE id = ?", id);
 
-    logger.info(`Notification deleted successfully, id: ${id}`, { model: "DELETE /api/notification/[id]" });
+    logger.info(`Notification deleted successfully, id: ${id}`, { model: "DELETE /api/notifications/[id]" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "DELETE /api/notification/[id]" });
+    logger.error(error.message, { model: "DELETE /api/notifications/[id]" });
     return Response.json({
       code: 500,
       message: error.message
@@ -73,13 +73,13 @@ export async function PATCH(request, { params }) {
       throw error;
     }
 
-    logger.info(`Notification edit successfully, id: ${id}`, { model: "PATCH /api/notification/[id]" });
+    logger.info(`Notification edit successfully, id: ${id}`, { model: "PATCH /api/notifications/[id]" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "PATCH /api/notification/[id]" });
+    logger.error(error.message, { model: "PATCH /api/notifications/[id]" });
     return Response.json({
       code: 500,
       message: error.message

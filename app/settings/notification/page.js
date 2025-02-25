@@ -83,8 +83,8 @@ function VariablePopover() {
 }
 
 export default function NotificationSettings() {
-  const notificationApi = "/api/notification";
-  const configApi = "/api/config";
+  const notificationApi = "/api/notifications";
+  const configApi = "/api/configs";
 
   const { t } = useTranslation();
 

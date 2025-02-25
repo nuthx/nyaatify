@@ -40,7 +40,7 @@ export async function POST(request) {
       throw new Error(versionResult.message);
     }
 
-    logger.info(`Downloader connected successfully, name: ${data.values.name}, version: ${versionResult.data}`, { model: "POST /api/downloader/test" });
+    logger.info(`Downloader connected successfully, name: ${data.values.name}, version: ${versionResult.data}`, { model: "POST /api/downloaders/test" });
     return Response.json({
       code: 200,
       message: "success",
@@ -49,7 +49,7 @@ export async function POST(request) {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/downloader/test" });
+    logger.error(error.message, { model: "POST /api/downloaders/test" });
     return Response.json({
       code: 500,
       message: error.message

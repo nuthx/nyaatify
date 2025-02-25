@@ -37,8 +37,8 @@ import { ListCard } from "@/components/settings";
 import { RefreshCw } from "lucide-react";
 
 export default function RSSSettings() {
-  const rssApi = "/api/rss";
-  const configApi = "/api/config";
+  const rssApi = "/api/feeds";
+  const configApi = "/api/configs";
 
   const { t } = useTranslation();
 

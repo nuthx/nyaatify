@@ -35,7 +35,7 @@ import {
 import { SortableItem } from "@/components/settings";
 
 export default function Settings() {
-  const configApi = "/api/config";
+  const configApi = "/api/configs";
 
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();

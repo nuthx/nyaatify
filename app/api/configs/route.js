@@ -14,7 +14,7 @@ export async function GET() {
       data: config
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/config" });
+    logger.error(error.message, { model: "GET /api/configs" });
     return Response.json({
       code: 500,
       message: error.message
@@ -63,13 +63,13 @@ export async function PATCH(request) {
       throw error;
     }
 
-    logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "POST /api/config" });
+    logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "POST /api/configs" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/config" });
+    logger.error(error.message, { model: "POST /api/configs" });
     return Response.json({
       code: 500,
       message: error.message

@@ -36,8 +36,8 @@ import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/settings";
 
 export default function DownloaderSettings() {
-  const downloadersApi = "/api/downloader";
-  const configApi = "/api/config";
+  const downloadersApi = "/api/downloaders";
+  const configApi = "/api/configs";
 
   const { t } = useTranslation();
 

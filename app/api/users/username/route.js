@@ -18,7 +18,7 @@ export async function GET() {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/user/username" });
+    logger.error(error.message, { model: "GET /api/users/username" });
     return Response.json({
       code: 500,
       message: error.message
@@ -47,13 +47,13 @@ export async function PATCH(request) {
     // Update username
     await db.run("UPDATE user SET username = ? WHERE id = 1", [data.values.new_username]);
 
-    logger.info(`Username changed successfully, username: ${data.values.new_username}`, { model: "PATCH /api/user/username" });
+    logger.info(`Username changed successfully, username: ${data.values.new_username}`, { model: "PATCH /api/users/username" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "PATCH /api/user/username" });
+    logger.error(error.message, { model: "PATCH /api/users/username" });
     return Response.json({
       code: 500,
       message: error.message
