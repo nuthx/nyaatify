@@ -21,15 +21,13 @@ export async function DELETE() {
     logger.info("Logout success", { model: "DELETE /api/auth/logout" });
     return Response.json({
       code: 200,
-      message: "success",
-      data: null
+      message: "success"
     });
   } catch (error) {
     logger.error(error.message, { model: "DELETE /api/auth/logout" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

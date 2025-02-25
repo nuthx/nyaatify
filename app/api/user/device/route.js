@@ -26,8 +26,7 @@ export async function GET() {
     logger.error(error.message, { model: "GET /api/device" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

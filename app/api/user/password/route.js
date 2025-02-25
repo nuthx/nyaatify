@@ -31,15 +31,13 @@ export async function PATCH(request) {
     logger.info("Password changed successfully", { model: "PATCH /api/user/password" });
     return Response.json({
       code: 200,
-      message: "success",
-      data: null
+      message: "success"
     });
   } catch (error) {
     logger.error(error.message, { model: "PATCH /api/user/password" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

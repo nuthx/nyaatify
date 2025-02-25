@@ -26,7 +26,7 @@ export async function middleware(request) {
   // If not logged in, return with different response
   if (request.nextUrl.pathname.startsWith("/api")) {
     // For API routes, return 401 Unauthorized
-    return NextResponse.json({ code: 401, message: "Unauthorized", data: null }, { status: 401 });
+    return NextResponse.json({ code: 401, message: "Unauthorized" }, { status: 401 });
   } else {
     // For other routes, redirect to login page
     return NextResponse.redirect(new URL("/login", request.url));

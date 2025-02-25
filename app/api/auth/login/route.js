@@ -23,8 +23,7 @@ export async function POST(request) {
       logger.error(`Invalid username: ${data.values.username}`, { model: "POST /api/auth/login" });
       return Response.json({
         code: 401,
-        message: "Invalid username or password",
-        data: null
+        message: "Invalid username or password"
       }, { status: 401 });
     }
 
@@ -33,8 +32,7 @@ export async function POST(request) {
       logger.error(`Invalid password, username: ${data.values.username}`, { model: "POST /api/auth/login" });
       return Response.json({
         code: 401,
-        message: "Invalid username or password",
-        data: null
+        message: "Invalid username or password"
       }, { status: 401 });
     }
 
@@ -83,8 +81,7 @@ export async function POST(request) {
     logger.error(error.message, { model: "POST /api/auth/login" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

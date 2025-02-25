@@ -21,8 +21,7 @@ export async function GET() {
     logger.error(error.message, { model: "GET /api/user/username" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }
@@ -51,15 +50,13 @@ export async function PATCH(request) {
     logger.info(`Username changed successfully, username: ${data.values.new_username}`, { model: "PATCH /api/user/username" });
     return Response.json({
       code: 200,
-      message: "success",
-      data: null
+      message: "success"
     });
   } catch (error) {
     logger.error(error.message, { model: "PATCH /api/user/username" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

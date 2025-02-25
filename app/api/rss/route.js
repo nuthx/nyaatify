@@ -26,8 +26,7 @@ export async function GET() {
     logger.error(error.message, { model: "GET /api/rss" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }
@@ -113,15 +112,13 @@ export async function POST(request) {
 
     return Response.json({
       code: 200,
-      message: "success",
-      data: null
+      message: "success"
     });
   } catch (error) {
     logger.error(error.message, { model: "POST /api/rss" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

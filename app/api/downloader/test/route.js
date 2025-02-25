@@ -52,8 +52,7 @@ export async function POST(request) {
     logger.error(error.message, { model: "POST /api/downloader/test" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

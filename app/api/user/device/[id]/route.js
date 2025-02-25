@@ -21,15 +21,13 @@ export async function DELETE(_, { params }) {
     logger.info(`Device deleted successfully, id: ${id}`, { model: "DELETE /api/device/[id]" });
     return Response.json({
       code: 200,
-      message: "success",
-      data: null
+      message: "success"
     });
   } catch (error) {
     logger.error(error.message, { model: "DELETE /api/device/[id]" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

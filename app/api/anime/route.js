@@ -87,8 +87,7 @@ export async function GET(request) {
     logger.error(error.message, { model: "GET /api/anime" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

@@ -68,8 +68,7 @@ export async function GET() {
     logger.error(error.message, { model: "GET /api/torrents" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }
@@ -101,15 +100,13 @@ export async function POST(request) {
     logger.info(`Torrent ${data.action}ed successfully, hash: ${data.hash}`.replace('eed', 'ed'), { model: "POST /api/torrents" });
     return Response.json({
       code: 200,
-      message: "success",
-      data: null
+      message: "success"
     });
   } catch (error) {
     logger.error(error.message, { model: "POST /api/torrents" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }

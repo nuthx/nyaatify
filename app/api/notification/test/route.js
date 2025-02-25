@@ -45,15 +45,13 @@ export async function POST(request) {
     logger.info(`Notification test successfully, name: ${data.values.name}`, { model: "POST /api/notification/test" });
     return Response.json({
       code: 200,
-      message: "success",
-      data: null
+      message: "success"
     });
   } catch (error) {
     logger.error(error.message, { model: "POST /api/notification/test" });
     return Response.json({
       code: 500,
-      message: error.message,
-      data: null
+      message: error.message
     }, { status: 500 });
   }
 }
