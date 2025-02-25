@@ -28,7 +28,7 @@ export default function Settings() {
           <CardDescription>{t("st.abt.version.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <a>{t("glb.version")}: {currentVersion}</a>
+          <p className="text-sm text-muted-foreground">{t("glb.version")}: {currentVersion}</p>
         </CardContent>
       </Card>
     </>
