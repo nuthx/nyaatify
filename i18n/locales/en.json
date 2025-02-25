@@ -314,11 +314,18 @@
       }
     },
     "abt": {
-      "version": {
-        "title": "Version",
-        "description": "View the App and database version information of Nyaatify.",
-        "app_version": "App Version",
-        "db_version": "Database Version"
+      "app_version": "App Version",
+      "db_version": "Database Version",
+      "description": "Anime tracking, now on autopilot.",
+      "project": {
+        "title": "Overview",
+        "author": "Author",
+        "author_desc": "Nyaatify is designed and developed by <0>@nuthx</0>.",
+        "license": "License",
+        "license_desc": "This project is open-sourced under the <0>MIT License</0>.",
+        "repository": "Repository",
+        "contribute": "Contribute",
+        "contributor_desc": "Contributions are welcome! Feel free to submit <0>Pull Requests</0> or report issues in <1>Issues</1>."
       }
     }
   },

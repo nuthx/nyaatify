@@ -314,11 +314,18 @@
       }
     },
     "abt": {
-      "version": {
-        "title": "版本信息",
-        "description": "查看 Nyaatify 的程序与数据库版本信息",
-        "app_version": "程序版本",
-        "db_version": "数据库版本"
+      "app_version": "程序版本",
+      "db_version": "数据库版本",
+      "description": "动漫追踪，一触即发",
+      "project": {
+        "title": "项目信息",
+        "author": "作者",
+        "author_desc": "Nyaatify 由 <0>@nuthx</0> 参与设计与开发。",
+        "license": "开源协议",
+        "license_desc": "本项目基于 <0>MIT 协议</0> 开源。",
+        "repository": "项目地址",
+        "contribute": "参与贡献",
+        "contributor_desc": "欢迎提交 <0>Pull Request</0> 或在 <1>Issues</1> 中反馈问题。"
       }
     }
   },
