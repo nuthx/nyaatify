@@ -1,0 +1,337 @@
+{
+  "glb": {
+    "download": "Download",
+    "pause": "Pause",
+    "resume": "Resume",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm_delete": "Confirm Deletion",
+    "edit": "Edit",
+    "add": "Add",
+    "save": "Save",
+    "reset": "Reset",
+    "test": "Test",
+    "show": "Show",
+    "hide": "Hide",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "version": "Version",
+    "login": "Login",
+    "logout": "Logout",
+    "confirm_logout": "Confirm Logout"
+  },
+  "lang": {
+    "cn": "Chinese",
+    "jp": "Japanese",
+    "en": "English",
+    "romaji": "English (Romaji)"
+  },
+  "toast": {
+    "success": {
+      "save": "Saved Successfully",
+      "test": "Tested Successfully",
+      "send": "Notification Sent",
+      "edit": "Edited Successfully"
+    },
+    "failed": {
+      "save": "Save Failed",
+      "download": "Download Failed",
+      "pause": "Pause Failed",
+      "resume": "Resume Failed",
+      "edit": "Edit Failed",
+      "delete": "Delete Failed",
+      "login": "Login Failed",
+      "logout": "Logout Failed",
+      "fetch_config": "Failed to fetch config",
+      "fetch_rss": "Failed to load RSS subscription",
+      "fetch_downloader": "Failed to fetch downloader list",
+      "fetch_notification": "Failed to fetch notification list",
+      "fetch_logs": "Failed to fetch system logs",
+      "add_rss": "Failed to add RSS subscription",
+      "add_downloader": "Failed to add downloader",
+      "add_notification": "Failed to add notification",
+      "delete_rss": "Failed to delete RSS subscription",
+      "delete_downloader": "Failed to delete downloader",
+      "delete_notification": "Failed to delete notification",
+      "edit_notification": "Failed to edit notification",
+      "refresh_rss": "Failed to refresh RSS subscription",
+      "test_downloader": "Failed to connect to downloader",
+      "send_notification": "Failed to send notification"
+    },
+    "start": {
+      "download": "Start Downloading",
+      "refresh_rss": "Start Refreshing"
+    }
+  },
+  "validate": {
+    "required": "Please enter content",
+    "name_2": "Name must be at least 2 characters",
+    "name_40": "Name must be less than 40 characters",
+    "username": "Please enter a valid username",
+    "password": "Please enter a valid password",
+    "password_8": "Password must be at least 8 characters",
+    "url_invalid": "Please enter a valid URL",
+    "url_http": "URL must start with http or https",
+    "url_slash": "URL must not end with /",
+    "api_invalid": "Please enter a valid API URL",
+    "api_http": "API URL must start with http or https",
+    "api_slash": "API URL must not end with /"
+  },
+  "nav": {
+    "anime": "Anime",
+    "downloads": "Downloads",
+    "settings": "Settings"
+  },
+  "anime": {
+    "empty": "Please add a RSS subscription first.",
+    "load_fail": "Failed to load list",
+    "no_downloader": "No Downloader",
+    "downloader_offline": "Downloader Offline",
+    "today": "Today",
+    "week": "Week",
+    "total": "Total"
+  },
+  "downloads": {
+    "empty_downloader": "Please add a downloader first.",
+    "empty_online": "No online downloader now",
+    "empty_torrents": "No torrents found in all downloaders",
+    "d_speed": "Download Speed",
+    "u_speed": "Upload Speed",
+    "eta": "ETA",
+    "d": "d",
+    "h": "h",
+    "m": "m",
+    "s": "s",
+    "alert": "This action will delete the task from the downloader, but the downloaded files will not be deleted.",
+    "state": {
+      "error": "Error",
+      "missingFiles": "Missing Files",
+      "uploading": "Uploading",
+      "pausedUP": "Paused",
+      "queuedUP": "Queued",
+      "stalledUP": "Uploading",
+      "checkingUP": "Checked",
+      "forcedUP": "Uploading",
+      "stoppedUP": "Stopped",
+      "allocating": "Allocating Space",
+      "downloading": "Downloading",
+      "metaDL": "Getting Meta",
+      "pausedDL": "Paused",
+      "queuedDL": "Queued",
+      "stalledDL": "Downloading",
+      "checkingDL": "Checking",
+      "forcedDL": "Downloading",
+      "stoppedDL": "Stopped",
+      "checkingResumeData": "Checking Resume Data",
+      "moving": "Moved",
+      "unknown": "Unknown"
+    }
+  },
+  "st": {
+    "title": "Settings",
+    "nav": {
+      "general": "General",
+      "rss": "RSS Subscription",
+      "downloader": "Downloader",
+      "notification": "Notification",
+      "user": "Account",
+      "logs": "System Logs",
+      "about": "About Nyaatify"
+    },
+    "metadata": {
+      "general": "General Setting",
+      "rss": "RSS Subscription Setting",
+      "downloader": "Downloader Setting",
+      "notification": "Notification Setting",
+      "user": "Account Setting",
+      "logs": "System Logs",
+      "about": "About"
+    },
+    "gr": {
+      "theme": {
+        "title": "Theme",
+        "description": "Choose how Nyaatify looks to you.",
+        "system": "System",
+        "light": "Light",
+        "dark": "Dark"
+      },
+      "language": {
+        "title": "Language",
+        "description": "This is the language of Nyaatify. This setting is saved in your browser."
+      },
+      "dl_state": {
+        "title": "Show Downloader State",
+        "description": "Show the state of downloader on anime page, such as no downloader or downloader offline."
+      },
+      "title_priority": {
+        "title": "Title Priority",
+        "description": "The anime title will be displayed in the order of the selected language."
+      },
+      "cover_source": {
+        "title": "Cover Source",
+        "description": "Choose your favorite anime cover: Bangumi uses standard covers, Anilist removes the anime title from the cover."
+      }
+    },
+    "rss": {
+      "add": {
+        "title": "Add a New RSS Subscription",
+        "description": "Add a Nyaa or Mikan RSS subscription to track anime publication. It may take a few minutes to parse all anime data.",
+        "name": "Name",
+        "url": "RSS URL",
+        "cron": "Refresh Rule (CRON)"
+      },
+      "list": {
+        "title": "RSS Subscription List",
+        "empty": "Please add a RSS subscription first.",
+        "cron": "Refresh Rule",
+        "running": "Refreshing",
+        "next": "Next",
+        "refresh": "Refresh Now",
+        "alert": "This action will delete this RSS subscription permanently. The anime included in this RSS will also be DELETED."
+      },
+      "ai": {
+        "title": "AI Parsing",
+        "description": "When parsing titles, prioritize utilizing AI to accurately extract anime titles. The selected model should be compatible with OpenAI interfaces, such as ChatGPT, Gemini, DeepSeek, Kimi, etc. To ensure accuracy, try not to use the lowest grade Lite model. Each parsing consumes approximately 200 tokens.",
+        "priority": "Priority",
+        "local": "Use local parsing only",
+        "ai": "Use AI parsing first",
+        "api": "API URL",
+        "key": "API Key",
+        "model": "Model"
+      }
+    },
+    "dl": {
+      "add": {
+        "title": "Add a New Downloader",
+        "description": "Add a downloader to manage your download tasks.",
+        "name": "Name",
+        "type": "Downloader Type",
+        "type_notice_qb": "Notice: qBittorrent minimum compatible version is 4.1.0",
+        "type_notice_tr": "Notice: Transmission minimum compatible version is 1.0",
+        "type_notice_ar": "Notice: Aria2 minimum compatible version is 1.0",
+        "url": "Downloader URL",
+        "username": "Username",
+        "password": "Password"
+      },
+      "list": {
+        "title": "Downloaders List",
+        "empty": "Please add a downloader first.",
+        "online": "Online",
+        "offline": "Offline",
+        "alert": "This action will delete this downloader permanently."
+      },
+      "default": {
+        "title": "Default Downloader",
+        "description": "When creating download tasks, Nyaatify will prioritize downloading through this downloader.",
+        "downloader": "Default Downloader",
+        "empty": "No Downloader"
+      }
+    },
+    "nt": {
+      "add": {
+        "title": "Add a New Notification",
+        "description": "Add a notification service to receive message pushes when new anime releases.",
+        "name": "Name",
+        "filter": "Filter Rules (Optional)",
+        "filter_notice": "Enter the RSS subscription name to receive notifications only for new anime releases from this subscription. For multiple subscriptions, separate them with commas. Leave it blank to receive all notifications.",
+        "type": "Push Service",
+        "type_notice": "View official documentation",
+        "type_bark": "Bark",
+        "type_gotify": "Gotify",
+        "type_serverchan": "ServerChan",
+        "url": "Push URL",
+        "token": "Token",
+        "push_title": "Push Title",
+        "push_message": "Push Message",
+        "extra": "Extra Parameters (Optional)",
+        "extra_notice": "The extra parameters added will be sent together in the POST request. For multiple parameters, separate them with “&”. ",
+        "variable": "Custom variables supported, ",
+        "variable_view": "view details"
+      },
+      "variable": {
+        "description": "Custom variables must be wrapped in double curly braces like {{title_jp}}. Please check the spelling carefully, otherwise empty content will be returned.",
+        "rss": "RSS subscription name of this anime",
+        "title_publish": "Published original title",
+        "title_jp": "Japanese title",
+        "title_cn": "Chinese title",
+        "title_en": "English title",
+        "title_romaji": "Romaji title",
+        "torrent_link": "Torrent download link",
+        "torrent_hash": "Torrent hash",
+        "torrent_size": "Torrent size",
+        "cover_anilist": "Anilist cover image link",
+        "cover_bangumi": "Bangumi cover image link",
+        "link_anilist": "Anilist detail page link",
+        "link_bangumi": "Bangumi detail page link"
+      },
+      "list": {
+        "title": "Notification List",
+        "empty": "Please add a notification service first.",
+        "filter": "Filter Rules",
+        "filter_all": "All",
+        "push_title": "Push Title",
+        "push_message": "Push Message",
+        "extra": "Extra Parameters",
+        "test": "Test Notification",
+        "alert": "This action will delete this notification service permanently."
+      }
+    },
+    "user": {
+      "username": {
+        "title": "Change Username",
+        "description": "Change the username of your account."
+      },
+      "password": {
+        "title": "Change Password",
+        "description": "Change the password of your account. The new password will not be confirmed twice, please ensure the password correct.",
+        "current": "Current Password",
+        "new": "New Password"
+      },
+      "devices": {
+        "title": "Logged in Devices",
+        "os": "Operating System",
+        "browser": "Browser",
+        "ip": "IP Address",
+        "last": "Last Used",
+        "current": "This Device",
+        "alert": "After logging out, you will need to log in again the next time you use the device."
+      }
+    },
+    "logs": {
+      "title": "System Logs",
+      "select_date": "Select Date",
+      "log_level": "Log Level",
+      "all": "All",
+      "info": "Info",
+      "warn": "Warn",
+      "error": "Error",
+      "no_logs": "No logs",
+      "table": {
+        "level": "Level",
+        "time": "Time",
+        "model": "Model",
+        "message": "Message"
+      }
+    },
+    "abt": {
+      "app_version": "App Version",
+      "db_version": "Database Version",
+      "description": "Anime tracking, now on autopilot.",
+      "project": {
+        "title": "Overview",
+        "author": "Author",
+        "author_desc": "Nyaatify is designed and developed by <0>@nuthx</0>.",
+        "license": "License",
+        "license_desc": "This project is open-sourced under the <0>MIT License</0>.",
+        "repository": "Repository",
+        "contribute": "Contribute",
+        "contributor_desc": "Contributions are welcome! Feel free to submit <0>Pull Requests</0> or report issues in <1>Issues</1>."
+      }
+    }
+  },
+  "404": {
+    "title": "404 Page Not Found",
+    "description": "The page you are looking for does not exists.",
+    "home": "Return Home"
+  }
+}
