@@ -316,7 +316,9 @@
     "abt": {
       "version": {
         "title": "版本信息",
-        "description": "查看正在运行的 Nyaatify 程序版本"
+        "description": "查看 Nyaatify 的程序与数据库版本信息",
+        "app_version": "程序版本",
+        "db_version": "数据库版本"
       }
     }
   },

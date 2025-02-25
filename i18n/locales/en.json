@@ -316,7 +316,9 @@
     "abt": {
       "version": {
         "title": "Version",
-        "description": "Check the running version of Nyaatify."
+        "description": "View the App and database version information of Nyaatify.",
+        "app_version": "App Version",
+        "db_version": "Database Version"
       }
     }
   },
