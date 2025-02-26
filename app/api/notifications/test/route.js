@@ -1,5 +1,5 @@
 import { logger } from "@/lib/logger";
-import { dispatchNotification } from "@/lib/notifications";
+import { dispatchNotification } from "@/lib/notification";
 
 // Test a notification push
 // Body: {

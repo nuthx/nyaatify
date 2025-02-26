@@ -1,0 +1,8 @@
+version: "3.8"
+
+services:
+  nyaatify:
+    build: .
+    ports:
+      - "4100:4100"
+    restart: unless-stopped
