@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "docker:build": "docker build -t nyaatify:$(npm pkg get version | tr -d '\"') -t nyaatify:latest .",
+    "docker:run": "docker run -p 4100:4100 nyaatify:latest"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
