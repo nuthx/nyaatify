@@ -1,7 +1,7 @@
 "use client";
 
 import crypto from "crypto";
-import useSWR, { mutate } from "swr"
+import useSWR from "swr"
 import { toast } from "sonner"
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -87,8 +87,8 @@ export default function Devices() {
     return result.data;
   };
 
-  const { data: usernameData, error: usernameError, isLoading: usernameLoading } = useSWR(usernameApi, fetcher);
-  const { data: deviceData, error: deviceError, isLoading: deviceLoading } = useSWR(deviceApi, fetcher);
+  const { data: usernameData, error: usernameError, isLoading: usernameLoading, mutate: mutateUsername } = useSWR(usernameApi, fetcher);
+  const { data: deviceData, error: deviceError, isLoading: deviceLoading, mutate: mutateDevice } = useSWR(deviceApi, fetcher);
 
   // Set page title
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function Devices() {
   const handleUsername = async (values) => {
     const result = await handleRequest("PATCH", usernameApi, JSON.stringify({ values: values }));
     if (result.success) {
-      mutate(usernameApi);
+      mutateUsername();
       toast(t("toast.success.edit"));
     } else {
       toast.error(t("toast.failed.edit"), {
@@ -142,7 +142,7 @@ export default function Devices() {
   const handleDelete = async (id) => {
     const result = await handleRequest("DELETE", `${deviceApi}/${id}`);
     if (result.success) {
-      mutate(deviceApi);
+      mutateDevice();
     } else {
       toast.error(t("toast.failed.delete"), {
         description: result.message,

@@ -1,6 +1,6 @@
 "use client";
 
-import useSWR, { mutate } from "swr"
+import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -81,8 +81,8 @@ export default function DownloaderSettings() {
     return result.data;
   };
 
-  const { data: downloaderData, error: downloaderError, isLoading: downloaderLoading } = useSWR(downloadersApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
+  const { data: downloaderData, error: downloaderError, isLoading: downloaderLoading, mutate: mutateDownloader } = useSWR(downloadersApi, fetcher);
+  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
 
   // Set page title
   useEffect(() => {
@@ -109,8 +109,8 @@ export default function DownloaderSettings() {
     const result = await handleRequest("POST", downloadersApi, JSON.stringify({ values }));
     if (result.success) {
       downloaderForm.reset();
-      mutate(downloadersApi);
-      mutate(configApi);
+      mutateDownloader();
+      mutateConfig();
     } else {
       toast.error(t("toast.failed.add_downloader"), {
         description: result.message,
@@ -121,8 +121,8 @@ export default function DownloaderSettings() {
   const handleDelete = async (id) => {
     const result = await handleRequest("DELETE", `${downloadersApi}/${id}`);
     if (result.success) {
-      mutate(downloadersApi);
-      mutate(configApi);
+      mutateDownloader();
+      mutateConfig();
     } else {
       toast.error(t("toast.failed.delete_downloader"), {
         description: result.message,
@@ -147,7 +147,7 @@ export default function DownloaderSettings() {
     const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
     if (result.success) {
       toast(t("toast.success.save"));
-      mutate(configApi);
+      mutateConfig();
     } else {
       toast.error(t("toast.failed.save"), {
         description: result.message,
