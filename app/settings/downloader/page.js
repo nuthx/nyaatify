@@ -190,8 +190,8 @@ export default function DownloaderSettings() {
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="qBittorrent">qBittorrent</SelectItem>
-                      <SelectItem value="Transmission">Transmission</SelectItem>
-                      <SelectItem value="Aria2">Aria2</SelectItem>
+                      <SelectItem value="Transmission" disabled>Transmission</SelectItem>
+                      <SelectItem value="Aria2" disabled>Aria2</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
