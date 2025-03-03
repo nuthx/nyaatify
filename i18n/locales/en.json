@@ -27,40 +27,34 @@
     "romaji": "English (Romaji)"
   },
   "toast": {
+    "start": {
+      "download": "Start Downloading",
+      "refresh_rss": "Start Refreshing Subscription"
+    },
+    "done": {
+      "send": "Notification Sent"
+    },
     "success": {
       "save": "Saved Successfully",
       "test": "Tested Successfully",
-      "send": "Notification Sent",
       "edit": "Edited Successfully"
     },
     "failed": {
+      "login": "Login Failed",
+      "logout": "Logout Failed",
       "save": "Save Failed",
+      "test": "Test Failed",
+      "add": "Add Failed",
+      "edit": "Edit Failed",
+      "delete": "Delete Failed",
       "download": "Download Failed",
       "pause": "Pause Failed",
       "resume": "Resume Failed",
-      "edit": "Edit Failed",
-      "delete": "Delete Failed",
-      "login": "Login Failed",
-      "logout": "Logout Failed",
       "fetch_config": "Failed to fetch config",
-      "fetch_rss": "Failed to load RSS subscription",
-      "fetch_downloader": "Failed to fetch downloader list",
-      "fetch_notification": "Failed to fetch notification list",
-      "fetch_logs": "Failed to fetch system logs",
-      "add_rss": "Failed to add RSS subscription",
-      "add_downloader": "Failed to add downloader",
-      "add_notification": "Failed to add notification",
-      "delete_rss": "Failed to delete RSS subscription",
-      "delete_downloader": "Failed to delete downloader",
-      "delete_notification": "Failed to delete notification",
-      "edit_notification": "Failed to edit notification",
-      "refresh_rss": "Failed to refresh RSS subscription",
-      "test_downloader": "Failed to connect to downloader",
+      "fetch_list": "Failed to fetch list",
+      "fetch_logs": "Failed to fetch logs",
+      "refresh_rss": "Failed to refresh subscription",
       "send_notification": "Failed to send notification"
-    },
-    "start": {
-      "download": "Start Downloading",
-      "refresh_rss": "Start Refreshing"
     }
   },
   "validate": {

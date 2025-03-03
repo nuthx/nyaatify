@@ -99,7 +99,7 @@ export default function RSSSettings() {
 
   useEffect(() => {
     if (rssError) {
-      toast.error(t("toast.failed.fetch_rss"), {
+      toast.error(t("toast.failed.fetch_list"), {
         description: rssError.message,
       });
     }
@@ -125,7 +125,7 @@ export default function RSSSettings() {
       rssForm.reset();
       mutateRss();
     } else {
-      toast.error(t("toast.failed.add_rss"), {
+      toast.error(t("toast.failed.add"), {
         description: result.message,
       });
     }
@@ -136,7 +136,7 @@ export default function RSSSettings() {
     if (result.success) {
       mutateRss();
     } else {
-      toast.error(t("toast.failed.delete_rss"), {
+      toast.error(t("toast.failed.delete"), {
         description: result.message,
       });
     }

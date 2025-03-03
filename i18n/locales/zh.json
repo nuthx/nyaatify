@@ -27,40 +27,34 @@
     "romaji": "罗马音"
   },
   "toast": {
+    "start": {
+      "download": "开始下载",
+      "refresh_rss": "开始刷新订阅"
+    },
+    "done": {
+      "send": "通知已发送"
+    },
     "success": {
       "save": "保存成功",
       "test": "测试成功",
-      "send": "通知已发送",
       "edit": "修改成功"
     },
     "failed": {
+      "login": "登陆失败",
+      "logout": "登出失败",
       "save": "保存失败",
+      "test": "测试失败",
+      "add": "添加失败",
+      "edit": "修改失败",
+      "delete": "删除失败",
       "download": "下载失败",
       "pause": "暂停失败",
       "resume": "恢复失败",
-      "edit": "修改失败",
-      "delete": "删除失败",
-      "login": "登陆失败",
-      "logout": "登出失败",
-      "fetch_config": "配置获取失败",
-      "fetch_rss": "无法获取 RSS 订阅列表",
-      "fetch_downloader": "无法获取下载器列表",
-      "fetch_notification": "无法获取通知列表",
-      "fetch_logs": "无法获取日志信息",
-      "add_rss": "添加 RSS 订阅失败",
-      "add_downloader": "添加下载器失败",
-      "add_notification": "添加通知失败",
-      "delete_rss": "删除 RSS 订阅失败",
-      "delete_downloader": "删除下载器失败",
-      "delete_notification": "删除通知失败",
-      "edit_notification": "编辑通知失败",
-      "refresh_rss": "刷新 RSS 订阅失败",
-      "test_downloader": "无法连接到下载器",
+      "fetch_config": "系统配置获取失败",
+      "fetch_list": "列表获取失败",
+      "fetch_logs": "日志获取失败",
+      "refresh_rss": "订阅刷新失败",
       "send_notification": "通知发送失败"
-    },
-    "start": {
-      "download": "开始下载",
-      "refresh_rss": "开始刷新 RSS 订阅"
     }
   },
   "validate": {

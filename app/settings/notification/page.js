@@ -145,7 +145,7 @@ export default function NotificationSettings() {
 
   useEffect(() => {
     if (notificationError) {
-      toast.error(t("toast.failed.fetch_notification"), {
+      toast.error(t("toast.failed.fetch_list"), {
         description: notificationError.message,
       });
     }
@@ -175,7 +175,7 @@ export default function NotificationSettings() {
       notificationFrom.reset();
       mutateNotification();
     } else {
-      toast.error(t("toast.failed.add_notification"), {
+      toast.error(t("toast.failed.add"), {
         description: result.message,
       });
     }
@@ -186,7 +186,7 @@ export default function NotificationSettings() {
     if (result.success) {
       mutateNotification();
     } else {
-      toast.error(t("toast.failed.delete_notification"), {
+      toast.error(t("toast.failed.delete"), {
         description: result.message,
       });
     }
@@ -197,7 +197,7 @@ export default function NotificationSettings() {
     if (result.success) {
       mutateNotification();
     } else {
-      toast.error(t("toast.failed.edit_notification"), {
+      toast.error(t("toast.failed.edit"), {
         description: result.message,
       });
     }
@@ -206,7 +206,7 @@ export default function NotificationSettings() {
   const handleTest = async (values) => {
     const result = await handleRequest("POST", `${notificationApi}/test`, JSON.stringify({ values }));
     if (result.success) {
-      toast(t("toast.success.send"));
+      toast(t("toast.done.send"));
     } else {
       toast.error(t("toast.failed.send_notification"), {
         description: result.message,

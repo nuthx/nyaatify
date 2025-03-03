@@ -91,7 +91,7 @@ export default function DownloaderSettings() {
 
   useEffect(() => {
     if (downloaderError) {
-      toast.error(t("toast.failed.fetch_downloader"), {
+      toast.error(t("toast.failed.fetch_list"), {
         description: downloaderError.message,
       });
     }
@@ -112,7 +112,7 @@ export default function DownloaderSettings() {
       mutateDownloader();
       mutateConfig();
     } else {
-      toast.error(t("toast.failed.add_downloader"), {
+      toast.error(t("toast.failed.add"), {
         description: result.message,
       });
     }
@@ -124,7 +124,7 @@ export default function DownloaderSettings() {
       mutateDownloader();
       mutateConfig();
     } else {
-      toast.error(t("toast.failed.delete_downloader"), {
+      toast.error(t("toast.failed.delete"), {
         description: result.message,
       });
     }
@@ -137,7 +137,7 @@ export default function DownloaderSettings() {
         description: `${t("glb.version")}: ${result.data.version}`
       });
     } else {
-      toast.error(t("toast.failed.test_downloader"), {
+      toast.error(t("toast.failed.test"), {
         description: result.message,
       });
     }
