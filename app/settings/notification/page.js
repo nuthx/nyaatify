@@ -1,6 +1,6 @@
 "use client";
 
-import useSWR, { mutate } from "swr"
+import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -135,8 +135,8 @@ export default function NotificationSettings() {
     return result.data;
   };
 
-  const { data: notificationData, error: notificationError, isLoading: notificationLoading } = useSWR(notificationApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
+  const { data: notificationData, error: notificationError, isLoading: notificationLoading, mutate: mutateNotification } = useSWR(notificationApi, fetcher);
+  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
 
   // Set page title
   useEffect(() => {
@@ -145,7 +145,7 @@ export default function NotificationSettings() {
 
   useEffect(() => {
     if (notificationError) {
-      toast.error(t("toast.failed.fetch_notification"), {
+      toast.error(t("toast.failed.fetch_list"), {
         description: notificationError.message,
       });
     }
@@ -173,9 +173,9 @@ export default function NotificationSettings() {
     const result = await handleRequest("POST", notificationApi, JSON.stringify({ values }));
     if (result.success) {
       notificationFrom.reset();
-      mutate(notificationApi);
+      mutateNotification();
     } else {
-      toast.error(t("toast.failed.add_notification"), {
+      toast.error(t("toast.failed.add"), {
         description: result.message,
       });
     }
@@ -184,9 +184,9 @@ export default function NotificationSettings() {
   const handleDelete = async (id) => {
     const result = await handleRequest("DELETE", `${notificationApi}/${id}`);
     if (result.success) {
-      mutate(notificationApi);
+      mutateNotification();
     } else {
-      toast.error(t("toast.failed.delete_notification"), {
+      toast.error(t("toast.failed.delete"), {
         description: result.message,
       });
     }
@@ -195,9 +195,9 @@ export default function NotificationSettings() {
   const handleEdit = async (id, values) => {
     const result = await handleRequest("PATCH", `${notificationApi}/${id}`, JSON.stringify({ values }));
     if (result.success) {
-      mutate(notificationApi);
+      mutateNotification();
     } else {
-      toast.error(t("toast.failed.edit_notification"), {
+      toast.error(t("toast.failed.edit"), {
         description: result.message,
       });
     }
@@ -206,7 +206,7 @@ export default function NotificationSettings() {
   const handleTest = async (values) => {
     const result = await handleRequest("POST", `${notificationApi}/test`, JSON.stringify({ values }));
     if (result.success) {
-      toast(t("toast.success.send"));
+      toast(t("toast.done.send"));
     } else {
       toast.error(t("toast.failed.send_notification"), {
         description: result.message,

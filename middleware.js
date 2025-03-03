@@ -12,9 +12,8 @@ export async function middleware(request) {
       : NextResponse.next();
   }
 
-  // Do not need to authenticate paths
-  const publicPaths = ["/login", "/api/auth"];
-  if (publicPaths.some(path => request.nextUrl.pathname.startsWith(path))) {
+  // Exclude auth routes
+  if (request.nextUrl.pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
 
@@ -41,8 +40,11 @@ async function verifyToken(token, origin) {
 }
 
 export const config = {
-  // Match all paths except _next/static and favicon.ico
   matcher: [
-    "/((?!_next/static|favicon.ico|logo).*)",
+    "/api/:path*",
+    "/anime",
+    "/downloads",
+    "/login",
+    "/settings/:path*",
   ],
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import useSWR, { mutate } from "swr"
+import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -89,8 +89,8 @@ export default function RSSSettings() {
     return result.data;
   };
 
-  const { data: rssData, error: rssError, isLoading: rssLoading } = useSWR(rssApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading } = useSWR(configApi, fetcher);
+  const { data: rssData, error: rssError, isLoading: rssLoading, mutate: mutateRss } = useSWR(rssApi, fetcher);
+  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
 
   // Set page title
   useEffect(() => {
@@ -99,7 +99,7 @@ export default function RSSSettings() {
 
   useEffect(() => {
     if (rssError) {
-      toast.error(t("toast.failed.fetch_rss"), {
+      toast.error(t("toast.failed.fetch_list"), {
         description: rssError.message,
       });
     }
@@ -123,9 +123,9 @@ export default function RSSSettings() {
     const result = await handleRequest("POST", rssApi, JSON.stringify({ values }));
     if (result.success) {
       rssForm.reset();
-      mutate(rssApi);
+      mutateRss();
     } else {
-      toast.error(t("toast.failed.add_rss"), {
+      toast.error(t("toast.failed.add"), {
         description: result.message,
       });
     }
@@ -134,9 +134,9 @@ export default function RSSSettings() {
   const handleDelete = async (id) => {
     const result = await handleRequest("DELETE", `${rssApi}/${id}`);
     if (result.success) {
-      mutate(rssApi);
+      mutateRss();
     } else {
-      toast.error(t("toast.failed.delete_rss"), {
+      toast.error(t("toast.failed.delete"), {
         description: result.message,
       });
     }
@@ -146,7 +146,7 @@ export default function RSSSettings() {
     const result = await handleRequest("POST", `${rssApi}/refresh`, JSON.stringify({ values: { name } }));
     if (result.success) {
       toast(t("toast.start.refresh_rss"));
-      mutate(rssApi);
+      mutateRss();
     } else {
       toast.error(t("toast.failed.refresh_rss"), {
         description: result.message,
@@ -158,7 +158,7 @@ export default function RSSSettings() {
     const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
     if (result.success) {
       toast(t("toast.success.save"));
-      mutate(configApi);
+      mutateConfig();
     } else {
       toast.error(t("toast.failed.save"), {
         description: result.message,
