@@ -1,12 +1,14 @@
-name: Build, Push and Release
+name: Build and Release
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - '*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,25 +25,24 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Get version from package.json
-        id: version
-        run: |
-          echo "VERSION=$(jq -r '.version' package.json)" >> $GITHUB_ENV
-
       - name: Build and push Docker images
         run: |
           docker buildx create --use
           docker buildx build --platform linux/amd64,linux/arm64 -t nuthx/nyaatify:latest . --push
-          docker buildx build --platform linux/amd64,linux/arm64 -t nuthx/nyaatify:${{ env.VERSION }} . --push
+          docker buildx build --platform linux/amd64,linux/arm64 -t nuthx/nyaatify:${{ github.ref_name }} . --push
 
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Release
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ env.VERSION }}
+          tag_name: ${{ github.ref_name }}
           draft: true
-          name: 🎉 ${{ env.VERSION }}
+          name: v${{ github.ref_name }}
           body: |
             ## New features
             - New content
