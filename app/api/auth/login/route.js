@@ -66,7 +66,8 @@ export async function POST(request) {
     cookieStore.set({
       name: "auth_token",
       value: token,
-      sameSite: "strict"
+      sameSite: "strict",
+      expires: new Date(Date.now() + 365 * 86400 * 1000) // 1 year
     });
 
     logger.info(`User logged in, username: ${user.username}`, { model: "POST /api/auth/login" });
