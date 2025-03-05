@@ -47,6 +47,7 @@ export async function GET(request) {
       return torrentsResult.data.map(t => ({...t, downloader_name: downloader.name}));
     }))).flat();
 
+    logger.debug(`Get anime list successfully, page: ${page}, size: ${size}`, { model: "GET /api/anime" });
     return Response.json({
       code: 200,
       message: "success",

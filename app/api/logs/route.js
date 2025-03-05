@@ -38,6 +38,7 @@ export async function GET(request) {
 
     // Check if log file exists
     if (foundDate) {
+      logger.debug(`Get system logs successfully, date: ${foundDate}`, { model: "GET /api/logs" });
       return Response.json({
         code: 200,
         message: "success",

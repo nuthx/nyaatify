@@ -58,7 +58,7 @@ export async function POST(request) {
         ]
       );
     } else {
-      logger.warn(`Token will not be stored in database due to non-browser login, user agent: ${ua.ua}`, { model: "POST /api/auth/login" });
+      logger.warn(`Non-browser login, token will not be stored in database, user agent: ${ua.ua}`, { model: "POST /api/auth/login" });
     }
 
     // Set cookie

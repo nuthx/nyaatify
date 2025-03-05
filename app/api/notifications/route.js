@@ -8,6 +8,7 @@ export async function GET() {
     const db = await getDb();
     const notification = await db.all("SELECT * FROM notification ORDER BY name ASC");
 
+    logger.debug("Get notification list successfully", { model: "GET /api/notifications" });
     return Response.json({
       code: 200,
       message: "success",
@@ -45,7 +46,7 @@ export async function POST(request) {
 
     // Check if name is empty
     if (data.values.name.trim() === "") {
-      throw new Error("Name is required");
+      throw new Error("Notification name is required");
     }
 
     // Check if name already exists
@@ -71,7 +72,7 @@ export async function POST(request) {
       ]
     );
 
-    logger.info(`Notification added successfully, name: ${data.values.name}`, { model: "POST /api/notifications" });
+    logger.info(`Add notification successfully, name: ${data.values.name}`, { model: "POST /api/notifications" });
     return Response.json({
       code: 200,
       message: "success"
