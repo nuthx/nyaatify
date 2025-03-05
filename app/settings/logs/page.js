@@ -115,7 +115,7 @@ export default function Logs() {
         <CardHeader>
           <CardTitle>{t("st.logs.title")}</CardTitle>
         </CardHeader>
-        <CardContent className="p-0 pb-6">
+        <CardContent className="p-0 pb-1">
           <div className="flex gap-4 p-6 border-b">
             <Select defaultValue={logsData?.date} onValueChange={setSelectedDate}>
               <SelectTrigger className="w-48">
@@ -140,28 +140,31 @@ export default function Logs() {
               </SelectContent>
             </Select>
           </div>
-          <div className="px-4 space-y-4">
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent">
-                  <TableHead className="px-2 py-4">{t("st.logs.table.level")}</TableHead>
-                  <TableHead className="px-2 py-4">{t("st.logs.table.time")}</TableHead>
-                  <TableHead className="px-2 py-4">{t("st.logs.table.model")}</TableHead>
-                  <TableHead className="px-2 py-4">{t("st.logs.table.message")}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {paginatedLogs.length === 0 ? (
+          <div className="px-4">
+            {paginatedLogs.length === 0 ? (
+              <div className="my-16 text-sm text-center text-muted-foreground">
+                {t("st.logs.no_logs")}
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
                   <TableRow className="hover:bg-transparent">
-                    <TableCell colSpan={4} className="text-center h-28 text-muted-foreground">
-                      {t("st.logs.no_logs")}
-                    </TableCell>
+                    <TableHead className="px-2 py-4">{t("st.logs.table.level")}</TableHead>
+                    <TableHead className="px-2 py-4">{t("st.logs.table.time")}</TableHead>
+                    <TableHead className="px-2 py-4">{t("st.logs.table.model")}</TableHead>
+                    <TableHead className="px-2 py-4">{t("st.logs.table.message")}</TableHead>
                   </TableRow>
-                ) : (
-                  paginatedLogs.map((log, index) => (
+                </TableHeader>
+                <TableBody>
+                  {paginatedLogs.map((log, index) => (
                     <TableRow key={index} className="hover:bg-transparent">
                       <TableCell className="px-2 py-3">
-                        <Badge variant={log.level === "error" ? "destructive" : log.level === "warn" ? "warning" : "outline"}>
+                        <Badge variant={
+                          log.level === "error" ? "destructive" : 
+                          log.level === "warn" ? "warning" : 
+                          log.level === "debug" ? "debug" : 
+                          "outline"
+                        }>
                           {log.level.charAt(0).toUpperCase() + log.level.slice(1)}
                         </Badge>
                       </TableCell>
@@ -169,11 +172,12 @@ export default function Logs() {
                       <TableCell className="px-2 py-3">{log.model}</TableCell>
                       <TableCell className="px-2 py-3">{log.message}</TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
             <PaginationPro
+              className="my-3"
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
