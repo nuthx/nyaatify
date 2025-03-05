@@ -92,8 +92,8 @@ export default function Logs() {
         <CardHeader>
           <CardTitle>{t("st.logs.title")}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex gap-4 mb-4">
+        <CardContent className="p-0 pb-6">
+          <div className="flex gap-4 p-6 border-b">
             <Select defaultValue={data?.date} onValueChange={setSelectedDate}>
               <SelectTrigger className="w-48">
                 <SelectValue placeholder={t("st.logs.select_date")} />
@@ -117,40 +117,40 @@ export default function Logs() {
             </Select>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t("st.logs.table.level")}</TableHead>
-                <TableHead>{t("st.logs.table.time")}</TableHead>
-                <TableHead>{t("st.logs.table.model")}</TableHead>
-                <TableHead>{t("st.logs.table.message")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paginatedLogs.length === 0 ? (
+          <div className="px-4 space-y-4">
+            <Table>
+              <TableHeader>
                 <TableRow className="hover:bg-transparent">
-                  <TableCell colSpan={4} className="text-center h-28 text-muted-foreground">
-                    {t("st.logs.no_logs")}
-                  </TableCell>
+                  <TableHead className="px-2 py-4">{t("st.logs.table.level")}</TableHead>
+                  <TableHead className="px-2 py-4">{t("st.logs.table.time")}</TableHead>
+                  <TableHead className="px-2 py-4">{t("st.logs.table.model")}</TableHead>
+                  <TableHead className="px-2 py-4">{t("st.logs.table.message")}</TableHead>
                 </TableRow>
-              ) : (
-                paginatedLogs.map((log, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <Badge variant={log.level === "error" ? "destructive" : log.level === "warn" ? "warning" : "outline"}>
-                        {log.level.charAt(0).toUpperCase() + log.level.slice(1)}
-                      </Badge>
+              </TableHeader>
+              <TableBody>
+                {paginatedLogs.length === 0 ? (
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell colSpan={4} className="text-center h-28 text-muted-foreground">
+                      {t("st.logs.no_logs")}
                     </TableCell>
-                    <TableCell>{new Date(log.timestamp).toLocaleString()}</TableCell>
-                    <TableCell>{log.model}</TableCell>
-                    <TableCell>{log.message}</TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-          
-          <div className="mt-4">
+                ) : (
+                  paginatedLogs.map((log, index) => (
+                    <TableRow key={index} className="hover:bg-transparent">
+                      <TableCell className="px-2 py-3">
+                        <Badge variant={log.level === "error" ? "destructive" : log.level === "warn" ? "warning" : "outline"}>
+                          {log.level.charAt(0).toUpperCase() + log.level.slice(1)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-2 py-3">{new Date(log.timestamp).toLocaleString()}</TableCell>
+                      <TableCell className="px-2 py-3">{log.model}</TableCell>
+                      <TableCell className="px-2 py-3">{log.message}</TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+
             <PaginationPro
               currentPage={currentPage}
               totalPages={totalPages}
