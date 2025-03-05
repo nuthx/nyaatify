@@ -4,6 +4,7 @@ import useSWR from "swr"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
+import { handleRequest } from "@/lib/handlers";
 import {
   Select,
   SelectContent,
@@ -23,6 +24,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CardDescription,
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -30,6 +32,7 @@ import { PaginationPro } from "@/components/pagination";
 
 export default function Logs() {
   const logsApi = "/api/logs";
+  const configApi = "/api/configs";
 
   const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
@@ -40,17 +43,17 @@ export default function Logs() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 80;
 
-  const { data, error, isLoading } = useSWR(
-    selectedDate ? `${logsApi}?date=${selectedDate}` : logsApi,
-    async (url) => {
-      const response = await fetch(url);
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-      return result.data;
+  const fetcher = async (url) => {
+    const response = await fetch(url);
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message);
     }
-  );
+    return result.data;
+  };
+
+  const { data: logsData, error: logsError, isLoading: logsLoading } = useSWR(selectedDate ? `${logsApi}?date=${selectedDate}` : logsApi, fetcher);
+  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
 
   // Set page title
   useEffect(() => {
@@ -58,17 +61,25 @@ export default function Logs() {
   }, [t]);
 
   useEffect(() => {
-    if (error) {
+    if (logsError) {
       toast.error(t("toast.failed.fetch_logs"), {
-        description: error.message,
+        description: logsError.message,
       });
     }
-    if (data) {
-      setLogs(data.logs);
-      setFilteredLogs(data.logs);
-      setAvailableDays(data.days);
+    if (logsData) {
+      setLogs(logsData.logs);
+      setFilteredLogs(logsData.logs);
+      setAvailableDays(logsData.days);
     }
-  }, [error, data]);
+  }, [logsError, logsData]);
+
+  useEffect(() => {
+    if (configError) {
+      toast.error(t("toast.failed.fetch_config"), {
+        description: configError.message,
+      });
+    }
+  }, [configError]);
 
   useEffect(() => {
     setFilteredLogs(level === "all" ? logs : logs.filter(log => log.level === level));
@@ -82,7 +93,19 @@ export default function Logs() {
 
   const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
 
-  if (isLoading) {
+  const handleSaveConfig = async (values) => {
+    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
+    if (result.success) {
+      toast(t("toast.success.save"));
+      mutateConfig();
+    } else {
+      toast.error(t("toast.failed.save"), {
+        description: result.message,
+      })
+    }
+  };
+
+  if (logsLoading || configLoading) {
     return <></>;
   }
 
@@ -94,7 +117,7 @@ export default function Logs() {
         </CardHeader>
         <CardContent className="p-0 pb-6">
           <div className="flex gap-4 p-6 border-b">
-            <Select defaultValue={data?.date} onValueChange={setSelectedDate}>
+            <Select defaultValue={logsData?.date} onValueChange={setSelectedDate}>
               <SelectTrigger className="w-48">
                 <SelectValue placeholder={t("st.logs.select_date")} />
               </SelectTrigger>
@@ -109,14 +132,14 @@ export default function Logs() {
                 <SelectValue placeholder={t("st.logs.log_level")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("st.logs.all")}</SelectItem>
-                <SelectItem value="info">{t("st.logs.info")}</SelectItem>
-                <SelectItem value="warn">{t("st.logs.warn")}</SelectItem>
-                <SelectItem value="error">{t("st.logs.error")}</SelectItem>                
+                <SelectItem value="all">{t("st.logs.level.all")}</SelectItem>
+                <SelectItem value="debug">{t("st.logs.level.debug")}</SelectItem>
+                <SelectItem value="info">{t("st.logs.level.info")}</SelectItem>
+                <SelectItem value="warn">{t("st.logs.level.warn")}</SelectItem>
+                <SelectItem value="error">{t("st.logs.level.error")}</SelectItem>                
               </SelectContent>
             </Select>
           </div>
-
           <div className="px-4 space-y-4">
             <Table>
               <TableHeader>
@@ -150,13 +173,30 @@ export default function Logs() {
                 )}
               </TableBody>
             </Table>
-
             <PaginationPro
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}
             />
           </div>
+        </CardContent>
+      </Card>
+      
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.logs.debug.title")}</CardTitle>
+          <CardDescription>{t("st.logs.debug.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Select defaultValue={configData?.save_debug || "0"} onValueChange={(value) => handleSaveConfig({ save_debug: value })}>
+            <SelectTrigger className="w-72">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="0">{t("st.logs.debug.disable")}</SelectItem>
+              <SelectItem value="1">{t("st.logs.debug.enable")}</SelectItem>
+            </SelectContent>
+          </Select>
         </CardContent>
       </Card>
     </>
