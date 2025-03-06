@@ -12,7 +12,6 @@ export async function GET() {
     const rss = await db.all("SELECT * FROM rss ORDER BY name ASC");
 
     // Return rss list with next refresh time
-    logger.debug("Get RSS list successfully", { model: "GET /api/feeds" });
     return Response.json({
       code: 200,
       message: "success",

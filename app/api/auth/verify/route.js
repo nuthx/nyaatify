@@ -21,7 +21,6 @@ export async function POST(request) {
     // Update last used time with ISO timestamp
     await db.run("UPDATE device SET last_used_at = ? WHERE token = ?", [new Date().toISOString(), data.token.value]);
 
-    logger.debug("Token verified successfully", { model: "POST /api/auth/verify" });
     return Response.json({
       code: 200,
       message: "success",

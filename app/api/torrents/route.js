@@ -55,7 +55,6 @@ export async function GET() {
       return a.downloader.localeCompare(b.downloader);
     });
 
-    logger.debug("Get torrent list successfully", { model: "GET /api/torrents" });
     return Response.json({
       code: 200,
       message: "success",

@@ -14,7 +14,6 @@ export async function GET() {
     const authToken = cookieStore.get("auth_token");
     const currentDevice = devices.find(device => device.token === authToken.value);
 
-    logger.debug("Get device list successfully", { model: "GET /api/device" });
     return Response.json({
       code: 200,
       message: "success",

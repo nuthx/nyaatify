@@ -20,7 +20,6 @@ export async function GET() {
       };
     }));
 
-    logger.debug("Get downloader list successfully", { model: "GET /api/downloaders" });
     return Response.json({
       code: 200,
       message: "success",

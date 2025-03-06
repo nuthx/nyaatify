@@ -10,7 +10,6 @@ export async function GET() {
     // Get current username
     const user = await db.get("SELECT username FROM user WHERE id = 1");
 
-    logger.debug("Get current username successfully", { model: "GET /api/users/username" });
     return Response.json({
       code: 200,
       message: "success",

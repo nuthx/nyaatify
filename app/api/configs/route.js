@@ -8,7 +8,6 @@ export async function GET() {
   try {
     const config = await getConfig();
 
-    logger.debug("Get config successfully", { model: "GET /api/configs" });
     return Response.json({
       code: 200,
       message: "success",

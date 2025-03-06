@@ -8,7 +8,6 @@ export async function GET() {
     const db = await getDb();
     const notification = await db.all("SELECT * FROM notification ORDER BY name ASC");
 
-    logger.debug("Get notification list successfully", { model: "GET /api/notifications" });
     return Response.json({
       code: 200,
       message: "success",
