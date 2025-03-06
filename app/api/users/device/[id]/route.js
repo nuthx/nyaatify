@@ -9,16 +9,10 @@ export async function DELETE(_, { params }) {
     const db = await getDb();
     const id = (await params).id;
 
-    // Check if device exists
-    const device = await db.get("SELECT * FROM device WHERE id = ?", id);
-    if (!device) {
-      throw new Error(`Device not found, id: ${id}`);
-    }
-
     // Delete device by id
     await db.run("DELETE FROM device WHERE id = ?", id);
 
-    logger.info(`Device deleted successfully, id: ${id}`, { model: "DELETE /api/device/[id]" });
+    logger.info(`Delete device successfully, id: ${id}`, { model: "DELETE /api/device/[id]" });
     return Response.json({
       code: 200,
       message: "success"

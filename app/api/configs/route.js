@@ -43,7 +43,7 @@ export async function PATCH(request) {
       throw new Error(`Invalid key: ${invalidKeys.join(", ")}`);
     }
 
-    // If save ai config, use a testing title to check if ai config valid
+    // If save ai config, parse a anime title to verify validity
     if (data.ai_priority === "ai") {
       const result = await testOpenAI(data);
       if (!result.success) {

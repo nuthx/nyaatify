@@ -97,7 +97,7 @@ export async function POST(request) {
       throw new Error(manageResult.message);
     }
 
-    logger.info(`Torrent ${data.action}ed successfully, hash: ${data.hash}`.replace('eed', 'ed'), { model: "POST /api/torrents" });
+    logger.info(`Manage torrent successfully, action: ${data.action}, hash: ${data.hash}`, { model: "POST /api/torrents" });
     return Response.json({
       code: 200,
       message: "success"

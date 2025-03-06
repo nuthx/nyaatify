@@ -18,7 +18,7 @@ export async function DELETE() {
     // Delete the auth token on browser
     cookieStore.delete("auth_token");
 
-    logger.info("Logout success", { model: "DELETE /api/auth/logout" });
+    logger.info("Logout successfully", { model: "DELETE /api/auth/logout" });
     return Response.json({
       code: 200,
       message: "success"

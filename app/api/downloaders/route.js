@@ -54,7 +54,7 @@ export async function POST(request) {
 
     // Check if name is empty
     if (data.values.name.trim() === "") {
-      throw new Error("Name is required");
+      throw new Error("Downloader name is required");
     }
 
     // Check if name or URL already exists
@@ -75,7 +75,7 @@ export async function POST(request) {
     if (data.values.type === "qBittorrent") {
       cookieResult = await getQbittorrentCookie(data.values.url, data.values.username, data.values.password);
     } else {
-      throw new Error(`Downloader not supported, type: ${data.values.type}`);
+      throw new Error(`Unsupported downloader: ${data.values.type}`);
     }
 
     // Return if connection failed
@@ -111,10 +111,10 @@ export async function POST(request) {
 
     // Log if default downloader is empty before update
     if (prevDefaultDownloader.value === "") {
-      logger.info(`Default downloader set to ${data.values.name}`, { model: "POST /api/downloaders" });
+      logger.info(`Set default downloader to ${data.values.name}`, { model: "POST /api/downloaders" });
     }
 
-    logger.info(`Downloader added successfully, name: ${data.values.name}, type: ${data.values.type}`, { model: "POST /api/downloaders" });
+    logger.info(`Add downloader successfully, name: ${data.values.name}, type: ${data.values.type}`, { model: "POST /api/downloaders" });
     return Response.json({
       code: 200,
       message: "success"

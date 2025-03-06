@@ -27,8 +27,8 @@ export async function PATCH(request) {
 
     // Update password last changed time
     await db.run("UPDATE user SET password_changed_at = ? WHERE id = 1", [new Date().toISOString()]);
-  
-    logger.info("Password changed successfully", { model: "PATCH /api/users/password" });
+
+    logger.info("Change password successfully", { model: "PATCH /api/users/password" });
     return Response.json({
       code: 200,
       message: "success"

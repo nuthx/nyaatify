@@ -27,30 +27,35 @@ export function NavBar() {
   };
 
   return (
-    <nav className="border-b bg-background">
-      <div className="container mx-auto max-w-screen-xl flex h-20 items-center justify-between">
+    <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-sm">
+      <nav className="container mx-auto max-w-screen-xl flex h-[60px] items-center justify-between">
         <Link href="/" className="flex items-center gap-4">
-          <Image src="/logo/nyaatify.svg" alt="Nyaatify Logo" className="dark:invert" width={50} height={40} priority />
+          <Image src="/logo/nyaatify.svg" alt="Nyaatify Logo" className="dark:invert" width={40} height={40} priority />
           <span className="text-xl font-bold">Nyaatify</span>
         </Link>
 
-        <div className="flex items-center space-x-10">
-          <Link href="/anime" className={`text-sm transition-all hover:text-primary ${pathname === "/anime" ? "text-primary" : "text-primary/50"}`}>
-            {t("nav.anime")}
-          </Link>
-          <Link href="/downloads" className={`text-sm transition-all hover:text-primary ${pathname === "/downloads" ? "text-primary" : "text-primary/50"}`}>
-            {t("nav.downloads")}
-          </Link>
-          <Link href="/settings/general" className={`text-sm text-sm transition-all hover:text-primary ${pathname.startsWith("/settings") ? "text-primary" : "text-primary/50"}`}>
-            {t("nav.settings")}
-          </Link>
+        <div className="flex items-center gap-3">
+          <NavLink href="/anime" />
+          <NavLink href="/downloads" />
+          <NavLink href="/settings" />
+
           {pathname !== "/login" && (
-            <button onClick={handleLogout} className="text-sm text-sm transition-all hover:text-primary text-primary/50">
+            <button onClick={handleLogout} className="px-4 py-1.5 text-sm text-primary/80 rounded-md transition-all duration-300 ease-in-out hover:bg-accent">
               {t("glb.logout")}
             </button>
           )}
         </div>
-      </div>
-    </nav>
+      </nav>
+    </header>
+  );
+}
+
+function NavLink({ href }) {
+  const { t } = useTranslation();
+
+  return (
+    <Link href={href} className="px-4 py-1.5 text-sm text-primary/80 rounded-md transition-all duration-300 ease-in-out hover:bg-accent">
+      {t(`nav.${href.replace("/", "")}`)}
+    </Link>
   );
 }

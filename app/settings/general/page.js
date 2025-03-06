@@ -85,7 +85,7 @@ export default function Settings() {
     const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
     if (result.success) {
       toast(t("toast.success.save"));
-      mutate(configApi);
+      mutate();
     } else {
       toast.error(t("toast.failed.save"), {
         description: result.message,
@@ -140,7 +140,7 @@ export default function Settings() {
           <CardDescription>{t("st.gr.language.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={i18n.language} onValueChange={handleLanguageChange}>
+          <Select defaultValue={i18n.resolvedLanguage} onValueChange={handleLanguageChange}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>

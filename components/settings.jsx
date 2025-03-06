@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { usePathname, useRouter } from "next/navigation";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
@@ -24,20 +23,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Ellipsis, Trash2, GripVertical } from "lucide-react";
-
-export function Nav({ label, path }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  
-  return (
-    <button
-      className={`w-full text-left px-4 py-2.5 rounded-lg hover:bg-primary/5 dark:hover:bg-muted/60 ${pathname === path ? "bg-primary/5 dark:bg-muted/80" : ""}`}
-      onClick={() => router.push(path)}
-    >
-      {label}
-    </button>
-  );
-}
 
 export function ListCard({ items, empty, content, state, menu, deleteable, deleteDesc, onDelete }) {
   const { t } = useTranslation();

@@ -9,16 +9,10 @@ export async function DELETE(_, { params }) {
     const db = await getDb();
     const id = (await params).id;
 
-    // Check if notification exists
-    const notification = await db.get("SELECT * FROM notification WHERE id = ?", id);
-    if (!notification) {
-      throw new Error(`Notification not found, id: ${id}`);
-    }
-
     // Delete notification by id
     await db.run("DELETE FROM notification WHERE id = ?", id);
 
-    logger.info(`Notification deleted successfully, id: ${id}`, { model: "DELETE /api/notifications/[id]" });
+    logger.info(`Delete notification successfully, id: ${id}`, { model: "DELETE /api/notifications/[id]" });
     return Response.json({
       code: 200,
       message: "success"
@@ -48,12 +42,6 @@ export async function PATCH(request, { params }) {
     const id = (await params).id;
     const data = await request.json();
 
-    // Check if id exists
-    const existingId = await db.get("SELECT id FROM notification WHERE id = ?", id);
-    if (!existingId) {
-      throw new Error(`Notification not found, id: ${id}`);
-    }
-
     // Extract valid values
     const validValues = {};
     const fields = ["state"];
@@ -73,7 +61,7 @@ export async function PATCH(request, { params }) {
       throw error;
     }
 
-    logger.info(`Notification edit successfully, id: ${id}`, { model: "PATCH /api/notifications/[id]" });
+    logger.info(`Edit notification successfully, id: ${id}`, { model: "PATCH /api/notifications/[id]" });
     return Response.json({
       code: 200,
       message: "success"

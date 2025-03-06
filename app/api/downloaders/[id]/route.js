@@ -36,14 +36,14 @@ export async function DELETE(_, { params }) {
 
       // Log if default downloader is changed
       if (nextDownloaderName) {
-        logger.info(`Default downloader changed from ${downloader.name} to ${nextDownloaderName}`, { model: "DELETE /api/downloaders/[id]" });
+        logger.info(`Change default downloader from ${downloader.name} to ${nextDownloaderName}`, { model: "DELETE /api/downloaders/[id]" });
       }
     } catch (error) {
       await db.run("ROLLBACK");
       throw error;
     }
 
-    logger.info(`Downloader deleted successfully, id: ${id}`, { model: "DELETE /api/downloaders/[id]" });
+    logger.info(`Delete downloader successfully, id: ${id}`, { model: "DELETE /api/downloaders/[id]" });
     return Response.json({
       code: 200,
       message: "success"

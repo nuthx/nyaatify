@@ -47,7 +47,7 @@ export async function PATCH(request) {
     // Update username
     await db.run("UPDATE user SET username = ? WHERE id = 1", [data.values.new_username]);
 
-    logger.info(`Username changed successfully, username: ${data.values.new_username}`, { model: "PATCH /api/users/username" });
+    logger.info(`Change username successfully, username: ${data.values.new_username}`, { model: "PATCH /api/users/username" });
     return Response.json({
       code: 200,
       message: "success"

@@ -15,7 +15,7 @@ export async function POST(request) {
     // Refresh RSS
     refreshRSS(data.values.name);
 
-    logger.info(`RSS subscription refreshed manually, name: ${data.values.name}`, { model: "POST /api/feeds/refresh" });
+    logger.info(`Start refreshing RSS subscription manually, name: ${data.values.name}`, { model: "POST /api/feeds/refresh" });
     return Response.json({
       code: 200,
       message: "success"
