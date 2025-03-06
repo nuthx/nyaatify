@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../database/core.db"
+}
+
+model Anime {
+  id            Int       @id @default(autoincrement())
+  hash          String    @unique
+  title         String
+  nameParsed    String?   @map("name_title")
+  nameJp        String?   @map("name_jp")
+  nameCn        String?   @map("name_cn")
+  nameEn        String?   @map("name_en")
+  nameRomaji    String?   @map("name_romaji")
+  torrent       String
+  pubDate       DateTime? @map("pub_date")
+  size          String
+  categoryId    String?   @map("category_id")
+  coverAnilist  String?   @map("cover_anilist")
+  coverBangumi  String?   @map("cover_bangumi")
+  linkAnilist   String?   @map("link_anilist")
+  linkBangumi   String?   @map("link_bangumi")
+  createdAt     DateTime  @map("created_at")
+  rssFeeds      RssAnime[]
+}
+
+model Rss {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  url             String
+  type            String
+  cron            String
+  state           String?
+  createdAt       DateTime  @map("created_at")
+  refreshCount    Int?      @map("refresh_count")
+  lastRefreshedAt DateTime? @map("last_refreshed_at")
+  animes          RssAnime[]
+}
+
+model RssAnime {
+  animeHash String  @map("anime_hash")
+  rssId     Int     @map("rss_id")
+  anime     Anime   @relation(fields: [animeHash], references: [hash])
+  rss       Rss     @relation(fields: [rssId], references: [id])
+
+  @@id([animeHash, rssId])
+}
+
+model Downloader {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  url       String   @unique
+  type      String
+  username  String
+  password  String
+  createdAt DateTime @map("created_at")
+  cookie    String?
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  filter    String?
+  type      String
+  url       String
+  token     String
+  title     String
+  message   String
+  extra     String?
+  state     Int
+  createdAt DateTime @map("created_at")
+}
+
+model Config {
+  key   String @id
+  value String
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  username          String    @unique
+  password          String
+  createdAt         DateTime  @map("created_at")
+  passwordChangedAt DateTime? @map("password_changed_at")
+  devices           Device[]
+}
+
+model Device {
+  id          Int      @id @default(autoincrement())
+  token       String   @unique
+  userId      Int      @map("user_id")
+  browser     String?
+  os          String?
+  ip          String?
+  createdAt   DateTime @map("created_at")
+  lastUsedAt  DateTime @map("last_used_at")
+  user        User     @relation(fields: [userId], references: [id])
+}
