@@ -6,7 +6,7 @@ import {
   PaginationLink
 } from "@/components/ui/pagination";
 
-export function PaginationPro({ currentPage, totalPages, onPageChange }) {
+export function PaginationPro({ className = "", currentPage, totalPages, onPageChange }) {
   const ItemButton = (page, isActive = false) => (
     <PaginationItem key={page}>
       <PaginationLink className="cursor-pointer" onClick={() => onPageChange(page)} isActive={isActive}>
@@ -27,7 +27,7 @@ export function PaginationPro({ currentPage, totalPages, onPageChange }) {
   }
 
   return (
-    <Pagination>
+    <Pagination className={className}>
       <PaginationContent>
         {totalPages > 7 ? (
           <>

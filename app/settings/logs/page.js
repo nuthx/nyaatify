@@ -4,6 +4,7 @@ import useSWR from "swr"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
+import { handleRequest } from "@/lib/handlers";
 import {
   Select,
   SelectContent,
@@ -30,6 +31,7 @@ import { PaginationPro } from "@/components/pagination";
 
 export default function Logs() {
   const logsApi = "/api/logs";
+  const configApi = "/api/configs";
 
   const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
@@ -38,19 +40,19 @@ export default function Logs() {
   const [availableDays, setAvailableDays] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 80;
+  const itemsPerPage = 10;
 
-  const { data, error, isLoading } = useSWR(
-    selectedDate ? `${logsApi}?date=${selectedDate}` : logsApi,
-    async (url) => {
-      const response = await fetch(url);
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.message);
-      }
-      return result.data;
+  const fetcher = async (url) => {
+    const response = await fetch(url);
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.message);
     }
-  );
+    return result.data;
+  };
+
+  const { data: logsData, error: logsError, isLoading: logsLoading } = useSWR(selectedDate ? `${logsApi}?date=${selectedDate}` : logsApi, fetcher);
+  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
 
   // Set page title
   useEffect(() => {
@@ -58,17 +60,25 @@ export default function Logs() {
   }, [t]);
 
   useEffect(() => {
-    if (error) {
+    if (logsError) {
       toast.error(t("toast.failed.fetch_logs"), {
-        description: error.message,
+        description: logsError.message,
       });
     }
-    if (data) {
-      setLogs(data.logs);
-      setFilteredLogs(data.logs);
-      setAvailableDays(data.days);
+    if (logsData) {
+      setLogs(logsData.logs);
+      setFilteredLogs(logsData.logs);
+      setAvailableDays(logsData.days);
     }
-  }, [error, data]);
+  }, [logsError, logsData]);
+
+  useEffect(() => {
+    if (configError) {
+      toast.error(t("toast.failed.fetch_config"), {
+        description: configError.message,
+      });
+    }
+  }, [configError]);
 
   useEffect(() => {
     setFilteredLogs(level === "all" ? logs : logs.filter(log => log.level === level));
@@ -82,7 +92,19 @@ export default function Logs() {
 
   const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
 
-  if (isLoading) {
+  const handleSaveConfig = async (values) => {
+    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
+    if (result.success) {
+      toast(t("toast.success.save"));
+      mutateConfig();
+    } else {
+      toast.error(t("toast.failed.save"), {
+        description: result.message,
+      })
+    }
+  };
+
+  if (logsLoading || configLoading) {
     return <></>;
   }
 
@@ -92,9 +114,9 @@ export default function Logs() {
         <CardHeader>
           <CardTitle>{t("st.logs.title")}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex gap-4 mb-4">
-            <Select defaultValue={data?.date} onValueChange={setSelectedDate}>
+        <CardContent className="p-0">
+          <div className="flex gap-4 p-6 border-b">
+            <Select defaultValue={logsData?.date} onValueChange={setSelectedDate}>
               <SelectTrigger className="w-48">
                 <SelectValue placeholder={t("st.logs.select_date")} />
               </SelectTrigger>
@@ -109,54 +131,59 @@ export default function Logs() {
                 <SelectValue placeholder={t("st.logs.log_level")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t("st.logs.all")}</SelectItem>
-                <SelectItem value="info">{t("st.logs.info")}</SelectItem>
-                <SelectItem value="warn">{t("st.logs.warn")}</SelectItem>
-                <SelectItem value="error">{t("st.logs.error")}</SelectItem>                
+                <SelectItem value="all">{t("st.logs.level.all")}</SelectItem>
+                <SelectItem value="debug">{t("st.logs.level.debug")}</SelectItem>
+                <SelectItem value="info">{t("st.logs.level.info")}</SelectItem>
+                <SelectItem value="warn">{t("st.logs.level.warn")}</SelectItem>
+                <SelectItem value="error">{t("st.logs.level.error")}</SelectItem>                
               </SelectContent>
             </Select>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>{t("st.logs.table.level")}</TableHead>
-                <TableHead>{t("st.logs.table.time")}</TableHead>
-                <TableHead>{t("st.logs.table.model")}</TableHead>
-                <TableHead>{t("st.logs.table.message")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paginatedLogs.length === 0 ? (
-                <TableRow className="hover:bg-transparent">
-                  <TableCell colSpan={4} className="text-center h-28 text-muted-foreground">
-                    {t("st.logs.no_logs")}
-                  </TableCell>
-                </TableRow>
-              ) : (
-                paginatedLogs.map((log, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <Badge variant={log.level === "error" ? "destructive" : log.level === "warn" ? "warning" : "outline"}>
-                        {log.level.charAt(0).toUpperCase() + log.level.slice(1)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{new Date(log.timestamp).toLocaleString()}</TableCell>
-                    <TableCell>{log.model}</TableCell>
-                    <TableCell>{log.message}</TableCell>
+          <div className="px-4 pb-2">
+            {paginatedLogs.length === 0 ? (
+              <div className="my-16 text-sm text-center text-muted-foreground">
+                {t("st.logs.no_logs")}
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="px-2 py-4">{t("st.logs.table.level")}</TableHead>
+                    <TableHead className="px-2 py-4">{t("st.logs.table.time")}</TableHead>
+                    <TableHead className="px-2 py-4">{t("st.logs.table.model")}</TableHead>
+                    <TableHead className="px-2 py-4">{t("st.logs.table.message")}</TableHead>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-          
-          <div className="mt-4">
-            <PaginationPro
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
+                </TableHeader>
+                <TableBody>
+                  {paginatedLogs.map((log, index) => (
+                    <TableRow key={index} className="hover:bg-transparent">
+                      <TableCell className="px-2 py-3">
+                        <Badge variant={
+                          log.level === "error" ? "destructive" : 
+                          log.level === "warn" ? "warning" : 
+                          log.level === "debug" ? "debug" : 
+                          "outline"
+                        }>
+                          {log.level.charAt(0).toUpperCase() + log.level.slice(1)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-2 py-3">{new Date(log.timestamp).toLocaleString()}</TableCell>
+                      <TableCell className="px-2 py-3">{log.model}</TableCell>
+                      <TableCell className="px-2 py-3">{log.message}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
           </div>
+
+          <PaginationPro
+            className="px-6 py-4 border-t"
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </CardContent>
       </Card>
     </>

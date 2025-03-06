@@ -13,7 +13,7 @@ export async function DELETE(_, { params }) {
     // Check if RSS is running
     const rss = await db.get("SELECT * FROM rss WHERE id = ?", [id]);
     if (rss.state === "running") {
-      throw new Error(`Delete cancelled due to RSS subscription is running, id: ${id}`);
+      throw new Error(`RSS subscription is refreshing, deletion not possible, id: ${id}`);
     }
 
     // Stop RSS task
@@ -49,7 +49,7 @@ export async function DELETE(_, { params }) {
       throw error;
     }
 
-    logger.info(`RSS subscription deleted successfully, id: ${id}`, { model: "DELETE /api/feeds/[id]" });
+    logger.info(`Delete RSS subscription successfully, id: ${id}`, { model: "DELETE /api/feeds/[id]" });
     return Response.json({
       code: 200,
       message: "success"

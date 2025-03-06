@@ -47,7 +47,7 @@ export async function POST(request) {
 
     // Check if name is empty
     if (data.values.name.trim() === "") {
-      throw new Error("Name is required");
+      throw new Error("RSS name is required");
     }
 
     // Check if name already exists
@@ -65,7 +65,7 @@ export async function POST(request) {
     } else if (urlPrefix.includes("mikan")) {
       rssType = "Mikan";
     } else {
-      throw new Error(`RSS address is not supported, url: ${data.values.url}`);
+      throw new Error(`Not a valid Nyaa or Mikan link: ${data.values.url}`);
     }
 
     // Check cron validity
@@ -73,14 +73,14 @@ export async function POST(request) {
     try {
       parser.parseExpression(data.values.cron);
     } catch (error) {
-      throw new Error(`Cron is invalid, cron: ${data.values.cron}, error: ${error.message}`);
+      throw new Error(`Invalid cron: ${data.values.cron}, error: ${error.message}`);
     }
 
     // Check RSS address validity
     const rssParser = new RSSParser();
     const rss = await rssParser.parseURL(data.values.url);
     if (!rss) {
-      throw new Error(`RSS address is invalid, url: ${data.values.url}`);
+      throw new Error(`Invalid link: ${data.values.url}`);
     }
 
     // Insert to database
@@ -98,7 +98,7 @@ export async function POST(request) {
     );
 
     // Log info here because startTask will log another message
-    logger.info(`RSS subscription added successfully, name: ${data.values.name}, type: ${rssType}`, { model: "POST /api/feeds" });
+    logger.info(`Add RSS subscription successfully, name: ${data.values.name}, type: ${rssType}`, { model: "POST /api/feeds" });
 
     // Start RSS task
     const { lastID } = await db.get("SELECT last_insert_rowid() as lastID");

@@ -21,7 +21,7 @@ export async function POST(request) {
     if (data.values.type === "qBittorrent") {
       cookieResult = await getQbittorrentCookie(data.values.url, data.values.username, data.values.password);
     } else {
-      throw new Error(`Downloader not supported, type: ${data.values.type}`);
+      throw new Error(`Unsupported downloader: ${data.values.type}`);
     }
 
     // Return if connection failed
@@ -40,7 +40,7 @@ export async function POST(request) {
       throw new Error(versionResult.message);
     }
 
-    logger.info(`Downloader connected successfully, name: ${data.values.name}, version: ${versionResult.data}`, { model: "POST /api/downloaders/test" });
+    logger.info(`Test downloader successfully, name: ${data.values.name}, version: ${versionResult.data}`, { model: "POST /api/downloaders/test" });
     return Response.json({
       code: 200,
       message: "success",

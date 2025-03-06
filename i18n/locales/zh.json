@@ -295,11 +295,14 @@
       "title": "系统日志",
       "select_date": "选择日期",
       "log_level": "日志等级",
-      "all": "全部",
-      "info": "信息 (Info)",
-      "warn": "警告 (Warn)",
-      "error": "错误 (Error)",
       "no_logs": "暂无日志",
+      "level": {
+        "all": "全部",
+        "debug": "调试 (Debug)",
+        "info": "信息 (Info)",
+        "warn": "警告 (Warn)",
+        "error": "错误 (Error)"
+      },
       "table": {
         "level": "级别",
         "time": "时间",
