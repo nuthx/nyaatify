@@ -40,7 +40,7 @@ export default function Logs() {
   const [availableDays, setAvailableDays] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 80;
+  const itemsPerPage = 10;
 
   const fetcher = async (url) => {
     const response = await fetch(url);
@@ -114,7 +114,7 @@ export default function Logs() {
         <CardHeader>
           <CardTitle>{t("st.logs.title")}</CardTitle>
         </CardHeader>
-        <CardContent className="p-0 pb-1">
+        <CardContent className="p-0">
           <div className="flex gap-4 p-6 border-b">
             <Select defaultValue={logsData?.date} onValueChange={setSelectedDate}>
               <SelectTrigger className="w-48">
@@ -139,7 +139,8 @@ export default function Logs() {
               </SelectContent>
             </Select>
           </div>
-          <div className="px-4">
+
+          <div className="px-4 pb-2">
             {paginatedLogs.length === 0 ? (
               <div className="my-16 text-sm text-center text-muted-foreground">
                 {t("st.logs.no_logs")}
@@ -175,13 +176,14 @@ export default function Logs() {
                 </TableBody>
               </Table>
             )}
-            <PaginationPro
-              className="my-3"
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
           </div>
+
+          <PaginationPro
+            className="px-6 py-4 border-t"
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </CardContent>
       </Card>
     </>
