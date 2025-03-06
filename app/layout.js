@@ -18,12 +18,12 @@ export default function RootLayout({ children }) {
       <body className="bg-secondary/50 dark:bg-background overflow-y-scroll">
         <NextThemesProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <I18nWrapper>
-            <header className="sticky top-0 z-50">
-              <NavBar />
-            </header>
+            <NavBar />
+
             <main className="relative">
               {children}
             </main>
+
             <Toaster position="top-center" offset={20} />
           </I18nWrapper>
         </NextThemesProvider>
