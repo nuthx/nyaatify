@@ -140,7 +140,7 @@ export default function Settings() {
           <CardDescription>{t("st.gr.language.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={i18n.language} onValueChange={handleLanguageChange}>
+          <Select defaultValue={i18n.resolvedLanguage} onValueChange={handleLanguageChange}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>
