@@ -24,7 +24,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardDescription,
   CardTitle,
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -183,24 +182,6 @@ export default function Logs() {
               onPageChange={setCurrentPage}
             />
           </div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("st.logs.debug.title")}</CardTitle>
-          <CardDescription>{t("st.logs.debug.description")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Select defaultValue={configData?.save_debug || "0"} onValueChange={(value) => handleSaveConfig({ save_debug: value })}>
-            <SelectTrigger className="w-72">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="0">{t("st.logs.debug.disable")}</SelectItem>
-              <SelectItem value="1">{t("st.logs.debug.enable")}</SelectItem>
-            </SelectContent>
-          </Select>
         </CardContent>
       </Card>
     </>

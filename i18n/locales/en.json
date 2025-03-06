@@ -308,12 +308,6 @@
         "time": "Time",
         "model": "Model",
         "message": "Message"
-      },
-      "debug": {
-        "title": "Debug Logs",
-        "description": "When enabled, debug logs will be saved locally. Regardless of the setting, debug logs will always be output to the console.",
-        "enable": "Enable debug logging",
-        "disable": "Disable debug logging"
       }
     },
     "abt": {
