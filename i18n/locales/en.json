@@ -6,10 +6,8 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "confirm_delete": "Confirm Deletion",
-    "edit": "Edit",
     "add": "Add",
     "save": "Save",
-    "reset": "Reset",
     "test": "Test",
     "show": "Show",
     "hide": "Hide",
@@ -78,7 +76,6 @@
   },
   "anime": {
     "empty": "Please add a RSS subscription first.",
-    "load_fail": "Failed to load list",
     "no_downloader": "No Downloader",
     "downloader_offline": "Downloader Offline",
     "today": "Today",

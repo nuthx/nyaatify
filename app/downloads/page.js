@@ -51,7 +51,7 @@ export default function Home() {
 
   // Set page title
   useEffect(() => {
-    document.title = `${t("nav.download")} - Nyaatify`;
+    document.title = `${t("nav.downloads")} - Nyaatify`;
   }, [t]);
 
   const handleManage = async (action, downloader, hash) => {

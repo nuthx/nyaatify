@@ -6,10 +6,8 @@
     "cancel": "取消",
     "delete": "删除",
     "confirm_delete": "确认删除",
-    "edit": "编辑",
     "add": "添加",
     "save": "保存",
-    "reset": "清空",
     "test": "测试",
     "show": "显示",
     "hide": "隐藏",
@@ -78,7 +76,6 @@
   },
   "anime": {
     "empty": "请先添加一个 RSS 订阅",
-    "load_fail": "加载列表失败",
     "no_downloader": "未添加下载器",
     "downloader_offline": "下载器已离线",
     "today": "今日",
