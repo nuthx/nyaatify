@@ -12,11 +12,6 @@ const arOneSans = AR_One_Sans({
   fallback: ["-apple-system", "system-ui", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "Arial", "sans-serif"]
 })
 
-export const metadata = {
-  title: "Nyaatify",
-  description: "A awesome subscription reminder and download management tool for Nyaa.",
-}
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={arOneSans.className} suppressHydrationWarning>
