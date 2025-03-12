@@ -46,7 +46,7 @@ export async function POST(request) {
     // Write new token to database
     if (ua.browser.name) {
       await db.run(
-        "INSERT INTO device (token, user_id, browser, os, ip, created_at, last_used_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO device (token, user_id, browser, os, ip, created_at, last_active_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [
           token,
           user.id,

@@ -19,7 +19,7 @@ export async function POST(request) {
     }
 
     // Update last used time with ISO timestamp
-    await db.run("UPDATE device SET last_used_at = ? WHERE token = ?", [new Date().toISOString(), data.token.value]);
+    await db.run("UPDATE device SET last_active_at = ? WHERE token = ?", [new Date().toISOString(), data.token.value]);
 
     return Response.json({
       code: 200,

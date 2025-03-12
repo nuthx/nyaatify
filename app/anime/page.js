@@ -87,20 +87,20 @@ export default function Anime() {
     for (const p of priorities) {
       switch (p) {
         case "jp":
-          if (item.name_jp) return item.name_jp;
+          if (item.title_jp) return item.title_jp;
           break;
         case "romaji":
-          if (item.name_romaji) return item.name_romaji;
+          if (item.title_romaji) return item.title_romaji;
           break;
         case "cn":
-          if (item.name_cn) return item.name_cn;
+          if (item.title_cn) return item.title_cn;
           break;
         case "en":
-          if (item.name_en) return item.name_en;
+          if (item.title_en) return item.title_en;
           break;
       }
     }
-    return item.name_title || item.title;
+    return item.title_prased || item.title;
   };
 
   if (isLoading) {
@@ -151,12 +151,12 @@ export default function Anime() {
                         </a>
                       </TooltipTrigger>
                       <TooltipContent className="py-2 space-y-1">
-                        {item.name_cn && <p><a className="font-bold">CN: </a>{item.name_cn}</p>}
-                        {item.name_jp && <p><a className="font-bold">JP: </a>{item.name_jp}</p>}
-                        {item.name_en && <p><a className="font-bold">EN: </a>{item.name_en}</p>}
-                        {item.name_romaji && <p><a className="font-bold">Romaji: </a>{item.name_romaji}</p>}
-                        {!item.name_cn && !item.name_jp && !item.name_en && !item.name_romaji && item.name_title && <p><a className="font-bold">Title: </a>{item.name_title}</p>}
-                        {!item.name_cn && !item.name_jp && !item.name_en && !item.name_romaji && !item.name_title && <p>{item.title}</p>}
+                        {item.title_cn && <p><a className="font-bold">CN: </a>{item.title_cn}</p>}
+                        {item.title_jp && <p><a className="font-bold">JP: </a>{item.title_jp}</p>}
+                        {item.title_en && <p><a className="font-bold">EN: </a>{item.title_en}</p>}
+                        {item.title_romaji && <p><a className="font-bold">Romaji: </a>{item.title_romaji}</p>}
+                        {!item.title_cn && !item.title_jp && !item.title_en && !item.title_romaji && item.title_prased && <p><a className="font-bold">Title: </a>{item.title_prased}</p>}
+                        {!item.title_cn && !item.title_jp && !item.title_en && !item.title_romaji && !item.title_prased && <p>{item.title_raw}</p>}
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>

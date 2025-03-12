@@ -244,7 +244,7 @@ export default function Devices() {
                     {deviceData.current_device === device.id ? (
                       t("st.user.devices.current")
                     ) : (
-                      new Date(device.last_used_at).toLocaleString()
+                      new Date(device.last_active_at).toLocaleString()
                     )}
                   </TableCell>
                   <TableCell className="px-3 py-4 w-4">

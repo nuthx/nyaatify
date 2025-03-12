@@ -8,95 +8,82 @@ datasource db {
 }
 
 model Anime {
-  id            Int       @id @default(autoincrement())
-  hash          String    @unique
-  title         String
-  nameParsed    String?   @map("name_title")
-  nameJp        String?   @map("name_jp")
-  nameCn        String?   @map("name_cn")
-  nameEn        String?   @map("name_en")
-  nameRomaji    String?   @map("name_romaji")
-  torrent       String
-  pubDate       DateTime? @map("pub_date")
-  size          String
-  categoryId    String?   @map("category_id")
-  coverAnilist  String?   @map("cover_anilist")
-  coverBangumi  String?   @map("cover_bangumi")
-  linkAnilist   String?   @map("link_anilist")
-  linkBangumi   String?   @map("link_bangumi")
-  createdAt     DateTime  @map("created_at")
-  rssFeeds      RssAnime[]
+  id           Int       @id @default(autoincrement())
+  hash         String    @unique         /// torrent hash for download
+  titleRaw     String                    /// published title by submitter
+  titleParsed  String?                   /// parsed title with anitomy or ai
+  titleJp      String?                   /// japanese title
+  titleCn      String?                   /// chinese title
+  titleEn      String?                   /// english title
+  titleRomaji  String?                   /// romaji title
+  size         String?                   /// file size
+  torrent      String?                   /// download link for the torrent file
+  categoryId   String?                   /// nyaa category id
+  coverAnilist String?                   /// anilist cover image url
+  coverBangumi String?                   /// bangumi cover image url
+  pageAnilist  String?                   /// anilist detail page url
+  pageBangumi  String?                   /// bangumi detail page url
+  pubDate      DateTime?                 /// published date
+  createdAt    DateTime  @default(now()) /// created time
+  rss          Rss[]                     /// related rss subscriptions
 }
 
 model Rss {
-  id              Int       @id @default(autoincrement())
-  name            String    @unique
-  url             String
-  type            String
-  cron            String
-  state           String?
-  createdAt       DateTime  @map("created_at")
-  refreshCount    Int?      @map("refresh_count")
-  lastRefreshedAt DateTime? @map("last_refreshed_at")
-  animes          RssAnime[]
-}
-
-model RssAnime {
-  animeHash String  @map("anime_hash")
-  rssId     Int     @map("rss_id")
-  anime     Anime   @relation(fields: [animeHash], references: [hash])
-  rss       Rss     @relation(fields: [rssId], references: [id])
-
-  @@id([animeHash, rssId])
+  id           Int       @id @default(autoincrement())
+  name         String    @unique         /// rss name
+  url          String                    /// rss url
+  type         String                    /// rss type (Nyaa, Mikan)
+  cron         String                    /// rss cron
+  state        Int                       /// 0: running, 1: success
+  createdAt    DateTime  @default(now()) /// created time
+  refreshedAt  DateTime?                 /// last refreshed time
+  refreshCount Int                       /// refresh count, avoid sending notification at first refresh
+  animes       Anime[]
 }
 
 model Downloader {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  url       String   @unique
-  type      String
-  username  String
-  password  String
-  createdAt DateTime @map("created_at")
-  cookie    String?
+  id           Int       @id @default(autoincrement())
+  name         String    @unique         /// downloader name
+  url          String    @unique         /// downloader url
+  type         String                    /// downloader type (qBittorrent, Transmission, Aria2)
+  username     String                    /// downloader username
+  password     String                    /// downloader password
+  createdAt    DateTime  @default(now()) /// downloader created time
+  cookie       String                    /// downloader cookie
 }
 
 model Notification {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  filter    String?
-  type      String
-  url       String
-  token     String
-  title     String
-  message   String
-  extra     String?
-  state     Int
-  createdAt DateTime @map("created_at")
-}
-
-model Config {
-  key   String @id
-  value String
+  id           Int       @id @default(autoincrement())
+  name         String    @unique         /// notification name
+  filter       String?                   /// name of rss which want to send notification, empty means all
+  type         String                    /// notification type (Bark, Gotify, ServerChan)
+  url          String                    /// notification url
+  token        String                    /// notification token
+  title        String                    /// notification title
+  message      String                    /// notification message
+  extra        String?                   /// extra parameters on POST request, split by &
+  state        Int                       /// 0: disabled, 1: enabled
+  createdAt    DateTime  @default(now()) /// created time
 }
 
 model User {
-  id                Int       @id @default(autoincrement())
-  username          String    @unique
-  password          String
-  createdAt         DateTime  @map("created_at")
-  passwordChangedAt DateTime? @map("password_changed_at")
-  devices           Device[]
+  id           Int       @id @default(autoincrement())
+  username     String    @unique         /// username
+  password     String                    /// hashed password
+  createdAt    DateTime  @default(now()) /// created time
 }
 
 model Device {
-  id          Int      @id @default(autoincrement())
-  token       String   @unique
-  userId      Int      @map("user_id")
-  browser     String?
-  os          String?
-  ip          String?
-  createdAt   DateTime @map("created_at")
-  lastUsedAt  DateTime @map("last_used_at")
-  user        User     @relation(fields: [userId], references: [id])
+  id           Int       @id @default(autoincrement())
+  token        String    @unique         /// auth_token
+  browser      String?                   /// browser and version
+  os           String?                   /// os and version
+  ip           String?                   /// ip address
+  createdAt    DateTime  @default(now()) /// created time
+  lastActiveAt DateTime  @default(now()) /// last active time
+}
+
+model Config {
+  key          String    @id
+  value        String
 }

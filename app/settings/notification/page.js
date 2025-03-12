@@ -64,7 +64,7 @@ function VariablePopover() {
         <div className="space-y-2">
           <p className="text-sm mb-3">{t("st.nt.variable.description")}</p>
           <VariableItem name="rss" description={t("st.nt.variable.rss")} />
-          <VariableItem name="title_publish" description={t("st.nt.variable.title_publish")} />
+          <VariableItem name="title_raw" description={t("st.nt.variable.title_raw")} />
           <VariableItem name="title_jp" description={t("st.nt.variable.title_jp")} />
           <VariableItem name="title_cn" description={t("st.nt.variable.title_cn")} />
           <VariableItem name="title_en" description={t("st.nt.variable.title_en")} />
@@ -74,8 +74,8 @@ function VariablePopover() {
           <VariableItem name="torrent_size" description={t("st.nt.variable.torrent_size")} />
           <VariableItem name="cover_anilist" description={t("st.nt.variable.cover_anilist")} />
           <VariableItem name="cover_bangumi" description={t("st.nt.variable.cover_bangumi")} />
-          <VariableItem name="link_anilist" description={t("st.nt.variable.link_anilist")} />
-          <VariableItem name="link_bangumi" description={t("st.nt.variable.link_bangumi")} />
+          <VariableItem name="page_anilist" description={t("st.nt.variable.page_anilist")} />
+          <VariableItem name="page_bangumi" description={t("st.nt.variable.page_bangumi")} />
         </div>
       </PopoverContent>
     </Popover>
