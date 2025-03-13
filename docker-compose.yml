@@ -2,7 +2,9 @@ version: "3.8"
 
 services:
   nyaatify:
-    build: .
+    image: nuthx/nyaatify:latest
     ports:
       - "4100:4100"
     restart: unless-stopped
+    volumes:
+      - ./data:/app/data
