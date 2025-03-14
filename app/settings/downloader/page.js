@@ -277,7 +277,7 @@ export default function DownloaderSettings() {
           <CardDescription>{t("st.dl.default.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select value={configData?.default_downloader} onValueChange={(value) => handleSaveConfig({ default_downloader: value })} disabled={!downloaderData?.downloaders?.length}>
+          <Select value={configData?.defaultDownloader} onValueChange={(value) => handleSaveConfig({ defaultDownloader: value })} disabled={!downloaderData?.downloaders?.length}>
             <SelectTrigger className="w-72">
               <SelectValue placeholder={t("st.dl.default.empty")} />
             </SelectTrigger>

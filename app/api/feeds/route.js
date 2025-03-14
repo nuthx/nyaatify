@@ -1,6 +1,6 @@
 import parser from "cron-parser";
 import RSSParser from "rss-parser";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { tasks, startTask } from "@/lib/schedule";
 
@@ -8,8 +8,9 @@ import { tasks, startTask } from "@/lib/schedule";
 
 export async function GET() {
   try {
-    const db = await getDb();
-    const rss = await db.all("SELECT * FROM rss ORDER BY name ASC");
+    const rss = await prisma.rss.findMany({
+      orderBy: { name: "asc" }
+    });
 
     // Return rss list with next refresh time
     return Response.json({
@@ -42,17 +43,19 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
 
     // Check if name is empty
-    if (data.values.name.trim() === "") {
+    if (!data.values.name?.trim()) {
       throw new Error("RSS name is required");
     }
 
     // Check if name already exists
-    const existingName = await db.get("SELECT name FROM rss WHERE name = ?", data.values.name.trim());
-    if (existingName) {
+    const existingRss = await prisma.rss.findUnique({
+      where: { name: data.values.name.trim() }
+    });
+    
+    if (existingRss) {
       throw new Error(`RSS already exists, name: ${data.values.name}`);
     }
 
@@ -84,30 +87,27 @@ export async function POST(request) {
     }
 
     // Insert to database
-    await db.run(
-      "INSERT INTO rss (name, url, cron, type, state, created_at, refresh_count) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [
-        data.values.name.trim(),
-        data.values.url.trim(),
-        data.values.cron.trim(),
-        rssType,
-        "completed",
-        new Date().toISOString(),
-        0
-      ]
-    );
+    const newRss = await prisma.rss.create({
+      data: {
+        name: data.values.name.trim(),
+        url: data.values.url.trim(),
+        cron: data.values.cron.trim(),
+        type: rssType,
+        state: 1,
+        refreshCount: 0
+      }
+    });
 
     // Log info here because startTask will log another message
     logger.info(`Add RSS subscription successfully, name: ${data.values.name}, type: ${rssType}`, { model: "POST /api/feeds" });
 
     // Start RSS task
-    const { lastID } = await db.get("SELECT last_insert_rowid() as lastID");
     await startTask({
-      id: lastID,
-      name: data.values.name,
-      url: data.values.url,
-      cron: data.values.cron,
-      type: rssType
+      id: newRss.id,
+      name: newRss.name,
+      url: newRss.url,
+      cron: newRss.cron,
+      type: newRss.type
     });
 
     return Response.json({

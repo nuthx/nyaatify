@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 
 // Change user password
@@ -12,21 +12,23 @@ import { logger } from "@/lib/logger";
 
 export async function PATCH(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
 
     // Check if current password is correct
-    const user = await db.get("SELECT password FROM user WHERE id = 1");
+    const user = await prisma.user.findUnique({
+      where: { id: 1 }
+    });
+
     const hashedPassword = crypto.createHash("sha256").update(data.values.current_password).digest("hex");
     if (user.password !== hashedPassword) {
       throw new Error("Current password is incorrect");
     }
 
     // Update password
-    await db.run("UPDATE user SET password = ? WHERE id = 1", [data.values.new_password]);
-
-    // Update password last changed time
-    await db.run("UPDATE user SET password_changed_at = ? WHERE id = 1", [new Date().toISOString()]);
+    await prisma.user.update({
+      where: { id: 1 },
+      data: { password: data.values.new_password }
+    });
 
     logger.info("Change password successfully", { model: "PATCH /api/users/password" });
     return Response.json({

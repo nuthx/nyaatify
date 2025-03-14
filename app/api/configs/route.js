@@ -1,4 +1,4 @@
-import { getDb, getConfig } from "@/lib/db";
+import { prisma, getConfig } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { testOpenAI } from "@/lib/api/openai";
 
@@ -32,11 +32,10 @@ export async function GET() {
 
 export async function PATCH(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
 
     // Check if key name valid
-    const existingKeys = await db.all("SELECT key FROM config");
+    const existingKeys = await prisma.config.findMany();
     const validKeysSet = new Set(existingKeys.map(row => row.key));
     const invalidKeys = Object.keys(data).filter(key => !validKeysSet.has(key));
     if (invalidKeys.length > 0) {
@@ -44,32 +43,30 @@ export async function PATCH(request) {
     }
 
     // If save ai config, parse a anime title to verify validity
-    if (data.ai_priority === "ai") {
+    if (data.aiPriority === "ai") {
       const result = await testOpenAI(data);
       if (!result.success) {
         throw new Error(result.message);
       }
     }
 
-    // Use try-catch because we need to monitor the transaction result
-    await db.run("BEGIN TRANSACTION");
-    try {
-      for (const [key, value] of Object.entries(data)) {
-        await db.run("UPDATE config SET value = ? WHERE key = ?", [value, key]);
-      }
-      await db.run("COMMIT");
-    } catch (error) {
-      await db.run("ROLLBACK");
-      throw error;
-    }
+    // Update configs using Prisma transaction
+    await prisma.$transaction(
+      Object.entries(data).map(([key, value]) =>
+        prisma.config.update({
+          where: { key },
+          data: { value }
+        })
+      )
+    );
 
-    logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "POST /api/configs" });
+    logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "PATCH /api/configs" });
     return Response.json({
       code: 200,
       message: "success"
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/configs" });
+    logger.error(error.message, { model: "PATCH /api/configs" });
     return Response.json({
       code: 500,
       message: error.message

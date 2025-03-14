@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 
 // Delete a device
@@ -6,11 +6,12 @@ import { logger } from "@/lib/logger";
 
 export async function DELETE(_, { params }) {
   try {
-    const db = await getDb();
-    const id = (await params).id;
+    const id = parseInt((await params).id);
 
-    // Delete device by id
-    await db.run("DELETE FROM device WHERE id = ?", id);
+    // Delete device
+    await prisma.device.delete({
+      where: { id }
+    });
 
     logger.info(`Delete device successfully, id: ${id}`, { model: "DELETE /api/device/[id]" });
     return Response.json({

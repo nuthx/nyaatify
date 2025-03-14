@@ -67,7 +67,7 @@ export default function LoginPage() {
   return (
     <div className="container flex mx-auto max-w-screen-xl min-h-[calc(100vh-72px)]">
       <div className="flex-1 hidden lg:flex items-center justify-center">
-        <Image src="/login.png" alt="Login image" className="dark:grayscale dark:invert dark:opacity-90" width={380} height={380} priority />
+        <Image src="images/login.png" alt="Login image" className="dark:grayscale dark:invert dark:opacity-90" width={380} height={380} priority />
       </div>
 
       <div className="flex-1 flex flex-col items-center justify-center">

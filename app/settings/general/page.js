@@ -70,9 +70,9 @@ export default function Settings() {
   }, [t]);
 
   useEffect(() => {
-    // Check data?.title_priority to avoid error when drag finished
-    if (data?.title_priority) {
-      setItems(data.title_priority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
+    // Check data?.titlePriority to avoid error when drag finished
+    if (data?.titlePriority) {
+      setItems(data.titlePriority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
     }
     if (error) {
       toast.error(t("toast.failed.fetch_config"), {
@@ -104,7 +104,7 @@ export default function Settings() {
       
       // Save title priority after drag finished
       handleSaveConfig({ 
-        title_priority: newItems.map(item => item.id).join(",")
+        titlePriority: newItems.map(item => item.id).join(",")
       });
     }
   }
@@ -158,7 +158,7 @@ export default function Settings() {
           <CardDescription>{t("st.gr.dl_state.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={data?.show_downloader_state || "1"} onValueChange={(value) => handleSaveConfig({ show_downloader_state: value })}>
+          <Select defaultValue={data?.showDownloaderState || "1"} onValueChange={(value) => handleSaveConfig({ showDownloaderState: value })}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>
@@ -190,7 +190,7 @@ export default function Settings() {
           <CardDescription>{t("st.gr.cover_source.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={data?.cover_source || "bangumi"} onValueChange={(value) => handleSaveConfig({ cover_source: value })}>
+          <Select defaultValue={data?.coverSource || "bangumi"} onValueChange={(value) => handleSaveConfig({ coverSource: value })}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>

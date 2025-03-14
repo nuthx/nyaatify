@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { prisma, getConfig } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { formatBytes } from "@/lib/bytes";
 import { getQbittorrentVersion, getQbittorrentTorrents } from "@/lib/api/qbittorrent";
@@ -11,32 +11,52 @@ export async function GET(request) {
   try {
     const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
     const size = parseInt(request.nextUrl.searchParams.get("size") || "20");
-    const offset = (page - 1) * size;
-    const db = await getDb();
 
-    let [anime, total, todayCount, weekCount, downloaders, config] = await Promise.all([
-      db.all(`
-        SELECT a.*, GROUP_CONCAT(r.name) as rss_names
-        FROM anime a
-        LEFT JOIN rss_anime ra ON a.hash = ra.anime_hash
-        LEFT JOIN rss r ON ra.rss_id = r.id
-        GROUP BY a.id
-        ORDER BY a.pub_date DESC 
-        LIMIT ? OFFSET ?
-      `, [size, offset]),
-      db.get("SELECT COUNT(*) as count FROM anime"),
-      db.get("SELECT COUNT(*) as count FROM anime WHERE date(pub_date) = date('now')"),
-      db.get("SELECT COUNT(*) as count FROM anime WHERE pub_date >= date('now', '-7 days')"),
-      db.all("SELECT name, url, cookie FROM downloader"),
-      db.all("SELECT key, value FROM config").then(rows => 
-        rows.reduce((acc, { key, value }) => ({ ...acc, [key]: value }), {})
-      )
+    const [anime, total, todayCount, weekCount, downloaders] = await Promise.all([
+      // Get anime data with pagination
+      prisma.anime.findMany({
+        take: size,
+        skip: (page - 1) * size,
+        orderBy: {
+          pubDate: "desc"
+        },
+        include: {
+          rss: {
+            select: {
+              name: true
+            }
+          }
+        }
+      }),
+      // Get total count
+      prisma.anime.count(),
+      // Get today count
+      prisma.anime.count({
+        where: {
+          pubDate: {
+            gte: new Date(new Date().setHours(0, 0, 0, 0))
+          }
+        }
+      }),
+      // Get week count
+      prisma.anime.count({
+        where: {
+          pubDate: {
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+          }
+        }
+      }),
+      // Get downloader list
+      prisma.downloader.findMany()
     ]);
+
+    // Get config
+    const config = await getConfig();
 
     // Check if default downloader is online
     let defaultOnline = "0";
-    if (config.default_downloader) {
-      const defaultDownloaderInfo = downloaders.find(downloader => downloader.name === config.default_downloader);
+    if (config.defaultDownloader) {
+      const defaultDownloaderInfo = downloaders.find(downloader => downloader.name === config.defaultDownloader);
       const version = await getQbittorrentVersion(defaultDownloaderInfo.url, defaultDownloaderInfo.cookie);
       defaultOnline = version.success ? "1" : "0";
     }
@@ -47,39 +67,42 @@ export async function GET(request) {
       return torrentsResult.data.map(t => ({...t, downloader_name: downloader.name}));
     }))).flat();
 
+    // Process anime data with rss names and downloader status
+    const processedAnime = anime.map(item => ({
+      ...item,
+      downloader: (() => {
+        const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
+        return matchingTorrent ? {
+          name: matchingTorrent.downloader_name,
+          state: matchingTorrent.state,
+          progress: matchingTorrent.progress,
+          completed: formatBytes(matchingTorrent.completed),
+          size: formatBytes(matchingTorrent.size)
+        } : null;
+      })()
+    }));
+
     return Response.json({
       code: 200,
       message: "success",
       data: {
-        anime: anime.map(item => {
-          const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
-          return {
-            ...item,
-            downloader: matchingTorrent ? {
-              name: matchingTorrent.downloader_name,
-              state: matchingTorrent.state,
-              progress: matchingTorrent.progress,
-              completed: formatBytes(matchingTorrent.completed), 
-              size: formatBytes(matchingTorrent.size)
-            } : null
-          };
-        }),
+        anime: processedAnime,
         count: {
-          today: todayCount.count,
-          week: weekCount.count,
-          total: total.count
+          today: todayCount,
+          week: weekCount,
+          total: total
         },
         pagination: {
-          total: total.count,
+          total: total,
           size: size,
           current: page
         },
         config: {
-          default_downloader: config.default_downloader,
-          default_downloader_online: defaultOnline,
-          show_downloader_state: config.show_downloader_state,
-          title_priority: config.title_priority,
-          cover_source: config.cover_source
+          defaultDownloader: config.defaultDownloader,
+          defaultDownloaderOnline: defaultOnline,
+          showDownloaderState: config.showDownloaderState,
+          titlePriority: config.titlePriority,
+          coverSource: config.coverSource
         }
       }
     });
