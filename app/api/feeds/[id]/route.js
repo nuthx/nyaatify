@@ -7,7 +7,7 @@ import { stopTask } from "@/lib/schedule";
 
 export async function DELETE(_, { params }) {
   try {
-    const id = (await params).id;
+    const id = parseInt((await params).id);
 
     // Check if RSS is running
     const rss = await prisma.rss.findUnique({

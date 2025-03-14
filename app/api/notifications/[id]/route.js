@@ -6,7 +6,7 @@ import { logger } from "@/lib/logger";
 
 export async function DELETE(_, { params }) {
   try {
-    const id = (await params).id;
+    const id = parseInt((await params).id);
 
     // Delete notification
     await prisma.notification.delete({
@@ -39,7 +39,7 @@ export async function DELETE(_, { params }) {
 
 export async function PATCH(request, { params }) {
   try {
-    const id = (await params).id;
+    const id = parseInt((await params).id);
     const data = await request.json();
 
     // Extract valid values

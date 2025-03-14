@@ -6,7 +6,7 @@ import { logger } from "@/lib/logger";
 
 export async function DELETE(_, { params }) {
   try {
-    const id = (await params).id;
+    const id = parseInt((await params).id);
 
     // Delete device
     await prisma.device.delete({
