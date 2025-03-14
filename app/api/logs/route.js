@@ -11,7 +11,7 @@ export async function GET(request) {
     const targetDateStr = format(targetDate, "yyyy-MM-dd");
 
     // Get all log files
-    const files = await readdir("logs");
+    const files = await readdir("data/logs");
     const logFiles = files.filter(f => f.endsWith("-combined.log"));
     
     // Get available dates
@@ -27,7 +27,7 @@ export async function GET(request) {
       const fileDate = file.split("-combined.log")[0];
       if (fileDate <= targetDateStr) {
         try {
-          logContent = await readFile(`logs/${file}`, "utf-8");
+          logContent = await readFile(`data/logs/${file}`, "utf-8");
           foundDate = fileDate;
           break;
         } catch (e) {
