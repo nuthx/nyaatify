@@ -43,7 +43,7 @@ export async function PATCH(request) {
     }
 
     // If save ai config, parse a anime title to verify validity
-    if (data.ai_priority === "ai") {
+    if (data.aiPriority === "ai") {
       const result = await testOpenAI(data);
       if (!result.success) {
         throw new Error(result.message);

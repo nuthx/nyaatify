@@ -23,7 +23,7 @@ export async function DELETE(_, { params }) {
       // Update default downloader
       // If deleted downloader is default downloader, update default downloader to the first downloader
       // If no downloader left, set default downloader to empty
-      if (downloader.name === config.default_downloader) {
+      if (downloader.name === config.defaultDownloader) {
         // Find next available downloader, excluding the one being deleted
         // If no downloader left, nextDownloaderName will be null
         const nextDownloader = await tx.downloader.findFirst({
@@ -36,7 +36,7 @@ export async function DELETE(_, { params }) {
 
         // Update default downloader config
         await tx.config.update({
-          where: { key: "default_downloader" },
+          where: { key: "defaultDownloader" },
           data: { value: nextDownloader?.name || "" }
         });
 

@@ -105,13 +105,13 @@ export async function POST(request) {
 
     // Get the current value to determine if update is needed
     const config = await prisma.config.findUnique({
-      where: { key: "default_downloader" }
+      where: { key: "defaultDownloader" }
     });
 
     // Update default downloader only if empty
     if (!config.value) {
       await prisma.config.update({
-        where: { key: "default_downloader" },
+        where: { key: "defaultDownloader" },
         data: { value: data.values.name }
       });
       logger.info(`Set default downloader to ${data.values.name}`, { model: "POST /api/downloaders" });

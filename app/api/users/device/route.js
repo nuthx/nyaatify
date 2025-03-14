@@ -22,7 +22,7 @@ export async function GET() {
       message: "success",
       data: {
         devices: devices.map(({ token, ...rest }) => rest),  // Remove token from response
-        current_device: currentDevice?.id || null
+        currentDevice: currentDevice?.id || null
       }
     });
   } catch (error) {

@@ -241,14 +241,14 @@ export default function Devices() {
                   <TableCell className="px-2 py-4">{device.browser}</TableCell>
                   <TableCell className="px-2 py-4">{device.ip}</TableCell>
                   <TableCell className="px-2 py-4">
-                    {deviceData.current_device === device.id ? (
+                    {deviceData.currentDevice === device.id ? (
                       t("st.user.devices.current")
                     ) : (
-                      new Date(device.last_active_at).toLocaleString()
+                      new Date(device.lastActiveAt).toLocaleString()
                     )}
                   </TableCell>
                   <TableCell className="px-3 py-4 w-4">
-                    <Button variant="ghost" size="icon" disabled={deviceData.current_device === device.id} onClick={() => setLogoutDevice(device)}>
+                    <Button variant="ghost" size="icon" disabled={deviceData.currentDevice === device.id} onClick={() => setLogoutDevice(device)}>
                       <Trash2 className="text-muted-foreground"/>
                     </Button>
                   </TableCell>

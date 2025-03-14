@@ -55,8 +55,8 @@ export async function GET(request) {
 
     // Check if default downloader is online
     let defaultOnline = "0";
-    if (config.default_downloader) {
-      const defaultDownloaderInfo = downloaders.find(downloader => downloader.name === config.default_downloader);
+    if (config.defaultDownloader) {
+      const defaultDownloaderInfo = downloaders.find(downloader => downloader.name === config.defaultDownloader);
       const version = await getQbittorrentVersion(defaultDownloaderInfo.url, defaultDownloaderInfo.cookie);
       defaultOnline = version.success ? "1" : "0";
     }
@@ -70,7 +70,7 @@ export async function GET(request) {
     // Process anime data with rss names and downloader status
     const processedAnime = anime.map(item => ({
       ...item,
-      rss_names: item.rss.map(r => r.name).join(","),
+      rssNames: item.rss.map(r => r.name).join(","),
       downloader: (() => {
         const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
         return matchingTorrent ? {
@@ -99,11 +99,11 @@ export async function GET(request) {
           current: page
         },
         config: {
-          default_downloader: config.default_downloader,
-          default_downloader_online: defaultOnline,
-          show_downloader_state: config.show_downloader_state,
-          title_priority: config.title_priority,
-          cover_source: config.cover_source
+          defaultDownloader: config.defaultDownloader,
+          defaultDownloaderOnline: defaultOnline,
+          showDownloaderState: config.showDownloaderState,
+          titlePriority: config.titlePriority,
+          coverSource: config.coverSource
         }
       }
     });
