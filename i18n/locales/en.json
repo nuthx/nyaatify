@@ -308,8 +308,6 @@
       }
     },
     "abt": {
-      "app_version": "App Version",
-      "db_version": "Database Version",
       "description": "Anime tracking, now on autopilot.",
       "project": {
         "title": "Overview",

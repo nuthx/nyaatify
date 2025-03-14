@@ -308,8 +308,6 @@
       }
     },
     "abt": {
-      "app_version": "程序版本",
-      "db_version": "数据库版本",
       "description": "动漫追踪，一触即发",
       "project": {
         "title": "项目信息",

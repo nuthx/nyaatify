@@ -54,8 +54,7 @@ export default function Settings() {
         <h1 className="text-2xl font-bold mt-8">Nyaatify</h1>
         <p className="text-sm text-muted-foreground mt-2">{t("st.abt.description")}</p>
         <div className="flex gap-2 mt-5">
-          <Badge variant="outline">{t("st.abt.app_version")}: v{currentVersion}</Badge>
-          <Badge variant="outline">{t("st.abt.db_version")}: v{data?.db_version}</Badge>
+          <Badge variant="outline">{t("glb.version")}: v{currentVersion}</Badge>
         </div>
         
       </div>
