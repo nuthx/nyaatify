@@ -1,12 +1,15 @@
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 
 // Get notification list
 
 export async function GET() {
   try {
-    const db = await getDb();
-    const notification = await db.all("SELECT * FROM notification ORDER BY name ASC");
+    const notification = await prisma.notification.findMany({
+      orderBy: {
+        name: "asc"
+      }
+    });
 
     return Response.json({
       code: 200,
@@ -40,36 +43,36 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
 
     // Check if name is empty
-    if (data.values.name.trim() === "") {
+    if (!data.values.name?.trim()) {
       throw new Error("Notification name is required");
     }
 
     // Check if name already exists
-    const existingName = await db.get("SELECT name FROM notification WHERE name = ?", data.values.name.trim());
+    const existingName = await prisma.notification.findUnique({
+      where: { name: data.values.name.trim() }
+    });
+    
     if (existingName) {
       throw new Error(`Notification already exists, name: ${data.values.name}`);
     }
 
-    // Insert to database
-    await db.run(
-      "INSERT INTO notification (name, filter, type, url, token, title, message, extra, state, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        data.values.name.trim(),
-        data.values.filter.trim(),
-        data.values.type.trim(),
-        data.values.url.trim(),
-        data.values.token.trim(),
-        data.values.title.trim(),
-        data.values.message.trim(),
-        data.values.extra.trim(),
-        1,
-        new Date().toISOString()
-      ]
-    );
+    // Insert to database using Prisma
+    await prisma.notification.create({
+      data: {
+        name: data.values.name.trim(),
+        filter: data.values.filter.trim(),
+        type: data.values.type.trim(),
+        url: data.values.url.trim(),
+        token: data.values.token.trim(),
+        title: data.values.title.trim(),
+        message: data.values.message.trim(),
+        extra: data.values.extra.trim(),
+        state: 1
+      }
+    });
 
     logger.info(`Add notification successfully, name: ${data.values.name}`, { model: "POST /api/notifications" });
     return Response.json({

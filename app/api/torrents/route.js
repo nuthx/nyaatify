@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { formatBytes } from "@/lib/bytes";
 import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
@@ -7,11 +7,8 @@ import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent
 
 export async function GET() {
   try {
-    const db = await getDb();
-
-    // Check downloader online status
-    // If version returns success, then the downloader is online
-    const downloaders = await db.all("SELECT url, cookie, name FROM downloader");
+    // Get all downloaders and check their online status
+    const downloaders = await prisma.downloader.findMany();
     const downloaderStatuses = await Promise.all(
       downloaders.map(async downloader => {
         const version = await getQbittorrentVersion(downloader.url, downloader.cookie);
@@ -82,11 +79,13 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
 
     // Get downloader info
-    const downloader = await db.get("SELECT url, cookie FROM downloader WHERE name = ?", data.downloader);
+    const downloader = await prisma.downloader.findUnique({
+      where: { name: data.downloader }
+    });
+
     if (!downloader) {
       throw new Error(`Downloader not found, name: ${data.downloader}`);
     }

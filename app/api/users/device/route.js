@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
 import { logger } from "@/lib/logger";
 
@@ -6,8 +6,11 @@ import { logger } from "@/lib/logger";
 
 export async function GET() {
   try {
-    const db = await getDb();
-    const devices = await db.all("SELECT * FROM device ORDER BY last_active_at DESC");
+    const devices = await prisma.device.findMany({
+      orderBy: {
+        lastActiveAt: "desc"
+      }
+    });
 
     // Find current device index
     const cookieStore = await cookies();

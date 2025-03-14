@@ -231,7 +231,7 @@ export default function RSSSettings() {
               </>
             )}
             state={(rss) => (
-              rss.state === "running" ? (
+              rss.state === 0 ? (
                 <>{t("st.rss.list.running")}</>
               ) : (
                 <>{t("st.rss.list.next")}: {new Date(rss.next).toLocaleString()}</>
@@ -244,7 +244,7 @@ export default function RSSSettings() {
                 </DropdownMenuItem>
               </>
             )}
-            deleteable={(rss) => rss.state !== "running"}
+            deleteable={(rss) => rss.state === 1}
             deleteDesc={t("st.rss.list.alert")}
             onDelete={(rss) => handleDelete(rss.id)}
           />

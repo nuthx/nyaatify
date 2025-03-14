@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 
 // Check if the token is valid
@@ -8,18 +8,28 @@ import { logger } from "@/lib/logger";
 
 export async function POST(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
 
-    // Check if this token in the database
-    const result = await db.get("SELECT * FROM device WHERE token = ?", [data.token.value]);
+    // Check if this token exists in the database
+    const device = await prisma.device.findUnique({
+      where: {
+        token: data.token.value
+      }
+    });
 
-    if (!result) {
+    if (!device) {
       throw new Error(`Invalid token, token: ${data.token}`);
     }
 
-    // Update last used time with ISO timestamp
-    await db.run("UPDATE device SET last_active_at = ? WHERE token = ?", [new Date().toISOString(), data.token.value]);
+    // Update last active time
+    await prisma.device.update({
+      where: {
+        token: data.token.value
+      },
+      data: {
+        lastActiveAt: new Date()
+      }
+    });
 
     return Response.json({
       code: 200,

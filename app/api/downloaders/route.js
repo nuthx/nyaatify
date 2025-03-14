@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
 import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorrent";
 
@@ -6,8 +6,11 @@ import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorre
 
 export async function GET() {
   try {
-    const db = await getDb();
-    const downloaders = await db.all("SELECT * FROM downloader ORDER BY name ASC");
+    const downloaders = await prisma.downloader.findMany({
+      orderBy: {
+        name: "asc"
+      }
+    });
 
     // Get all downloaders' version and online state
     const downloadersWithState = await Promise.all(downloaders.map(async downloader => {
@@ -49,24 +52,29 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
 
     // Check if name is empty
-    if (data.values.name.trim() === "") {
+    if (!data.values.name?.trim()) {
       throw new Error("Downloader name is required");
     }
 
     // Check if name or URL already exists
-    const [existingName, existingUrl] = await Promise.all([
-      db.get("SELECT name FROM downloader WHERE name = ?", data.values.name.trim()),
-      db.get("SELECT url FROM downloader WHERE url = ?", data.values.url.trim())
-    ]);
-    if (existingName) {
-      throw new Error(`Downloader already exists, name: ${data.values.name}`);
-    }
-    if (existingUrl) {
-      throw new Error(`Downloader already exists, url: ${data.values.url}`);
+    const existingDownloader = await prisma.downloader.findFirst({
+      where: {
+        OR: [
+          { name: data.values.name.trim() },
+          { url: data.values.url.trim() }
+        ]
+      }
+    });
+
+    if (existingDownloader) {
+      if (existingDownloader.name === data.values.name.trim()) {
+        throw new Error(`Downloader already exists, name: ${data.values.name}`);
+      } else {
+        throw new Error(`Downloader already exists, url: ${data.values.url}`);
+      }
     }
 
     // Get downloader cookie
@@ -83,34 +91,29 @@ export async function POST(request) {
       throw new Error(cookieResult.message);
     }
 
-    // Insert to database
-    await db.run(
-      "INSERT INTO downloader (name, url, type, username, password, created_at, cookie) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [
-        data.values.name.trim(),
-        data.values.url.trim(),
-        data.values.type,
-        data.values.username,
-        data.values.password,
-        new Date().toISOString(),
-        cookieResult.data
-      ]
-    );
+    // Create downloader
+    await prisma.downloader.create({
+      data: {
+        name: data.values.name.trim(),
+        url: data.values.url.trim(),
+        type: data.values.type.trim(),
+        username: data.values.username,
+        password: data.values.password,
+        cookie: cookieResult.data
+      }
+    });
+
+    // Get the current value to determine if update is needed
+    const config = await prisma.config.findUnique({
+      where: { key: "default_downloader" }
+    });
 
     // Update default downloader only if empty
-    // Get the current value to determine if update is needed
-    const prevDefaultDownloader = await db.get("SELECT value FROM config WHERE key = 'default_downloader'");
-    await db.run(`
-      UPDATE config 
-      SET value = CASE 
-        WHEN value = "" THEN ? 
-        ELSE value 
-      END 
-      WHERE key = "default_downloader"
-    `, [data.values.name]);
-
-    // Log if default downloader is empty before update
-    if (prevDefaultDownloader.value === "") {
+    if (!config.value) {
+      await prisma.config.update({
+        where: { key: "default_downloader" },
+        data: { value: data.values.name }
+      });
       logger.info(`Set default downloader to ${data.values.name}`, { model: "POST /api/downloaders" });
     }
 
