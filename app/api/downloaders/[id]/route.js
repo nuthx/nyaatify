@@ -1,4 +1,4 @@
-import { getDb, getConfig } from "@/lib/db";
+import { prisma, getConfig } from "@/lib/db";
 import { logger } from "@/lib/logger";
 
 // Delete a downloader 
@@ -6,42 +6,46 @@ import { logger } from "@/lib/logger";
 
 export async function DELETE(_, { params }) {
   try {
-    const db = await getDb();
+    const id = parseInt((await params).id);
     const config = await getConfig();
-    const id = (await params).id;
 
-    // Use try-catch because we need to monitor the transaction result
-    await db.run("BEGIN TRANSACTION");
-    try {
-      // Get downloader (need name)
-      const downloader = await db.get("SELECT * FROM downloader WHERE id = ?", [id]);
+    await prisma.$transaction(async (tx) => {
+      // Get the downloader name to be deleted
+      const downloader = await tx.downloader.findUnique({
+        where: { id: parseInt(id) }
+      });
 
       // Delete downloader
-      await db.run("DELETE FROM downloader WHERE id = ?", [id]);
+      await tx.downloader.delete({
+        where: { id: parseInt(id) }
+      });
 
       // Update default downloader
       // If deleted downloader is default downloader, update default downloader to the first downloader
       // If no downloader left, set default downloader to empty
-      let nextDownloaderName = null;
-      if (downloader.name === config.default_downloader) {
+      if (downloader.name === config.defaultDownloader) {
         // Find next available downloader, excluding the one being deleted
         // If no downloader left, nextDownloaderName will be null
-        const nextDownloader = await db.get("SELECT name FROM downloader WHERE name != ? LIMIT 1", [downloader.name]);
-        nextDownloaderName = nextDownloader?.name || "";
-        await db.run("UPDATE config SET value = ? WHERE key = 'default_downloader'", [nextDownloaderName]);
-      }
+        const nextDownloader = await tx.downloader.findFirst({
+          where: {
+            NOT: {
+              name: downloader.name
+            }
+          }
+        });
 
-      // Commit transaction
-      await db.run("COMMIT");
+        // Update default downloader config
+        await tx.config.update({
+          where: { key: "defaultDownloader" },
+          data: { value: nextDownloader?.name || "" }
+        });
 
-      // Log if default downloader is changed
-      if (nextDownloaderName) {
-        logger.info(`Change default downloader from ${downloader.name} to ${nextDownloaderName}`, { model: "DELETE /api/downloaders/[id]" });
+        // Log if default downloader is changed
+        if (nextDownloader) {
+          logger.info(`Change default downloader from ${downloader.name} to ${nextDownloader.name}`, { model: "DELETE /api/downloaders/[id]" });
+        }
       }
-    } catch (error) {
-      await db.run("ROLLBACK");
-      throw error;
-    }
+    });
 
     logger.info(`Delete downloader successfully, id: ${id}`, { model: "DELETE /api/downloaders/[id]" });
     return Response.json({

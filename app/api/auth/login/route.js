@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { UAParser } from "ua-parser-js";
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
 import { logger } from "@/lib/logger";
 
@@ -14,9 +14,12 @@ import { logger } from "@/lib/logger";
 
 export async function POST(request) {
   try {
-    const db = await getDb();
     const data = await request.json();
-    const user = await db.get("SELECT * FROM user WHERE username = ?", [data.values.username]);
+    const user = await prisma.user.findUnique({
+      where: {
+        username: data.values.username
+      }
+    });
 
     // Check user
     if (!user) {
@@ -37,32 +40,29 @@ export async function POST(request) {
     }
 
     // Create user token
-    const token = crypto.createHash("sha256").update(user.password + user.username + Date.now().toString()).digest("hex");
+    const token = crypto.createHash("sha256")
+      .update(user.password + user.username + Date.now().toString())
+      .digest("hex");
 
     // Get user agent
     const ua = UAParser(request.headers.get("user-agent"));
 
-    // Check if client is browser
-    // Write new token to database
+    // Check if client is browser and store device info
     if (ua.browser.name) {
-      await db.run(
-        "INSERT INTO device (token, user_id, browser, os, ip, created_at, last_used_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        [
+      await prisma.device.create({
+        data: {
           token,
-          user.id,
-          `${ua.browser.name || ""} ${ua.browser.version || ""}`,
-          `${ua.os.name || ""} ${ua.os.version || ""}`,
-          request.headers.get("x-forwarded-for") || "",
-          new Date().toISOString(),
-          new Date().toISOString()
-        ]
-      );
+          browser: `${ua.browser.name || ""} ${ua.browser.version || ""}`,
+          os: `${ua.os.name || ""} ${ua.os.version || ""}`,
+          ip: request.headers.get("x-forwarded-for") || ""
+        }
+      });
     } else {
       logger.warn(`Non-browser login, token will not be stored in database, user agent: ${ua.ua}`, { model: "POST /api/auth/login" });
     }
 
     // Set cookie
-    const cookieStore = await cookies()
+    const cookieStore = await cookies();
     cookieStore.set({
       name: "auth_token",
       value: token,

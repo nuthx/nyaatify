@@ -63,20 +63,20 @@ export default function RSSSettings() {
 
   const aiForm = useForm({
     resolver: zodResolver(z.object({
-      ai_priority: z.string(),
-      ai_api: z.string()
+      aiPriority: z.string(),
+      aiApi: z.string()
         .url({ message: t("validate.api_invalid") })
         .startsWith("http", { message: t("validate.api_http") })
         .refine(url => !url.endsWith("/"), { message: t("validate.api_slash") })
         .or(z.literal("")),
-      ai_key: z.string(),
-      ai_model: z.string()
+      aiKey: z.string(),
+      aiModel: z.string()
     })),
     defaultValues: {
-      ai_priority: "local",
-      ai_api: "",
-      ai_key: "",
-      ai_model: "",
+      aiPriority: "local",
+      aiApi: "",
+      aiKey: "",
+      aiModel: "",
     },
   })
 
@@ -107,10 +107,10 @@ export default function RSSSettings() {
 
   useEffect(() => {
     if (configData) {
-      aiForm.setValue("ai_priority", configData?.ai_priority);
-      aiForm.setValue("ai_api", configData?.ai_api);
-      aiForm.setValue("ai_key", configData?.ai_key);
-      aiForm.setValue("ai_model", configData?.ai_model);
+      aiForm.setValue("aiPriority", configData?.aiPriority);
+      aiForm.setValue("aiApi", configData?.aiApi);
+      aiForm.setValue("aiKey", configData?.aiKey);
+      aiForm.setValue("aiModel", configData?.aiModel);
     }
     if (configError) {
       toast.error(t("toast.failed.fetch_config"), {
@@ -231,7 +231,7 @@ export default function RSSSettings() {
               </>
             )}
             state={(rss) => (
-              rss.state === "running" ? (
+              rss.state === 0 ? (
                 <>{t("st.rss.list.running")}</>
               ) : (
                 <>{t("st.rss.list.next")}: {new Date(rss.next).toLocaleString()}</>
@@ -244,7 +244,7 @@ export default function RSSSettings() {
                 </DropdownMenuItem>
               </>
             )}
-            deleteable={(rss) => rss.state !== "running"}
+            deleteable={(rss) => rss.state === 1}
             deleteDesc={t("st.rss.list.alert")}
             onDelete={(rss) => handleDelete(rss.id)}
           />
@@ -259,10 +259,10 @@ export default function RSSSettings() {
         <CardContent>
           <Form {...aiForm}>
             <form onSubmit={aiForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
-              <FormField control={aiForm.control} name="ai_priority" render={({ field }) => (
+              <FormField control={aiForm.control} name="aiPriority" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.rss.ai.priority")}</FormLabel>
-                  <Select defaultValue={configData?.ai_priority || field.value} onValueChange={field.onChange}>
+                  <Select defaultValue={configData?.aiPriority || field.value} onValueChange={field.onChange}>
                     <FormControl>
                       <SelectTrigger className="w-72">
                         <SelectValue />
@@ -277,9 +277,9 @@ export default function RSSSettings() {
                 </FormItem>
               )}
               />
-              {aiForm.watch("ai_priority") === "ai" && (
+              {aiForm.watch("aiPriority") === "ai" && (
                 <>
-                  <FormField control={aiForm.control} name="ai_api" render={({ field }) => (
+                  <FormField control={aiForm.control} name="aiApi" render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("st.rss.ai.api")}</FormLabel>
                       <FormControl>
@@ -289,7 +289,7 @@ export default function RSSSettings() {
                     </FormItem>
                   )}
                   />
-                  <FormField control={aiForm.control} name="ai_key" render={({ field }) => (
+                  <FormField control={aiForm.control} name="aiKey" render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("st.rss.ai.key")}</FormLabel>
                       <FormControl>
@@ -299,7 +299,7 @@ export default function RSSSettings() {
                     </FormItem>
                   )}
                   />
-                  <FormField control={aiForm.control} name="ai_model" render={({ field }) => (
+                  <FormField control={aiForm.control} name="aiModel" render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("st.rss.ai.model")}</FormLabel>
                       <FormControl>

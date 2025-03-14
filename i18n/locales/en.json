@@ -242,7 +242,7 @@
       "variable": {
         "description": "Custom variables must be wrapped in double curly braces like {{title_jp}}. Please check the spelling carefully, otherwise empty content will be returned.",
         "rss": "RSS subscription name of this anime",
-        "title_publish": "Published original title",
+        "title_raw": "Published original title",
         "title_jp": "Japanese title",
         "title_cn": "Chinese title",
         "title_en": "English title",
@@ -252,8 +252,8 @@
         "torrent_size": "Torrent size",
         "cover_anilist": "Anilist cover image link",
         "cover_bangumi": "Bangumi cover image link",
-        "link_anilist": "Anilist detail page link",
-        "link_bangumi": "Bangumi detail page link"
+        "page_anilist": "Anilist detail page link",
+        "page_bangumi": "Bangumi detail page link"
       },
       "list": {
         "title": "Notification List",

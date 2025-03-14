@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
 import { logger } from "@/lib/logger";
 
@@ -6,14 +6,16 @@ import { logger } from "@/lib/logger";
 
 export async function DELETE() {
   try {
-    const db = await getDb();
-
     // Get the auth token from the cookies
     const cookieStore = await cookies();
     const authToken = cookieStore.get("auth_token");
 
     // Delete the auth token from the database
-    await db.run("DELETE FROM device WHERE token = ?", [authToken.value]);
+    await prisma.device.delete({
+      where: {
+        token: authToken.value
+      }
+    });
 
     // Delete the auth token on browser
     cookieStore.delete("auth_token");

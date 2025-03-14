@@ -21,7 +21,7 @@ export async function POST(request) {
     // Generate demo variable
     const demo_variable = {
       rss: "Demo Subscription",
-      title_publish: "[Moozzi2] Gimai Seikatsu [ 義妹生活 ] (BD 1920x1080 x265-10Bit Flac) - TV + SP + 4K",
+      title_raw: "[Moozzi2] Gimai Seikatsu [ 義妹生活 ] (BD 1920x1080 x265-10Bit Flac) - TV + SP + 4K",
       title_jp: "義妹生活",
       title_cn: "义妹生活",
       title_en: "Days with My Stepsister",
@@ -31,8 +31,8 @@ export async function POST(request) {
       torrent_size: "24.2 GiB",
       cover_anilist: "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx152681-xtQiVOYDhr3p.jpg",
       cover_bangumi: "https://lain.bgm.tv/r/400/pic/cover/l/40/01/393037_I7mvN.jpg",
-      link_anilist: "https://anilist.co/anime/152681",
-      link_bangumi: "https://bgm.tv/subject/393037"
+      page_anilist: "https://anilist.co/anime/152681",
+      page_bangumi: "https://bgm.tv/subject/393037"
     }
 
     // Dispatch test notification

@@ -40,7 +40,7 @@ export default function Logs() {
   const [availableDays, setAvailableDays] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 80;
 
   const fetcher = async (url) => {
     const response = await fetch(url);

@@ -1,4 +1,4 @@
-import { getDb } from "@/lib/db";
+import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
 import { logger } from "@/lib/logger";
 
@@ -6,8 +6,11 @@ import { logger } from "@/lib/logger";
 
 export async function GET() {
   try {
-    const db = await getDb();
-    const devices = await db.all("SELECT * FROM device ORDER BY last_used_at DESC");
+    const devices = await prisma.device.findMany({
+      orderBy: {
+        lastActiveAt: "desc"
+      }
+    });
 
     // Find current device index
     const cookieStore = await cookies();
@@ -19,7 +22,7 @@ export async function GET() {
       message: "success",
       data: {
         devices: devices.map(({ token, ...rest }) => rest),  // Remove token from response
-        current_device: currentDevice?.id || null
+        currentDevice: currentDevice?.id || null
       }
     });
   } catch (error) {
