@@ -45,7 +45,7 @@ export async function POST(request) {
       .digest("hex");
 
     // Get user agent
-    const ua = UAParser(request.headers.get("user-agent"));
+    const ua = UAParser(request.headers).withClientHints();
 
     // Check if client is browser and store device info
     if (ua.browser.name) {
