@@ -70,7 +70,6 @@ export async function GET(request) {
     // Process anime data with rss names and downloader status
     const processedAnime = anime.map(item => ({
       ...item,
-      rssNames: item.rss.map(r => r.name).join(","),
       downloader: (() => {
         const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
         return matchingTorrent ? {

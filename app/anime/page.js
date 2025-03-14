@@ -134,14 +134,12 @@ export default function Anime() {
                 <div className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md bg-muted" />
               )}
               <div className="flex flex-col gap-2 my-1 w-fit">
-                {item.rssNames && (
-                  <div className="flex gap-2">
-                    <Badge variant="outline">{new Date(item.pubDate).toLocaleString()}</Badge>
-                    {item.rssNames.split(",").map((name, idx) => (
-                      <Badge key={idx} variant="outline">{name}</Badge>
-                    ))}
-                  </div>
-                )}
+                <div className="flex gap-2">
+                  <Badge variant="outline">{new Date(item.pubDate).toLocaleString()}</Badge>
+                  {item.rss?.map((rss, idx) => (
+                    <Badge key={idx} variant="outline">{rss.name}</Badge>
+                  ))}
+                </div>
                 <div className="w-fit">
                   <TooltipProvider>
                     <Tooltip>
