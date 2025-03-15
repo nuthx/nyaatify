@@ -1,6 +1,6 @@
 import { prisma, getConfig } from "@/lib/db";
-import { logger } from "@/lib/logger";
 import { formatBytes } from "@/lib/bytes";
+import { sendResponse } from "@/lib/http/response";
 import { getQbittorrentVersion, getQbittorrentTorrents } from "@/lib/api/qbittorrent";
 
 // Get anime list with pagination
@@ -82,7 +82,7 @@ export async function GET(request) {
       })()
     }));
 
-    return Response.json({
+    return sendResponse(request, {
       code: 200,
       message: "success",
       data: {
@@ -107,10 +107,9 @@ export async function GET(request) {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/anime" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

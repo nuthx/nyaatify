@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { readFile, readdir } from "fs/promises";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Get system logs
 // Params: date, string, optional, default: today, format: 2025-01-01
@@ -38,9 +38,7 @@ export async function GET(request) {
 
     // Check if log file exists
     if (foundDate) {
-      return Response.json({
-        code: 200,
-        message: "success",
+      return sendResponse(request, {
         data: {
           logs: logContent ? logContent.trim().split("\n").map(line => JSON.parse(line)).reverse() : [],
           days: availableDays,
@@ -48,10 +46,9 @@ export async function GET(request) {
         }
       });
     } else {
-      logger.warn(`No system logs found, date: ${targetDateStr}`, { model: "GET /api/logs" });
-      return Response.json({
+      return sendResponse(request, {
         code: 404,
-        message: "No system logs found",
+        message: `No system logs found, date: ${targetDateStr}`,
         data: {
           logs: [],
           days: availableDays,
@@ -60,10 +57,9 @@ export async function GET(request) {
       });
     }
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/logs" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
