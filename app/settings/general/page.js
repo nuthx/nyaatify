@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next";
-import { handleRequest } from "@/lib/handlers";
+import { handleRequest } from "@/lib/http/request";
 import {
   DndContext, 
   closestCenter,
