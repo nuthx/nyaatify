@@ -8,6 +8,11 @@ export async function GET() {
   try {
     const config = await getConfig();
 
+    // Hide aiKey with first 15 characters and asterisks
+    if (config.aiKey) {
+      config.aiKey = config.aiKey.slice(0, 15) + "*".repeat(Math.max(0, config.aiKey.length - 15));
+    }
+
     return Response.json({
       code: 200,
       message: "success",
