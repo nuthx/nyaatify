@@ -40,7 +40,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { ListCard } from "@/components/settings";
+import { ListCard } from "@/components/listcard";
 import { BellDot, BellMinus, BellRing } from "lucide-react";
 
 function VariableItem({ name, description }) {

@@ -33,7 +33,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { ListCard } from "@/components/settings";
+import { ListCard } from "@/components/listcard";
 import { RefreshCw } from "lucide-react";
 
 export default function RSSSettings() {

@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ListCard } from "@/components/settings";
+import { ListCard } from "@/components/listcard";
 
 export default function DownloaderSettings() {
   const downloadersApi = "/api/downloaders";

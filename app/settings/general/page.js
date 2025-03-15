@@ -32,7 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { SortableItem } from "@/components/settings";
+import { SortableItem } from "@/components/sortableitem";
 
 export default function Settings() {
   const configApi = "/api/configs";
