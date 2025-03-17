@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorrent";
 
 // Get downloader list with downloader version and online state
 
-export async function GET() {
+export async function GET(request) {
   try {
     const downloaders = await prisma.downloader.findMany({
       orderBy: {
@@ -23,19 +24,14 @@ export async function GET() {
       };
     }));
 
-    return Response.json({
-      code: 200,
-      message: "success",
-      data: {
-        downloaders: downloadersWithState
-      }
+    return sendResponse(request, {
+      data: { downloaders: downloadersWithState }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/downloaders" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
 
@@ -117,16 +113,13 @@ export async function POST(request) {
       logger.info(`Set default downloader to ${data.values.name}`, { model: "POST /api/downloaders" });
     }
 
-    logger.info(`Add downloader successfully, name: ${data.values.name}, type: ${data.values.type}`, { model: "POST /api/downloaders" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Add downloader successfully, name: ${data.values.name}, type: ${data.values.type}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/downloaders" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

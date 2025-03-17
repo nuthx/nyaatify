@@ -4,7 +4,7 @@ import useSWR from "swr"
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
-import { handleRequest } from "@/lib/handlers";
+import { handleRequest } from "@/lib/http/request";
 import {
   Select,
   SelectContent,

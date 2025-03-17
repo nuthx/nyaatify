@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Change user password
 // Body: {
@@ -30,16 +30,13 @@ export async function PATCH(request) {
       data: { password: data.values.new_password }
     });
 
-    logger.info("Change password successfully", { model: "PATCH /api/users/password" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: "Change password successfully"
     });
   } catch (error) {
-    logger.error(error.message, { model: "PATCH /api/users/password" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

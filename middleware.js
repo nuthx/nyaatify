@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { handleRequest } from "@/lib/handlers";
+import { handleRequest } from "@/lib/http/request";
 
 export async function middleware(request) {
   const token = request.cookies.get("auth_token");

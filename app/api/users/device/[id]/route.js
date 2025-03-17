@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Delete a device
 // Params: id, string, required
@@ -13,16 +13,13 @@ export async function DELETE(_, { params }) {
       where: { id }
     });
 
-    logger.info(`Delete device successfully, id: ${id}`, { model: "DELETE /api/device/[id]" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Delete device successfully, id: ${id}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "DELETE /api/device/[id]" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

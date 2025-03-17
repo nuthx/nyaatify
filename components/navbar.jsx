@@ -5,7 +5,7 @@ import Image from "next/image";
 import { toast } from "sonner"
 import { useTranslation } from "react-i18next";
 import { usePathname, useRouter } from "next/navigation";
-import { handleRequest } from "@/lib/handlers";
+import { handleRequest } from "@/lib/http/request";
 
 export function NavBar() {
   const logoutApi = "/api/auth/logout";

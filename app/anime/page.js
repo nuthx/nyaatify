@@ -5,7 +5,7 @@ import { toast } from "sonner"
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
-import { handleRequest } from "@/lib/handlers";
+import { handleRequest } from "@/lib/http/request";
 import {
   AlertDialog,
   AlertDialogAction,

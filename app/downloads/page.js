@@ -4,7 +4,7 @@ import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { handleRequest } from "@/lib/handlers";
+import { handleRequest } from "@/lib/http/request";
 import {
   AlertDialog,
   AlertDialogAction,

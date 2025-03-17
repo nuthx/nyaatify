@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Get notification list
 
-export async function GET() {
+export async function GET(request) {
   try {
     const notification = await prisma.notification.findMany({
       orderBy: {
@@ -11,19 +11,14 @@ export async function GET() {
       }
     });
 
-    return Response.json({
-      code: 200,
-      message: "success",
-      data: {
-        notification
-      }
+    return sendResponse(request, {
+      data: { notification }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/notifications" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
 
@@ -74,16 +69,13 @@ export async function POST(request) {
       }
     });
 
-    logger.info(`Add notification successfully, name: ${data.values.name}`, { model: "POST /api/notifications" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Add notification successfully, name: ${data.values.name}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/notifications" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 import { refreshRSS } from "@/lib/parse";
 
 // Refresh a rss subscription
@@ -15,16 +15,13 @@ export async function POST(request) {
     // Refresh RSS
     refreshRSS(data.values.name);
 
-    logger.info(`Start refreshing RSS subscription manually, name: ${data.values.name}`, { model: "POST /api/feeds/refresh" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Start refreshing RSS subscription manually, name: ${data.values.name}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/feeds/refresh" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
