@@ -83,8 +83,6 @@ export async function GET(request) {
     }));
 
     return sendResponse(request, {
-      code: 200,
-      message: "success",
       data: {
         anime: processedAnime,
         count: {

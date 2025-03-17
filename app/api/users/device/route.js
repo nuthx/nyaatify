@@ -1,10 +1,10 @@
 import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Get all devices with their tokens
 
-export async function GET() {
+export async function GET(request) {
   try {
     const devices = await prisma.device.findMany({
       orderBy: {
@@ -17,19 +17,16 @@ export async function GET() {
     const authToken = cookieStore.get("auth_token");
     const currentDevice = devices.find(device => device.token === authToken.value);
 
-    return Response.json({
-      code: 200,
-      message: "success",
+    return sendResponse(request, {
       data: {
         devices: devices.map(({ token, ...rest }) => rest),  // Remove token from response
         currentDevice: currentDevice?.id || null
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/device" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

@@ -1,21 +1,19 @@
 import parser from "cron-parser";
 import RSSParser from "rss-parser";
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 import { tasks, startTask } from "@/lib/schedule";
 
 // Get rss list with next refresh time
 
-export async function GET() {
+export async function GET(request) {
   try {
     const rss = await prisma.rss.findMany({
       orderBy: { name: "asc" }
     });
 
     // Return rss list with next refresh time
-    return Response.json({
-      code: 200,
-      message: "success",
+    return sendResponse(request, {
       data: {
         rss: rss.map(item => ({
           ...item,
@@ -24,11 +22,10 @@ export async function GET() {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/feeds" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
 
@@ -98,9 +95,6 @@ export async function POST(request) {
       }
     });
 
-    // Log info here because startTask will log another message
-    logger.info(`Add RSS subscription successfully, name: ${data.values.name}, type: ${rssType}`, { model: "POST /api/feeds" });
-
     // Start RSS task
     await startTask({
       id: newRss.id,
@@ -110,15 +104,13 @@ export async function POST(request) {
       type: newRss.type
     });
 
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Add RSS subscription successfully, name: ${data.values.name}, type: ${rssType}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/feeds" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Check if the token is valid
 // Body: {
@@ -31,21 +31,14 @@ export async function POST(request) {
       }
     });
 
-    return Response.json({
-      code: 200,
-      message: "success",
-      data: {
-        valid: true
-      }
+    return sendResponse(request, {
+      data: { valid: true }
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/auth/verify" });
-    return Response.json({
+    return sendResponse(request, {
       code: 401,
       message: error.message,
-      data: {
-        valid: false
-      }
-    }, { status: 401 });
+      data: { valid: false }
+    });
   }
 }
