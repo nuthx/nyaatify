@@ -170,47 +170,31 @@ export default function NotificationSettings() {
   }, [selectedType]);
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", notificationApi, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("POST", notificationApi, values, t("toast.failed.add"));
+    if (result) {
       notificationFrom.reset();
       mutateNotification();
-    } else {
-      toast.error(t("toast.failed.add"), {
-        description: result.message,
-      });
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${notificationApi}/${id}`);
-    if (result.success) {
+    const result = await handleRequest("DELETE", `${notificationApi}/${id}`, null, t("toast.failed.delete"));
+    if (result) {
       mutateNotification();
-    } else {
-      toast.error(t("toast.failed.delete"), {
-        description: result.message,
-      });
     }
   };
 
   const handleEdit = async (id, values) => {
-    const result = await handleRequest("PATCH", `${notificationApi}/${id}`, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("PATCH", `${notificationApi}/${id}`, values, t("toast.failed.edit"));
+    if (result) {
       mutateNotification();
-    } else {
-      toast.error(t("toast.failed.edit"), {
-        description: result.message,
-      });
     }
   };
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${notificationApi}/test`, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("POST", `${notificationApi}/test`, values, t("toast.failed.send"));
+    if (result) {
       toast(t("toast.done.send"));
-    } else {
-      toast.error(t("toast.failed.send_notification"), {
-        description: result.message,
-      });
     }
   };
 

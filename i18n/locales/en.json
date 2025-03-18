@@ -48,11 +48,11 @@
       "download": "Download Failed",
       "pause": "Pause Failed",
       "resume": "Resume Failed",
+      "send": "Failed to send notification",
       "fetch_config": "Failed to fetch config",
       "fetch_list": "Failed to fetch list",
       "fetch_logs": "Failed to fetch logs",
-      "refresh_rss": "Failed to refresh subscription",
-      "send_notification": "Failed to send notification"
+      "refresh_rss": "Failed to refresh subscription"
     }
   },
   "validate": {

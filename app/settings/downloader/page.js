@@ -106,52 +106,36 @@ export default function DownloaderSettings() {
   }, [configError]);
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", downloadersApi, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("POST", downloadersApi, values, t("toast.failed.add"));
+    if (result) {
       downloaderForm.reset();
       mutateDownloader();
       mutateConfig();
-    } else {
-      toast.error(t("toast.failed.add"), {
-        description: result.message,
-      });
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${downloadersApi}/${id}`);
-    if (result.success) {
+    const result = await handleRequest("DELETE", `${downloadersApi}/${id}`, null, t("toast.failed.delete"));
+    if (result) {
       mutateDownloader();
       mutateConfig();
-    } else {
-      toast.error(t("toast.failed.delete"), {
-        description: result.message,
-      });
     }
   };
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${downloadersApi}/test`, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("POST", `${downloadersApi}/test`, values, t("toast.failed.test"));
+    if (result) {
       toast.success(t("toast.success.test"), {
         description: `${t("glb.version")}: ${result.data.version}`
-      });
-    } else {
-      toast.error(t("toast.failed.test"), {
-        description: result.message,
       });
     }
   };
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
-    if (result.success) {
+    const result = await handleRequest("PATCH", configApi, values, t("toast.failed.save"));
+    if (result) {
       toast(t("toast.success.save"));
       mutateConfig();
-    } else {
-      toast.error(t("toast.failed.save"), {
-        description: result.message,
-      })
     }
   };
 
