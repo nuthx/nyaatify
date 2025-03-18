@@ -35,8 +35,8 @@ export async function middleware(request) {
 // Check token availability
 async function verifyToken(token, origin) {
   if (!token) return false;
-  const result = await handleRequest("POST", `${origin}/api/auth/verify`, JSON.stringify({ token }));
-  return result.success;
+  const result = await handleRequest("POST", `${origin}/api/auth/verify`, { token }, "", false);
+  return result;
 }
 
 export const config = {
