@@ -17,6 +17,10 @@ export async function PATCH(request) {
       where: { id: 1 }
     });
 
+    if (data.cur_password === data.new_password) {
+      throw new Error("New password cannot be the same as the current password");
+    }
+
     if (user.password !== data.cur_password) {
       throw new Error("Current password is incorrect");
     }
