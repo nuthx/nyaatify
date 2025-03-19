@@ -1,12 +1,12 @@
 "use client";
 
-import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
   Card,
@@ -80,30 +80,13 @@ export default function RSSSettings() {
     },
   })
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  const { data: rssData, error: rssError, isLoading: rssLoading, mutate: mutateRss } = useSWR(rssApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
+  const { data: rssData, isLoading: rssLoading, mutate: mutateRss } = useData(rssApi, t("toast.failed.fetch_list"));
+  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(configApi, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
     document.title = `${t("st.metadata.rss")} - Nyaatify`;
   }, [t]);
-
-  useEffect(() => {
-    if (rssError) {
-      toast.error(t("toast.failed.fetch_list"), {
-        description: rssError.message,
-      });
-    }
-  }, [rssError]);
 
   useEffect(() => {
     if (configData) {
@@ -112,12 +95,7 @@ export default function RSSSettings() {
       aiForm.setValue("aiKey", configData?.aiKey);
       aiForm.setValue("aiModel", configData?.aiModel);
     }
-    if (configError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: configError.message,
-      });
-    }
-  }, [configData, configError]);
+  }, [configData]);
 
   const handleAdd = async (values) => {
     const result = await handleRequest("POST", rssApi, values, t("toast.failed.add"));
