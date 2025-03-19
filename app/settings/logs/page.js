@@ -1,10 +1,8 @@
 "use client";
 
-import useSWR from "swr"
-import { toast } from "sonner"
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
-import { handleRequest } from "@/lib/http/request";
+import { useData } from "@/lib/http/swr";
 import {
   Select,
   SelectContent,
@@ -31,7 +29,6 @@ import { PaginationPro } from "@/components/pagination";
 
 export default function Logs() {
   const logsApi = "/api/logs";
-  const configApi = "/api/configs";
 
   const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
@@ -42,17 +39,7 @@ export default function Logs() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 80;
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  const { data: logsData, error: logsError, isLoading: logsLoading } = useSWR(selectedDate ? `${logsApi}?date=${selectedDate}` : logsApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
+  const { data: logsData, isLoading: logsLoading } = useData(selectedDate ? `${logsApi}?date=${selectedDate}` : logsApi, t("toast.failed.fetch_logs"));
 
   // Set page title
   useEffect(() => {
@@ -60,25 +47,12 @@ export default function Logs() {
   }, [t]);
 
   useEffect(() => {
-    if (logsError) {
-      toast.error(t("toast.failed.fetch_logs"), {
-        description: logsError.message,
-      });
-    }
     if (logsData) {
       setLogs(logsData.logs);
       setFilteredLogs(logsData.logs);
       setAvailableDays(logsData.days);
     }
-  }, [logsError, logsData]);
-
-  useEffect(() => {
-    if (configError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: configError.message,
-      });
-    }
-  }, [configError]);
+  }, [logsData]);
 
   useEffect(() => {
     setFilteredLogs(level === "all" ? logs : logs.filter(log => log.level === level));
@@ -92,15 +66,7 @@ export default function Logs() {
 
   const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
 
-  const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, values, t("toast.failed.save"));
-    if (result) {
-      toast(t("toast.success.save"));
-      mutateConfig();
-    }
-  };
-
-  if (logsLoading || configLoading) {
+  if (logsLoading) {
     return <></>;
   }
 

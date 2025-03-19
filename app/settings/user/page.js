@@ -1,13 +1,13 @@
 "use client";
 
 import crypto from "crypto";
-import useSWR from "swr"
 import { toast } from "sonner"
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
   AlertDialog,
@@ -78,17 +78,8 @@ export default function Devices() {
     },
   })
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  const { data: usernameData, error: usernameError, isLoading: usernameLoading, mutate: mutateUsername } = useSWR(usernameApi, fetcher);
-  const { data: deviceData, error: deviceError, isLoading: deviceLoading, mutate: mutateDevice } = useSWR(deviceApi, fetcher);
+  const { data: usernameData, isLoading: usernameLoading, mutate: mutateUsername } = useData(usernameApi, t("toast.failed.fetch_config"));
+  const { data: deviceData, isLoading: deviceLoading, mutate: mutateDevice } = useData(deviceApi, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
@@ -99,20 +90,7 @@ export default function Devices() {
     if (usernameData?.username) {
       usernameFrom.setValue('new_username', usernameData.username);
     }
-    if (usernameError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: usernameError.message,
-      });
-    }
-  }, [usernameData, usernameError]);
-
-  useEffect(() => {
-    if (deviceError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: deviceError.message,
-      });
-    }
-  }, [deviceError]);
+  }, [usernameData]);
 
   const handleUsername = async (values) => {
     const result = await handleRequest("PATCH", usernameApi, values, t("toast.failed.edit"));

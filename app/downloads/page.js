@@ -1,8 +1,8 @@
 "use client";
 
-import useSWR from "swr"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
   AlertDialog,
@@ -30,23 +30,7 @@ export default function Home() {
 
   const { t } = useTranslation();
 
-  const { data, error, isLoading, mutate } = useSWR(torrentsApi, async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    if (result.data.downloaders === 0) {
-      throw new Error(t("downloads.empty_downloader"));
-    }
-    if (result.data.online === 0) {
-      throw new Error(t("downloads.empty_online"));
-    }
-    if (result.data.torrents.length === 0) {
-      throw new Error(t("downloads.empty_torrents"));
-    }
-    return result.data;
-  }, { refreshInterval: 2000 });
+  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(torrentsApi, null, { refreshInterval: 1000 });
 
   // Set page title
   useEffect(() => {
@@ -56,22 +40,33 @@ export default function Home() {
   const handleManage = async (action, downloader, hash) => {
     const result = await handleRequest("POST", torrentsApi, { action, downloader, hash }, t(`toast.failed.${action}`));
     if (result) {
-      mutate();
+      mutateTorrents();
     }
   };
 
-  if (isLoading) {
+  if (torrentsLoading) {
     return <></>;
   }
 
-  if (error) {
-    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8">{error.message}</a>
+  // Show error message if request failed or no torrents
+  let errorMessage = "";
+  if (torrentsError) {
+    errorMessage = torrentsError.message;
+  } else if (torrentsData.downloaders === 0) {
+    errorMessage = t("downloads.empty_downloader");
+  } else if (torrentsData.online === 0) {
+    errorMessage = t("downloads.empty_online");
+  } else if (torrentsData.torrents.length === 0) {
+    errorMessage = t("downloads.empty_torrents");
+  }
+  if (errorMessage) {
+    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8">{errorMessage}</a>
   }
 
   return (
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
       <div className="grid gap-3">
-        {data.torrents.map((item, index) => (
+        {torrentsData.torrents.map((item, index) => (
           <Card key={index} className="overflow-hidden">
             <CardContent className="flex flex-col gap-2">
               <div className="flex items-center gap-2">

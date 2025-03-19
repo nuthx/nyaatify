@@ -1,12 +1,12 @@
 "use client";
 
-import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
   Card,
@@ -126,38 +126,12 @@ export default function NotificationSettings() {
     ServerChan: "https://sctapi.ftqq.com",
   };
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  const { data: notificationData, error: notificationError, isLoading: notificationLoading, mutate: mutateNotification } = useSWR(notificationApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
+  const { data: notificationData, isLoading: notificationLoading, mutate: mutateNotification } = useData(notificationApi, t("toast.failed.fetch_list"));
 
   // Set page title
   useEffect(() => {
     document.title = `${t("st.metadata.notification")} - Nyaatify`;
   }, [t]);
-
-  useEffect(() => {
-    if (notificationError) {
-      toast.error(t("toast.failed.fetch_list"), {
-        description: notificationError.message,
-      });
-    }
-  }, [notificationError]);
-
-  useEffect(() => {
-    if (configError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: configError.message,
-      });
-    }
-  }, [configError]);
 
   // Set default url for notification type
   useEffect(() => {
@@ -198,7 +172,7 @@ export default function NotificationSettings() {
     }
   };
 
-  if (notificationLoading || configLoading) {
+  if (notificationLoading) {
     return <></>;
   }
 

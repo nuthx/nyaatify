@@ -1,10 +1,10 @@
 "use client";
 
-import useSWR from "swr";
 import { toast } from "sonner"
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
   AlertDialog,
@@ -42,17 +42,7 @@ export default function Anime() {
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
 
-  const { data, error, isLoading, mutate } = useSWR(`${animeApi}?page=${currentPage}`, async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    if (result.data.anime.length === 0) {
-      throw new Error(t("anime.empty"));
-    }
-    return result.data;
-  });
+  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(`${animeApi}?page=${currentPage}`);
 
   // Set page title
   useEffect(() => {
@@ -72,7 +62,7 @@ export default function Anime() {
       if (action === "download") {
         toast(t(`toast.start.download`));
       }
-      mutate();
+      mutateAnime();
     }
   };
 
@@ -99,30 +89,37 @@ export default function Anime() {
     return item.titleParsed || item.titleRaw;
   };
 
-  if (isLoading) {
+  if (animeLoading) {
     return <></>;
   }
 
-  if (error) {
-    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8">{error.message}</a>
+  // Show error message if request failed or no anime
+  let errorMessage = "";
+  if (animeError) {
+    errorMessage = animeError.message;
+  } else if (animeData.anime.length === 0) {
+    errorMessage = t("anime.empty");
+  }
+  if (errorMessage) {
+    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8">{errorMessage}</a>
   }
 
   return (
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
-          {data.config.showDownloaderState === "1" && !data.config.defaultDownloader && <Badge variant="outline">{t("anime.no_downloader")}</Badge>}
-          {data.config.showDownloaderState === "1" && data.config.defaultDownloader && data.config.defaultDownloaderOnline === "0" && <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>}
-          <a className="text-sm text-muted-foreground">{t("anime.today")}: {data.count.today}</a>
-          <a className="text-sm text-muted-foreground">{t("anime.week")}: {data.count.week}</a>
-          <a className="text-sm text-muted-foreground">{t("anime.total")}: {data.count.total}</a>
+          {animeData.config.showDownloaderState === "1" && !animeData.config.defaultDownloader && <Badge variant="outline">{t("anime.no_downloader")}</Badge>}
+          {animeData.config.showDownloaderState === "1" && animeData.config.defaultDownloader && animeData.config.defaultDownloaderOnline === "0" && <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>}
+          <a className="text-sm text-muted-foreground">{t("anime.today")}: {animeData.count.today}</a>
+          <a className="text-sm text-muted-foreground">{t("anime.week")}: {animeData.count.week}</a>
+          <a className="text-sm text-muted-foreground">{t("anime.total")}: {animeData.count.total}</a>
         </div>
-        {data.anime?.map((item, index) => (
+        {animeData.anime?.map((item, index) => (
           <Card key={index} className="flex flex-col">
             <CardContent className="flex gap-4 flex-1">
-              {(data.config.coverSource === "anilist" ? item.coverAnilist || item.coverBangumi : item.coverBangumi || item.coverAnilist) ? (
+              {(animeData.config.coverSource === "anilist" ? item.coverAnilist || item.coverBangumi : item.coverBangumi || item.coverAnilist) ? (
                 <img 
-                  src={data.config.coverSource === "anilist" ? item.coverAnilist || item.coverBangumi || null : item.coverBangumi || item.coverAnilist || null}
+                  src={animeData.config.coverSource === "anilist" ? item.coverAnilist || item.coverBangumi || null : item.coverBangumi || item.coverAnilist || null}
                   className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md object-cover bg-muted"
                   onError={(e) => { e.target.src = "" }}
                 />
@@ -141,7 +138,7 @@ export default function Anime() {
                     <Tooltip>
                       <TooltipTrigger className="text-left">
                         <a href={item.torrent} target="_blank" className="font-medium hover:underline">
-                          {getTitleByPriority(item, data.config.titlePriority)}
+                          {getTitleByPriority(item, animeData.config.titlePriority)}
                         </a>
                       </TooltipTrigger>
                       <TooltipContent className="py-2 space-y-1">
@@ -200,7 +197,7 @@ export default function Anime() {
                     </AlertDialog>
                   </>
                 ) : (
-                  <Button variant="outline" className="font-normal" onClick={() => handleManage("download", data.config.defaultDownloader, item.hash)} disabled={!data.config.defaultDownloader || data.config.defaultDownloaderOnline === "0"}>
+                  <Button variant="outline" className="font-normal" onClick={() => handleManage("download", animeData.config.defaultDownloader, item.hash)} disabled={!animeData.config.defaultDownloader || animeData.config.defaultDownloaderOnline === "0"}>
                     <Download />{t("glb.download")}
                   </Button>
                 )}
@@ -209,7 +206,7 @@ export default function Anime() {
           </Card>
         ))}
       </div>
-      <PaginationPro currentPage={currentPage} totalPages={Math.ceil(data.pagination.total / data.pagination.size)} onPageChange={handlePageChange} />
+      <PaginationPro currentPage={currentPage} totalPages={Math.ceil(animeData.pagination.total / animeData.pagination.size)} onPageChange={handlePageChange} />
     </div>
   );
 }

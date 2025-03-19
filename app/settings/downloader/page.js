@@ -1,12 +1,12 @@
 "use client";
 
-import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
   Card,
@@ -72,38 +72,13 @@ export default function DownloaderSettings() {
     Aria2: "http://192.168.1.100:6800/jsonrpc"
   };
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  const { data: downloaderData, error: downloaderError, isLoading: downloaderLoading, mutate: mutateDownloader } = useSWR(downloadersApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
+  const { data: downloaderData, isLoading: downloaderLoading, mutate: mutateDownloader } = useData(downloadersApi, t("toast.failed.fetch_list"));
+  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(configApi, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
     document.title = `${t("st.metadata.downloader")} - Nyaatify`;
   }, [t]);
-
-  useEffect(() => {
-    if (downloaderError) {
-      toast.error(t("toast.failed.fetch_list"), {
-        description: downloaderError.message,
-      });
-    }
-  }, [downloaderError]);
-
-  useEffect(() => {
-    if (configError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: configError.message,
-      });
-    }
-  }, [configError]);
 
   const handleAdd = async (values) => {
     const result = await handleRequest("POST", downloadersApi, values, t("toast.failed.add"));
