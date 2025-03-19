@@ -4,7 +4,7 @@ import { sendResponse } from "@/lib/http/response";
 
 // Change user password
 // Body: {
-//   current_password: string, required
+//   cur_password: string, required
 //   new_password: string, required
 // }
 
@@ -17,8 +17,7 @@ export async function PATCH(request) {
       where: { id: 1 }
     });
 
-    const hashedPassword = crypto.createHash("sha256").update(data.current_password).digest("hex");
-    if (user.password !== hashedPassword) {
+    if (user.password !== data.cur_password) {
       throw new Error("Current password is incorrect");
     }
 
