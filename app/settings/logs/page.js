@@ -93,14 +93,10 @@ export default function Logs() {
   const totalPages = Math.ceil(filteredLogs.length / itemsPerPage);
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
-    if (result.success) {
+    const result = await handleRequest("PATCH", configApi, values, t("toast.failed.save"));
+    if (result) {
       toast(t("toast.success.save"));
       mutateConfig();
-    } else {
-      toast.error(t("toast.failed.save"), {
-        description: result.message,
-      })
     }
   };
 

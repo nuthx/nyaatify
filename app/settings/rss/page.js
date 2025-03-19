@@ -120,49 +120,33 @@ export default function RSSSettings() {
   }, [configData, configError]);
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", rssApi, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("POST", rssApi, values, t("toast.failed.add"));
+    if (result) {
       rssForm.reset();
       mutateRss();
-    } else {
-      toast.error(t("toast.failed.add"), {
-        description: result.message,
-      });
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${rssApi}/${id}`);
-    if (result.success) {
+    const result = await handleRequest("DELETE", `${rssApi}/${id}`, null, t("toast.failed.delete"));
+    if (result) {
       mutateRss();
-    } else {
-      toast.error(t("toast.failed.delete"), {
-        description: result.message,
-      });
     }
   };
 
   const handleRefresh = async (name) => {
-    const result = await handleRequest("POST", `${rssApi}/refresh`, JSON.stringify({ values: { name } }));
-    if (result.success) {
+    const result = await handleRequest("POST", `${rssApi}/refresh`, { name }, t("toast.failed.refresh_rss"));
+    if (result) {
       toast(t("toast.start.refresh_rss"));
       mutateRss();
-    } else {
-      toast.error(t("toast.failed.refresh_rss"), {
-        description: result.message,
-      });
     }
   };
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
-    if (result.success) {
+    const result = await handleRequest("PATCH", configApi, values, t("toast.failed.save"));
+    if (result) {
       toast(t("toast.success.save"));
       mutateConfig();
-    } else {
-      toast.error(t("toast.failed.save"), {
-        description: result.message,
-      })
     }
   };
 

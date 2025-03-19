@@ -82,14 +82,10 @@ export default function Settings() {
   }, [data, error, t]);
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
-    if (result.success) {
+    const result = await handleRequest("PATCH", configApi, values, t("toast.failed.save"));
+    if (result) {
       toast(t("toast.success.save"));
       mutate();
-    } else {
-      toast.error(t("toast.failed.save"), {
-        description: result.message,
-      })
     }
   };
 

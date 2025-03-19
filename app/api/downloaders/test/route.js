@@ -3,13 +3,11 @@ import { getQbittorrentCookie, getQbittorrentVersion } from "@/lib/api/qbittorre
 
 // Test a downloader connection
 // Body: {
-//   values: {
-//     name: string, required
-//     type: string, required
-//     url: string, required
-//     username: string, required
-//     password: string, required
-//   }
+//   name: string, required
+//   type: string, required
+//   url: string, required
+//   username: string, required
+//   password: string, required
 // }
 
 export async function POST(request) {
@@ -18,10 +16,10 @@ export async function POST(request) {
 
     // Get downloader cookie
     let cookieResult = null;
-    if (data.values.type === "qBittorrent") {
-      cookieResult = await getQbittorrentCookie(data.values.url, data.values.username, data.values.password);
+    if (data.type === "qBittorrent") {
+      cookieResult = await getQbittorrentCookie(data.url, data.username, data.password);
     } else {
-      throw new Error(`Unsupported downloader: ${data.values.type}`);
+      throw new Error(`Unsupported downloader: ${data.type}`);
     }
 
     // Return if connection failed
@@ -31,8 +29,8 @@ export async function POST(request) {
 
     // Get downloader version
     let versionResult = null;
-    if (data.values.type === "qBittorrent") {
-      versionResult = await getQbittorrentVersion(data.values.url, cookieResult.data);
+    if (data.type === "qBittorrent") {
+      versionResult = await getQbittorrentVersion(data.url, cookieResult.data);
     }
 
     // Return if connection failed
@@ -41,7 +39,7 @@ export async function POST(request) {
     }
 
     return sendResponse(request, {
-      message: `Test downloader successfully, name: ${data.values.name}, version: ${versionResult.data}`,
+      message: `Test downloader successfully, name: ${data.name}, version: ${versionResult.data}`,
       data: { version: versionResult.data }
     });
   } catch (error) {

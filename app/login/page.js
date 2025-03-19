@@ -2,7 +2,6 @@
 
 import crypto from "crypto";
 import Image from "next/image"
-import { toast } from "sonner"
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
@@ -53,14 +52,10 @@ export default function LoginPage() {
 
   const handleLogin = async (values) => {
     const hashedPassword = crypto.createHash("sha256").update(values.password).digest("hex");
-    const result = await handleRequest("POST", loginApi, JSON.stringify({ values: { ...values, password: hashedPassword } }));
-    if (result.success) {
+    const result = await handleRequest("POST", loginApi, { ...values, password: hashedPassword }, t("toast.failed.login"));
+    if (result) {
       router.push("/");
       router.refresh();
-    } else {
-      toast.error(t("toast.failed.login"), {
-        description: result.message,
-      });
     }
   };
 

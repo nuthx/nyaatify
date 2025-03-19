@@ -115,38 +115,26 @@ export default function Devices() {
   }, [deviceError]);
 
   const handleUsername = async (values) => {
-    const result = await handleRequest("PATCH", usernameApi, JSON.stringify({ values: values }));
-    if (result.success) {
+    const result = await handleRequest("PATCH", usernameApi, values, t("toast.failed.edit"));
+    if (result) {
       mutateUsername();
       toast(t("toast.success.edit"));
-    } else {
-      toast.error(t("toast.failed.edit"), {
-        description: result.message,
-      });
     }
   };
 
   const handlePassword = async (values) => {
     const hashedPassword = crypto.createHash("sha256").update(values.new_password).digest("hex");
-    const result = await handleRequest("PATCH", passwordApi, JSON.stringify({ values: { ...values, new_password: hashedPassword } }));
-    if (result.success) {
+    const result = await handleRequest("PATCH", passwordApi, { ...values, new_password: hashedPassword }, t("toast.failed.edit"));
+    if (result) {
       passwordFrom.reset();
       toast(t("toast.success.edit"));
-    } else {
-      toast.error(t("toast.failed.edit"), {
-        description: result.message,
-      });
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${deviceApi}/${id}`);
-    if (result.success) {
+    const result = await handleRequest("DELETE", `${deviceApi}/${id}`, null, t("toast.failed.delete"));
+    if (result) {
       mutateDevice();
-    } else {
-      toast.error(t("toast.failed.delete"), {
-        description: result.message,
-      });
     }
   };
 
