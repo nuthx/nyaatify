@@ -24,16 +24,14 @@ export async function GET(request) {
 
 // Add a new notification
 // Body: {
-//   values: {
-//     name: string, required
-//     filter: string, required
-//     type: string, required
-//     url: string, required
-//     token: string, required
-//     title: string, required
-//     message: string, required
-//     extra: string, required
-//   }
+//   name: string, required
+//   filter: string, required
+//   type: string, required
+//   url: string, required
+//   token: string, required
+//   title: string, required
+//   message: string, required
+//   extra: string, required
 // }
 
 export async function POST(request) {
@@ -41,36 +39,36 @@ export async function POST(request) {
     const data = await request.json();
 
     // Check if name is empty
-    if (!data.values.name?.trim()) {
+    if (!data.name?.trim()) {
       throw new Error("Notification name is required");
     }
 
     // Check if name already exists
     const existingName = await prisma.notification.findUnique({
-      where: { name: data.values.name.trim() }
+      where: { name: data.name.trim() }
     });
     
     if (existingName) {
-      throw new Error(`Notification already exists, name: ${data.values.name}`);
+      throw new Error(`Notification already exists, name: ${data.name}`);
     }
 
     // Insert to database using Prisma
     await prisma.notification.create({
       data: {
-        name: data.values.name.trim(),
-        filter: data.values.filter.trim(),
-        type: data.values.type.trim(),
-        url: data.values.url.trim(),
-        token: data.values.token.trim(),
-        title: data.values.title.trim(),
-        message: data.values.message.trim(),
-        extra: data.values.extra.trim(),
+        name: data.name.trim(),
+        filter: data.filter.trim(),
+        type: data.type.trim(),
+        url: data.url.trim(),
+        token: data.token.trim(),
+        title: data.title.trim(),
+        message: data.message.trim(),
+        extra: data.extra.trim(),
         state: 1
       }
     });
 
     return sendResponse(request, {
-      message: `Add notification successfully, name: ${data.values.name}`
+      message: `Add notification successfully, name: ${data.name}`
     });
   } catch (error) {
     return sendResponse(request, {

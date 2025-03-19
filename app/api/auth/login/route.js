@@ -7,10 +7,8 @@ import { sendResponse } from "@/lib/http/response";
 
 // Login in with username and password
 // Body: {
-//   values: {
-//     username: string, required
-//     password: string, required
-//   }
+//   username: string, required
+//   password: string, required
 // }
 
 export async function POST(request) {
@@ -18,7 +16,7 @@ export async function POST(request) {
     const data = await request.json();
     const user = await prisma.user.findUnique({
       where: {
-        username: data.values.username
+        username: data.username
       }
     });
 
@@ -27,16 +25,16 @@ export async function POST(request) {
       return sendResponse(request, {
         code: 401,
         message: "Invalid username or password",
-        logMessage: `Invalid username: ${data.values.username}`
+        logMessage: `Invalid username: ${data.username}`
       });
     }
 
     // Check password
-    if (user.password !== data.values.password) {
+    if (user.password !== data.password) {
       return sendResponse(request, {
         code: 401,
         message: "Invalid username or password",
-        logMessage: `Invalid password, username: ${data.values.username}`
+        logMessage: `Invalid password, username: ${data.username}`
       });
     }
 

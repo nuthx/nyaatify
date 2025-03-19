@@ -124,7 +124,7 @@ export default function Devices() {
 
   const handlePassword = async (values) => {
     const hashedPassword = crypto.createHash("sha256").update(values.new_password).digest("hex");
-    const result = await handleRequest("PATCH", passwordApi, { values: { ...values, new_password: hashedPassword } }, t("toast.failed.edit"));
+    const result = await handleRequest("PATCH", passwordApi, { ...values, new_password: hashedPassword }, t("toast.failed.edit"));
     if (result) {
       passwordFrom.reset();
       toast(t("toast.success.edit"));

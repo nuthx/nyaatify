@@ -37,13 +37,11 @@ export async function GET(request) {
 
 // Add a new downloader
 // Body: {
-//   values: {
-//     name: string, required
-//     type: string, required
-//     url: string, required
-//     username: string, required
-//     password: string, required
-//   }
+//   name: string, required
+//   type: string, required
+//   url: string, required
+//   username: string, required
+//   password: string, required
 // }
 
 export async function POST(request) {
@@ -51,7 +49,7 @@ export async function POST(request) {
     const data = await request.json();
 
     // Check if name is empty
-    if (!data.values.name?.trim()) {
+    if (!data.name?.trim()) {
       throw new Error("Downloader name is required");
     }
 
@@ -59,27 +57,27 @@ export async function POST(request) {
     const existingDownloader = await prisma.downloader.findFirst({
       where: {
         OR: [
-          { name: data.values.name.trim() },
-          { url: data.values.url.trim() }
+          { name: data.name.trim() },
+          { url: data.url.trim() }
         ]
       }
     });
 
     if (existingDownloader) {
-      if (existingDownloader.name === data.values.name.trim()) {
-        throw new Error(`Downloader already exists, name: ${data.values.name}`);
+      if (existingDownloader.name === data.name.trim()) {
+        throw new Error(`Downloader already exists, name: ${data.name}`);
       } else {
-        throw new Error(`Downloader already exists, url: ${data.values.url}`);
+        throw new Error(`Downloader already exists, url: ${data.url}`);
       }
     }
 
     // Get downloader cookie
     // This will check if the connection is successful
     let cookieResult = null;
-    if (data.values.type === "qBittorrent") {
-      cookieResult = await getQbittorrentCookie(data.values.url, data.values.username, data.values.password);
+    if (data.type === "qBittorrent") {
+      cookieResult = await getQbittorrentCookie(data.url, data.username, data.password);
     } else {
-      throw new Error(`Unsupported downloader: ${data.values.type}`);
+      throw new Error(`Unsupported downloader: ${data.type}`);
     }
 
     // Return if connection failed
@@ -90,11 +88,11 @@ export async function POST(request) {
     // Create downloader
     await prisma.downloader.create({
       data: {
-        name: data.values.name.trim(),
-        url: data.values.url.trim(),
-        type: data.values.type.trim(),
-        username: data.values.username,
-        password: data.values.password,
+        name: data.name.trim(),
+        url: data.url.trim(),
+        type: data.type.trim(),
+        username: data.username,
+        password: data.password,
         cookie: cookieResult.data
       }
     });
@@ -108,13 +106,13 @@ export async function POST(request) {
     if (!config.value) {
       await prisma.config.update({
         where: { key: "defaultDownloader" },
-        data: { value: data.values.name }
+        data: { value: data.name }
       });
-      logger.info(`Set default downloader to ${data.values.name}`, { model: "POST /api/downloaders" });
+      logger.info(`Set default downloader to ${data.name}`, { model: "POST /api/downloaders" });
     }
 
     return sendResponse(request, {
-      message: `Add downloader successfully, name: ${data.values.name}, type: ${data.values.type}`
+      message: `Add downloader successfully, name: ${data.name}, type: ${data.type}`
     });
   } catch (error) {
     return sendResponse(request, {

@@ -52,7 +52,7 @@ export default function LoginPage() {
 
   const handleLogin = async (values) => {
     const hashedPassword = crypto.createHash("sha256").update(values.password).digest("hex");
-    const result = await handleRequest("POST", loginApi, { values: { ...values, password: hashedPassword } }, t("toast.failed.login"));
+    const result = await handleRequest("POST", loginApi, { ...values, password: hashedPassword }, t("toast.failed.login"));
     if (result) {
       router.push("/");
       router.refresh();

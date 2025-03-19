@@ -3,9 +3,7 @@ import { refreshRSS } from "@/lib/parse";
 
 // Refresh a rss subscription
 // Body: {
-//   values: {
-//     name: string, required
-//   }
+//   name: string, required
 // }
 
 export async function POST(request) {
@@ -13,10 +11,10 @@ export async function POST(request) {
     const data = await request.json();
 
     // Refresh RSS
-    refreshRSS(data.values.name);
+    refreshRSS(data.name);
 
     return sendResponse(request, {
-      message: `Start refreshing RSS subscription manually, name: ${data.values.name}`
+      message: `Start refreshing RSS subscription manually, name: ${data.name}`
     });
   } catch (error) {
     return sendResponse(request, {

@@ -135,7 +135,7 @@ export default function RSSSettings() {
   };
 
   const handleRefresh = async (name) => {
-    const result = await handleRequest("POST", `${rssApi}/refresh`, { values: { name } }, t("toast.failed.refresh_rss"));
+    const result = await handleRequest("POST", `${rssApi}/refresh`, { name }, t("toast.failed.refresh_rss"));
     if (result) {
       toast(t("toast.start.refresh_rss"));
       mutateRss();

@@ -27,11 +27,9 @@ export async function DELETE(_, { params }) {
 // Edit a notification
 // Params: id, string, required
 // Body: {
-//   values: {
-//     key1: value1,
-//     key2: value2,
-//     ...
-//   }
+//   key1: value1,
+//   key2: value2,
+//   ...
 // }
 
 export async function PATCH(request, { params }) {
@@ -43,7 +41,7 @@ export async function PATCH(request, { params }) {
     const validValues = {};
     const fields = ["state"];
     fields.forEach(field => {
-      if (data.values[field] !== undefined) validValues[field] = data.values[field];
+      if (data[field] !== undefined) validValues[field] = data[field];
     });
 
     // Update notification

@@ -3,15 +3,13 @@ import { dispatchNotification } from "@/lib/notification";
 
 // Test a notification push
 // Body: {
-//   values: {
-//     name: string, required
-//     type: string, required
-//     url: string, required
-//     token: string, required
-//     title: string, required
-//     message: string, required
-//     extra: string, required
-//   }
+//   name: string, required
+//   type: string, required
+//   url: string, required
+//   token: string, required
+//   title: string, required
+//   message: string, required
+//   extra: string, required
 // }
 
 export async function POST(request) {
@@ -36,14 +34,14 @@ export async function POST(request) {
     }
 
     // Dispatch test notification
-    const notificationResult = await dispatchNotification(data.values, demo_variable);
+    const notificationResult = await dispatchNotification(data, demo_variable);
 
     if (!notificationResult.success) {
       throw new Error(notificationResult.message);
     }
 
     return sendResponse(request, {
-      message: `Test notification successfully, name: ${data.values.name}`
+      message: `Test notification successfully, name: ${data.name}`
     });
   } catch (error) {
     return sendResponse(request, {
