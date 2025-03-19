@@ -1,7 +1,6 @@
 "use client";
 
 import useSWR from "swr"
-import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { handleRequest } from "@/lib/http/request";
@@ -55,13 +54,9 @@ export default function Home() {
   }, [t]);
 
   const handleManage = async (action, downloader, hash) => {
-    const result = await handleRequest("POST", torrentsApi, JSON.stringify({ action, downloader, hash }));
-    if (result.success) {
+    const result = await handleRequest("POST", torrentsApi, { action, downloader, hash }, t(`toast.failed.${action}`));
+    if (result) {
       mutate();
-    } else {
-      toast.error(t(`toast.failed.${action}`), {
-        description: result.message,
-      });
     }
   };
 

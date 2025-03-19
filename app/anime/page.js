@@ -67,16 +67,12 @@ export default function Anime() {
   };
 
   const handleManage = async (action, downloader, hash) => {
-    const result = await handleRequest("POST", torrentsApi, JSON.stringify({ action, downloader, hash }));
-    if (result.success) {
+    const result = await handleRequest("POST", torrentsApi, { action, downloader, hash }, t(`toast.failed.${action}`));
+    if (result) {
       if (action === "download") {
         toast(t(`toast.start.download`));
       }
       mutate();
-    } else {
-      toast.error(t(`toast.failed.${action}`), {
-        description: result.message,
-      });
     }
   };
 
