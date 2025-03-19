@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
@@ -36,9 +37,6 @@ import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/listcard";
 
 export default function DownloaderSettings() {
-  const downloadersApi = "/api/downloaders";
-  const configApi = "/api/configs";
-
   const { t } = useTranslation();
 
   const downloaderForm = useForm({
@@ -72,8 +70,8 @@ export default function DownloaderSettings() {
     Aria2: "http://192.168.1.100:6800/jsonrpc"
   };
 
-  const { data: downloaderData, isLoading: downloaderLoading, mutate: mutateDownloader } = useData(downloadersApi, t("toast.failed.fetch_list"));
-  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(configApi, t("toast.failed.fetch_config"));
+  const { data: downloaderData, isLoading: downloaderLoading, mutate: mutateDownloader } = useData(API.DOWNLOADER, t("toast.failed.fetch_list"));
+  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
@@ -81,7 +79,7 @@ export default function DownloaderSettings() {
   }, [t]);
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", downloadersApi, values, t("toast.failed.add"));
+    const result = await handleRequest("POST", API.DOWNLOADER, values, t("toast.failed.add"));
     if (result) {
       downloaderForm.reset();
       mutateDownloader();
@@ -90,7 +88,7 @@ export default function DownloaderSettings() {
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${downloadersApi}/${id}`, null, t("toast.failed.delete"));
+    const result = await handleRequest("DELETE", `${API.DOWNLOADER}/${id}`, null, t("toast.failed.delete"));
     if (result) {
       mutateDownloader();
       mutateConfig();
@@ -98,7 +96,7 @@ export default function DownloaderSettings() {
   };
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${downloadersApi}/test`, values, t("toast.failed.test"));
+    const result = await handleRequest("POST", `${API.DOWNLOADER}/test`, values, t("toast.failed.test"));
     if (result) {
       toast.success(t("toast.success.test"), {
         description: `${t("glb.version")}: ${result.data.version}`
@@ -107,7 +105,7 @@ export default function DownloaderSettings() {
   };
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, values, t("toast.failed.save"));
+    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
     if (result) {
       toast(t("toast.success.save"));
       mutateConfig();

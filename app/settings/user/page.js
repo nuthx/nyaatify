@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
@@ -47,10 +48,6 @@ import { Input } from "@/components/ui/input";
 import { Trash2, Eye, EyeOff } from "lucide-react"
 
 export default function Devices() {
-  const deviceApi = "/api/users/device";
-  const usernameApi = "/api/users/username";
-  const passwordApi = "/api/users/password";
-
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [logoutDevice, setLogoutDevice] = useState(null);
@@ -78,8 +75,8 @@ export default function Devices() {
     },
   })
 
-  const { data: usernameData, isLoading: usernameLoading, mutate: mutateUsername } = useData(usernameApi, t("toast.failed.fetch_config"));
-  const { data: deviceData, isLoading: deviceLoading, mutate: mutateDevice } = useData(deviceApi, t("toast.failed.fetch_config"));
+  const { data: usernameData, isLoading: usernameLoading, mutate: mutateUsername } = useData(API.USERNAME, t("toast.failed.fetch_config"));
+  const { data: deviceData, isLoading: deviceLoading, mutate: mutateDevice } = useData(API.DEVICE, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
@@ -93,7 +90,7 @@ export default function Devices() {
   }, [usernameData]);
 
   const handleUsername = async (values) => {
-    const result = await handleRequest("PATCH", usernameApi, values, t("toast.failed.edit"));
+    const result = await handleRequest("PATCH", API.USERNAME, values, t("toast.failed.edit"));
     if (result) {
       mutateUsername();
       toast(t("toast.success.edit"));
@@ -103,7 +100,7 @@ export default function Devices() {
   const handlePassword = async (values) => {
     const hashedCurPw = crypto.createHash("sha256").update(values.current_password).digest("hex");
     const hashedNewPw = crypto.createHash("sha256").update(values.new_password).digest("hex");
-    const result = await handleRequest("PATCH", passwordApi, { cur_password: hashedCurPw, new_password: hashedNewPw }, t("toast.failed.edit"));
+    const result = await handleRequest("PATCH", API.PASSWORD, { cur_password: hashedCurPw, new_password: hashedNewPw }, t("toast.failed.edit"));
     if (result) {
       passwordFrom.reset();
       toast(t("toast.success.edit"));
@@ -111,7 +108,7 @@ export default function Devices() {
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${deviceApi}/${id}`, null, t("toast.failed.delete"));
+    const result = await handleRequest("DELETE", `${API.DEVICE}/${id}`, null, t("toast.failed.delete"));
     if (result) {
       mutateDevice();
     }

@@ -4,17 +4,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { usePathname, useRouter } from "next/navigation";
+import { API } from "@/lib/http/api";
 import { handleRequest } from "@/lib/http/request";
 
 export function NavBar() {
-  const logoutApi = "/api/auth/logout";
-
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useTranslation();
 
   const handleLogout = async () => {
-    const result = await handleRequest("DELETE", logoutApi, null, t("toast.failed.logout"));
+    const result = await handleRequest("DELETE", API.LOGOUT, null, t("toast.failed.logout"));
     if (result) {
       router.push("/login");
       router.refresh();

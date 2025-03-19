@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
@@ -83,9 +84,6 @@ function VariablePopover() {
 }
 
 export default function NotificationSettings() {
-  const notificationApi = "/api/notifications";
-  const configApi = "/api/configs";
-
   const { t } = useTranslation();
 
   const notificationFrom = useForm({
@@ -126,7 +124,7 @@ export default function NotificationSettings() {
     ServerChan: "https://sctapi.ftqq.com",
   };
 
-  const { data: notificationData, isLoading: notificationLoading, mutate: mutateNotification } = useData(notificationApi, t("toast.failed.fetch_list"));
+  const { data: notificationData, isLoading: notificationLoading, mutate: mutateNotification } = useData(API.NOTIFICATION, t("toast.failed.fetch_list"));
 
   // Set page title
   useEffect(() => {
@@ -144,7 +142,7 @@ export default function NotificationSettings() {
   }, [selectedType]);
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", notificationApi, values, t("toast.failed.add"));
+    const result = await handleRequest("POST", API.NOTIFICATION, values, t("toast.failed.add"));
     if (result) {
       notificationFrom.reset();
       mutateNotification();
@@ -152,21 +150,21 @@ export default function NotificationSettings() {
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${notificationApi}/${id}`, null, t("toast.failed.delete"));
+    const result = await handleRequest("DELETE", `${API.NOTIFICATION}/${id}`, null, t("toast.failed.delete"));
     if (result) {
       mutateNotification();
     }
   };
 
   const handleEdit = async (id, values) => {
-    const result = await handleRequest("PATCH", `${notificationApi}/${id}`, values, t("toast.failed.edit"));
+    const result = await handleRequest("PATCH", `${API.NOTIFICATION}/${id}`, values, t("toast.failed.edit"));
     if (result) {
       mutateNotification();
     }
   };
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${notificationApi}/test`, values, t("toast.failed.send"));
+    const result = await handleRequest("POST", `${API.NOTIFICATION}/test`, values, t("toast.failed.send"));
     if (result) {
       toast(t("toast.done.send"));
     }

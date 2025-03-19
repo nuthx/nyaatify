@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { API } from "@/lib/http/api";
 import { handleRequest } from "@/lib/http/request";
 import { 
   Card,
@@ -26,8 +27,6 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
-  const loginApi = "/api/auth/login";
-
   const { t } = useTranslation();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -52,7 +51,7 @@ export default function LoginPage() {
 
   const handleLogin = async (values) => {
     const hashedPassword = crypto.createHash("sha256").update(values.password).digest("hex");
-    const result = await handleRequest("POST", loginApi, { ...values, password: hashedPassword }, t("toast.failed.login"));
+    const result = await handleRequest("POST", API.LOGIN, { ...values, password: hashedPassword }, t("toast.failed.login"));
     if (result) {
       router.push("/");
       router.refresh();

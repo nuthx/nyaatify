@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
@@ -26,11 +27,9 @@ import { Progress } from "@/components/ui/progress";
 import { Pause, RefreshCcw, Trash2 } from "lucide-react";
 
 export default function Home() {
-  const torrentsApi = "/api/torrents";
-
   const { t } = useTranslation();
 
-  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(torrentsApi, null, { refreshInterval: 1000 });
+  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(API.TORRENTS, null, { refreshInterval: 1000 });
 
   // Set page title
   useEffect(() => {
@@ -38,7 +37,7 @@ export default function Home() {
   }, [t]);
 
   const handleManage = async (action, downloader, hash) => {
-    const result = await handleRequest("POST", torrentsApi, { action, downloader, hash }, t(`toast.failed.${action}`));
+    const result = await handleRequest("POST", API.TORRENTS, { action, downloader, hash }, t(`toast.failed.${action}`));
     if (result) {
       mutateTorrents();
     }

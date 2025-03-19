@@ -4,6 +4,7 @@ import { toast } from "sonner"
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next";
+import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
@@ -35,8 +36,6 @@ import {
 import { SortableItem } from "@/components/sortableitem";
 
 export default function Settings() {
-  const configApi = "/api/configs";
-
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
 
@@ -55,7 +54,7 @@ export default function Settings() {
     useSensor(PointerSensor)
   );
 
-  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(configApi, t("toast.failed.fetch_config"));
+  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
@@ -70,7 +69,7 @@ export default function Settings() {
   }, [configData]);
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, values, t("toast.failed.save"));
+    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
     if (result) {
       toast(t("toast.success.save"));
       mutateConfig();

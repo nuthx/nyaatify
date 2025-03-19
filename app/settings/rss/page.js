@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
@@ -37,9 +38,6 @@ import { ListCard } from "@/components/listcard";
 import { RefreshCw } from "lucide-react";
 
 export default function RSSSettings() {
-  const rssApi = "/api/feeds";
-  const configApi = "/api/configs";
-
   const { t } = useTranslation();
 
   const rssForm = useForm({
@@ -80,8 +78,8 @@ export default function RSSSettings() {
     },
   })
 
-  const { data: rssData, isLoading: rssLoading, mutate: mutateRss } = useData(rssApi, t("toast.failed.fetch_list"));
-  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(configApi, t("toast.failed.fetch_config"));
+  const { data: rssData, isLoading: rssLoading, mutate: mutateRss } = useData(API.RSS, t("toast.failed.fetch_list"));
+  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
@@ -98,7 +96,7 @@ export default function RSSSettings() {
   }, [configData]);
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", rssApi, values, t("toast.failed.add"));
+    const result = await handleRequest("POST", API.RSS, values, t("toast.failed.add"));
     if (result) {
       rssForm.reset();
       mutateRss();
@@ -106,14 +104,14 @@ export default function RSSSettings() {
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${rssApi}/${id}`, null, t("toast.failed.delete"));
+    const result = await handleRequest("DELETE", `${API.RSS}/${id}`, null, t("toast.failed.delete"));
     if (result) {
       mutateRss();
     }
   };
 
   const handleRefresh = async (name) => {
-    const result = await handleRequest("POST", `${rssApi}/refresh`, { name }, t("toast.failed.refresh_rss"));
+    const result = await handleRequest("POST", `${API.RSS}/refresh`, { name }, t("toast.failed.refresh_rss"));
     if (result) {
       toast(t("toast.start.refresh_rss"));
       mutateRss();
@@ -121,7 +119,7 @@ export default function RSSSettings() {
   };
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, values, t("toast.failed.save"));
+    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
     if (result) {
       toast(t("toast.success.save"));
       mutateConfig();

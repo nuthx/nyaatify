@@ -2,6 +2,7 @@
 
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
+import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import {
   Select,
@@ -28,8 +29,6 @@ import { Badge } from "@/components/ui/badge"
 import { PaginationPro } from "@/components/pagination";
 
 export default function Logs() {
-  const logsApi = "/api/logs";
-
   const { t } = useTranslation();
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
@@ -39,7 +38,7 @@ export default function Logs() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 80;
 
-  const { data: logsData, isLoading: logsLoading } = useData(selectedDate ? `${logsApi}?date=${selectedDate}` : logsApi, t("toast.failed.fetch_logs"));
+  const { data: logsData, isLoading: logsLoading } = useData(selectedDate ? `${API.LOGS}?date=${selectedDate}` : API.LOGS, t("toast.failed.fetch_logs"));
 
   // Set page title
   useEffect(() => {

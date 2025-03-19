@@ -4,6 +4,7 @@ import { toast } from "sonner"
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouter, useSearchParams } from "next/navigation";
+import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import {
@@ -34,15 +35,12 @@ import { Download, Pause, RefreshCcw, Trash2 } from "lucide-react";
 import { PaginationPro } from "@/components/pagination";
 
 export default function Anime() {
-  const animeApi = "/api/anime";
-  const torrentsApi = "/api/torrents";
-
   const { t } = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
 
-  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(`${animeApi}?page=${currentPage}`);
+  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(`${API.ANIME}?page=${currentPage}`);
 
   // Set page title
   useEffect(() => {
@@ -57,7 +55,7 @@ export default function Anime() {
   };
 
   const handleManage = async (action, downloader, hash) => {
-    const result = await handleRequest("POST", torrentsApi, { action, downloader, hash }, t(`toast.failed.${action}`));
+    const result = await handleRequest("POST", API.TORRENTS, { action, downloader, hash }, t(`toast.failed.${action}`));
     if (result) {
       if (action === "download") {
         toast(t(`toast.start.download`));
