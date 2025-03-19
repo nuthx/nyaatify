@@ -5,7 +5,7 @@ import { sendResponse } from "@/lib/http/response";
 // Delete a downloader 
 // Params: id, string, required
 
-export async function DELETE(_, { params }) {
+export async function DELETE(request, { params }) {
   try {
     const id = parseInt((await params).id);
     const config = await getConfig();

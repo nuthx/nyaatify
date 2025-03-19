@@ -4,7 +4,7 @@ import { sendResponse } from "@/lib/http/response";
 
 // Logout
 
-export async function DELETE() {
+export async function DELETE(request) {
   try {
     // Get the auth token from the cookies
     const cookieStore = await cookies();

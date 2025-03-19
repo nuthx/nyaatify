@@ -5,7 +5,7 @@ import { stopTask } from "@/lib/schedule";
 // Delete a rss subscription
 // Params: id, string, required
 
-export async function DELETE(_, { params }) {
+export async function DELETE(request, { params }) {
   try {
     const id = parseInt((await params).id);
 
