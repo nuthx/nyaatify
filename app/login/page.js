@@ -5,11 +5,9 @@ import Image from "next/image"
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { API } from "@/lib/http/api";
 import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import { 
   Card,
   CardContent
@@ -31,18 +29,10 @@ export default function LoginPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
-  const loginFrom = useForm({
-    resolver: zodResolver(z.object({
-      username: z.string()
-        .min(1, { message: t("validate.username") }),
-      password: z.string()
-        .min(1, { message: t("validate.password") })
-    })),
-    defaultValues: {
-      username: "",
-      password: ""
-    },
-  })
+  const loginForm = createForm({
+    username: { schema: "username" },
+    password: { schema: "password" }
+  })();
 
   // Set page title
   useEffect(() => {
@@ -68,9 +58,9 @@ export default function LoginPage() {
         <Card className="w-full max-w-lg">
           <CardContent className="flex flex-col gap-10 pt-10">
             <h1 className="text-2xl font-bold text-center">Welcome!<br />Login to Nyaatify</h1>
-            <Form {...loginFrom}>
-              <form onSubmit={loginFrom.handleSubmit((values) => handleLogin(values))} className="space-y-6" noValidate>
-                <FormField control={loginFrom.control} name="username" render={({ field }) => (
+            <Form {...loginForm}>
+              <form onSubmit={loginForm.handleSubmit((values) => handleLogin(values))} className="space-y-6" noValidate>
+                <FormField control={loginForm.control} name="username" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.dl.add.username")}</FormLabel>
                     <FormControl>
@@ -80,7 +70,7 @@ export default function LoginPage() {
                   </FormItem>
                 )}
                 />
-                <FormField control={loginFrom.control} name="password" render={({ field }) => (
+                <FormField control={loginForm.control} name="password" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.dl.add.password")}</FormLabel>
                     <FormControl>

@@ -49,7 +49,7 @@ export async function POST(request) {
     const data = await request.json();
 
     // Check if name is empty
-    if (!data.name?.trim()) {
+    if (!data.name) {
       throw new Error("Downloader name is required");
     }
 
@@ -57,14 +57,14 @@ export async function POST(request) {
     const existingDownloader = await prisma.downloader.findFirst({
       where: {
         OR: [
-          { name: data.name.trim() },
-          { url: data.url.trim() }
+          { name: data.name },
+          { url: data.url }
         ]
       }
     });
 
     if (existingDownloader) {
-      if (existingDownloader.name === data.name.trim()) {
+      if (existingDownloader.name === data.name) {
         throw new Error(`Downloader already exists, name: ${data.name}`);
       } else {
         throw new Error(`Downloader already exists, url: ${data.url}`);
@@ -88,9 +88,9 @@ export async function POST(request) {
     // Create downloader
     await prisma.downloader.create({
       data: {
-        name: data.name.trim(),
-        url: data.url.trim(),
-        type: data.type.trim(),
+        name: data.name,
+        url: data.url,
+        type: data.type,
         username: data.username,
         password: data.password,
         cookie: cookieResult.data

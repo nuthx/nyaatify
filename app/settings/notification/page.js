@@ -3,12 +3,10 @@
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import {
   Card,
   CardContent,
@@ -86,38 +84,18 @@ function VariablePopover() {
 export default function NotificationSettings() {
   const { t } = useTranslation();
 
-  const notificationFrom = useForm({
-    resolver: zodResolver(z.object({
-      name: z.string()
-        .min(2, { message: t("validate.name_2") })
-        .max(40, { message: t("validate.name_40") }),
-      filter: z.string(),
-      type: z.string(),
-      url: z.string()
-        .url({ message: t("validate.url_invalid") })
-        .startsWith("http", { message: t("validate.url_http") })
-        .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
-      token: z.string()
-        .min(1, { message: t("validate.required") }),
-      title: z.string()
-        .min(1, { message: t("validate.required") }),
-      message: z.string()
-        .min(1, { message: t("validate.required") }),
-      extra: z.string()
-    })),
-    defaultValues: {
-      name: "",
-      filter: "",
-      type: "Bark",
-      url: "https://api.day.app",
-      token: "",
-      title: "",
-      message: "",
-      extra: ""
-    },
-  })
+  const notificationForm = createForm({
+    name: { schema: "name" },
+    filter: { schema: "trim" },
+    type: { schema: "trim", default: "Bark" },
+    url: { schema: "url", default: "https://api.day.app" },
+    token: { schema: "required" },
+    title: { schema: "required" },
+    message: { schema: "required" },
+    extra: { schema: "trim" }
+  })();
 
-  const selectedType = notificationFrom.watch("type");
+  const selectedType = notificationForm.watch("type");
   const urlPlaceholders = {
     Bark: "https://api.day.app",
     Gotify: "https://your-server.com",
@@ -138,13 +116,13 @@ export default function NotificationSettings() {
       Gotify: "",
       ServerChan: "https://sctapi.ftqq.com"
     };
-    notificationFrom.setValue("url", defaultUrls[selectedType]);
+    notificationForm.setValue("url", defaultUrls[selectedType]);
   }, [selectedType]);
 
   const handleAdd = async (values) => {
     const result = await handleRequest("POST", API.NOTIFICATION, values, t("toast.failed.add"));
     if (result) {
-      notificationFrom.reset();
+      notificationForm.reset();
       mutateNotification();
     }
   };
@@ -182,9 +160,9 @@ export default function NotificationSettings() {
           <CardDescription>{t("st.nt.add.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...notificationFrom}>
-            <form onSubmit={notificationFrom.handleSubmit((values) => handleAdd(values))} className="space-y-6" noValidate>
-              <FormField control={notificationFrom.control} name="name" render={({ field }) => (
+          <Form {...notificationForm}>
+            <form onSubmit={notificationForm.handleSubmit((values) => handleAdd(values))} className="space-y-6" noValidate>
+              <FormField control={notificationForm.control} name="name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.name")}</FormLabel>
                   <FormControl>
@@ -194,7 +172,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="filter" render={({ field }) => (
+              <FormField control={notificationForm.control} name="filter" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.filter")}</FormLabel>
                   <FormControl>
@@ -205,7 +183,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="type" render={({ field }) => (
+              <FormField control={notificationForm.control} name="type" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.type")}</FormLabel>
                   <Select defaultValue={field.value} onValueChange={field.onChange}>
@@ -229,7 +207,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="url" render={({ field }) => (
+              <FormField control={notificationForm.control} name="url" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.url")}</FormLabel>
                   <FormControl>
@@ -239,7 +217,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="token" render={({ field }) => (
+              <FormField control={notificationForm.control} name="token" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.token")}</FormLabel>
                   <FormControl>
@@ -249,7 +227,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="title" render={({ field }) => (
+              <FormField control={notificationForm.control} name="title" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.push_title")}</FormLabel>
                   <FormControl>
@@ -263,7 +241,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="message" render={({ field }) => (
+              <FormField control={notificationForm.control} name="message" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.push_message")}</FormLabel>
                   <FormControl>
@@ -277,7 +255,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="extra" render={({ field }) => (
+              <FormField control={notificationForm.control} name="extra" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.extra")}</FormLabel>
                   <FormControl>
@@ -294,7 +272,7 @@ export default function NotificationSettings() {
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
-                <Button type="button" variant="outline" onClick={notificationFrom.handleSubmit((values) => handleTest(values))}>{t("glb.test")}</Button>
+                <Button type="button" variant="outline" onClick={notificationForm.handleSubmit((values) => handleTest(values))}>{t("glb.test")}</Button>
               </div>
             </form>
           </Form>

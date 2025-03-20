@@ -4,12 +4,10 @@ import crypto from "crypto";
 import { toast } from "sonner"
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -52,28 +50,14 @@ export default function Devices() {
   const [showPassword, setShowPassword] = useState(false);
   const [logoutDevice, setLogoutDevice] = useState(null);
 
-  const usernameFrom = useForm({
-    resolver: zodResolver(z.object({
-      new_username: z.string()
-        .min(1, { message: t("validate.username") })
-    })),
-    defaultValues: {
-      new_username: ""
-    },
-  })
+  const usernameForm = createForm({
+    new_username: { schema: "username" }
+  })();
 
-  const passwordFrom = useForm({
-    resolver: zodResolver(z.object({
-      current_password: z.string()
-        .min(1, { message: t("validate.password") }),
-      new_password: z.string()
-        .min(8, { message: t("validate.password_8") })
-    })),
-    defaultValues: {
-      current_password: "",
-      new_password: ""
-    },
-  })
+  const passwordForm = createForm({
+    current_password: { schema: "password" },
+    new_password: { schema: "password8" }
+  })();
 
   const { data: usernameData, isLoading: usernameLoading, mutate: mutateUsername } = useData(API.USERNAME, t("toast.failed.fetch_config"));
   const { data: deviceData, isLoading: deviceLoading, mutate: mutateDevice } = useData(API.DEVICE, t("toast.failed.fetch_config"));
@@ -85,7 +69,7 @@ export default function Devices() {
 
   useEffect(() => {
     if (usernameData?.username) {
-      usernameFrom.setValue('new_username', usernameData.username);
+      usernameForm.setValue("new_username", usernameData.username);
     }
   }, [usernameData]);
 
@@ -102,7 +86,7 @@ export default function Devices() {
     const hashedNewPw = crypto.createHash("sha256").update(values.new_password).digest("hex");
     const result = await handleRequest("PATCH", API.PASSWORD, { cur_password: hashedCurPw, new_password: hashedNewPw }, t("toast.failed.edit"));
     if (result) {
-      passwordFrom.reset();
+      passwordForm.reset();
       toast(t("toast.success.edit"));
     }
   };
@@ -126,9 +110,9 @@ export default function Devices() {
           <CardDescription>{t("st.user.username.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...usernameFrom}>
-            <form onSubmit={usernameFrom.handleSubmit((values) => handleUsername(values))} className="space-y-6" noValidate>
-              <FormField control={usernameFrom.control} name="new_username" render={({ field }) => (
+          <Form {...usernameForm}>
+            <form onSubmit={usernameForm.handleSubmit((values) => handleUsername(values))} className="space-y-6" noValidate>
+              <FormField control={usernameForm.control} name="new_username" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.dl.add.username")}</FormLabel>
                   <FormControl>
@@ -150,9 +134,9 @@ export default function Devices() {
           <CardDescription>{t("st.user.password.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...passwordFrom}>
-            <form onSubmit={passwordFrom.handleSubmit((values) => handlePassword(values))} className="space-y-6" noValidate>
-              <FormField control={passwordFrom.control} name="current_password" render={({ field }) => (
+          <Form {...passwordForm}>
+            <form onSubmit={passwordForm.handleSubmit((values) => handlePassword(values))} className="space-y-6" noValidate>
+              <FormField control={passwordForm.control} name="current_password" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.user.password.current")}</FormLabel>
                   <FormControl>
@@ -162,7 +146,7 @@ export default function Devices() {
                 </FormItem>
               )}
               />
-              <FormField control={passwordFrom.control} name="new_password" render={({ field }) => (
+              <FormField control={passwordForm.control} name="new_password" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.user.password.new")}</FormLabel>
                   <FormControl>
