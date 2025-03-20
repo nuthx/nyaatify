@@ -1,15 +1,14 @@
 import crypto from "crypto";
 import { UAParser } from "ua-parser-js";
-import { prisma } from "@/lib/db";
 import { cookies } from "next/headers";
+import { prisma } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Login in with username and password
 // Body: {
-//   values: {
-//     username: string, required
-//     password: string, required
-//   }
+//   username: string, required
+//   password: string, required
 // }
 
 export async function POST(request) {
@@ -17,26 +16,26 @@ export async function POST(request) {
     const data = await request.json();
     const user = await prisma.user.findUnique({
       where: {
-        username: data.values.username
+        username: data.username
       }
     });
 
     // Check user
     if (!user) {
-      logger.error(`Invalid username: ${data.values.username}`, { model: "POST /api/auth/login" });
-      return Response.json({
+      return sendResponse(request, {
         code: 401,
-        message: "Invalid username or password"
-      }, { status: 401 });
+        message: "Invalid username or password",
+        logMessage: `Invalid username: ${data.username}`
+      });
     }
 
     // Check password
-    if (user.password !== data.values.password) {
-      logger.error(`Invalid password, username: ${data.values.username}`, { model: "POST /api/auth/login" });
-      return Response.json({
+    if (user.password !== data.password) {
+      return sendResponse(request, {
         code: 401,
-        message: "Invalid username or password"
-      }, { status: 401 });
+        message: "Invalid username or password",
+        logMessage: `Invalid password, username: ${data.username}`
+      });
     }
 
     // Create user token
@@ -70,19 +69,14 @@ export async function POST(request) {
       expires: new Date(Date.now() + 365 * 86400 * 1000) // 1 year
     });
 
-    logger.info(`User logged in, username: ${user.username}`, { model: "POST /api/auth/login" });
-    return Response.json({
-      code: 200,
-      message: "success",
-      data: {
-        token: token
-      }
+    return sendResponse(request, {
+      message: `User logged in, username: ${user.username}`,
+      data: { token }
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/auth/login" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

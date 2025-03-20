@@ -1,35 +1,28 @@
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Get current username
 
-export async function GET() {
+export async function GET(request) {
   try {
     const user = await prisma.user.findUnique({
       where: { id: 1 }
     });
 
-    return Response.json({
-      code: 200,
-      message: "success",
-      data: {
-        username: user.username
-      }
+    return sendResponse(request, {
+      data: { username: user.username }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/users/username" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
 
 // Change username
 // Body: {
-//   values: {
-//     new_username: string, required
-//   }
+//   new_username: string, required
 // }
 
 export async function PATCH(request) {
@@ -41,26 +34,23 @@ export async function PATCH(request) {
       where: { id: 1 }
     });
 
-    if (user.username === data.values.new_username) {
+    if (user.username === data.new_username) {
       throw new Error("New username is the same as the current username");
     }
 
     // Update username
     await prisma.user.update({
       where: { id: 1 },
-      data: { username: data.values.new_username }
+      data: { username: data.new_username }
     });
 
-    logger.info(`Change username successfully, username: ${data.values.new_username}`, { model: "PATCH /api/users/username" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Change username successfully, username: ${data.new_username}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "PATCH /api/users/username" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

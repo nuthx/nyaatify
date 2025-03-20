@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Get notification list
 
-export async function GET() {
+export async function GET(request) {
   try {
     const notification = await prisma.notification.findMany({
       orderBy: {
@@ -11,34 +11,27 @@ export async function GET() {
       }
     });
 
-    return Response.json({
-      code: 200,
-      message: "success",
-      data: {
-        notification
-      }
+    return sendResponse(request, {
+      data: { notification }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/notifications" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
 
 // Add a new notification
 // Body: {
-//   values: {
-//     name: string, required
-//     filter: string, required
-//     type: string, required
-//     url: string, required
-//     token: string, required
-//     title: string, required
-//     message: string, required
-//     extra: string, required
-//   }
+//   name: string, required
+//   filter: string, required
+//   type: string, required
+//   url: string, required
+//   token: string, required
+//   title: string, required
+//   message: string, required
+//   extra: string, required
 // }
 
 export async function POST(request) {
@@ -46,44 +39,41 @@ export async function POST(request) {
     const data = await request.json();
 
     // Check if name is empty
-    if (!data.values.name?.trim()) {
+    if (!data.name) {
       throw new Error("Notification name is required");
     }
 
     // Check if name already exists
     const existingName = await prisma.notification.findUnique({
-      where: { name: data.values.name.trim() }
+      where: { name: data.name }
     });
     
     if (existingName) {
-      throw new Error(`Notification already exists, name: ${data.values.name}`);
+      throw new Error(`Notification already exists, name: ${data.name}`);
     }
 
     // Insert to database using Prisma
     await prisma.notification.create({
       data: {
-        name: data.values.name.trim(),
-        filter: data.values.filter.trim(),
-        type: data.values.type.trim(),
-        url: data.values.url.trim(),
-        token: data.values.token.trim(),
-        title: data.values.title.trim(),
-        message: data.values.message.trim(),
-        extra: data.values.extra.trim(),
+        name: data.name,
+        filter: data.filter,
+        type: data.type,
+        url: data.url,
+        token: data.token,
+        title: data.title,
+        message: data.message,
+        extra: data.extra,
         state: 1
       }
     });
 
-    logger.info(`Add notification successfully, name: ${data.values.name}`, { model: "POST /api/notifications" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Add notification successfully, name: ${data.name}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/notifications" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

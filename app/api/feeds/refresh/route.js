@@ -1,11 +1,9 @@
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 import { refreshRSS } from "@/lib/parse";
 
 // Refresh a rss subscription
 // Body: {
-//   values: {
-//     name: string, required
-//   }
+//   name: string, required
 // }
 
 export async function POST(request) {
@@ -13,18 +11,15 @@ export async function POST(request) {
     const data = await request.json();
 
     // Refresh RSS
-    refreshRSS(data.values.name);
+    refreshRSS(data.name);
 
-    logger.info(`Start refreshing RSS subscription manually, name: ${data.values.name}`, { model: "POST /api/feeds/refresh" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Start refreshing RSS subscription manually, name: ${data.name}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/feeds/refresh" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

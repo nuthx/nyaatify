@@ -1,13 +1,12 @@
 "use client";
 
-import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { handleRequest } from "@/lib/handlers";
+import { API } from "@/lib/http/api";
+import { useData } from "@/lib/http/swr";
+import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import {
   Card,
   CardContent,
@@ -40,7 +39,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { ListCard } from "@/components/settings";
+import { ListCard } from "@/components/listcard";
 import { BellDot, BellMinus, BellRing } from "lucide-react";
 
 function VariableItem({ name, description }) {
@@ -83,81 +82,32 @@ function VariablePopover() {
 }
 
 export default function NotificationSettings() {
-  const notificationApi = "/api/notifications";
-  const configApi = "/api/configs";
-
   const { t } = useTranslation();
 
-  const notificationFrom = useForm({
-    resolver: zodResolver(z.object({
-      name: z.string()
-        .min(2, { message: t("validate.name_2") })
-        .max(40, { message: t("validate.name_40") }),
-      filter: z.string(),
-      type: z.string(),
-      url: z.string()
-        .url({ message: t("validate.url_invalid") })
-        .startsWith("http", { message: t("validate.url_http") })
-        .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
-      token: z.string()
-        .min(1, { message: t("validate.required") }),
-      title: z.string()
-        .min(1, { message: t("validate.required") }),
-      message: z.string()
-        .min(1, { message: t("validate.required") }),
-      extra: z.string()
-    })),
-    defaultValues: {
-      name: "",
-      filter: "",
-      type: "Bark",
-      url: "https://api.day.app",
-      token: "",
-      title: "",
-      message: "",
-      extra: ""
-    },
-  })
+  const notificationForm = createForm({
+    name: { schema: "name" },
+    filter: { schema: "trim" },
+    type: { schema: "trim", default: "Bark" },
+    url: { schema: "url", default: "https://api.day.app" },
+    token: { schema: "required" },
+    title: { schema: "required" },
+    message: { schema: "required" },
+    extra: { schema: "trim" }
+  })();
 
-  const selectedType = notificationFrom.watch("type");
+  const selectedType = notificationForm.watch("type");
   const urlPlaceholders = {
     Bark: "https://api.day.app",
     Gotify: "https://your-server.com",
     ServerChan: "https://sctapi.ftqq.com",
   };
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  const { data: notificationData, error: notificationError, isLoading: notificationLoading, mutate: mutateNotification } = useSWR(notificationApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
+  const { data: notificationData, isLoading: notificationLoading, mutate: mutateNotification } = useData(API.NOTIFICATION, t("toast.failed.fetch_list"));
 
   // Set page title
   useEffect(() => {
     document.title = `${t("st.metadata.notification")} - Nyaatify`;
   }, [t]);
-
-  useEffect(() => {
-    if (notificationError) {
-      toast.error(t("toast.failed.fetch_list"), {
-        description: notificationError.message,
-      });
-    }
-  }, [notificationError]);
-
-  useEffect(() => {
-    if (configError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: configError.message,
-      });
-    }
-  }, [configError]);
 
   // Set default url for notification type
   useEffect(() => {
@@ -166,55 +116,39 @@ export default function NotificationSettings() {
       Gotify: "",
       ServerChan: "https://sctapi.ftqq.com"
     };
-    notificationFrom.setValue("url", defaultUrls[selectedType]);
+    notificationForm.setValue("url", defaultUrls[selectedType]);
   }, [selectedType]);
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", notificationApi, JSON.stringify({ values }));
-    if (result.success) {
-      notificationFrom.reset();
+    const result = await handleRequest("POST", API.NOTIFICATION, values, t("toast.failed.add"));
+    if (result) {
+      notificationForm.reset();
       mutateNotification();
-    } else {
-      toast.error(t("toast.failed.add"), {
-        description: result.message,
-      });
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${notificationApi}/${id}`);
-    if (result.success) {
+    const result = await handleRequest("DELETE", `${API.NOTIFICATION}/${id}`, null, t("toast.failed.delete"));
+    if (result) {
       mutateNotification();
-    } else {
-      toast.error(t("toast.failed.delete"), {
-        description: result.message,
-      });
     }
   };
 
   const handleEdit = async (id, values) => {
-    const result = await handleRequest("PATCH", `${notificationApi}/${id}`, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("PATCH", `${API.NOTIFICATION}/${id}`, values, t("toast.failed.edit"));
+    if (result) {
       mutateNotification();
-    } else {
-      toast.error(t("toast.failed.edit"), {
-        description: result.message,
-      });
     }
   };
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${notificationApi}/test`, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("POST", `${API.NOTIFICATION}/test`, values, t("toast.failed.send"));
+    if (result) {
       toast(t("toast.done.send"));
-    } else {
-      toast.error(t("toast.failed.send_notification"), {
-        description: result.message,
-      });
     }
   };
 
-  if (notificationLoading || configLoading) {
+  if (notificationLoading) {
     return <></>;
   }
 
@@ -226,9 +160,9 @@ export default function NotificationSettings() {
           <CardDescription>{t("st.nt.add.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...notificationFrom}>
-            <form onSubmit={notificationFrom.handleSubmit((values) => handleAdd(values))} className="space-y-6" noValidate>
-              <FormField control={notificationFrom.control} name="name" render={({ field }) => (
+          <Form {...notificationForm}>
+            <form onSubmit={notificationForm.handleSubmit((values) => handleAdd(values))} className="space-y-6" noValidate>
+              <FormField control={notificationForm.control} name="name" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.name")}</FormLabel>
                   <FormControl>
@@ -238,7 +172,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="filter" render={({ field }) => (
+              <FormField control={notificationForm.control} name="filter" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.filter")}</FormLabel>
                   <FormControl>
@@ -249,7 +183,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="type" render={({ field }) => (
+              <FormField control={notificationForm.control} name="type" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.type")}</FormLabel>
                   <Select defaultValue={field.value} onValueChange={field.onChange}>
@@ -273,7 +207,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="url" render={({ field }) => (
+              <FormField control={notificationForm.control} name="url" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.url")}</FormLabel>
                   <FormControl>
@@ -283,7 +217,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="token" render={({ field }) => (
+              <FormField control={notificationForm.control} name="token" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.token")}</FormLabel>
                   <FormControl>
@@ -293,7 +227,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="title" render={({ field }) => (
+              <FormField control={notificationForm.control} name="title" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.push_title")}</FormLabel>
                   <FormControl>
@@ -307,7 +241,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="message" render={({ field }) => (
+              <FormField control={notificationForm.control} name="message" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.push_message")}</FormLabel>
                   <FormControl>
@@ -321,7 +255,7 @@ export default function NotificationSettings() {
                 </FormItem>
               )}
               />
-              <FormField control={notificationFrom.control} name="extra" render={({ field }) => (
+              <FormField control={notificationForm.control} name="extra" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.nt.add.extra")}</FormLabel>
                   <FormControl>
@@ -338,7 +272,7 @@ export default function NotificationSettings() {
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
-                <Button type="button" variant="outline" onClick={notificationFrom.handleSubmit((values) => handleTest(values))}>{t("glb.test")}</Button>
+                <Button type="button" variant="outline" onClick={notificationForm.handleSubmit((values) => handleTest(values))}>{t("glb.test")}</Button>
               </div>
             </form>
           </Form>

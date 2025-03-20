@@ -1,14 +1,13 @@
 "use client";
 
 import crypto from "crypto";
-import useSWR from "swr"
 import { toast } from "sonner"
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { handleRequest } from "@/lib/handlers";
+import { API } from "@/lib/http/api";
+import { useData } from "@/lib/http/swr";
+import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,48 +46,21 @@ import { Input } from "@/components/ui/input";
 import { Trash2, Eye, EyeOff } from "lucide-react"
 
 export default function Devices() {
-  const deviceApi = "/api/users/device";
-  const usernameApi = "/api/users/username";
-  const passwordApi = "/api/users/password";
-
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
   const [logoutDevice, setLogoutDevice] = useState(null);
 
-  const usernameFrom = useForm({
-    resolver: zodResolver(z.object({
-      new_username: z.string()
-        .min(1, { message: t("validate.username") })
-    })),
-    defaultValues: {
-      new_username: ""
-    },
-  })
+  const usernameForm = createForm({
+    new_username: { schema: "username" }
+  })();
 
-  const passwordFrom = useForm({
-    resolver: zodResolver(z.object({
-      current_password: z.string()
-        .min(1, { message: t("validate.password") }),
-      new_password: z.string()
-        .min(8, { message: t("validate.password_8") })
-    })),
-    defaultValues: {
-      current_password: "",
-      new_password: ""
-    },
-  })
+  const passwordForm = createForm({
+    current_password: { schema: "password" },
+    new_password: { schema: "password8" }
+  })();
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  const { data: usernameData, error: usernameError, isLoading: usernameLoading, mutate: mutateUsername } = useSWR(usernameApi, fetcher);
-  const { data: deviceData, error: deviceError, isLoading: deviceLoading, mutate: mutateDevice } = useSWR(deviceApi, fetcher);
+  const { data: usernameData, isLoading: usernameLoading, mutate: mutateUsername } = useData(API.USERNAME, t("toast.failed.fetch_config"));
+  const { data: deviceData, isLoading: deviceLoading, mutate: mutateDevice } = useData(API.DEVICE, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
@@ -97,56 +69,32 @@ export default function Devices() {
 
   useEffect(() => {
     if (usernameData?.username) {
-      usernameFrom.setValue('new_username', usernameData.username);
+      usernameForm.setValue("new_username", usernameData.username);
     }
-    if (usernameError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: usernameError.message,
-      });
-    }
-  }, [usernameData, usernameError]);
-
-  useEffect(() => {
-    if (deviceError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: deviceError.message,
-      });
-    }
-  }, [deviceError]);
+  }, [usernameData]);
 
   const handleUsername = async (values) => {
-    const result = await handleRequest("PATCH", usernameApi, JSON.stringify({ values: values }));
-    if (result.success) {
+    const result = await handleRequest("PATCH", API.USERNAME, values, t("toast.failed.edit"));
+    if (result) {
       mutateUsername();
       toast(t("toast.success.edit"));
-    } else {
-      toast.error(t("toast.failed.edit"), {
-        description: result.message,
-      });
     }
   };
 
   const handlePassword = async (values) => {
-    const hashedPassword = crypto.createHash("sha256").update(values.new_password).digest("hex");
-    const result = await handleRequest("PATCH", passwordApi, JSON.stringify({ values: { ...values, new_password: hashedPassword } }));
-    if (result.success) {
-      passwordFrom.reset();
+    const hashedCurPw = crypto.createHash("sha256").update(values.current_password).digest("hex");
+    const hashedNewPw = crypto.createHash("sha256").update(values.new_password).digest("hex");
+    const result = await handleRequest("PATCH", API.PASSWORD, { cur_password: hashedCurPw, new_password: hashedNewPw }, t("toast.failed.edit"));
+    if (result) {
+      passwordForm.reset();
       toast(t("toast.success.edit"));
-    } else {
-      toast.error(t("toast.failed.edit"), {
-        description: result.message,
-      });
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${deviceApi}/${id}`);
-    if (result.success) {
+    const result = await handleRequest("DELETE", `${API.DEVICE}/${id}`, null, t("toast.failed.delete"));
+    if (result) {
       mutateDevice();
-    } else {
-      toast.error(t("toast.failed.delete"), {
-        description: result.message,
-      });
     }
   };
 
@@ -162,9 +110,9 @@ export default function Devices() {
           <CardDescription>{t("st.user.username.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...usernameFrom}>
-            <form onSubmit={usernameFrom.handleSubmit((values) => handleUsername(values))} className="space-y-6" noValidate>
-              <FormField control={usernameFrom.control} name="new_username" render={({ field }) => (
+          <Form {...usernameForm}>
+            <form onSubmit={usernameForm.handleSubmit((values) => handleUsername(values))} className="space-y-6" noValidate>
+              <FormField control={usernameForm.control} name="new_username" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.dl.add.username")}</FormLabel>
                   <FormControl>
@@ -186,9 +134,9 @@ export default function Devices() {
           <CardDescription>{t("st.user.password.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Form {...passwordFrom}>
-            <form onSubmit={passwordFrom.handleSubmit((values) => handlePassword(values))} className="space-y-6" noValidate>
-              <FormField control={passwordFrom.control} name="current_password" render={({ field }) => (
+          <Form {...passwordForm}>
+            <form onSubmit={passwordForm.handleSubmit((values) => handlePassword(values))} className="space-y-6" noValidate>
+              <FormField control={passwordForm.control} name="current_password" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.user.password.current")}</FormLabel>
                   <FormControl>
@@ -198,7 +146,7 @@ export default function Devices() {
                 </FormItem>
               )}
               />
-              <FormField control={passwordFrom.control} name="new_password" render={({ field }) => (
+              <FormField control={passwordForm.control} name="new_password" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.user.password.new")}</FormLabel>
                   <FormControl>

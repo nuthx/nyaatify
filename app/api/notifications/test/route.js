@@ -1,17 +1,15 @@
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 import { dispatchNotification } from "@/lib/notification";
 
 // Test a notification push
 // Body: {
-//   values: {
-//     name: string, required
-//     type: string, required
-//     url: string, required
-//     token: string, required
-//     title: string, required
-//     message: string, required
-//     extra: string, required
-//   }
+//   name: string, required
+//   type: string, required
+//   url: string, required
+//   token: string, required
+//   title: string, required
+//   message: string, required
+//   extra: string, required
 // }
 
 export async function POST(request) {
@@ -36,22 +34,19 @@ export async function POST(request) {
     }
 
     // Dispatch test notification
-    const notificationResult = await dispatchNotification(data.values, demo_variable);
+    const notificationResult = await dispatchNotification(data, demo_variable);
 
     if (!notificationResult.success) {
       throw new Error(notificationResult.message);
     }
 
-    logger.info(`Test notification successfully, name: ${data.values.name}`, { model: "POST /api/notifications/test" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Test notification successfully, name: ${data.name}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/notifications/test" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

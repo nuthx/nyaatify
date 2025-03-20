@@ -1,11 +1,11 @@
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
 import { formatBytes } from "@/lib/bytes";
+import { sendResponse } from "@/lib/http/response";
 import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
 
 // Get torrent list
 
-export async function GET() {
+export async function GET(request) {
   try {
     // Get all downloaders and check their online status
     const downloaders = await prisma.downloader.findMany();
@@ -52,9 +52,7 @@ export async function GET() {
       return a.downloader.localeCompare(b.downloader);
     });
 
-    return Response.json({
-      code: 200,
-      message: "success",
+    return sendResponse(request, {
       data: {
         torrents: allTorrents,
         downloaders: downloaders.length,  // Total downloaders count
@@ -62,11 +60,10 @@ export async function GET() {
       }
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/torrents" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
 
@@ -96,16 +93,13 @@ export async function POST(request) {
       throw new Error(manageResult.message);
     }
 
-    logger.info(`Manage torrent successfully, action: ${data.action}, hash: ${data.hash}`, { model: "POST /api/torrents" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Manage torrent successfully, action: ${data.action}, hash: ${data.hash}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "POST /api/torrents" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

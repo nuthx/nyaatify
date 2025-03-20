@@ -1,10 +1,11 @@
 import { prisma, getConfig } from "@/lib/db";
 import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Delete a downloader 
 // Params: id, string, required
 
-export async function DELETE(_, { params }) {
+export async function DELETE(request, { params }) {
   try {
     const id = parseInt((await params).id);
     const config = await getConfig();
@@ -47,16 +48,13 @@ export async function DELETE(_, { params }) {
       }
     });
 
-    logger.info(`Delete downloader successfully, id: ${id}`, { model: "DELETE /api/downloaders/[id]" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Delete downloader successfully, id: ${id}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "DELETE /api/downloaders/[id]" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

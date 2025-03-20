@@ -1,13 +1,12 @@
 "use client";
 
-import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { handleRequest } from "@/lib/handlers";
+import { API } from "@/lib/http/api";
+import { useData } from "@/lib/http/swr";
+import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import {
   Card,
   CardContent,
@@ -33,77 +32,32 @@ import {
 import { Button } from "@/components/ui/button";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { ListCard } from "@/components/settings";
+import { ListCard } from "@/components/listcard";
 import { RefreshCw } from "lucide-react";
 
 export default function RSSSettings() {
-  const rssApi = "/api/feeds";
-  const configApi = "/api/configs";
-
   const { t } = useTranslation();
 
-  const rssForm = useForm({
-    resolver: zodResolver(z.object({
-      name: z.string()
-        .min(2, { message: t("validate.name_2") })
-        .max(40, { message: t("validate.name_40") }),
-      url: z.string()
-        .url({ message: t("validate.url_invalid") })
-        .startsWith("http", { message: t("validate.url_http") })
-        .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
-      cron: z.string()
-        .min(1, { message: t("validate.required") })
-    })),
-    defaultValues: {
-      name: "",
-      url: "",
-      cron: "0 */10 * * * *",
-    },
-  })
+  const rssForm = createForm({
+    name: { schema: "name" },
+    url: { schema: "url" },
+    cron: { schema: "required", default: "0 */10 * * * *" }
+  })();
 
-  const aiForm = useForm({
-    resolver: zodResolver(z.object({
-      aiPriority: z.string(),
-      aiApi: z.string()
-        .url({ message: t("validate.api_invalid") })
-        .startsWith("http", { message: t("validate.api_http") })
-        .refine(url => !url.endsWith("/"), { message: t("validate.api_slash") })
-        .or(z.literal("")),
-      aiKey: z.string(),
-      aiModel: z.string()
-    })),
-    defaultValues: {
-      aiPriority: "local",
-      aiApi: "",
-      aiKey: "",
-      aiModel: "",
-    },
-  })
+  const aiForm = createForm({
+    aiPriority: { schema: "trim", default: "local" },
+    aiApi: { schema: "url" },
+    aiKey: { schema: "required" },
+    aiModel: { schema: "trim" }
+  })();
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  const { data: rssData, error: rssError, isLoading: rssLoading, mutate: mutateRss } = useSWR(rssApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
+  const { data: rssData, isLoading: rssLoading, mutate: mutateRss } = useData(API.RSS, t("toast.failed.fetch_list"));
+  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
     document.title = `${t("st.metadata.rss")} - Nyaatify`;
   }, [t]);
-
-  useEffect(() => {
-    if (rssError) {
-      toast.error(t("toast.failed.fetch_list"), {
-        description: rssError.message,
-      });
-    }
-  }, [rssError]);
 
   useEffect(() => {
     if (configData) {
@@ -112,57 +66,36 @@ export default function RSSSettings() {
       aiForm.setValue("aiKey", configData?.aiKey);
       aiForm.setValue("aiModel", configData?.aiModel);
     }
-    if (configError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: configError.message,
-      });
-    }
-  }, [configData, configError]);
+  }, [configData]);
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", rssApi, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("POST", API.RSS, values, t("toast.failed.add"));
+    if (result) {
       rssForm.reset();
       mutateRss();
-    } else {
-      toast.error(t("toast.failed.add"), {
-        description: result.message,
-      });
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${rssApi}/${id}`);
-    if (result.success) {
+    const result = await handleRequest("DELETE", `${API.RSS}/${id}`, null, t("toast.failed.delete"));
+    if (result) {
       mutateRss();
-    } else {
-      toast.error(t("toast.failed.delete"), {
-        description: result.message,
-      });
     }
   };
 
   const handleRefresh = async (name) => {
-    const result = await handleRequest("POST", `${rssApi}/refresh`, JSON.stringify({ values: { name } }));
-    if (result.success) {
+    const result = await handleRequest("POST", `${API.RSS}/refresh`, { name }, t("toast.failed.refresh_rss"));
+    if (result) {
       toast(t("toast.start.refresh_rss"));
       mutateRss();
-    } else {
-      toast.error(t("toast.failed.refresh_rss"), {
-        description: result.message,
-      });
     }
   };
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
-    if (result.success) {
+    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
+    if (result) {
       toast(t("toast.success.save"));
       mutateConfig();
-    } else {
-      toast.error(t("toast.failed.save"), {
-        description: result.message,
-      })
     }
   };
 

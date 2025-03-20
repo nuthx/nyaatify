@@ -1,13 +1,12 @@
 "use client";
 
-import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { handleRequest } from "@/lib/handlers";
+import { API } from "@/lib/http/api";
+import { useData } from "@/lib/http/swr";
+import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import {
   Card,
   CardContent,
@@ -33,37 +32,18 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ListCard } from "@/components/settings";
+import { ListCard } from "@/components/listcard";
 
 export default function DownloaderSettings() {
-  const downloadersApi = "/api/downloaders";
-  const configApi = "/api/configs";
-
   const { t } = useTranslation();
 
-  const downloaderForm = useForm({
-    resolver: zodResolver(z.object({
-      type: z.string(),
-      name: z.string()
-        .min(2, { message: t("validate.name_2") })
-        .max(40, { message: t("validate.name_40") }),
-      url: z.string()
-        .url({ message: t("validate.url_invalid") })
-        .startsWith("http", { message: t("validate.url_http") })
-        .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
-      username: z.string()
-        .min(1, { message: t("validate.username") }),
-      password: z.string()
-        .min(1, { message: t("validate.password") }),
-    })),
-    defaultValues: {
-      type: "qBittorrent",
-      name: "",
-      url: "",
-      username: "",
-      password: ""
-    },
-  })
+  const downloaderForm = createForm({
+    type: { schema: "trim", default: "qBittorrent" },
+    name: { schema: "name" },
+    url: { schema: "url" },
+    username: { schema: "username" },
+    password: { schema: "password" }
+  })();
 
   const selectedType = downloaderForm.watch("type");
   const urlPlaceholders = {
@@ -72,86 +52,45 @@ export default function DownloaderSettings() {
     Aria2: "http://192.168.1.100:6800/jsonrpc"
   };
 
-  const fetcher = async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  };
-
-  const { data: downloaderData, error: downloaderError, isLoading: downloaderLoading, mutate: mutateDownloader } = useSWR(downloadersApi, fetcher);
-  const { data: configData, error: configError, isLoading: configLoading, mutate: mutateConfig } = useSWR(configApi, fetcher);
+  const { data: downloaderData, isLoading: downloaderLoading, mutate: mutateDownloader } = useData(API.DOWNLOADER, t("toast.failed.fetch_list"));
+  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
     document.title = `${t("st.metadata.downloader")} - Nyaatify`;
   }, [t]);
 
-  useEffect(() => {
-    if (downloaderError) {
-      toast.error(t("toast.failed.fetch_list"), {
-        description: downloaderError.message,
-      });
-    }
-  }, [downloaderError]);
-
-  useEffect(() => {
-    if (configError) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: configError.message,
-      });
-    }
-  }, [configError]);
-
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", downloadersApi, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("POST", API.DOWNLOADER, values, t("toast.failed.add"));
+    if (result) {
       downloaderForm.reset();
       mutateDownloader();
       mutateConfig();
-    } else {
-      toast.error(t("toast.failed.add"), {
-        description: result.message,
-      });
     }
   };
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${downloadersApi}/${id}`);
-    if (result.success) {
+    const result = await handleRequest("DELETE", `${API.DOWNLOADER}/${id}`, null, t("toast.failed.delete"));
+    if (result) {
       mutateDownloader();
       mutateConfig();
-    } else {
-      toast.error(t("toast.failed.delete"), {
-        description: result.message,
-      });
     }
   };
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${downloadersApi}/test`, JSON.stringify({ values }));
-    if (result.success) {
+    const result = await handleRequest("POST", `${API.DOWNLOADER}/test`, values, t("toast.failed.test"));
+    if (result) {
       toast.success(t("toast.success.test"), {
         description: `${t("glb.version")}: ${result.data.version}`
-      });
-    } else {
-      toast.error(t("toast.failed.test"), {
-        description: result.message,
       });
     }
   };
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
-    if (result.success) {
+    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
+    if (result) {
       toast(t("toast.success.save"));
       mutateConfig();
-    } else {
-      toast.error(t("toast.failed.save"), {
-        description: result.message,
-      })
     }
   };
 

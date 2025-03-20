@@ -1,11 +1,11 @@
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 import { stopTask } from "@/lib/schedule";
 
 // Delete a rss subscription
 // Params: id, string, required
 
-export async function DELETE(_, { params }) {
+export async function DELETE(request, { params }) {
   try {
     const id = parseInt((await params).id);
 
@@ -55,16 +55,13 @@ export async function DELETE(_, { params }) {
       });
     });
 
-    logger.info(`Delete RSS subscription successfully, id: ${id}`, { model: "DELETE /api/feeds/[id]" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Delete RSS subscription successfully, id: ${id}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "DELETE /api/feeds/[id]" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

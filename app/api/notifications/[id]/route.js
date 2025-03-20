@@ -1,10 +1,10 @@
 import { prisma } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 
 // Delete a notification
 // Params: id, string, required
 
-export async function DELETE(_, { params }) {
+export async function DELETE(request, { params }) {
   try {
     const id = parseInt((await params).id);
 
@@ -13,28 +13,23 @@ export async function DELETE(_, { params }) {
       where: { id }
     });
 
-    logger.info(`Delete notification successfully, id: ${id}`, { model: "DELETE /api/notifications/[id]" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Delete notification successfully, id: ${id}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "DELETE /api/notifications/[id]" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
 
 // Edit a notification
 // Params: id, string, required
 // Body: {
-//   values: {
-//     key1: value1,
-//     key2: value2,
-//     ...
-//   }
+//   key1: value1,
+//   key2: value2,
+//   ...
 // }
 
 export async function PATCH(request, { params }) {
@@ -46,7 +41,7 @@ export async function PATCH(request, { params }) {
     const validValues = {};
     const fields = ["state"];
     fields.forEach(field => {
-      if (data.values[field] !== undefined) validValues[field] = data.values[field];
+      if (data[field] !== undefined) validValues[field] = data[field];
     });
 
     // Update notification
@@ -55,16 +50,13 @@ export async function PATCH(request, { params }) {
       data: validValues
     });
 
-    logger.info(`Edit notification successfully, id: ${id}`, { model: "PATCH /api/notifications/[id]" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Edit notification successfully, id: ${id}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "PATCH /api/notifications/[id]" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }

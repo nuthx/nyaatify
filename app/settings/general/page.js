@@ -1,11 +1,12 @@
 "use client";
 
-import useSWR from "swr"
 import { toast } from "sonner"
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next";
-import { handleRequest } from "@/lib/handlers";
+import { API } from "@/lib/http/api";
+import { useData } from "@/lib/http/swr";
+import { handleRequest } from "@/lib/http/request";
 import {
   DndContext, 
   closestCenter,
@@ -32,11 +33,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { SortableItem } from "@/components/settings";
+import { SortableItem } from "@/components/sortableitem";
 
 export default function Settings() {
-  const configApi = "/api/configs";
-
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
 
@@ -55,41 +54,25 @@ export default function Settings() {
     useSensor(PointerSensor)
   );
 
-  const { data, error, isLoading, mutate } = useSWR(configApi, async (url) => {
-    const response = await fetch(url);
-    const result = await response.json();
-    if (!response.ok) {
-      throw new Error(result.message);
-    }
-    return result.data;
-  });
+  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
     document.title = `${t("st.metadata.general")} - Nyaatify`;
   }, [t]);
 
+  // Check configData?.titlePriority to avoid error when drag finished
   useEffect(() => {
-    // Check data?.titlePriority to avoid error when drag finished
-    if (data?.titlePriority) {
-      setItems(data.titlePriority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
+    if (configData?.titlePriority) {
+      setItems(configData.titlePriority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
     }
-    if (error) {
-      toast.error(t("toast.failed.fetch_config"), {
-        description: error.message,
-      })
-    }
-  }, [data, error, t]);
+  }, [configData]);
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", configApi, JSON.stringify(values));
-    if (result.success) {
+    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
+    if (result) {
       toast(t("toast.success.save"));
-      mutate();
-    } else {
-      toast.error(t("toast.failed.save"), {
-        description: result.message,
-      })
+      mutateConfig();
     }
   };
 
@@ -109,7 +92,7 @@ export default function Settings() {
     }
   }
 
-  if (isLoading) {
+  if (configLoading) {
     return <></>;
   }
 
@@ -158,7 +141,7 @@ export default function Settings() {
           <CardDescription>{t("st.gr.dl_state.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={data?.showDownloaderState || "1"} onValueChange={(value) => handleSaveConfig({ showDownloaderState: value })}>
+          <Select defaultValue={configData?.showDownloaderState || "1"} onValueChange={(value) => handleSaveConfig({ showDownloaderState: value })}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>
@@ -190,7 +173,7 @@ export default function Settings() {
           <CardDescription>{t("st.gr.cover_source.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={data?.coverSource || "bangumi"} onValueChange={(value) => handleSaveConfig({ coverSource: value })}>
+          <Select defaultValue={configData?.coverSource || "bangumi"} onValueChange={(value) => handleSaveConfig({ coverSource: value })}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>

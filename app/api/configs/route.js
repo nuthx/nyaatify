@@ -1,24 +1,26 @@
 import { prisma, getConfig } from "@/lib/db";
-import { logger } from "@/lib/logger";
+import { sendResponse } from "@/lib/http/response";
 import { testOpenAI } from "@/lib/api/openai";
 
 // Get all config
 
-export async function GET() {
+export async function GET(request) {
   try {
     const config = await getConfig();
 
-    return Response.json({
-      code: 200,
-      message: "success",
+    // Hide aiKey with first 15 characters and asterisks
+    if (config.aiKey) {
+      config.aiKey = config.aiKey.slice(0, 15) + "*".repeat(Math.max(0, config.aiKey.length - 15));
+    }
+
+    return sendResponse(request, {
       data: config
     });
   } catch (error) {
-    logger.error(error.message, { model: "GET /api/configs" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
 
@@ -60,16 +62,13 @@ export async function PATCH(request) {
       )
     );
 
-    logger.info(`Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`, { model: "PATCH /api/configs" });
-    return Response.json({
-      code: 200,
-      message: "success"
+    return sendResponse(request, {
+      message: `Saved config successfully, ${Object.entries(data).map(([key, value]) => `${key}: ${value}`).join(", ")}`
     });
   } catch (error) {
-    logger.error(error.message, { model: "PATCH /api/configs" });
-    return Response.json({
+    return sendResponse(request, {
       code: 500,
       message: error.message
-    }, { status: 500 });
+    });
   }
 }
