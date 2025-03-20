@@ -3,11 +3,10 @@
 import crypto from "crypto";
 import Image from "next/image"
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
-import { API } from "@/lib/http/api";
-import { handleRequest } from "@/lib/http/request";
+import { signIn } from "next-auth/react"
 import { createForm } from "@/lib/form";
+import { toast } from "sonner";
 import { 
   Card,
   CardContent
@@ -26,7 +25,6 @@ import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const { t } = useTranslation();
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   const loginForm = createForm({
@@ -40,11 +38,17 @@ export default function LoginPage() {
   }, [t]);
 
   const handleLogin = async (values) => {
-    const hashedPassword = crypto.createHash("sha256").update(values.password).digest("hex");
-    const result = await handleRequest("POST", API.LOGIN, { ...values, password: hashedPassword }, t("toast.failed.login"));
-    if (result) {
-      router.push("/");
-      router.refresh();
+    const result = await signIn("credentials", {
+      username: values.username,
+      password: crypto.createHash("sha256").update(values.password).digest("hex"),
+      redirect: false
+    });
+    if (result.error) {
+      toast.error(t("toast.failed.login"), {
+        description: result.error
+      });
+    } else {
+      window.location.href = "/anime";
     }
   };
 
