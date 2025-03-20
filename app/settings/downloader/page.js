@@ -3,12 +3,10 @@
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import {
   Card,
   CardContent,
@@ -39,29 +37,13 @@ import { ListCard } from "@/components/listcard";
 export default function DownloaderSettings() {
   const { t } = useTranslation();
 
-  const downloaderForm = useForm({
-    resolver: zodResolver(z.object({
-      type: z.string(),
-      name: z.string()
-        .min(2, { message: t("validate.name_2") })
-        .max(40, { message: t("validate.name_40") }),
-      url: z.string()
-        .url({ message: t("validate.url_invalid") })
-        .startsWith("http", { message: t("validate.url_http") })
-        .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
-      username: z.string()
-        .min(1, { message: t("validate.username") }),
-      password: z.string()
-        .min(1, { message: t("validate.password") }),
-    })),
-    defaultValues: {
-      type: "qBittorrent",
-      name: "",
-      url: "",
-      username: "",
-      password: ""
-    },
-  })
+  const downloaderForm = createForm({
+    type: { schema: "trim", default: "qBittorrent" },
+    name: { schema: "name" },
+    url: { schema: "url" },
+    username: { schema: "username" },
+    password: { schema: "password" }
+  })();
 
   const selectedType = downloaderForm.watch("type");
   const urlPlaceholders = {

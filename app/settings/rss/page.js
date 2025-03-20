@@ -3,12 +3,10 @@
 import { toast } from "sonner"
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import {
   Card,
   CardContent,
@@ -40,43 +38,18 @@ import { RefreshCw } from "lucide-react";
 export default function RSSSettings() {
   const { t } = useTranslation();
 
-  const rssForm = useForm({
-    resolver: zodResolver(z.object({
-      name: z.string()
-        .min(2, { message: t("validate.name_2") })
-        .max(40, { message: t("validate.name_40") }),
-      url: z.string()
-        .url({ message: t("validate.url_invalid") })
-        .startsWith("http", { message: t("validate.url_http") })
-        .refine(url => !url.endsWith("/"), { message: t("validate.url_slash") }),
-      cron: z.string()
-        .min(1, { message: t("validate.required") })
-    })),
-    defaultValues: {
-      name: "",
-      url: "",
-      cron: "0 */10 * * * *",
-    },
-  })
+  const rssForm = createForm({
+    name: { schema: "name" },
+    url: { schema: "url" },
+    cron: { schema: "required", default: "0 */10 * * * *" }
+  })();
 
-  const aiForm = useForm({
-    resolver: zodResolver(z.object({
-      aiPriority: z.string(),
-      aiApi: z.string()
-        .url({ message: t("validate.api_invalid") })
-        .startsWith("http", { message: t("validate.api_http") })
-        .refine(url => !url.endsWith("/"), { message: t("validate.api_slash") })
-        .or(z.literal("")),
-      aiKey: z.string(),
-      aiModel: z.string()
-    })),
-    defaultValues: {
-      aiPriority: "local",
-      aiApi: "",
-      aiKey: "",
-      aiModel: "",
-    },
-  })
+  const aiForm = createForm({
+    aiPriority: { schema: "trim", default: "local" },
+    aiApi: { schema: "url" },
+    aiKey: { schema: "required" },
+    aiModel: { schema: "trim" }
+  })();
 
   const { data: rssData, isLoading: rssLoading, mutate: mutateRss } = useData(API.RSS, t("toast.failed.fetch_list"));
   const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
