@@ -39,13 +39,13 @@ export async function POST(request) {
     const data = await request.json();
 
     // Check if name is empty
-    if (!data.name?.trim()) {
+    if (!data.name) {
       throw new Error("Notification name is required");
     }
 
     // Check if name already exists
     const existingName = await prisma.notification.findUnique({
-      where: { name: data.name.trim() }
+      where: { name: data.name }
     });
     
     if (existingName) {
@@ -55,14 +55,14 @@ export async function POST(request) {
     // Insert to database using Prisma
     await prisma.notification.create({
       data: {
-        name: data.name.trim(),
-        filter: data.filter.trim(),
-        type: data.type.trim(),
-        url: data.url.trim(),
-        token: data.token.trim(),
-        title: data.title.trim(),
-        message: data.message.trim(),
-        extra: data.extra.trim(),
+        name: data.name,
+        filter: data.filter,
+        type: data.type,
+        url: data.url,
+        token: data.token,
+        title: data.title,
+        message: data.message,
+        extra: data.extra,
         state: 1
       }
     });

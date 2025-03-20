@@ -41,13 +41,13 @@ export async function POST(request) {
     const data = await request.json();
 
     // Check if name is empty
-    if (!data.name?.trim()) {
+    if (!data.name) {
       throw new Error("RSS name is required");
     }
 
     // Check if name already exists
     const existingRss = await prisma.rss.findUnique({
-      where: { name: data.name.trim() }
+      where: { name: data.name }
     });
     
     if (existingRss) {
@@ -84,9 +84,9 @@ export async function POST(request) {
     // Insert to database
     const newRss = await prisma.rss.create({
       data: {
-        name: data.name.trim(),
-        url: data.url.trim(),
-        cron: data.cron.trim(),
+        name: data.name,
+        url: data.url,
+        cron: data.cron,
         type: rssType,
         state: 1,
         refreshCount: 0
