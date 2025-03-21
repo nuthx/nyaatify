@@ -8,7 +8,16 @@ export async function GET(request) {
   try {
     const devices = await prisma.device.findMany({
       orderBy: {
-        lastActiveAt: "desc"
+        createdAt: "desc"
+      }
+    });
+
+    // Delete expired devices
+    await prisma.device.deleteMany({
+      where: {
+        expiredAt: {
+          lt: new Date()
+        }
       }
     });
 

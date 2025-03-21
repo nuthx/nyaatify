@@ -80,7 +80,7 @@ model Device {
   os           String?                   /// os and version
   ip           String?                   /// ip address
   createdAt    DateTime  @default(now()) /// created time
-  lastActiveAt DateTime  @default(now()) /// last active time
+  expiredAt    DateTime                  /// expired time
 }
 
 model Config {

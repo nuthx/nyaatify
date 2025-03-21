@@ -1,4 +1,4 @@
-import parser from "cron-parser";
+import schedule from "node-schedule";
 import RSSParser from "rss-parser";
 import { prisma } from "@/lib/db";
 import { sendResponse } from "@/lib/http/response";
@@ -67,9 +67,11 @@ export async function POST(request) {
     }
 
     // Check cron validity
-    // This will throw an error if the cron is invalid
+    // Create a new scheduler instance and cancel it immediately to validate the cron
+    // If the cron is invalid, it will throw an error
     try {
-      parser.parseExpression(data.cron);
+      const job = schedule.scheduleJob(data.cron, () => {});
+      job.cancel();
     } catch (error) {
       throw new Error(`Invalid cron: ${data.cron}, error: ${error.message}`);
     }
