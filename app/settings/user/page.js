@@ -43,12 +43,11 @@ import {
 } from "@/components/ui/form"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Trash2, Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function Devices() {
   const { t } = useTranslation();
   const [showPassword, setShowPassword] = useState(false);
-  const [logoutDevice, setLogoutDevice] = useState(null);
 
   const usernameForm = createForm({
     new_username: { schema: "username" }
@@ -88,13 +87,6 @@ export default function Devices() {
     if (result) {
       passwordForm.reset();
       toast(t("toast.success.edit"));
-    }
-  };
-
-  const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${API.DEVICE}/${id}`, null, t("toast.failed.delete"));
-    if (result) {
-      mutateDevice();
     }
   };
 
@@ -178,49 +170,29 @@ export default function Devices() {
                 <TableHead className="px-2 py-4">{t("st.user.devices.os")}</TableHead>
                 <TableHead className="px-2 py-4">{t("st.user.devices.browser")}</TableHead>
                 <TableHead className="px-2 py-4">{t("st.user.devices.ip")}</TableHead>
-                <TableHead className="px-2 py-4">{t("st.user.devices.last")}</TableHead>
-                <TableHead className="px-3 py-4 w-4"></TableHead>
+                <TableHead className="px-2 py-4">{t("st.user.devices.created")}</TableHead>
+                <TableHead className="px-2 py-4">{t("st.user.devices.expired")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {deviceData?.devices.map((device) => (
                 <TableRow key={device.id} className="hover:bg-transparent">
                   <TableCell className="px-2 py-4">{device.os}</TableCell>
-                  <TableCell className="px-2 py-4">{device.browser}</TableCell>
-                  <TableCell className="px-2 py-4">{device.ip}</TableCell>
                   <TableCell className="px-2 py-4">
-                    {deviceData.currentDevice === device.id ? (
-                      t("st.user.devices.current")
-                    ) : (
-                      new Date(device.createdAt).toLocaleString()
-                    )}
+                    <div className="flex items-center gap-2">
+                      {device.browser}
+                      {deviceData.currentDevice === device.id && (
+                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      )}
+                    </div>
                   </TableCell>
-                  <TableCell className="px-3 py-4 w-4">
-                    <Button variant="ghost" size="icon" disabled={deviceData.currentDevice === device.id} onClick={() => setLogoutDevice(device)}>
-                      <Trash2 className="text-muted-foreground"/>
-                    </Button>
-                  </TableCell>
+                  <TableCell className="px-2 py-4">{device.ip}</TableCell>
+                  <TableCell className="px-2 py-4">{new Date(device.createdAt).toLocaleString()}</TableCell>
+                  <TableCell className="px-2 py-4">{new Date(device.expiredAt).toLocaleString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-
-          <AlertDialog open={logoutDevice !== null} onOpenChange={(open) => !open && setLogoutDevice(null)}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>{t("glb.confirm_logout")}</AlertDialogTitle>
-                <AlertDialogDescription>{t("st.user.devices.alert")}</AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>
-                  {t("glb.cancel")}
-                </AlertDialogCancel>
-                <AlertDialogAction onClick={() => { handleDelete(logoutDevice.id); setLogoutDevice(null); }}>
-                  {t("glb.logout")}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </CardContent>
       </Card>
     </>
