@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import jwt from "jsonwebtoken";
 import { UAParser } from "ua-parser-js";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
@@ -38,10 +38,15 @@ export async function POST(request) {
       });
     }
 
-    // Create user token
-    const token = crypto.createHash("sha256")
-      .update(user.password + user.username + Date.now().toString())
-      .digest("hex");
+    // Create JWT
+    const token = jwt.sign(
+      { 
+        userId: user.id,
+        username: user.username
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "30d" }
+    );
 
     // Get user agent
     const ua = UAParser(request.headers).withClientHints();
@@ -66,7 +71,7 @@ export async function POST(request) {
       name: "auth_token",
       value: token,
       sameSite: "strict",
-      expires: new Date(Date.now() + 365 * 86400 * 1000) // 1 year
+      expires: new Date(Date.now() + 30 * 86400 * 1000)  // 30 days
     });
 
     return sendResponse(request, {
