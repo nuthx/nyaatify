@@ -58,11 +58,12 @@ export async function POST(request) {
           token,
           browser: `${ua.browser.name || ""} ${ua.browser.version || ""}`,
           os: `${ua.os.name || ""} ${ua.os.version || ""}`,
-          ip: request.headers.get("x-forwarded-for") || ""
+          ip: request.headers.get("x-forwarded-for") || "",
+          expiredAt: new Date(Date.now() + 30 * 86400 * 1000)  // 30 days
         }
       });
     } else {
-      logger.warn(`Non-browser login, token will not be stored in database, user agent: ${ua.ua}`, { model: "POST /api/auth/login" });
+      logger.warn(`Non-browser login, ua: ${ua.ua}`, { model: "POST /api/auth/login" });
     }
 
     // Set cookie

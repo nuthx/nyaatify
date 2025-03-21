@@ -75,7 +75,7 @@ CREATE TABLE "Device" (
     "os" TEXT,
     "ip" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "lastActiveAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "expiredAt" DATETIME NOT NULL
 );
 
 -- CreateTable
