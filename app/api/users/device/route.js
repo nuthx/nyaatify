@@ -12,6 +12,15 @@ export async function GET(request) {
       }
     });
 
+    // Delete expired devices
+    await prisma.device.deleteMany({
+      where: {
+        expiredAt: {
+          lt: new Date()
+        }
+      }
+    });
+
     // Find current device index
     const cookieStore = await cookies();
     const authToken = cookieStore.get("auth_token");

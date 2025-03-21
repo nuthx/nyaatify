@@ -59,7 +59,7 @@ export default function Devices() {
   })();
 
   const { data: usernameData, isLoading: usernameLoading, mutate: mutateUsername } = useData(API.USERNAME, t("toast.failed.fetch_config"));
-  const { data: deviceData, isLoading: deviceLoading, mutate: mutateDevice } = useData(API.DEVICE, t("toast.failed.fetch_config"));
+  const { data: deviceData, isLoading: deviceLoading } = useData(API.DEVICE, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
