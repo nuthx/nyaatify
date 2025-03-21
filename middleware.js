@@ -1,42 +1,41 @@
 import { NextResponse } from "next/server";
-import { handleRequest } from "@/lib/http/request";
+import { jwtVerify } from "jose";
 
 export async function middleware(request) {
   const token = request.cookies.get("auth_token");
-  const isAuthenticated = await verifyToken(token, request.nextUrl.origin);
-
-  // If logged in, redirect login page to homepage
-  if (request.nextUrl.pathname === "/login") {
-    return isAuthenticated
-      ? NextResponse.redirect(new URL("/", request.url))
-      : NextResponse.next();
-  }
+  const isAuthenticated = await verifyToken(token);
 
   // Exclude auth routes
   if (request.nextUrl.pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
 
-  // Check login status
-  if (isAuthenticated) {
-    return NextResponse.next();
+  // Redirect login page by login status
+  if (request.nextUrl.pathname === "/login") {
+    return isAuthenticated 
+      ? NextResponse.redirect(new URL("/anime", request.url))
+      : NextResponse.next();
   }
 
   // If not logged in, return with different response
-  if (request.nextUrl.pathname.startsWith("/api")) {
-    // For API routes, return 401 Unauthorized
-    return NextResponse.json({ code: 401, message: "Unauthorized" }, { status: 401 });
-  } else {
-    // For other routes, redirect to login page
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (!isAuthenticated) {
+    return request.nextUrl.pathname.startsWith("/api")
+      ? NextResponse.json({ code: 401, message: "Unauthorized", data: null }, { status: 401 })
+      : NextResponse.redirect(new URL("/login", request.url));
   }
+
+  return NextResponse.next();
 }
 
-// Check token availability
-async function verifyToken(token, origin) {
+async function verifyToken(token) {
   if (!token) return false;
-  const result = await handleRequest("POST", `${origin}/api/auth/verify`, { token }, "", false);
-  return result;
+  try {
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    await jwtVerify(token.value, secret);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export const config = {

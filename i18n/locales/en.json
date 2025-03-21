@@ -283,7 +283,8 @@
         "os": "Operating System",
         "browser": "Browser",
         "ip": "IP Address",
-        "last": "Last Used",
+        "created": "Created Time",
+        "expired": "Expired Time",
         "current": "This Device",
         "alert": "After logging out, you will need to log in again the next time you use the device."
       }
