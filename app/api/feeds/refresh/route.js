@@ -1,5 +1,5 @@
 import { sendResponse } from "@/lib/http/response";
-import { refreshRSS } from "@/lib/parse";
+import { refreshRSS } from "@/lib/core/refresh";
 
 // Refresh a rss subscription
 // Body: {

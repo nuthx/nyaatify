@@ -2,7 +2,7 @@ import schedule from "node-schedule";
 import RSSParser from "rss-parser";
 import { prisma } from "@/lib/db";
 import { sendResponse } from "@/lib/http/response";
-import { tasks, startTask } from "@/lib/schedule";
+import { tasks, startTask } from "@/lib/core/schedule";
 
 // Get rss list with next refresh time
 
