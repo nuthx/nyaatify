@@ -18,7 +18,6 @@ model Anime {
   titleRomaji  String?                   /// romaji title
   size         String?                   /// file size
   torrent      String?                   /// download link for the torrent file
-  categoryId   String?                   /// nyaa category id
   coverAnilist String?                   /// anilist cover image url
   coverBangumi String?                   /// bangumi cover image url
   pageAnilist  String?                   /// anilist detail page url

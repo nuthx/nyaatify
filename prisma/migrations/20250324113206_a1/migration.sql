@@ -10,7 +10,6 @@ CREATE TABLE "Anime" (
     "titleRomaji" TEXT,
     "size" TEXT,
     "torrent" TEXT,
-    "categoryId" TEXT,
     "coverAnilist" TEXT,
     "coverBangumi" TEXT,
     "pageAnilist" TEXT,
