@@ -216,7 +216,7 @@ export default function RSSSettings() {
                     <FormItem>
                       <FormLabel>{t("st.rss.ai.api")}</FormLabel>
                       <FormControl>
-                        <Input className="w-full" placeholder="https://api.openai.com/v1" {...field} />
+                        <Input className="w-full" placeholder="https://api.openai.com/v1/chat/completions" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
