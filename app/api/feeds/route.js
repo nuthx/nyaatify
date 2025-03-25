@@ -2,7 +2,8 @@ import schedule from "node-schedule";
 import RSSParser from "rss-parser";
 import { prisma } from "@/lib/db";
 import { sendResponse } from "@/lib/http/response";
-import { tasks, startTask } from "@/lib/schedule";
+import { parserConfig } from "@/lib/core/parser/config";
+import { tasks, startTask } from "@/lib/core/schedule";
 
 // Get rss list with next refresh time
 
@@ -49,22 +50,17 @@ export async function POST(request) {
     const existingRss = await prisma.rss.findUnique({
       where: { name: data.name }
     });
-    
     if (existingRss) {
       throw new Error(`RSS already exists, name: ${data.name}`);
     }
 
     // Identify RSS type
-    // Extract the first 20 characters of the RSS address to identify the RSS type
-    let rssType = null;
-    const urlPrefix = data.url.toLowerCase().substring(0, 20);
-    if (urlPrefix.includes("nyaa")) {
-      rssType = "Nyaa";
-    } else if (urlPrefix.includes("mikan")) {
-      rssType = "Mikan";
-    } else {
-      throw new Error(`Not a valid Nyaa or Mikan link: ${data.url}`);
+    const hostname = new URL(data.url).hostname.toLowerCase();
+    const matchedConfig = parserConfig.find(config => config.urls.some(url => hostname.includes(url)));
+    if (!matchedConfig) {
+      throw new Error(`Unsupported RSS feed: ${data.url}`);
     }
+    const rssType = matchedConfig.type;
 
     // Check cron validity
     // Create a new scheduler instance and cancel it immediately to validate the cron
@@ -80,7 +76,7 @@ export async function POST(request) {
     const rssParser = new RSSParser();
     const rss = await rssParser.parseURL(data.url);
     if (!rss) {
-      throw new Error(`Invalid link: ${data.url}`);
+      throw new Error(`Invalid RSS feed: ${data.url}`);
     }
 
     // Insert to database

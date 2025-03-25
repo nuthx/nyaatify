@@ -1,5 +1,5 @@
 import { sendResponse } from "@/lib/http/response";
-import { refreshRSS } from "@/lib/parse";
+import { parseRSS } from "@/lib/core/parser";
 
 // Refresh a rss subscription
 // Body: {
@@ -11,7 +11,7 @@ export async function POST(request) {
     const data = await request.json();
 
     // Refresh RSS
-    refreshRSS(data.name);
+    parseRSS(data.name);
 
     return sendResponse(request, {
       message: `Start refreshing RSS subscription manually, name: ${data.name}`

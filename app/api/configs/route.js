@@ -1,6 +1,6 @@
 import { prisma, getConfig } from "@/lib/db";
 import { sendResponse } from "@/lib/http/response";
-import { testOpenAI } from "@/lib/api/openai";
+import { useOpenAI } from "@/lib/api/openai";
 
 // Get all config
 
@@ -46,7 +46,7 @@ export async function PATCH(request) {
 
     // If save ai config, parse a anime title to verify validity
     if (data.aiPriority === "ai") {
-      const result = await testOpenAI(data);
+      const result = await useOpenAI("Hello", "Hello", data);
       if (!result.success) {
         throw new Error(result.message);
       }
