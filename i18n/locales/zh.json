@@ -123,6 +123,7 @@
     "nav": {
       "general": "常规",
       "rss": "RSS 订阅",
+      "parser": "解析器",
       "downloader": "下载器",
       "notification": "通知",
       "user": "用户",
@@ -132,6 +133,7 @@
     "metadata": {
       "general": "常规设置",
       "rss": "RSS 订阅设置",
+      "parser": "解析器设置",
       "downloader": "下载器设置",
       "notification": "通知设置",
       "user": "用户设置",

@@ -123,6 +123,7 @@
     "nav": {
       "general": "General",
       "rss": "RSS Subscription",
+      "parser": "Parser",
       "downloader": "Downloader",
       "notification": "Notification",
       "user": "Account",
@@ -132,6 +133,7 @@
     "metadata": {
       "general": "General Setting",
       "rss": "RSS Subscription Setting",
+      "parser": "Parser Setting",
       "downloader": "Downloader Setting",
       "notification": "Notification Setting",
       "user": "Account Setting",

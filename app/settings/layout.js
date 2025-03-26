@@ -16,6 +16,7 @@ export default function SettingsLayout({ children }) {
         <div className="flex flex-col w-72 gap-2">
           <NavLink href="/settings/general" />
           <NavLink href="/settings/rss" />
+          <NavLink href="/settings/parser" />
           <NavLink href="/settings/downloader" />
           <NavLink href="/settings/notification" />
           <NavLink href="/settings/user" />
