@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
 import { sendResponse } from "@/lib/http/response";
-import { stopTask } from "@/lib/schedule";
+import { stopTask } from "@/lib/core/schedule";
 
 // Delete a rss subscription
 // Params: id, string, required

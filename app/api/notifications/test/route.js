@@ -1,5 +1,5 @@
 import { sendResponse } from "@/lib/http/response";
-import { dispatchNotification } from "@/lib/notification";
+import { dispatchNotification } from "@/lib/core/notification";
 
 // Test a notification push
 // Body: {
