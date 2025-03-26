@@ -150,10 +150,6 @@
         "title": "语言",
         "description": "选择 Nyaatify 的显示语言，此设置仅会保存在浏览器本地"
       },
-      "dl_state": {
-        "title": "下载器状态",
-        "description": "在动画页左上角显示下载器的状态，如未添加下载器、下载器已离线等"
-      },
       "title_priority": {
         "title": "标题优先级",
         "description": "页面中的动画标题将按照选择的语言顺序展示"
@@ -216,6 +212,10 @@
         "description": "创建下载任务时，Nyaatify 会通过指定的下载器进行下载",
         "downloader": "默认下载器",
         "empty": "无下载器"
+      },
+      "state": {
+        "title": "显示下载器状态",
+        "description": "在动画页面的左上角显示下载器的状态，如未添加下载器、下载器已离线等"
       }
     },
     "nt": {

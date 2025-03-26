@@ -137,24 +137,6 @@ export default function Settings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.gr.dl_state.title")}</CardTitle>
-          <CardDescription>{t("st.gr.dl_state.description")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Select defaultValue={configData?.showDownloaderState || "1"} onValueChange={(value) => handleSaveConfig({ showDownloaderState: value })}>
-            <SelectTrigger className="w-72">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">{t("glb.show")}</SelectItem>
-              <SelectItem value="0">{t("glb.hide")}</SelectItem>
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
           <CardTitle>{t("st.gr.title_priority.title")}</CardTitle>
           <CardDescription>{t("st.gr.title_priority.description")}</CardDescription>
         </CardHeader>

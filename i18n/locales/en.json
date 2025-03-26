@@ -150,10 +150,6 @@
         "title": "Language",
         "description": "This is the language of Nyaatify. This setting is saved in your browser."
       },
-      "dl_state": {
-        "title": "Show Downloader State",
-        "description": "Show the state of downloader on anime page, such as no downloader or downloader offline."
-      },
       "title_priority": {
         "title": "Title Priority",
         "description": "The anime title will be displayed in the order of the selected language."
@@ -216,6 +212,10 @@
         "description": "When creating download tasks, Nyaatify will prioritize downloading through this downloader.",
         "downloader": "Default Downloader",
         "empty": "No Downloader"
+      },
+      "state": {
+        "title": "Show Downloader State",
+        "description": "Show the state of downloader on anime page, such as no downloader or downloader offline."
       }
     },
     "nt": {
