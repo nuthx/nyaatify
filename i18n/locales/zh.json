@@ -192,7 +192,11 @@
         "description": "添加一个大语言模型用于 AI 解析，模型的 API 需兼容 OpenAI 接口。为保证准确率，尽量不要选择最低档的模型",
         "api": "API 地址",
         "key": "API Key",
-        "model": "模型名称"
+        "model": "模型名称",
+        "reset": {
+          "title": "重置 AI 模型",
+          "description": "此操作会移除当前的 AI 模型配置，移除后不可恢复"
+        }
       }
     },
     "dl": {

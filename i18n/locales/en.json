@@ -192,7 +192,11 @@
         "description": "Add a LLM for AI parsing, the model's API should be compatible with OpenAI interfaces. To ensure accuracy, try not to use the lowest grade Lite model.",
         "api": "API URL",
         "key": "API Key",
-        "model": "Model"
+        "model": "Model",
+        "reset": {
+          "title": "Reset AI Model",
+          "description": "This action will remove the current AI model configuration, which cannot be recovered."
+        }
       }
     },
     "dl": {

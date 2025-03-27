@@ -8,6 +8,17 @@ import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import { createForm } from "@/lib/form";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import {
   Card,
   CardContent,
   CardDescription,
@@ -137,7 +148,21 @@ export default function RSSSettings() {
               <div className="flex gap-2 items-center">
                 <Button type="submit">{t("glb.save")}</Button>
                 <Button type="button" variant="outline" onClick={aiForm.handleSubmit((values) => handleTest(values))}>{t("glb.test")}</Button>
-                <Button type="button" variant="outline" onClick={() => handleSaveConfig({ aiApi: "", aiKey: "", aiModel: "" })}>{t("glb.reset")}</Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button type="button" variant="outline">{t("glb.reset")}</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>{t("st.pr.ai.reset.title")}</AlertDialogTitle>
+                      <AlertDialogDescription>{t("st.pr.ai.reset.description")}</AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleSaveConfig({ aiApi: "", aiKey: "", aiModel: "" })}>{t("glb.reset")}</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </form>
           </Form>
