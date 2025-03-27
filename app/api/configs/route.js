@@ -7,9 +7,12 @@ export async function GET(request) {
   try {
     const config = await getConfig();
 
-    // Hide aiKey with first 15 characters and asterisks
+    // Hide aiKey with first 7 characters and last 4 characters, rest with asterisks
     if (config.aiKey) {
-      config.aiKey = config.aiKey.slice(0, 15) + "*".repeat(Math.max(0, config.aiKey.length - 15));
+      const first = config.aiKey.slice(0, 7);
+      const last = config.aiKey.slice(-4);
+      const middleLength = Math.max(0, config.aiKey.length - 11);
+      config.aiKey = first + "*".repeat(middleLength) + last;
     }
 
     return sendResponse(request, {

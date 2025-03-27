@@ -51,7 +51,6 @@ export default function RSSSettings() {
   useEffect(() => {
     if (configData) {
       aiForm.setValue("aiApi", configData?.aiApi);
-      aiForm.setValue("aiKey", configData?.aiKey);
       aiForm.setValue("aiModel", configData?.aiModel);
     }
   }, [configData]);
@@ -119,7 +118,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.pr.ai.key")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full" placeholder="sk-1234567890" {...field} />
+                    <Input className="w-full" placeholder={configData?.aiKey || "sk-1234567890"} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
