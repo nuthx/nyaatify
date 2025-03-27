@@ -9,6 +9,7 @@
     "add": "Add",
     "save": "Save",
     "test": "Test",
+    "reset": "Reset",
     "show": "Show",
     "hide": "Hide",
     "enabled": "Enabled",
@@ -177,13 +178,18 @@
         "next": "Next",
         "refresh": "Refresh Now",
         "alert": "This action will delete this RSS subscription permanently. The anime included in this RSS will also be DELETED."
+      }
+    },
+    "pr": {
+      "priority": {
+        "title": "Parsing Priority",
+        "description": "Choose the parsing strategy for anime titles. When AI config is invalid or parsing fails, the local parser will be used as a fallback.",
+        "local-only": "Use local parsing only",
+        "ai-first": "Use AI parsing first"
       },
       "ai": {
-        "title": "AI Parsing",
-        "description": "When parsing titles, prioritize utilizing AI to accurately extract anime titles. The selected model should be compatible with OpenAI interfaces, such as ChatGPT, Gemini, DeepSeek, Kimi, etc. To ensure accuracy, try not to use the lowest grade Lite model. Each parsing consumes approximately 200 tokens.",
-        "priority": "Priority",
-        "local": "Use local parsing only",
-        "ai": "Use AI parsing first",
+        "title": "AI Model",
+        "description": "Add a LLM for AI parsing, the model's API should be compatible with OpenAI interfaces. To ensure accuracy, try not to use the lowest grade Lite model.",
         "api": "API URL",
         "key": "API Key",
         "model": "Model"
