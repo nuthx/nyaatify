@@ -1,6 +1,5 @@
 import { prisma, getConfig } from "@/lib/db";
 import { sendResponse } from "@/lib/http/response";
-import { useOpenAI } from "@/lib/api/openai";
 
 // Get all config
 
@@ -42,14 +41,6 @@ export async function PATCH(request) {
     const invalidKeys = Object.keys(data).filter(key => !validKeysSet.has(key));
     if (invalidKeys.length > 0) {
       throw new Error(`Invalid key: ${invalidKeys.join(", ")}`);
-    }
-
-    // If save ai config, parse a anime title to verify validity
-    if (data.aiPriority === "ai") {
-      const result = await useOpenAI("Hello", "Hello Json!", data);
-      if (!result.success) {
-        throw new Error(result.message);
-      }
     }
 
     // Update configs using Prisma transaction
