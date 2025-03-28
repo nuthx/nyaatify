@@ -1,7 +1,7 @@
 "use client";
 
 import { toast } from "sonner"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
@@ -45,11 +45,16 @@ import { Input } from "@/components/ui/input";
 
 export default function RSSSettings() {
   const { t } = useTranslation();
+  const [testResult, setTestResult] = useState("");
 
   const aiForm = createForm({
     aiApi: { schema: "url" },
     aiKey: { schema: "required" },
     aiModel: { schema: "required" }
+  })();
+
+  const testForm = createForm({
+    title: { schema: "required" }
   })();
 
   const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
@@ -67,11 +72,10 @@ export default function RSSSettings() {
   }, [configData]);
 
   const handleTest = async (values) => {
+    setTestResult("");
     const result = await handleRequest("POST", `${API.CONFIG}/test/ai`, values, t("toast.failed.test"));
     if (result) {
-      toast.success(t("toast.success.test"), {
-        description: result.data.response
-      });
+      setTestResult(result.data.output);
     }
   };
 
@@ -147,7 +151,6 @@ export default function RSSSettings() {
               />
               <div className="flex gap-2 items-center">
                 <Button type="submit">{t("glb.save")}</Button>
-                <Button type="button" variant="outline" onClick={aiForm.handleSubmit((values) => handleTest(values))}>{t("glb.test")}</Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button type="button" variant="outline">{t("glb.reset")}</Button>
@@ -166,6 +169,38 @@ export default function RSSSettings() {
               </div>
             </form>
           </Form>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{t("st.pr.test.title")}</CardTitle>
+          <CardDescription>{t("st.pr.test.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...testForm}>
+            <form onSubmit={testForm.handleSubmit(handleTest)} className="space-y-6" noValidate>
+              <FormField control={testForm.control} name="title" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("st.pr.test.anime_title")}</FormLabel>
+                  <FormControl>
+                    <div className="flex gap-2 items-center">
+                      <Input className="w-full" placeholder="[VCB-Studio] 鬼灭之刃 刀匠村篇 / Kimetsu no Yaiba Katanakaji no Sato Hen 10-bit 1080p HEVC BDRip [Fin]" {...field} />
+                      <Button type="submit">{t("glb.test")}</Button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+            </form>
+          </Form>
+          {testResult && (
+            <div className="flex flex-col gap-2 mt-4 bg-muted p-4 rounded-md">
+              <p className="text-sm font-medium">{t("st.pr.test.result")}</p>
+              <p className="text-sm">{testResult}</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </>

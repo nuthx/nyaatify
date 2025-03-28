@@ -197,6 +197,12 @@
           "title": "Reset AI Model",
           "description": "This action will remove the current AI model configuration, which cannot be recovered."
         }
+      },
+      "test": {
+        "title": "AI Parsing Test",
+        "description": "Test the parsing ability of the current model, the result will be returned in the original JSON format.",
+        "anime_title": "Anime Title",
+        "result": "Test Result"
       }
     },
     "dl": {

@@ -197,6 +197,12 @@
           "title": "重置 AI 模型",
           "description": "此操作会移除当前的 AI 模型配置，移除后不可恢复"
         }
+      },
+      "test": {
+        "title": "AI 解析测试",
+        "description": "测试当前设定模型的解析能力，测试结果会以原始 JSON 格式返回",
+        "anime_title": "动画标题",
+        "result": "测试结果"
       }
     },
     "dl": {
