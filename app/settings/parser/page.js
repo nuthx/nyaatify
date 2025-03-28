@@ -73,9 +73,18 @@ export default function RSSSettings() {
 
   const handleTest = async (values) => {
     setTestResult("");
-    const result = await handleRequest("POST", `${API.CONFIG}/test/ai`, values, t("toast.failed.test"));
+    const result = await handleRequest("POST", `${API.CONFIG}/test/ai`, values, t("toast.failed.test"), true);
     if (result) {
-      setTestResult(result.data.output);
+      const reader = result.body.getReader();
+      let accumulatedResult = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const text = new TextDecoder().decode(value);
+        accumulatedResult += text;
+        setTestResult(accumulatedResult);
+      }
     }
   };
 
