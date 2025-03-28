@@ -83,7 +83,14 @@ export default function RSSSettings() {
 
         const text = new TextDecoder().decode(value);
         accumulatedResult += text;
-        setTestResult(accumulatedResult);
+        
+        // Format the result manually
+        let formattedResult = accumulatedResult;
+        formattedResult = formattedResult.replace(/\{/, "{\n  ");
+        formattedResult = formattedResult.replace(/",/g, '",\n  ');
+        formattedResult = formattedResult.replace(/\}$/, '\n}');
+        
+        setTestResult(formattedResult);
       }
     }
   };
@@ -207,7 +214,7 @@ export default function RSSSettings() {
           {testResult && (
             <div className="flex flex-col gap-2 mt-4 bg-muted p-4 rounded-md">
               <p className="text-sm font-medium">{t("st.pr.test.result")}</p>
-              <p className="text-sm">{testResult}</p>
+              <pre className="text-sm overflow-auto whitespace-pre-wrap">{testResult}</pre>
             </div>
           )}
         </CardContent>
