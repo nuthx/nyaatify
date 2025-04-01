@@ -98,9 +98,9 @@ export async function GET(request) {
         config: {
           defaultDownloader: config.defaultDownloader,
           defaultDownloaderOnline: defaultOnline,
-          showDownloaderState: config.showDownloaderState,
-          titlePriority: config.titlePriority,
-          coverSource: config.coverSource
+          downloaderStateDisplay: config.downloaderStateDisplay,
+          animeTitlePriority: config.animeTitlePriority,
+          animeCoverSource: config.animeCoverSource
         }
       }
     });

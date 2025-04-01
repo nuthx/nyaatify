@@ -56,7 +56,7 @@ export default function RSSSettings() {
   })();
 
   const exclusionsForm = createForm({
-    titleParseExclusions: { schema: "required" }
+    anitomyTitleExclusions: { schema: "required" }
   })();
 
   const testForm = createForm({
@@ -74,7 +74,7 @@ export default function RSSSettings() {
     if (configData) {
       aiForm.setValue("aiApi", configData?.aiApi);
       aiForm.setValue("aiModel", configData?.aiModel);
-      exclusionsForm.setValue("titleParseExclusions", configData?.titleParseExclusions);
+      exclusionsForm.setValue("anitomyTitleExclusions", configData?.anitomyTitleExclusions);
       console.log(configData);
     }
   }, [configData]);
@@ -123,7 +123,7 @@ export default function RSSSettings() {
           <CardDescription>{t("st.pr.priority.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={configData?.aiPriority || "local-only"} onValueChange={(value) => handleSaveConfig({ aiPriority: value })}>
+          <Select defaultValue={configData?.parserPriority || "local-only"} onValueChange={(value) => handleSaveConfig({ parserPriority: value })}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>
@@ -143,7 +143,7 @@ export default function RSSSettings() {
         <CardContent>
           <Form {...exclusionsForm}>
             <form onSubmit={exclusionsForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
-              <FormField control={exclusionsForm.control} name="titleParseExclusions" render={({ field }) => (
+              <FormField control={exclusionsForm.control} name="anitomyTitleExclusions" render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("st.pr.local.exclusions.title")}</FormLabel>
                   <FormControl>
