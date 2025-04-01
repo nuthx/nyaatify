@@ -1,6 +1,5 @@
 import { prisma, getConfig } from "@/lib/db";
 import { sendResponse } from "@/lib/http/response";
-import { useOpenAI } from "@/lib/api/openai";
 
 // Get all config
 
@@ -8,9 +7,12 @@ export async function GET(request) {
   try {
     const config = await getConfig();
 
-    // Hide aiKey with first 15 characters and asterisks
+    // Hide aiKey with first 7 characters and last 4 characters, rest with asterisks
     if (config.aiKey) {
-      config.aiKey = config.aiKey.slice(0, 15) + "*".repeat(Math.max(0, config.aiKey.length - 15));
+      const first = config.aiKey.slice(0, 7);
+      const last = config.aiKey.slice(-4);
+      const middleLength = Math.max(0, config.aiKey.length - 11);
+      config.aiKey = first + "*".repeat(middleLength) + last;
     }
 
     return sendResponse(request, {
@@ -42,14 +44,6 @@ export async function PATCH(request) {
     const invalidKeys = Object.keys(data).filter(key => !validKeysSet.has(key));
     if (invalidKeys.length > 0) {
       throw new Error(`Invalid key: ${invalidKeys.join(", ")}`);
-    }
-
-    // If save ai config, parse a anime title to verify validity
-    if (data.aiPriority === "ai") {
-      const result = await useOpenAI("Hello", "Hello", data);
-      if (!result.success) {
-        throw new Error(result.message);
-      }
     }
 
     // Update configs using Prisma transaction

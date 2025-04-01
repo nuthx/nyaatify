@@ -106,8 +106,8 @@ export default function Anime() {
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
-          {animeData.config.showDownloaderState === "1" && !animeData.config.defaultDownloader && <Badge variant="outline">{t("anime.no_downloader")}</Badge>}
-          {animeData.config.showDownloaderState === "1" && animeData.config.defaultDownloader && animeData.config.defaultDownloaderOnline === "0" && <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>}
+          {animeData.config.downloaderStateDisplay === "1" && !animeData.config.defaultDownloader && <Badge variant="outline">{t("anime.no_downloader")}</Badge>}
+          {animeData.config.downloaderStateDisplay === "1" && animeData.config.defaultDownloader && animeData.config.defaultDownloaderOnline === "0" && <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>}
           <a className="text-sm text-muted-foreground">{t("anime.today")}: {animeData.count.today}</a>
           <a className="text-sm text-muted-foreground">{t("anime.week")}: {animeData.count.week}</a>
           <a className="text-sm text-muted-foreground">{t("anime.total")}: {animeData.count.total}</a>
@@ -115,9 +115,9 @@ export default function Anime() {
         {animeData.anime?.map((item, index) => (
           <Card key={index} className="flex flex-col">
             <CardContent className="flex gap-4 flex-1">
-              {(animeData.config.coverSource === "anilist" ? item.coverAnilist || item.coverBangumi : item.coverBangumi || item.coverAnilist) ? (
+              {(animeData.config.animeCoverSource === "anilist" ? item.coverAnilist || item.coverBangumi : item.coverBangumi || item.coverAnilist) ? (
                 <img 
-                  src={animeData.config.coverSource === "anilist" ? item.coverAnilist || item.coverBangumi || null : item.coverBangumi || item.coverAnilist || null}
+                  src={animeData.config.animeCoverSource === "anilist" ? item.coverAnilist || item.coverBangumi || null : item.coverBangumi || item.coverAnilist || null}
                   className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md object-cover bg-muted"
                   onError={(e) => { e.target.src = "" }}
                 />
@@ -136,7 +136,7 @@ export default function Anime() {
                     <Tooltip>
                       <TooltipTrigger className="text-left">
                         <a href={item.torrent} target="_blank" className="font-medium hover:underline">
-                          {getTitleByPriority(item, animeData.config.titlePriority)}
+                          {getTitleByPriority(item, animeData.config.animeTitlePriority)}
                         </a>
                       </TooltipTrigger>
                       <TooltipContent className="py-2 space-y-1">

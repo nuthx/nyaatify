@@ -61,10 +61,10 @@ export default function Settings() {
     document.title = `${t("st.metadata.general")} - Nyaatify`;
   }, [t]);
 
-  // Check configData?.titlePriority to avoid error when drag finished
+  // Check configData?.animeTitlePriority to avoid error when drag finished
   useEffect(() => {
-    if (configData?.titlePriority) {
-      setItems(configData.titlePriority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
+    if (configData?.animeTitlePriority) {
+      setItems(configData.animeTitlePriority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
     }
   }, [configData]);
 
@@ -87,7 +87,7 @@ export default function Settings() {
       
       // Save title priority after drag finished
       handleSaveConfig({ 
-        titlePriority: newItems.map(item => item.id).join(",")
+        animeTitlePriority: newItems.map(item => item.id).join(",")
       });
     }
   }
@@ -137,24 +137,6 @@ export default function Settings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("st.gr.dl_state.title")}</CardTitle>
-          <CardDescription>{t("st.gr.dl_state.description")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Select defaultValue={configData?.showDownloaderState || "1"} onValueChange={(value) => handleSaveConfig({ showDownloaderState: value })}>
-            <SelectTrigger className="w-72">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">{t("glb.show")}</SelectItem>
-              <SelectItem value="0">{t("glb.hide")}</SelectItem>
-            </SelectContent>
-          </Select>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
           <CardTitle>{t("st.gr.title_priority.title")}</CardTitle>
           <CardDescription>{t("st.gr.title_priority.description")}</CardDescription>
         </CardHeader>
@@ -173,7 +155,7 @@ export default function Settings() {
           <CardDescription>{t("st.gr.cover_source.description")}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Select defaultValue={configData?.coverSource || "bangumi"} onValueChange={(value) => handleSaveConfig({ coverSource: value })}>
+          <Select defaultValue={configData?.animeCoverSource || "bangumi"} onValueChange={(value) => handleSaveConfig({ animeCoverSource: value })}>
             <SelectTrigger className="w-72">
               <SelectValue />
             </SelectTrigger>

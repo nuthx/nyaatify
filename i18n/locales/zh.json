@@ -10,6 +10,7 @@
     "save": "保存",
     "test": "测试",
     "show": "显示",
+    "reset": "重置",
     "hide": "隐藏",
     "enabled": "启用",
     "disabled": "禁用",
@@ -123,6 +124,7 @@
     "nav": {
       "general": "常规",
       "rss": "RSS 订阅",
+      "parser": "解析器",
       "downloader": "下载器",
       "notification": "通知",
       "user": "用户",
@@ -132,6 +134,7 @@
     "metadata": {
       "general": "常规设置",
       "rss": "RSS 订阅设置",
+      "parser": "解析器设置",
       "downloader": "下载器设置",
       "notification": "通知设置",
       "user": "用户设置",
@@ -149,10 +152,6 @@
       "language": {
         "title": "语言",
         "description": "选择 Nyaatify 的显示语言，此设置仅会保存在浏览器本地"
-      },
-      "dl_state": {
-        "title": "下载器状态",
-        "description": "在动画页左上角显示下载器的状态，如未添加下载器、下载器已离线等"
       },
       "title_priority": {
         "title": "标题优先级",
@@ -179,16 +178,39 @@
         "next": "下次刷新",
         "refresh": "立即刷新",
         "alert": "此操作将会永久删除该 RSS 订阅，且该链接下的动画也会被一并删除！"
+      }
+    },
+    "pr": {
+      "priority": {
+        "title": "解析优先级",
+        "description": "选择动画标题的解析策略。当 AI 无效或解析失败时，会回退至本地解析器解析",
+        "local-only": "仅使用本地解析",
+        "ai-first": "优先使用 AI 解析"
+      },
+      "local": {
+        "title": "本地解析设置",
+        "description": "设置本地解析器的解析行为",
+        "exclusions": {
+          "title": "标题排除项",
+          "description": "设置的文本会在动画解析前从原始标题中移除，提高解析准确率。每行填写一个"
+        }
       },
       "ai": {
-        "title": "AI 解析",
-        "description": "解析标题时，优先使用 AI 提取动画名称。所选模型需兼容 OpenAI 接口，如 DeepSeek、Kimi、ChatGPT、Gemini 等。为保证准确率，尽量不要使用最低档的 Lite 模型。每次解析大约会消耗 200 Token。",
-        "priority": "优先级",
-        "local": "仅使用本地解析",
-        "ai": "优先使用 AI 解析",
+        "title": "AI 模型",
+        "description": "添加一个大语言模型用于 AI 解析，模型的 API 需兼容 OpenAI 接口。为保证准确率，尽量不要选择最低档的模型",
         "api": "API 地址",
         "key": "API Key",
-        "model": "模型名称"
+        "model": "模型名称",
+        "reset": {
+          "title": "重置 AI 模型",
+          "description": "此操作会移除当前的 AI 模型配置，移除后不可恢复"
+        }
+      },
+      "test": {
+        "title": "AI 解析测试",
+        "description": "测试当前设定模型的解析能力，测试结果会以原始 JSON 格式返回",
+        "anime_title": "动画标题",
+        "result": "测试结果"
       }
     },
     "dl": {
@@ -216,6 +238,10 @@
         "description": "创建下载任务时，Nyaatify 会通过指定的下载器进行下载",
         "downloader": "默认下载器",
         "empty": "无下载器"
+      },
+      "state": {
+        "title": "显示下载器状态",
+        "description": "在动画页面的左上角显示下载器的状态，如未添加下载器、下载器已离线等"
       }
     },
     "nt": {

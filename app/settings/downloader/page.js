@@ -230,6 +230,24 @@ export default function DownloaderSettings() {
           </Select>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.dl.state.title")}</CardTitle>
+          <CardDescription>{t("st.dl.state.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Select defaultValue={configData?.downloaderStateDisplay || "1"} onValueChange={(value) => handleSaveConfig({ downloaderStateDisplay: value })}>
+            <SelectTrigger className="w-72">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">{t("glb.show")}</SelectItem>
+              <SelectItem value="0">{t("glb.hide")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </CardContent>
+      </Card>
     </>
   );
 }
