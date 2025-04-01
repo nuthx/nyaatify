@@ -31,7 +31,8 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
+  FormDescription
 } from "@/components/ui/form"
 import {
   Select,
@@ -42,6 +43,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function RSSSettings() {
   const { t } = useTranslation();
@@ -51,6 +53,10 @@ export default function RSSSettings() {
     aiApi: { schema: "url" },
     aiKey: { schema: "required" },
     aiModel: { schema: "required" }
+  })();
+
+  const exclusionsForm = createForm({
+    titleParseExclusions: { schema: "required" }
   })();
 
   const testForm = createForm({
@@ -68,6 +74,8 @@ export default function RSSSettings() {
     if (configData) {
       aiForm.setValue("aiApi", configData?.aiApi);
       aiForm.setValue("aiModel", configData?.aiModel);
+      exclusionsForm.setValue("titleParseExclusions", configData?.titleParseExclusions);
+      console.log(configData);
     }
   }, [configData]);
 
@@ -124,6 +132,31 @@ export default function RSSSettings() {
               <SelectItem value="ai-first">{t("st.pr.priority.ai-first")}</SelectItem>
             </SelectContent>
           </Select>
+        </CardContent>
+      </Card>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>{t("st.pr.local.title")}</CardTitle>
+          <CardDescription>{t("st.pr.local.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...exclusionsForm}>
+            <form onSubmit={exclusionsForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
+              <FormField control={exclusionsForm.control} name="titleParseExclusions" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("st.pr.local.exclusions.title")}</FormLabel>
+                  <FormControl>
+                    <Textarea className="w-full h-44" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                  <FormDescription className="mt-0">{t("st.pr.local.exclusions.description")}</FormDescription>
+                </FormItem>
+              )}
+              />
+              <Button type="submit">{t("glb.save")}</Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
 

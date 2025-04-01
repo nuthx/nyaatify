@@ -183,9 +183,17 @@
     "pr": {
       "priority": {
         "title": "解析优先级",
-        "description": "选择动画标题的解析策略。当 AI 无效或解析失败时，会回退至本地解析器进行解析",
+        "description": "选择动画标题的解析策略。当 AI 无效或解析失败时，会回退至本地解析器解析",
         "local-only": "仅使用本地解析",
         "ai-first": "优先使用 AI 解析"
+      },
+      "local": {
+        "title": "本地解析设置",
+        "description": "设置本地解析器的解析行为",
+        "exclusions": {
+          "title": "标题排除项",
+          "description": "设置的文本会在动画解析前从原始标题中移除，提高解析准确率。每行填写一个"
+        }
       },
       "ai": {
         "title": "AI 模型",

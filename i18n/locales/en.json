@@ -187,6 +187,14 @@
         "local-only": "Use local parsing only",
         "ai-first": "Use AI parsing first"
       },
+      "local": {
+        "title": "Local Parsing Setting",
+        "description": "Set the behavior of the local parser.",
+        "exclusions": {
+          "title": "Title Exclusions",
+          "description": "The text will be removed from the original title before parsing to improve parsing accuracy. One line per item."
+        }
+      },
       "ai": {
         "title": "AI Model",
         "description": "Add a LLM for AI parsing, the model's API should be compatible with OpenAI interfaces. To ensure accuracy, try not to use the lowest grade Lite model.",
