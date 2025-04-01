@@ -9,6 +9,7 @@
     "add": "Add",
     "save": "Save",
     "test": "Test",
+    "reset": "Reset",
     "show": "Show",
     "hide": "Hide",
     "enabled": "Enabled",
@@ -123,6 +124,7 @@
     "nav": {
       "general": "General",
       "rss": "RSS Subscription",
+      "parser": "Parser",
       "downloader": "Downloader",
       "notification": "Notification",
       "user": "Account",
@@ -132,6 +134,7 @@
     "metadata": {
       "general": "General Setting",
       "rss": "RSS Subscription Setting",
+      "parser": "Parser Setting",
       "downloader": "Downloader Setting",
       "notification": "Notification Setting",
       "user": "Account Setting",
@@ -175,16 +178,39 @@
         "next": "Next",
         "refresh": "Refresh Now",
         "alert": "This action will delete this RSS subscription permanently. The anime included in this RSS will also be DELETED."
+      }
+    },
+    "pr": {
+      "priority": {
+        "title": "Parsing Priority",
+        "description": "Choose the parsing strategy for anime titles. When AI config is invalid or parsing fails, the local parser will be used as a fallback.",
+        "local-only": "Use local parsing only",
+        "ai-first": "Use AI parsing first"
+      },
+      "local": {
+        "title": "Local Parsing Setting",
+        "description": "Set the behavior of the local parser.",
+        "exclusions": {
+          "title": "Title Exclusions",
+          "description": "The text will be removed from the original title before parsing to improve parsing accuracy. One line per item."
+        }
       },
       "ai": {
-        "title": "AI Parsing",
-        "description": "When parsing titles, prioritize utilizing AI to accurately extract anime titles. The selected model should be compatible with OpenAI interfaces, such as ChatGPT, Gemini, DeepSeek, Kimi, etc. To ensure accuracy, try not to use the lowest grade Lite model. Each parsing consumes approximately 200 tokens.",
-        "priority": "Priority",
-        "local": "Use local parsing only",
-        "ai": "Use AI parsing first",
+        "title": "AI Model",
+        "description": "Add a LLM for AI parsing, the model's API should be compatible with OpenAI interfaces. To ensure accuracy, try not to use the lowest grade Lite model.",
         "api": "API URL",
         "key": "API Key",
-        "model": "Model"
+        "model": "Model",
+        "reset": {
+          "title": "Reset AI Model",
+          "description": "This action will remove the current AI model configuration, which cannot be recovered."
+        }
+      },
+      "test": {
+        "title": "AI Parsing Test",
+        "description": "Test the parsing ability of the current model, the result will be returned in the original JSON format.",
+        "anime_title": "Anime Title",
+        "result": "Test Result"
       }
     },
     "dl": {
