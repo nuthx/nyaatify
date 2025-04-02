@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { API } from "@/lib/http/api";
+import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import { createForm } from "@/lib/form";
 import { 
@@ -29,11 +30,17 @@ export default function LoginPage() {
   const { t } = useTranslation();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const loginForm = createForm({
     username: { schema: "username" },
     password: { schema: "password" }
   })();
+
+  const { data: coverData, error: coverError, isLoading: coverLoading } = useData(API.LOGIN_COVER, t("toast.failed.fetch_cover"), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false
+  });
 
   // Set page title
   useEffect(() => {
@@ -84,8 +91,17 @@ export default function LoginPage() {
               </div>
             </form>
           </Form>
-          <div className="relative hidden md:block h-[520px]">
-            <Image src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx151970-iOGS7HpkctVd.jpg" alt="Anime cover" fill className="object-cover" priority />
+          <div className="relative hidden md:block h-[540px] bg-primary/5 dark:bg-accent">
+            {!coverLoading && !coverError && (
+              <Image
+                src={coverData?.coverBangumi}
+                alt="Anime cover"
+                fill
+                className={`object-cover transition duration-700 ease-in-out ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                priority
+                onLoad={() => setImageLoaded(true)}
+              />
+            )}
           </div>
         </CardContent>
       </Card>
