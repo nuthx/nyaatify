@@ -100,6 +100,7 @@ export default function LoginPage() {
                 className={`object-cover transition duration-700 ease-in-out ${imageLoaded ? "opacity-100" : "opacity-0"}`}
                 priority
                 onLoad={() => setImageLoaded(true)}
+                draggable="false"
               />
             )}
           </div>
