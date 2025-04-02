@@ -117,7 +117,7 @@ export default function RSSSettings() {
 
   return (
     <>
-      <Card className="mb-6">
+      <Card>
         <CardHeader>
           <CardTitle>{t("st.pr.priority.title")}</CardTitle>
           <CardDescription>{t("st.pr.priority.description")}</CardDescription>
@@ -135,7 +135,7 @@ export default function RSSSettings() {
         </CardContent>
       </Card>
 
-      <Card className="mb-6">
+      <Card>
         <CardHeader>
           <CardTitle>{t("st.pr.local.title")}</CardTitle>
           <CardDescription>{t("st.pr.local.description")}</CardDescription>
@@ -221,7 +221,7 @@ export default function RSSSettings() {
         </CardContent>
       </Card>
 
-      <Card className="mb-6">
+      <Card>
         <CardHeader>
           <CardTitle>{t("st.pr.test.title")}</CardTitle>
           <CardDescription>{t("st.pr.test.description")}</CardDescription>
