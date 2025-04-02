@@ -20,6 +20,10 @@ export function NavBar() {
     }
   };
 
+  if (pathname === "/login") {
+    return null;
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-sm">
       <nav className="container mx-auto max-w-screen-xl flex h-16 items-center justify-between">
@@ -32,12 +36,9 @@ export function NavBar() {
           <NavLink href="/anime" />
           <NavLink href="/downloads" />
           <NavLink href="/settings" />
-
-          {pathname !== "/login" && (
-            <button onClick={handleLogout} className="px-4 py-1.5 text-sm text-primary/80 rounded-md transition-all duration-300 ease-in-out hover:bg-accent">
-              {t("glb.logout")}
-            </button>
-          )}
+          <button onClick={handleLogout} className="px-4 py-1.5 text-sm text-primary/80 rounded-md transition-all duration-300 ease-in-out hover:bg-accent">
+            {t("glb.logout")}
+          </button>
         </div>
       </nav>
     </header>
