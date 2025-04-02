@@ -59,11 +59,11 @@ export default function Home() {
     errorMessage = t("downloads.empty_torrents");
   }
   if (errorMessage) {
-    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8">{errorMessage}</a>
+    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8 px-6 md:px-10">{errorMessage}</a>
   }
 
   return (
-    <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
+    <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6 px-6 md:px-10">
       <div className="grid gap-3">
         {torrentsData.torrents.map((item, index) => (
           <Card key={index} className="overflow-hidden">
