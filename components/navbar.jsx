@@ -23,8 +23,8 @@ export function NavBar() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-sm">
       <nav className="container mx-auto max-w-screen-xl flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-4">
-          <Image src="/images/logo.svg" alt="Nyaatify Logo" className="dark:invert" width={40} height={40} priority />
+        <Link href="/" className="flex items-center gap-3">
+          <Image src="/images/logo-round.svg" alt="Nyaatify Logo" className="dark:invert" width={40} height={40} priority />
           <span className="text-xl font-bold">Nyaatify</span>
         </Link>
 
