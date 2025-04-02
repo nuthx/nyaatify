@@ -117,9 +117,11 @@ export default function Anime() {
           <Card key={index} className="flex flex-col">
             <CardContent className="flex gap-4 flex-1">
               <div className="relative min-w-20 max-w-20 min-h-28 max-h-28 rounded-md bg-muted overflow-hidden">
-                {(animeData.config.animeCoverSource === "anilist" ? item.coverAnilist || item.coverBangumi : item.coverBangumi || item.coverAnilist) && (
+                {(item.coverAnilist || item.coverBangumi) && (
                   <Image
-                    src={animeData.config.animeCoverSource === "anilist" ? item.coverAnilist || item.coverBangumi : item.coverBangumi || item.coverAnilist}
+                    src={animeData.config.animeCoverSource === "anilist" 
+                      ? (item.coverAnilist || item.coverBangumi) 
+                      : (item.coverBangumi || item.coverAnilist)}
                     alt="Anime cover"
                     fill
                     className="object-cover"
