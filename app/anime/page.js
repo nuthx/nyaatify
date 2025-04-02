@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { toast } from "sonner"
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -115,15 +116,17 @@ export default function Anime() {
         {animeData.anime?.map((item, index) => (
           <Card key={index} className="flex flex-col">
             <CardContent className="flex gap-4 flex-1">
-              {(animeData.config.animeCoverSource === "anilist" ? item.coverAnilist || item.coverBangumi : item.coverBangumi || item.coverAnilist) ? (
-                <img 
-                  src={animeData.config.animeCoverSource === "anilist" ? item.coverAnilist || item.coverBangumi || null : item.coverBangumi || item.coverAnilist || null}
-                  className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md object-cover bg-muted"
-                  onError={(e) => { e.target.src = "" }}
-                />
-              ) : (
-                <div className="min-w-20 max-w-20 min-h-28 max-h-28 rounded-md bg-muted" />
-              )}
+              <div className="relative min-w-20 max-w-20 min-h-28 max-h-28 rounded-md bg-muted overflow-hidden">
+                {(animeData.config.animeCoverSource === "anilist" ? item.coverAnilist || item.coverBangumi : item.coverBangumi || item.coverAnilist) && (
+                  <Image
+                    src={animeData.config.animeCoverSource === "anilist" ? item.coverAnilist || item.coverBangumi : item.coverBangumi || item.coverAnilist}
+                    alt="Anime cover"
+                    fill
+                    className="object-cover"
+                    draggable="false"
+                  />
+                )}
+              </div>
               <div className="flex flex-col gap-2 my-1 w-fit">
                 <div className="flex gap-2">
                   <Badge variant="outline">{new Date(item.pubDate).toLocaleString()}</Badge>
