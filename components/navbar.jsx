@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { usePathname, useRouter } from "next/navigation";
 import { API } from "@/lib/http/api";
@@ -15,6 +15,13 @@ export function NavBar() {
   const pathname = usePathname();
   const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Close the menu when the screen size is less than md(768px)
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    mq.onchange = e => e.matches && setIsMenuOpen(false);
+    return () => mq.onchange = null;
+  }, []);
 
   const handleLogout = async () => {
     const result = await handleRequest("DELETE", API.LOGOUT, null, t("toast.failed.logout"));
