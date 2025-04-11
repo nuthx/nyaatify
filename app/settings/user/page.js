@@ -108,7 +108,7 @@ export default function Devices() {
                 <FormItem>
                   <FormLabel>{t("st.dl.add.username")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full md:w-72" placeholder={usernameData?.username || "username"} {...field} />
+                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder={usernameData?.username || "username"} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -132,7 +132,7 @@ export default function Devices() {
                 <FormItem>
                   <FormLabel>{t("st.user.password.current")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full md:w-72" placeholder="********" type="password" {...field} />
+                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="********" type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -142,7 +142,7 @@ export default function Devices() {
                 <FormItem>
                   <FormLabel>{t("st.user.password.new")}</FormLabel>
                   <FormControl>
-                    <div className="relative w-full md:w-72">
+                    <div className="relative w-full lg:w-72 transition-width duration-300 ease-in-out">
                       <Input placeholder="********" type={showPassword ? "text" : "password"} {...field} />
                       <Button type="button" variant="ghost" size="icon" className="absolute right-0 top-0 h-full px-3 hover:bg-transparent text-primary/50" onClick={() => setShowPassword(!showPassword)}>
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
