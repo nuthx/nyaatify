@@ -7,7 +7,7 @@ export function NyaatifyInfo({ className }) {
 
   return (
     <div className={cn("flex flex-col items-center gap-2", className)}>
-      <Image src="/images/logo-256.png" alt="Nyaatify Logo" width={72} height={72} draggable="false"/>
+      <Image src="/icons/logo.png" alt="Nyaatify Logo" width={72} height={72} draggable="false"/>
       <h1 className="text-2xl font-bold">Nyaatify</h1>
       <p className="text-sm text-muted-foreground">{t("st.abt.description")}</p>
     </div>
