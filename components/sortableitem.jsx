@@ -20,7 +20,7 @@ export function SortableItem({ item }) {
   };
 
   return (
-    <div className="flex items-center justify-between h-10 pr-0.5 pl-3 py-2 w-72 text-sm border rounded-md shadow-sm" ref={setNodeRef} style={style}>
+    <div className="flex items-center justify-between h-10 pr-0.5 pl-3 py-2 w-full md:w-72 text-sm border rounded-md shadow-sm" ref={setNodeRef} style={style}>
       {item.name}
       <Button variant="ghost" size="icon" className="cursor-grab hover:cursor-grabbing hover:bg-transparent" {...attributes} {...listeners}>
         <GripVertical className="h-4 w-4" />

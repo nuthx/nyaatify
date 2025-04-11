@@ -85,7 +85,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.rss.add.name")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="Subscription" {...field} />
+                    <Input className="w-full md:w-72" placeholder="Subscription" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -105,7 +105,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.rss.add.cron")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="0 */10 * * * *" {...field} />
+                    <Input className="w-full md:w-72" placeholder="0 */10 * * * *" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

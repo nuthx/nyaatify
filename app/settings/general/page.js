@@ -105,7 +105,7 @@ export default function Settings() {
         </CardHeader>
         <CardContent>
           <Select value={theme} onValueChange={setTheme}>
-            <SelectTrigger className="w-72">
+            <SelectTrigger className="w-full md:w-72">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -124,7 +124,7 @@ export default function Settings() {
         </CardHeader>
         <CardContent>
           <Select defaultValue={i18n.resolvedLanguage} onValueChange={handleLanguageChange}>
-            <SelectTrigger className="w-72">
+            <SelectTrigger className="w-full md:w-72">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -156,7 +156,7 @@ export default function Settings() {
         </CardHeader>
         <CardContent>
           <Select defaultValue={configData?.animeCoverSource || "bangumi"} onValueChange={(value) => handleSaveConfig({ animeCoverSource: value })}>
-            <SelectTrigger className="w-72">
+            <SelectTrigger className="w-full md:w-72">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

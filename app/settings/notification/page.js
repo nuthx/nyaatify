@@ -166,7 +166,7 @@ export default function NotificationSettings() {
                 <FormItem>
                   <FormLabel>{t("st.nt.add.name")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="Notification" {...field} />
+                    <Input className="w-full md:w-72" placeholder="Notification" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -176,7 +176,7 @@ export default function NotificationSettings() {
                 <FormItem>
                   <FormLabel>{t("st.nt.add.filter")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="name1, name2" {...field} />
+                    <Input className="w-full md:w-72" placeholder="name1, name2" {...field} />
                   </FormControl>
                   <FormMessage />
                   <FormDescription>{t("st.nt.add.filter_notice")}</FormDescription>
@@ -188,7 +188,7 @@ export default function NotificationSettings() {
                   <FormLabel>{t("st.nt.add.type")}</FormLabel>
                   <Select defaultValue={field.value} onValueChange={field.onChange}>
                     <FormControl>
-                      <SelectTrigger className="w-72">
+                      <SelectTrigger className="w-full md:w-72">
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>

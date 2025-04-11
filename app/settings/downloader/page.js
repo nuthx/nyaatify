@@ -112,7 +112,7 @@ export default function DownloaderSettings() {
                 <FormItem>
                   <FormLabel>{t("st.dl.add.name")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="Downloader" {...field} />
+                    <Input className="w-full md:w-72" placeholder="Downloader" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -123,7 +123,7 @@ export default function DownloaderSettings() {
                   <FormLabel>{t("st.dl.add.type")}</FormLabel>
                   <Select defaultValue={field.value} onValueChange={field.onChange}>
                     <FormControl>
-                      <SelectTrigger className="w-72">
+                      <SelectTrigger className="w-full md:w-72">
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>
@@ -156,7 +156,7 @@ export default function DownloaderSettings() {
                 <FormItem>
                   <FormLabel>{t("st.dl.add.username")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="admin" {...field} />
+                    <Input className="w-full md:w-72" placeholder="admin" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -166,7 +166,7 @@ export default function DownloaderSettings() {
                 <FormItem>
                   <FormLabel>{t("st.dl.add.password")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" type="password" placeholder="password" {...field} />
+                    <Input className="w-full md:w-72" type="password" placeholder="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -217,7 +217,7 @@ export default function DownloaderSettings() {
         </CardHeader>
         <CardContent>
           <Select value={configData?.defaultDownloader} onValueChange={(value) => handleSaveConfig({ defaultDownloader: value })} disabled={!downloaderData?.downloaders?.length}>
-            <SelectTrigger className="w-72">
+            <SelectTrigger className="w-full md:w-72">
               <SelectValue placeholder={t("st.dl.default.empty")} />
             </SelectTrigger>
             <SelectContent>
@@ -238,7 +238,7 @@ export default function DownloaderSettings() {
         </CardHeader>
         <CardContent>
           <Select defaultValue={configData?.downloaderStateDisplay || "1"} onValueChange={(value) => handleSaveConfig({ downloaderStateDisplay: value })}>
-            <SelectTrigger className="w-72">
+            <SelectTrigger className="w-full md:w-72">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
