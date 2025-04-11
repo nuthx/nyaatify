@@ -100,11 +100,11 @@ export default function Anime() {
     errorMessage = t("anime.empty");
   }
   if (errorMessage) {
-    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8">{errorMessage}</a>
+    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8 px-6 md:px-10">{errorMessage}</a>
   }
 
   return (
-    <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6">
+    <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6 px-6 md:px-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
           {animeData.config.downloaderStateDisplay === "1" && !animeData.config.defaultDownloader && <Badge variant="outline">{t("anime.no_downloader")}</Badge>}

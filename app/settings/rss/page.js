@@ -85,7 +85,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.rss.add.name")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="Subscription" {...field} />
+                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="Subscription" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -105,7 +105,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.rss.add.cron")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="0 */10 * * * *" {...field} />
+                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="0 */10 * * * *" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -127,8 +127,8 @@ export default function RSSSettings() {
             empty={t("st.rss.list.empty")}
             content={(rss) => (
               <>
-                <p className="text-sm text-muted-foreground">{rss.url}</p>
-                <p className="text-sm text-muted-foreground">{t("st.rss.list.cron")}: {rss.cron}</p>
+                <p className="text-sm text-muted-foreground break-all">{rss.url}</p>
+                <p className="text-sm text-muted-foreground break-all">{t("st.rss.list.cron")}: {rss.cron}</p>
               </>
             )}
             state={(rss) => (

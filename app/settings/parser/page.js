@@ -124,7 +124,7 @@ export default function RSSSettings() {
         </CardHeader>
         <CardContent>
           <Select defaultValue={configData?.parserPriority || "local-only"} onValueChange={(value) => handleSaveConfig({ parserPriority: value })}>
-            <SelectTrigger className="w-72">
+            <SelectTrigger className="w-full lg:w-72 transition-width duration-300 ease-in-out">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -192,7 +192,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.pr.ai.model")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="gpt-4" {...field} />
+                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="gpt-4" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
