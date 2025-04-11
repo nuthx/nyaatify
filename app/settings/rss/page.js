@@ -127,8 +127,8 @@ export default function RSSSettings() {
             empty={t("st.rss.list.empty")}
             content={(rss) => (
               <>
-                <p className="text-sm text-muted-foreground">{rss.url}</p>
-                <p className="text-sm text-muted-foreground">{t("st.rss.list.cron")}: {rss.cron}</p>
+                <p className="text-sm text-muted-foreground break-all">{rss.url}</p>
+                <p className="text-sm text-muted-foreground break-all">{t("st.rss.list.cron")}: {rss.cron}</p>
               </>
             )}
             state={(rss) => (

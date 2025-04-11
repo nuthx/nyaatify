@@ -191,8 +191,8 @@ export default function DownloaderSettings() {
             empty={t("st.dl.list.empty")}
             content={(downloader) => (
               <>
-                <p className="text-sm text-muted-foreground">{downloader.url}</p>
-                <p className="text-sm text-muted-foreground">{t("glb.version")}: {downloader.version}</p>
+                <p className="text-sm text-muted-foreground break-all">{downloader.url}</p>
+                <p className="text-sm text-muted-foreground break-all">{t("glb.version")}: {downloader.version}</p>
               </>
             )}
             state={(downloader) => (

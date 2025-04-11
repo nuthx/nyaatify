@@ -289,10 +289,10 @@ export default function NotificationSettings() {
             empty={t("st.nt.list.empty")}
             content={(notification) => (
               <>
-                <p className="text-sm text-muted-foreground">{notification.url}</p>
-                <p className="text-sm text-muted-foreground">{t("st.nt.list.filter")}: {notification.filter || t("st.nt.list.filter_all")}</p>
-                <p className="text-sm text-muted-foreground">{t("st.nt.list.push_title")}: {notification.title}</p>
-                <p className="text-sm text-muted-foreground">{t("st.nt.list.push_message")}: {notification.message}</p>
+                <p className="text-sm text-muted-foreground break-all">{notification.url}</p>
+                <p className="text-sm text-muted-foreground break-all">{t("st.nt.list.filter")}: {notification.filter || t("st.nt.list.filter_all")}</p>
+                <p className="text-sm text-muted-foreground break-all">{t("st.nt.list.push_title")}: {notification.title}</p>
+                <p className="text-sm text-muted-foreground break-all">{t("st.nt.list.push_message")}: {notification.message}</p>
                 {notification.extra && (<p className="text-sm text-muted-foreground">{t("st.nt.list.extra")}: {notification.extra}</p>)}
               </>
             )}
