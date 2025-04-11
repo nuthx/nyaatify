@@ -13,7 +13,7 @@ export default function SettingsLayout({ children }) {
       <h2 className="container mx-auto max-w-screen-xl flex py-12 text-3xl font-bold px-6 md:px-10">{t("st.title")}</h2>
       <Separator />
       <div className="container mx-auto max-w-screen-xl flex flex-col md:flex-row py-8 gap-4 lg:gap-8 px-6 md:px-10">
-        <div className="flex md:flex-col gap-2 w-full overflow-x-auto md:overflow-visible md:w-48 lg:w-72 whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <div className="flex md:flex-col gap-2 w-full overflow-x-auto md:overflow-visible md:w-48 lg:w-72 transition-all duration-300 ease-in-out whitespace-nowrap [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           <NavLink href="/settings/general" />
           <NavLink href="/settings/rss" />
           <NavLink href="/settings/parser" />
