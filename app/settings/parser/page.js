@@ -117,14 +117,14 @@ export default function RSSSettings() {
 
   return (
     <>
-      <Card className="mb-6">
+      <Card>
         <CardHeader>
           <CardTitle>{t("st.pr.priority.title")}</CardTitle>
           <CardDescription>{t("st.pr.priority.description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Select defaultValue={configData?.parserPriority || "local-only"} onValueChange={(value) => handleSaveConfig({ parserPriority: value })}>
-            <SelectTrigger className="w-72">
+            <SelectTrigger className="w-full lg:w-72 transition-width duration-300 ease-in-out">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -135,7 +135,7 @@ export default function RSSSettings() {
         </CardContent>
       </Card>
 
-      <Card className="mb-6">
+      <Card>
         <CardHeader>
           <CardTitle>{t("st.pr.local.title")}</CardTitle>
           <CardDescription>{t("st.pr.local.description")}</CardDescription>
@@ -192,7 +192,7 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.pr.ai.model")}</FormLabel>
                   <FormControl>
-                    <Input className="w-72" placeholder="gpt-4" {...field} />
+                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="gpt-4" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -221,7 +221,7 @@ export default function RSSSettings() {
         </CardContent>
       </Card>
 
-      <Card className="mb-6">
+      <Card>
         <CardHeader>
           <CardTitle>{t("st.pr.test.title")}</CardTitle>
           <CardDescription>{t("st.pr.test.description")}</CardDescription>

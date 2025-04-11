@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { API } from "@/lib/http/api";
+import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import { createForm } from "@/lib/form";
 import { 
@@ -19,20 +20,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
+import { NyaatifyInfo } from "@/components/nyaatify-info";
 
 export default function LoginPage() {
   const { t } = useTranslation();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const loginForm = createForm({
     username: { schema: "username" },
     password: { schema: "password" }
   })();
+
+  const { data: coverData, error: coverError, isLoading: coverLoading } = useData(API.LOGIN_COVER, t("toast.failed.fetch_cover"), {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false
+  });
 
   // Set page title
   useEffect(() => {
@@ -49,17 +57,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container flex mx-auto max-w-screen-xl min-h-[calc(100vh-72px)]">
-      <div className="flex-1 hidden lg:flex items-center justify-center">
-        <Image src="/images/login.png" alt="Login image" className="dark:grayscale dark:invert dark:opacity-90" width={380} height={380} priority />
-      </div>
-
-      <div className="flex-1 flex flex-col items-center justify-center">
-        <Card className="w-full max-w-lg">
-          <CardContent className="flex flex-col gap-10 pt-10">
-            <h1 className="text-2xl font-bold text-center">Welcome!<br />Login to Nyaatify</h1>
-            <Form {...loginForm}>
-              <form onSubmit={loginForm.handleSubmit((values) => handleLogin(values))} className="space-y-6" noValidate>
+    <div className="flex flex-col items-center justify-center min-h-svh p-6 md:p-10">
+      <Card className="overflow-hidden w-full max-w-sm md:max-w-3xl">
+        <CardContent className="grid p-0 md:grid-cols-2">
+          <Form {...loginForm}>
+            <form onSubmit={loginForm.handleSubmit((values) => handleLogin(values))} className="p-6 md:px-8 md:py-10">
+              <div className="flex flex-col gap-5 h-full">
+                <NyaatifyInfo className="flex-1 justify-center my-4" />
                 <FormField control={loginForm.control} name="username" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.dl.add.username")}</FormLabel>
@@ -68,8 +72,7 @@ export default function LoginPage() {
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                )}
-                />
+                )} />
                 <FormField control={loginForm.control} name="password" render={({ field }) => (
                   <FormItem>
                     <FormLabel>{t("st.dl.add.password")}</FormLabel>
@@ -83,16 +86,26 @@ export default function LoginPage() {
                     </FormControl>
                     <FormMessage />
                   </FormItem>
-                )}
-                />
-                <div className="pt-2">
-                  <Button type="submit" className="w-full">{t("glb.login")}</Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-      </div>
+                )} />
+                <Button type="submit" className="w-full mt-2">{t("glb.login")}</Button>
+              </div>
+            </form>
+          </Form>
+          <div className="relative hidden md:block h-[540px] bg-primary/5 dark:bg-accent">
+            {!coverLoading && !coverError && (
+              <Image
+                src={coverData?.coverBangumi}
+                alt="Anime cover"
+                fill
+                className={`object-cover transition duration-700 ease-in-out ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                priority
+                onLoad={() => setImageLoaded(true)}
+                draggable="false"
+              />
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

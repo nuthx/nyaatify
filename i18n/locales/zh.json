@@ -50,6 +50,7 @@
       "pause": "暂停失败",
       "resume": "恢复失败",
       "send": "通知发送失败",
+      "fetch_cover": "封面获取失败",
       "fetch_config": "系统配置获取失败",
       "fetch_list": "列表获取失败",
       "fetch_logs": "日志获取失败",

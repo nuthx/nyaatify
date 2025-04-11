@@ -50,6 +50,7 @@
       "pause": "Pause Failed",
       "resume": "Resume Failed",
       "send": "Failed to send notification",
+      "fetch_cover": "Failed to fetch cover",
       "fetch_config": "Failed to fetch config",
       "fetch_list": "Failed to fetch list",
       "fetch_logs": "Failed to fetch logs",
