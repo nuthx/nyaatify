@@ -24,6 +24,7 @@ export function NavBar() {
   }, []);
 
   const handleLogout = async () => {
+    setIsMenuOpen(false);  // Close menu before logout
     const result = await handleRequest("DELETE", API.LOGOUT, null, t("toast.failed.logout"));
     if (result) {
       router.push("/login");
@@ -56,9 +57,9 @@ export function NavBar() {
             bg-background p-4 md:p-0 border-y md:border-0 shadow-sm md:shadow-none
           `}
         >
-          <NavLink href="/anime" />
-          <NavLink href="/downloads" />
-          <NavLink href="/settings" />
+          <NavLink href="/anime" onNavigate={() => setIsMenuOpen(false)} />
+          <NavLink href="/downloads" onNavigate={() => setIsMenuOpen(false)} />
+          <NavLink href="/settings" onNavigate={() => setIsMenuOpen(false)} />
           <button onClick={handleLogout} className="w-full md:w-auto px-4 py-3 md:py-1.5 text-sm text-center text-primary/80 rounded-md transition-all duration-300 ease-in-out hover:bg-accent">
             {t("glb.logout")}
           </button>
@@ -68,11 +69,15 @@ export function NavBar() {
   );
 }
 
-function NavLink({ href }) {
+function NavLink({ href, onNavigate }) {
   const { t } = useTranslation();
 
   return (
-    <Link href={href} className="w-full md:w-auto px-4 py-3 md:py-1.5 text-sm text-center text-primary/80 rounded-md transition-all duration-300 ease-in-out hover:bg-accent">
+    <Link 
+      href={href} 
+      onClick={onNavigate}
+      className="w-full md:w-auto px-4 py-3 md:py-1.5 text-sm text-center text-primary/80 rounded-md transition-all duration-300 ease-in-out hover:bg-accent"
+    >
       {t(`nav.${href.replace("/", "")}`)}
     </Link>
   );
