@@ -260,7 +260,9 @@ export default function Anime() {
           <p className="my-8 text-sm text-center text-muted-foreground col-span-1 md:col-span-2">{t("anime.empty_anime")}</p>
         )}
       </div>
-      <PaginationPro currentPage={currentPage} totalPages={Math.ceil(animeData.pagination.total / animeData.pagination.size)} onPageChange={handlePageChange} />
+      {animeData.anime.length > 0 && (
+        <PaginationPro currentPage={currentPage} totalPages={Math.ceil(animeData.pagination.total / animeData.pagination.size)} onPageChange={handlePageChange} />
+      )}
     </div>
   );
 }

@@ -79,7 +79,7 @@
   },
   "anime": {
     "empty_rss": "Please add a RSS subscription first.",
-    "empty_anime": "No anime found",
+    "empty_anime": "This page or category has no anime.",
     "no_downloader": "No Downloader",
     "downloader_offline": "Default Downloader Offline",
     "today": "Today",

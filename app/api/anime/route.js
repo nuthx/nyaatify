@@ -8,7 +8,7 @@ import { sendResponse } from "@/lib/http/response";
 export async function GET(request) {
   try {
     const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
-    const size = parseInt(request.nextUrl.searchParams.get("size") || "4");
+    const size = parseInt(request.nextUrl.searchParams.get("size") || "20");
     const rss = request.nextUrl.searchParams.get("rss");
 
     // Create where condition based on rss parameter
