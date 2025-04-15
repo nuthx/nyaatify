@@ -25,6 +25,13 @@ import {
   CardFooter
 } from "@/components/ui/card";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -40,8 +47,11 @@ export default function Anime() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
+  const [selectedRss, setSelectedRss] = useState(searchParams.get("rss") || "all");
 
-  const { data: animeData, error: animeError, isLoading: animeLoading } = useData(`${API.ANIME}?page=${currentPage}`);
+  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(
+    `${API.ANIME}?page=${currentPage}${selectedRss !== "all" ? `&rss=${selectedRss}` : ""}`
+  );
   const { data: configData, error: configError, isLoading: configLoading } = useData(API.CONFIG);
   const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(API.TORRENTS);
 
@@ -104,17 +114,46 @@ export default function Anime() {
   return (
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6 px-6 md:px-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
-          {configData.downloaderStateDisplay === "1" && (
-            torrentsData.downloaders.length === 0 ? (
-              <Badge variant="outline">{t("anime.no_downloader")}</Badge>
-            ) : !torrentsData.online.includes(configData.defaultDownloader) && (
-              <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>
-            )
-          )}
-          <a className="text-sm text-muted-foreground">{t("anime.today")}: {animeData.count.today}</a>
-          <a className="text-sm text-muted-foreground">{t("anime.week")}: {animeData.count.week}</a>
-          <a className="text-sm text-muted-foreground">{t("anime.total")}: {animeData.count.total}</a>
+        <div className="flex justify-between items-center gap-4 mb-2 col-span-1 md:col-span-2">
+          <div className="flex gap-4">
+            {configData.downloaderStateDisplay === "1" && (
+              torrentsData.downloaders.length === 0 ? (
+                <Badge variant="outline">{t("anime.no_downloader")}</Badge>
+              ) : !torrentsData.online.includes(configData.defaultDownloader) && (
+                <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>
+              )
+            )}
+            <a className="text-sm text-muted-foreground">{t("anime.today")}: {animeData.count.today}</a>
+            <a className="text-sm text-muted-foreground">{t("anime.week")}: {animeData.count.week}</a>
+            <a className="text-sm text-muted-foreground">{t("anime.total")}: {animeData.count.total}</a>
+          </div>
+
+          <div className="flex gap-4">
+            <Select 
+              defaultValue={selectedRss} 
+              onValueChange={(value) => {
+                setSelectedRss(value);
+                const params = new URLSearchParams(window.location.search);
+                if (value === "all") {
+                  params.delete("rss");
+                } else {
+                  params.set("rss", value);
+                }
+                router.push(`/anime?${params.toString()}`, { shallow: true });
+                mutateAnime();
+              }}
+            >
+              <SelectTrigger className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{t("glb.all")}</SelectItem>
+                {animeData.rss.map((rss, idx) => (
+                  <SelectItem key={idx} value={rss}>{rss}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {combinedData.map((item, index) => (
