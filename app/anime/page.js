@@ -49,8 +49,8 @@ export default function Anime() {
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
   const [selectedRss, setSelectedRss] = useState(searchParams.get("rss") || "all");
 
-  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(
-    `${API.ANIME}?page=${currentPage}${selectedRss !== "all" ? `&rss=${selectedRss}` : ""}`
+  const { data: animeData, error: animeError, isLoading: animeLoading } = useData(
+    `${API.ANIME}?page=${currentPage}&rss=${selectedRss === "all" ? "" : selectedRss}`
   );
   const { data: configData, error: configError, isLoading: configLoading } = useData(API.CONFIG);
   const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(API.TORRENTS);
@@ -60,11 +60,30 @@ export default function Anime() {
     document.title = `${t("nav.anime")} - Nyaatify`;
   }, [t]);
 
-  // To show url address with correct page
-  // If first page, hide page number
+  // Update URL when page changes
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    router.push(`/anime${page > 1 ? `?page=${page}` : ""}`);
+    const params = new URLSearchParams(searchParams);
+    if (page > 1) {
+      params.set("page", page);
+    } else {
+      params.delete("page");
+    }
+    router.push(`/anime${params.toString() ? `?${params.toString()}` : ""}`);
+  };
+
+  // Update URL when RSS changes
+  const handleRssChange = (value) => {
+    setSelectedRss(value);
+    setCurrentPage(1);
+    const params = new URLSearchParams(searchParams);
+    if (value === "all") {
+      params.delete("rss");
+    } else {
+      params.set("rss", value);
+    }
+    params.delete("page");
+    router.push(`/anime${params.toString() ? `?${params.toString()}` : ""}`);
   };
 
   const handleManage = async (action, downloader, hash) => {
@@ -129,20 +148,7 @@ export default function Anime() {
           </div>
 
           <div className="flex gap-4">
-            <Select 
-              defaultValue={selectedRss} 
-              onValueChange={(value) => {
-                setSelectedRss(value);
-                const params = new URLSearchParams(window.location.search);
-                if (value === "all") {
-                  params.delete("rss");
-                } else {
-                  params.set("rss", value);
-                }
-                router.push(`/anime?${params.toString()}`, { shallow: true });
-                mutateAnime();
-              }}
-            >
+            <Select defaultValue={selectedRss} onValueChange={handleRssChange}>
               <SelectTrigger className="w-48">
                 <SelectValue />
               </SelectTrigger>
