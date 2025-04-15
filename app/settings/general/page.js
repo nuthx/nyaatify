@@ -4,6 +4,8 @@ import { toast } from "sonner"
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
@@ -33,7 +35,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { SortableItem } from "@/components/sortableitem";
+import { Button } from "@/components/ui/button";
+import { GripVertical } from "lucide-react";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
@@ -66,7 +69,7 @@ export default function Settings() {
     if (configData?.animeTitlePriority) {
       setItems(configData.animeTitlePriority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
     }
-  }, [configData]);
+  }, [configData, t]);
 
   const handleSaveConfig = async (values) => {
     const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
@@ -168,4 +171,28 @@ export default function Settings() {
       </Card>
     </>
   )
+}
+
+function SortableItem({ item }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: item.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div className="flex items-center justify-between h-10 pr-0.5 pl-3 py-2 w-full lg:w-72 transition-width duration-300 ease-in-out text-sm border rounded-md shadow-sm" ref={setNodeRef} style={style}>
+      {item.name}
+      <Button variant="ghost" size="icon" className="cursor-grab hover:cursor-grabbing hover:bg-transparent" {...attributes} {...listeners}>
+        <GripVertical className="h-4 w-4" />
+      </Button>
+    </div>
+  );
 }
