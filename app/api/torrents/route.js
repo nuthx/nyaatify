@@ -7,18 +7,16 @@ import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent
 
 export async function GET(request) {
   try {
-    // Get all downloaders and check their online status
-    const downloaders = await prisma.downloader.findMany();
-    const downloaderStatuses = await Promise.all(
-      downloaders.map(async downloader => {
-        const version = await getQbittorrentVersion(downloader.url, downloader.cookie);
-        return {
-          ...downloader,
-          isOnline: version.success
-        };
-      })
+    // Get all downloaders with their online status
+    const downloaders = await Promise.all(
+      (await prisma.downloader.findMany()).map(async downloader => ({
+        ...downloader,
+        isOnline: (await getQbittorrentVersion(downloader.url, downloader.cookie)).success
+      }))
     );
-    const onlineDownloaders = downloaderStatuses.filter(downloader => downloader.isOnline);
+
+    // Get online downloaders
+    const onlineDownloaders = downloaders.filter(downloader => downloader.isOnline);
 
     // Get torrents from online downloaders
     const allTorrents = [];
@@ -55,8 +53,8 @@ export async function GET(request) {
     return sendResponse(request, {
       data: {
         torrents: allTorrents,
-        downloaders: downloaders.length,  // Total downloaders count
-        online: onlineDownloaders.length  // Online downloaders count
+        downloaders: downloaders.map(d => d.name),
+        online: onlineDownloaders.map(d => d.name)
       }
     });
   } catch (error) {
