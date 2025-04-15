@@ -1,7 +1,5 @@
 import { prisma, getConfig } from "@/lib/db";
-import { formatBytes } from "@/lib/bytes";
 import { sendResponse } from "@/lib/http/response";
-import { getQbittorrentVersion, getQbittorrentTorrents } from "@/lib/api/qbittorrent";
 
 // Get anime list with pagination
 // Params: page, number, optional, default: 1
@@ -12,7 +10,7 @@ export async function GET(request) {
     const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
     const size = parseInt(request.nextUrl.searchParams.get("size") || "20");
 
-    const [anime, total, todayCount, weekCount, downloaders] = await Promise.all([
+    const [anime, total, todayCount, weekCount] = await Promise.all([
       // Get anime data with pagination
       prisma.anime.findMany({
         take: size,
@@ -45,46 +43,29 @@ export async function GET(request) {
             gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
           }
         }
-      }),
-      // Get downloader list
-      prisma.downloader.findMany()
+      })
     ]);
 
-    // Get config
+    // Add titleFirst to each anime item
     const config = await getConfig();
-
-    // Check if default downloader is online
-    let defaultOnline = "0";
-    if (config.defaultDownloader) {
-      const defaultDownloaderInfo = downloaders.find(downloader => downloader.name === config.defaultDownloader);
-      const version = await getQbittorrentVersion(defaultDownloaderInfo.url, defaultDownloaderInfo.cookie);
-      defaultOnline = version.success ? "1" : "0";
-    }
-
-    // Get all torrents to match anime download status
-    const allTorrents = (await Promise.all(downloaders.map(async downloader => {
-      const torrentsResult = await getQbittorrentTorrents(downloader.url, downloader.cookie);
-      return torrentsResult.data.map(t => ({...t, downloader_name: downloader.name}));
-    }))).flat();
-
-    // Process anime data with rss names and downloader status
-    const processedAnime = anime.map(item => ({
+    const priorities = config.animeTitlePriority.split(",");
+    const animeWithTitleFirst = anime.map(item => ({
       ...item,
-      downloader: (() => {
-        const matchingTorrent = allTorrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
-        return matchingTorrent ? {
-          name: matchingTorrent.downloader_name,
-          state: matchingTorrent.state,
-          progress: matchingTorrent.progress,
-          completed: formatBytes(matchingTorrent.completed),
-          size: formatBytes(matchingTorrent.size)
-        } : null;
-      })()
+      titleFirst: priorities.reduce((title, p) => {
+        if (title) return title;
+        const titleMap = {
+          jp: item.titleJp,
+          romaji: item.titleRomaji,
+          cn: item.titleCn,
+          en: item.titleEn
+        };
+        return titleMap[p];
+      }, "") || item.titleParsed || item.titleRaw
     }));
 
     return sendResponse(request, {
       data: {
-        anime: processedAnime,
+        anime: animeWithTitleFirst,
         count: {
           today: todayCount,
           week: weekCount,
@@ -94,13 +75,6 @@ export async function GET(request) {
           total: total,
           size: size,
           current: page
-        },
-        config: {
-          defaultDownloader: config.defaultDownloader,
-          defaultDownloaderOnline: defaultOnline,
-          downloaderStateDisplay: config.downloaderStateDisplay,
-          animeTitlePriority: config.animeTitlePriority,
-          animeCoverSource: config.animeCoverSource
         }
       }
     });

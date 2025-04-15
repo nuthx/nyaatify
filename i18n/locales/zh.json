@@ -79,7 +79,7 @@
   "anime": {
     "empty": "请先添加一个 RSS 订阅",
     "no_downloader": "未添加下载器",
-    "downloader_offline": "下载器已离线",
+    "downloader_offline": "默认下载器已离线",
     "today": "今日",
     "week": "本周",
     "total": "总数"

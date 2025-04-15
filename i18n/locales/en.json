@@ -79,7 +79,7 @@
   "anime": {
     "empty": "Please add a RSS subscription first.",
     "no_downloader": "No Downloader",
-    "downloader_offline": "Downloader Offline",
+    "downloader_offline": "Default Downloader Offline",
     "today": "Today",
     "week": "Week",
     "total": "Total"

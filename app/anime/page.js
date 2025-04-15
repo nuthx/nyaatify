@@ -41,7 +41,9 @@ export default function Anime() {
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
 
-  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(`${API.ANIME}?page=${currentPage}`);
+  const { data: animeData, error: animeError, isLoading: animeLoading } = useData(`${API.ANIME}?page=${currentPage}`);
+  const { data: configData, error: configError, isLoading: configLoading } = useData(API.CONFIG);
+  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(API.TORRENTS);
 
   // Set page title
   useEffect(() => {
@@ -61,34 +63,11 @@ export default function Anime() {
       if (action === "download") {
         toast(t(`toast.start.download`));
       }
-      mutateAnime();
+      mutateTorrents();
     }
   };
 
-  // Get title by priority
-  // If not found, return parsed title, then original title
-  const getTitleByPriority = (item, priority) => {
-    const priorities = priority.split(",");
-    for (const p of priorities) {
-      switch (p) {
-        case "jp":
-          if (item.titleJp) return item.titleJp;
-          break;
-        case "romaji":
-          if (item.titleRomaji) return item.titleRomaji;
-          break;
-        case "cn":
-          if (item.titleCn) return item.titleCn;
-          break;
-        case "en":
-          if (item.titleEn) return item.titleEn;
-          break;
-      }
-    }
-    return item.titleParsed || item.titleRaw;
-  };
-
-  if (animeLoading) {
+  if (animeLoading || configLoading || torrentsLoading) {
     return <></>;
   }
 
@@ -96,6 +75,10 @@ export default function Anime() {
   let errorMessage = "";
   if (animeError) {
     errorMessage = animeError.message;
+  } else if (configError) {
+    errorMessage = configError.message;
+  } else if (torrentsError) {
+    errorMessage = torrentsError.message;
   } else if (animeData.anime.length === 0) {
     errorMessage = t("anime.empty");
   }
@@ -103,26 +86,47 @@ export default function Anime() {
     return <a className="text-sm text-center text-muted-foreground flex flex-col py-8 px-6 md:px-10">{errorMessage}</a>
   }
 
+  // Combine anime data with torrents data
+  const combinedData = animeData.anime.map(item => {
+    const matchingTorrent = torrentsData.torrents.find(t => t.hash.toLowerCase() === item.hash.toLowerCase());
+    return {
+      ...item,
+      downloader: matchingTorrent ? {
+        name: matchingTorrent.downloader,
+        state: matchingTorrent.state,
+        progress: matchingTorrent.progress,
+        completed: matchingTorrent.completed,
+        size: matchingTorrent.size
+      } : null
+    };
+  });
+
   return (
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6 px-6 md:px-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div className="flex gap-4 mx-1 mb-2 col-span-1 md:col-span-2">
-          {animeData.config.downloaderStateDisplay === "1" && !animeData.config.defaultDownloader && <Badge variant="outline">{t("anime.no_downloader")}</Badge>}
-          {animeData.config.downloaderStateDisplay === "1" && animeData.config.defaultDownloader && animeData.config.defaultDownloaderOnline === "0" && <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>}
+          {configData.downloaderStateDisplay === "1" && (
+            torrentsData.downloaders.length === 0 ? (
+              <Badge variant="outline">{t("anime.no_downloader")}</Badge>
+            ) : !torrentsData.online.includes(configData.defaultDownloader) && (
+              <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>
+            )
+          )}
           <a className="text-sm text-muted-foreground">{t("anime.today")}: {animeData.count.today}</a>
           <a className="text-sm text-muted-foreground">{t("anime.week")}: {animeData.count.week}</a>
           <a className="text-sm text-muted-foreground">{t("anime.total")}: {animeData.count.total}</a>
         </div>
-        {animeData.anime?.map((item, index) => (
+
+        {combinedData.map((item, index) => (
           <Card key={index} className="flex flex-col">
             <CardContent className="flex gap-4 flex-1">
               <div className="relative min-w-20 max-w-20 min-h-28 max-h-28 rounded-md bg-muted overflow-hidden">
                 {(item.coverAnilist || item.coverBangumi) && (
                   <Image
-                    src={animeData.config.animeCoverSource === "anilist" 
-                      ? (item.coverAnilist || item.coverBangumi) 
+                    src={configData.animeCoverSource === "anilist"
+                      ? (item.coverAnilist || item.coverBangumi)
                       : (item.coverBangumi || item.coverAnilist)}
-                    alt="Anime cover"
+                    alt={item.titleRaw}
                     fill
                     className="object-cover"
                     draggable="false"
@@ -140,9 +144,7 @@ export default function Anime() {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger className="text-left">
-                        <a href={item.torrent} target="_blank" className="font-medium hover:underline">
-                          {getTitleByPriority(item, animeData.config.animeTitlePriority)}
-                        </a>
+                        <a href={item.torrent} target="_blank" className="font-medium hover:underline">{item.titleFirst}</a>
                       </TooltipTrigger>
                       <TooltipContent className="py-2 space-y-1">
                         {item.titleCn && <p><a className="font-bold">CN: </a>{item.titleCn}</p>}
@@ -200,7 +202,7 @@ export default function Anime() {
                     </AlertDialog>
                   </>
                 ) : (
-                  <Button variant="outline" className="font-normal" onClick={() => handleManage("download", animeData.config.defaultDownloader, item.hash)} disabled={!animeData.config.defaultDownloader || animeData.config.defaultDownloaderOnline === "0"}>
+                  <Button variant="outline" className="font-normal" onClick={() => handleManage("download", configData.defaultDownloader, item.hash)} disabled={!configData.defaultDownloader || !torrentsData.online.includes(configData.defaultDownloader)}>
                     <Download />{t("glb.download")}
                   </Button>
                 )}
