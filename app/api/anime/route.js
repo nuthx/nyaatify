@@ -8,7 +8,7 @@ import { sendResponse } from "@/lib/http/response";
 export async function GET(request) {
   try {
     const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
-    const size = parseInt(request.nextUrl.searchParams.get("size") || "20");
+    const size = parseInt(request.nextUrl.searchParams.get("size") || "4");
     const rss = request.nextUrl.searchParams.get("rss");
 
     // Create where condition based on rss parameter
@@ -87,16 +87,19 @@ export async function GET(request) {
     return sendResponse(request, {
       data: {
         anime: animeWithTitleFirst,
-        rss: rssList.map(r => r.name),
+        rss: {
+          current: rss || "",
+          list: rssList.map(r => r.name)
+        },
         count: {
           today: todayCount,
           week: weekCount,
           total: total
         },
         pagination: {
-          total: total,
+          current: page,
           size: size,
-          current: page
+          total: total
         }
       }
     });

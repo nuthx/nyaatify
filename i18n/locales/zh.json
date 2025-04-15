@@ -78,7 +78,8 @@
     "settings": "设置"
   },
   "anime": {
-    "empty": "请先添加一个 RSS 订阅",
+    "empty_rss": "请先添加一个 RSS 订阅",
+    "empty_anime": "暂无动画",
     "no_downloader": "未添加下载器",
     "downloader_offline": "默认下载器已离线",
     "today": "今日",

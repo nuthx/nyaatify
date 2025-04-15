@@ -78,7 +78,8 @@
     "settings": "Settings"
   },
   "anime": {
-    "empty": "Please add a RSS subscription first.",
+    "empty_rss": "Please add a RSS subscription first.",
+    "empty_anime": "No anime found",
     "no_downloader": "No Downloader",
     "downloader_offline": "Default Downloader Offline",
     "today": "Today",
