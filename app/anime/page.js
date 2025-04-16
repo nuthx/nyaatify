@@ -160,107 +160,127 @@ export default function Anime() {
           </Select>
         </div>
 
-        {animeData.anime.length > 0 ? (
-          combinedData.map((item, index) => (
-            <Card key={index} className="flex flex-col">
-              <CardContent className="flex gap-4 flex-1">
-                <div className="relative min-w-20 max-w-20 min-h-28 max-h-28 rounded-md bg-muted overflow-hidden">
-                  {(item.coverAnilist || item.coverBangumi) && (
-                    <Image
-                      src={configData.animeCoverSource === "anilist"
-                        ? (item.coverAnilist || item.coverBangumi)
-                        : (item.coverBangumi || item.coverAnilist)}
-                      alt={item.titleRaw}
-                      fill
-                      className="object-cover"
-                      draggable="false"
-                    />
-                  )}
-                </div>
-                <div className="flex flex-col gap-2 my-1 w-fit">
-                  <div className="flex gap-2">
-                    <Badge variant="outline">{new Date(item.pubDate).toLocaleString()}</Badge>
-                    {item.rss?.map((rss, idx) => (
-                      <Badge key={idx} variant="outline">{rss.name}</Badge>
-                    ))}
-                  </div>
-                  <div className="w-fit">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger className="text-left">
-                          <a href={item.torrent} target="_blank" className="font-medium hover:underline">{item.titleFirst}</a>
-                        </TooltipTrigger>
-                        <TooltipContent className="py-2 space-y-1">
-                          {item.titleCn && <p><a className="font-bold">CN: </a>{item.titleCn}</p>}
-                          {item.titleJp && <p><a className="font-bold">JP: </a>{item.titleJp}</p>}
-                          {item.titleEn && <p><a className="font-bold">EN: </a>{item.titleEn}</p>}
-                          {item.titleRomaji && <p><a className="font-bold">Romaji: </a>{item.titleRomaji}</p>}
-                          {!item.titleCn && !item.titleJp && !item.titleEn && !item.titleRomaji && item.titleParsed && <p><a className="font-bold">Title: </a>{item.titleParsed}</p>}
-                          {!item.titleCn && !item.titleJp && !item.titleEn && !item.titleRomaji && !item.titleParsed && <p>{item.titleRaw}</p>}
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-                  <a className="text-sm text-muted-foreground">{item.titleRaw}</a>
-                </div>
-              </CardContent>
-              <CardFooter className="flex items-center justify-between py-4">
-                <div className="flex items-center gap-3">
-                  {item.downloader && <Badge>{t(`downloads.state.${item.downloader.state}`)}</Badge>}
-                  <a className="text-sm text-muted-foreground">{item.downloader ? `${item.downloader.completed} / ${item.downloader.size} (${item.downloader.progress === 1 ? 100 : (item.downloader.progress*100).toFixed(1)}%)` : item.size}</a>
-                </div>
-                <div className="flex items-center gap-2">
-                  {item.downloader? (
-                    <>
-                      {["uploading", "queuedUP", "stalledUP", "allocating", "downloading", "metaDL",
-                        "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.downloader.state) && (
-                        <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.downloader.name, item.hash)}>
-                          <Pause />{t("glb.pause")}
-                        </Button>
-                      )}
-                      {["pausedUP", "pausedDL", "stoppedUP", "stoppedDL"].includes(item.downloader.state) && (
-                        <Button className="font-normal" onClick={() => handleManage("resume", item.downloader.name, item.hash)}>
-                          <RefreshCcw />{t("glb.resume")}
-                        </Button>
-                      )}
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" className="font-normal">
-                            <Trash2 />{t("glb.delete")}
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {t("downloads.alert")}
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleManage("delete", item.downloader.name, item.hash)}>
-                              {t("glb.delete")}
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </>
-                  ) : (
-                    <Button variant="outline" className="font-normal" onClick={() => handleManage("download", configData.defaultDownloader, item.hash)} disabled={!configData.defaultDownloader || !torrentsData.online.includes(configData.defaultDownloader)}>
-                      <Download />{t("glb.download")}
-                    </Button>
-                  )}
-                </div>
-              </CardFooter>
-            </Card>
-          ))
+        {animeData.anime.length ? (
+          <>
+            {combinedData.map((item, index) => (
+              <AnimeCard
+                key={index}
+                item={item}
+                configData={configData}
+                torrentsData={torrentsData}
+                handleManage={handleManage}
+              />
+            ))}
+            <PaginationPro 
+              currentPage={currentPage} 
+              totalPages={Math.ceil(animeData.pagination.total / animeData.pagination.size)} 
+              onPageChange={handlePageChange}
+            />
+          </>
         ) : (
-          <p className="my-8 text-sm text-center text-muted-foreground col-span-1 md:col-span-2">{t("anime.empty_anime")}</p>
+          <p className="my-8 text-sm text-center text-muted-foreground col-span-1 md:col-span-2">
+            {t("anime.empty_anime")}
+          </p>
         )}
       </div>
-      {animeData.anime.length > 0 && (
-        <PaginationPro currentPage={currentPage} totalPages={Math.ceil(animeData.pagination.total / animeData.pagination.size)} onPageChange={handlePageChange} />
-      )}
     </div>
+  );
+}
+
+function AnimeCard({ item, configData, torrentsData, handleManage }) {
+  const { t } = useTranslation();
+  return (
+    <Card className="flex flex-col">
+      <CardContent className="flex gap-4 flex-1">
+        <div className="relative min-w-20 max-w-20 min-h-28 max-h-28 rounded-md bg-muted overflow-hidden">
+          {(item.coverAnilist || item.coverBangumi) && (
+            <Image
+              src={configData.animeCoverSource === "anilist"
+                ? (item.coverAnilist || item.coverBangumi)
+                : (item.coverBangumi || item.coverAnilist)}
+              alt={item.titleRaw}
+              fill
+              className="object-cover"
+              draggable="false"
+            />
+          )}
+        </div>
+        <div className="flex flex-col gap-2 my-1 w-fit">
+          <div className="flex gap-2">
+            <Badge variant="outline">{new Date(item.pubDate).toLocaleString()}</Badge>
+            {item.rss?.map((rss, idx) => (
+              <Badge key={idx} variant="outline">{rss.name}</Badge>
+            ))}
+          </div>
+          <div className="w-fit">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger className="text-left">
+                  <a href={item.torrent} target="_blank" className="font-medium hover:underline">{item.titleFirst}</a>
+                </TooltipTrigger>
+                <TooltipContent className="py-2 space-y-1">
+                  {item.titleCn && <p><a className="font-bold">CN: </a>{item.titleCn}</p>}
+                  {item.titleJp && <p><a className="font-bold">JP: </a>{item.titleJp}</p>}
+                  {item.titleEn && <p><a className="font-bold">EN: </a>{item.titleEn}</p>}
+                  {item.titleRomaji && <p><a className="font-bold">Romaji: </a>{item.titleRomaji}</p>}
+                  {!item.titleCn && !item.titleJp && !item.titleEn && !item.titleRomaji && item.titleParsed && <p><a className="font-bold">Title: </a>{item.titleParsed}</p>}
+                  {!item.titleCn && !item.titleJp && !item.titleEn && !item.titleRomaji && !item.titleParsed && <p>{item.titleRaw}</p>}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <a className="text-sm text-muted-foreground">{item.titleRaw}</a>
+        </div>
+      </CardContent>
+
+      <CardFooter className="flex items-center justify-between py-4">
+        <div className="flex items-center gap-3">
+          {item.downloader && <Badge>{t(`downloads.state.${item.downloader.state}`)}</Badge>}
+          <a className="text-sm text-muted-foreground">{item.downloader ? `${item.downloader.completed} / ${item.downloader.size} (${item.downloader.progress === 1 ? 100 : (item.downloader.progress*100).toFixed(1)}%)` : item.size}</a>
+        </div>
+        <div className="flex items-center gap-2">
+          {item.downloader? (
+            <>
+              {["uploading", "queuedUP", "stalledUP", "allocating", "downloading", "metaDL",
+                "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.downloader.state) && (
+                <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.downloader.name, item.hash)}>
+                  <Pause />{t("glb.pause")}
+                </Button>
+              )}
+              {["pausedUP", "pausedDL", "stoppedUP", "stoppedDL"].includes(item.downloader.state) && (
+                <Button className="font-normal" onClick={() => handleManage("resume", item.downloader.name, item.hash)}>
+                  <RefreshCcw />{t("glb.resume")}
+                </Button>
+              )}
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="outline" className="font-normal">
+                    <Trash2 />{t("glb.delete")}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t("downloads.alert")}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
+                    <AlertDialogAction onClick={() => handleManage("delete", item.downloader.name, item.hash)}>
+                      {t("glb.delete")}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </>
+          ) : (
+            <Button variant="outline" className="font-normal" onClick={() => handleManage("download", configData.defaultDownloader, item.hash)} disabled={!configData.defaultDownloader || !torrentsData.online.includes(configData.defaultDownloader)}>
+              <Download />{t("glb.download")}
+            </Button>
+          )}
+        </div>
+      </CardFooter>
+    </Card>
   );
 }
