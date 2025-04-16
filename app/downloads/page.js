@@ -51,9 +51,9 @@ export default function Home() {
   let errorMessage = "";
   if (torrentsError) {
     errorMessage = torrentsError.message;
-  } else if (torrentsData.downloaders === 0) {
+  } else if (torrentsData.downloaders.length === 0) {
     errorMessage = t("downloads.empty_downloader");
-  } else if (torrentsData.online === 0) {
+  } else if (torrentsData.online.length === 0) {
     errorMessage = t("downloads.empty_online");
   } else if (torrentsData.torrents.length === 0) {
     errorMessage = t("downloads.empty_torrents");

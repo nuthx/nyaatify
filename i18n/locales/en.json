@@ -1,5 +1,6 @@
 {
   "glb": {
+    "all": "All",
     "download": "Download",
     "pause": "Pause",
     "resume": "Resume",
@@ -77,9 +78,10 @@
     "settings": "Settings"
   },
   "anime": {
-    "empty": "Please add a RSS subscription first.",
+    "empty_rss": "Please add a RSS subscription first.",
+    "empty_anime": "This page or category has no anime.",
     "no_downloader": "No Downloader",
-    "downloader_offline": "Downloader Offline",
+    "downloader_offline": "Default Downloader Offline",
     "today": "Today",
     "week": "Week",
     "total": "Total"
