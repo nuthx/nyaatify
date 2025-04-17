@@ -87,14 +87,14 @@ export default function AnimeDetail({ params }) {
         </CardContent>
         <CardFooter className="flex justify-between py-4">
           <div className="flex gap-2">
-            <a href={animeData.pageAnilist} target="_blank">
+            <a href={`https://anilist.co/anime/${animeData.idAnilist}`} target="_blank">
               <Button variant="outline"><SquareArrowOutUpRight />Anilist</Button>
             </a>
-            <a href={animeData.pageBangumi} target="_blank">
+            <a href={`https://bgm.tv/subject/${animeData.idBangumi}`} target="_blank">
               <Button variant="outline"><SquareArrowOutUpRight />Bangumi</Button>
             </a>
-            <a href={animeData.pageMikan} target="_blank">
-              <Button variant="outline"><SquareArrowOutUpRight />Mikan</Button>
+            <a href={animeData.sourceUrl} target="_blank">
+              <Button variant="outline"><SquareArrowOutUpRight />{animeData.source}</Button>
             </a>
           </div>
           <div className="flex gap-2">
