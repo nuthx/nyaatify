@@ -216,7 +216,7 @@ function AnimeCard({ item, configData, torrentsData, handleManage }) {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger className="text-left">
-                  <a href={item.torrent} target="_blank" className="font-medium hover:underline">{item.titleFirst}</a>
+                  <a href={`/anime/${item.hash}`} className="font-medium hover:underline">{item.titleFirst}</a>
                 </TooltipTrigger>
                 <TooltipContent className="py-2 space-y-1">
                   {item.titleCn && <p><a className="font-bold">CN: </a>{item.titleCn}</p>}

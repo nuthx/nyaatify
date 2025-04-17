@@ -84,7 +84,21 @@
     "downloader_offline": "Default Downloader Offline",
     "today": "Today",
     "week": "Week",
-    "total": "Total"
+    "total": "Total",
+    "page": {
+      "title_jp": "Japanese Title",
+      "title_cn": "Chinese Title",
+      "title_en": "English Title",
+      "title_romaji": "Romaji Title",
+      "title_parsed": "Parsed Title",
+      "rss": "RSS",
+      "size": "File Size",
+      "pub_date": "Released At",
+      "created_at": "Created At",
+      "torrent_file": "Torrent File",
+      "magnet_link": "Magnet Link",
+      "pub_info": "Release Information"
+    }
   },
   "downloads": {
     "empty_downloader": "Please add a downloader first.",

@@ -84,7 +84,21 @@
     "downloader_offline": "默认下载器已离线",
     "today": "今日",
     "week": "本周",
-    "total": "总数"
+    "total": "总数",
+    "page": {
+      "title_jp": "日文标题",
+      "title_cn": "中文标题",
+      "title_en": "英文标题",
+      "title_romaji": "罗马音标题",
+      "title_parsed": "解析标题",
+      "rss": "RSS",
+      "size": "文件大小",
+      "pub_date": "发布时间",
+      "created_at": "添加时间",
+      "torrent_file": "种子文件",
+      "magnet_link": "磁力链接",
+      "pub_info": "发布信息"
+    }
   },
   "downloads": {
     "empty_downloader": "请先添加一个下载器",
