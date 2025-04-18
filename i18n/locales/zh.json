@@ -86,6 +86,7 @@
     "week": "本周",
     "total": "总数",
     "page": {
+      "switch_to": "切换至 {{source}} 封面",
       "title_jp": "日文标题",
       "title_cn": "中文标题",
       "title_en": "英文标题",

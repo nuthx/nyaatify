@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { use, useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
@@ -15,13 +15,21 @@ import {
   CardTitle,
   CardFooter
 } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { PenLine, Download, Pause, RefreshCcw, Trash2, File, Link, SquareArrowOutUpRight } from "lucide-react";
 
 export default function AnimeDetail({ params }) {
   const { t } = useTranslation();
   const { hash } = use(params);
+  const [showAnilist, setShowAnilist] = useState(false);
 
   const { data: animeData, error: animeError, isLoading: animeLoading } = useData(`${API.ANIME}/${hash}`);
+  const { data: configData, error: configError, isLoading: configLoading } = useData(`${API.CONFIG}`);
 
   // Set page title
   useEffect(() => {
@@ -34,12 +42,26 @@ export default function AnimeDetail({ params }) {
     }
   }, [animeData, animeLoading]);
 
-  if (animeLoading) {
+  // Set initial cover source based on config
+  useEffect(() => {
+    if (!configLoading && configData) {
+      setShowAnilist(configData.animeCoverSource === "anilist");
+    }
+  }, [configData, configLoading]);
+
+  if (animeLoading || configLoading) {
     return <></>;
   }
 
+  // Show error message if request failed
+  let errorMessage = "";
   if (animeError) {
-    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8 px-6 md:px-10">{animeError.message}</a>
+    errorMessage = animeError.message;
+  } else if (configError) {
+    errorMessage = configError.message;
+  }
+  if (errorMessage) {
+    return <a className="text-sm text-center text-muted-foreground flex flex-col py-8 px-6 md:px-10">{errorMessage}</a>
   }
 
   return (
@@ -51,15 +73,29 @@ export default function AnimeDetail({ params }) {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex flex-col md:flex-row gap-6">
-            <div className="relative min-w-40 max-w-40 min-h-56 max-h-56 rounded-md bg-muted overflow-hidden">
+            <div className="group relative min-w-40 max-w-40 min-h-56 max-h-56 rounded-md bg-muted overflow-hidden">
               {(animeData.coverAnilist || animeData.coverBangumi) && (
-                <Image
-                  src={animeData.coverAnilist || animeData.coverBangumi}
-                  alt={animeData.titleRaw}
-                  fill
-                  className="object-cover"
-                  draggable="false"
-                />
+                <>
+                  <Image
+                    src={showAnilist ? animeData.coverAnilist || animeData.coverBangumi : animeData.coverBangumi || animeData.coverAnilist}
+                    alt={animeData.titleRaw}
+                    fill
+                    className="object-cover"
+                    draggable="false"
+                  />
+                  <TooltipProvider delayDuration={0}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="float" size="icon" className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out" onClick={() => setShowAnilist(!showAnilist)}>
+                          <RefreshCcw className="w-6 h-6 text-white" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("anime.page.switch_to", { source: showAnilist ? "Bangumi" : "Anilist" })}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </>
               )}
             </div>
             <div className="flex-1 space-y-4">

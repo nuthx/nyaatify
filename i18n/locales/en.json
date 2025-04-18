@@ -86,6 +86,7 @@
     "week": "Week",
     "total": "Total",
     "page": {
+      "switch_to": "Switch to {{source}} cover",
       "title_jp": "Japanese Title",
       "title_cn": "Chinese Title",
       "title_en": "English Title",
