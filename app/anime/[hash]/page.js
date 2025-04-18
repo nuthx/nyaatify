@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { marked } from "marked";
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { Badge } from "@/components/ui/badge";
@@ -27,6 +28,7 @@ export default function AnimeDetail({ params }) {
   const { t } = useTranslation();
   const { hash } = use(params);
   const [showAnilist, setShowAnilist] = useState(false);
+  const [parsedContent, setParsedContent] = useState("");
 
   const { data: animeData, error: animeError, isLoading: animeLoading } = useData(`${API.ANIME}/${hash}`);
   const { data: configData, error: configError, isLoading: configLoading } = useData(`${API.CONFIG}`);
@@ -48,6 +50,13 @@ export default function AnimeDetail({ params }) {
       setShowAnilist(configData.animeCoverSource === "anilist");
     }
   }, [configData, configLoading]);
+
+  // Add markdown to HTML conversion
+  useEffect(() => {
+    if (animeData?.sourceContent) {
+      setParsedContent(marked(animeData.sourceContent));
+    }
+  }, [animeData?.sourceContent]);
 
   if (animeLoading || configLoading) {
     return <></>;
@@ -156,13 +165,18 @@ export default function AnimeDetail({ params }) {
         </CardFooter>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("anime.page.pub_info")}</CardTitle>
-        </CardHeader>
-        <CardContent>
-        </CardContent>
-      </Card>
+      {animeData?.sourceContent && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("anime.page.pub_info")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="prose prose-sm max-w-none dark:prose-invert"
+              dangerouslySetInnerHTML={{ __html: parsedContent }}>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
