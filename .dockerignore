@@ -4,6 +4,7 @@ node_modules
 .env
 .env.local
 .vscode
+.idea
 .DS_Store
 database
 logs
