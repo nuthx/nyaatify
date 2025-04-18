@@ -99,15 +99,23 @@ export default function AnimeDetail({ params }) {
               )}
             </div>
             <div className="flex-1 space-y-4">
-              <div className="space-y-2">
-                <p><span className="font-semibold">{t("anime.page.title_jp")}: </span>{animeData.titleJp}</p>
-                <p><span className="font-semibold">{t("anime.page.title_cn")}: </span>{animeData.titleCn}</p>
-                <p><span className="font-semibold">{t("anime.page.title_en")}: </span>{animeData.titleEn}</p>
-                <p><span className="font-semibold">{t("anime.page.title_romaji")}: </span>{animeData.titleRomaji}</p>
+              <div className="space-y-2.5">
+                {configData.animeTitlePriority.split(",").map((type) => {
+                  const titles = {
+                    jp: { label: t("anime.page.title_jp"), value: animeData.titleJp },
+                    cn: { label: t("anime.page.title_cn"), value: animeData.titleCn },
+                    en: { label: t("anime.page.title_en"), value: animeData.titleEn },
+                    romaji: { label: t("anime.page.title_romaji"), value: animeData.titleRomaji }
+                  };
+                  const title = titles[type];
+                  return (
+                    <p key={type}><span className="font-semibold">{title.label}: </span>{title.value}</p>
+                  );
+                })}
                 <p><span className="font-semibold">{t("anime.page.title_parsed")}: </span>{animeData.titleParsed}</p>
               </div>
               <Separator />
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <div className="flex items-center gap-2">
                   <span className="font-semibold">{t("anime.page.rss")}: </span>
                   {animeData.rss?.map((rss, idx) => (
