@@ -1,8 +1,7 @@
 import { prisma } from "@/lib/db";
-import { getTitleFirst } from "@/lib/title";
 import { sendResponse } from "@/lib/http/response";
 
-// Get anime detail by hash
+// Get anime description from source url
 // Params: hash, string, required
 export async function GET(request, { params }) {
   try {
@@ -21,10 +20,21 @@ export async function GET(request, { params }) {
       throw new Error("No anime found");
     }
 
+    // Get source content from source url
+    const res = await fetch(anime.sourceUrl);
+    const html = await res.text();
+    let match = null;
+    if (anime.source === "Nyaa") {
+      match = html.match(/id="torrent-description"[^>]*>([\s\S]*?)<\/div>/i);
+    } else {
+      match = html.match(/class="episode-desc"[^>]*>([\s\S]*?)(?=<\/div>\s*<a href="#0")/i);
+    }
+    const desc = match ? match[1].trim() : "";
+
     return sendResponse(request, {
       data: {
-        ...anime,
-        titleFirst: await getTitleFirst(anime)
+        type: anime.source,
+        content: desc.replace(/&#10;/g, "\n")
       }
     });
   } catch (error) {
