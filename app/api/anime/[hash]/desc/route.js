@@ -1,3 +1,4 @@
+import * as cheerio from "cheerio";
 import { prisma } from "@/lib/db";
 import { sendResponse } from "@/lib/http/response";
 
@@ -23,13 +24,14 @@ export async function GET(request, { params }) {
     // Get source content from source url
     const res = await fetch(anime.sourceUrl);
     const html = await res.text();
-    let match = null;
+    const $ = cheerio.load(html);
+    let desc = "";
     if (anime.source === "Nyaa") {
-      match = html.match(/id="torrent-description"[^>]*>([\s\S]*?)<\/div>/i);
+      desc = $("#torrent-description").html();
     } else {
-      match = html.match(/class="episode-desc"[^>]*>([\s\S]*?)(?=<\/div>\s*<a href="#0")/i);
+      desc = $(".episode-desc").children().first().remove();  // Remove the hidden tmall advertisement
+      desc = $(".episode-desc").html();
     }
-    const desc = match ? match[1].trim() : "";
 
     return sendResponse(request, {
       data: {
