@@ -32,7 +32,7 @@ export async function GET(request, { params }) {
     return sendResponse(request, {
       data: {
         type: anime.source,
-        content: desc.replace(/&#10;/g, "\n")
+        content: desc
       }
     });
   } catch (error) {
