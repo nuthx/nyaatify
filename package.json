@@ -30,6 +30,7 @@
     "@radix-ui/react-tooltip": "^1.2.0",
     "anitomy": "^0.0.35",
     "bottleneck": "^2.19.5",
+    "cheerio": "^1.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -38,6 +39,7 @@
     "jose": "^6.0.10",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.488.0",
+    "marked": "^15.0.8",
     "moment-timezone": "^0.5.48",
     "next": "^15.3.0",
     "next-themes": "^0.4.6",
@@ -58,6 +60,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "postcss": "^8.5.3",
     "prisma": "^6.6.0",
     "tailwindcss": "^3.4.17"

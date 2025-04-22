@@ -21,7 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PenLine, Download, Pause, RefreshCcw, Trash2, File, Link, SquareArrowOutUpRight } from "lucide-react";
+import { PenLine, Download, Pause, RefreshCcw, Trash2, File, Link, SquareArrowOutUpRight, Loader2 } from "lucide-react";
 
 export default function AnimeDetail({ params }) {
   const { t } = useTranslation();
@@ -29,6 +29,7 @@ export default function AnimeDetail({ params }) {
   const [showAnilist, setShowAnilist] = useState(false);
 
   const { data: animeData, error: animeError, isLoading: animeLoading } = useData(`${API.ANIME}/${hash}`);
+  const { data: descData, error: descError, isLoading: descLoading, mutate: descMutate } = useData(`${API.ANIME}/${hash}/desc`);
   const { data: configData, error: configError, isLoading: configLoading } = useData(`${API.CONFIG}`);
 
   // Set page title
@@ -161,6 +162,21 @@ export default function AnimeDetail({ params }) {
           <CardTitle>{t("anime.page.pub_info")}</CardTitle>
         </CardHeader>
         <CardContent>
+          {descLoading ? (
+            <div className="flex flex-col items-center justify-center gap-2 m-6">
+              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <p className="text-sm text-muted-foreground">{t("anime.page.loading")}</p>
+            </div>
+          ) : descError ? (
+            <div className="flex flex-col items-center justify-center gap-4 m-6">
+              <p className="text-sm text-muted-foreground">{t("toast.failed.fetch_desc")}</p>
+              <Button variant="outline" onClick={() => descMutate()}><RefreshCcw />{t("glb.retry")}</Button>
+            </div>
+          ) : (
+            <div className="prose prose-sm max-w-none dark:prose-invert"
+              dangerouslySetInnerHTML={{ __html: descData.content }}>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

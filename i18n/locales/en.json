@@ -10,8 +10,9 @@
     "add": "Add",
     "save": "Save",
     "test": "Test",
-    "reset": "Reset",
     "show": "Show",
+    "reset": "Reset",
+    "retry": "Retry",
     "hide": "Hide",
     "enabled": "Enabled",
     "disabled": "Disabled",
@@ -55,6 +56,7 @@
       "fetch_config": "Failed to fetch config",
       "fetch_list": "Failed to fetch list",
       "fetch_logs": "Failed to fetch logs",
+      "fetch_desc": "Failed to fetch anime description",
       "refresh_rss": "Failed to refresh subscription"
     }
   },
@@ -98,7 +100,8 @@
       "created_at": "Created At",
       "torrent_file": "Torrent File",
       "magnet_link": "Magnet Link",
-      "pub_info": "Release Information"
+      "pub_info": "Release Information",
+      "loading": "Loading, please wait..."
     }
   },
   "downloads": {

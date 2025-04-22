@@ -12,6 +12,7 @@
     "test": "测试",
     "show": "显示",
     "reset": "重置",
+    "retry": "重试",
     "hide": "隐藏",
     "enabled": "启用",
     "disabled": "禁用",
@@ -55,6 +56,7 @@
       "fetch_config": "系统配置获取失败",
       "fetch_list": "列表获取失败",
       "fetch_logs": "日志获取失败",
+      "fetch_desc": "动画信息获取失败",
       "refresh_rss": "订阅刷新失败"
     }
   },
@@ -98,7 +100,8 @@
       "created_at": "添加时间",
       "torrent_file": "种子文件",
       "magnet_link": "磁力链接",
-      "pub_info": "发布信息"
+      "pub_info": "发布信息",
+      "loading": "加载中，请稍后"
     }
   },
   "downloads": {
