@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio";
 import { marked } from "marked";
 import { prisma } from "@/lib/db";
+import { parserConfig } from "@/lib/core/parser/config";
 import { sendResponse } from "@/lib/http/response";
 
 // Get anime description from source url
@@ -22,18 +23,14 @@ export async function GET(request, { params }) {
       throw new Error("No anime found");
     }
 
+    // Import the specific parser module
+    const currentConfig = parserConfig.find(c => c.type === anime.source);
+    const parserModule = await import(`@/lib/core/parser/${currentConfig.parser}`);
+
     // Get source content from source url
     const res = await fetch(anime.sourceUrl);
     const html = await res.text();
-    const $ = cheerio.load(html);
-    let desc = "";
-    if (anime.source === "Nyaa") {
-      desc = $("#torrent-description").html();
-      desc = marked(desc);
-    } else {
-      desc = $(".episode-desc").children().first().remove();  // Remove the hidden tmall advertisement
-      desc = $(".episode-desc").html();
-    }
+    const desc = parserModule.extractDescription(html);
 
     return sendResponse(request, {
       data: {
