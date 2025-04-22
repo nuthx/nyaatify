@@ -1,7 +1,5 @@
-import * as cheerio from "cheerio";
-import { marked } from "marked";
 import { prisma } from "@/lib/db";
-import { parserConfig } from "@/lib/core/parser/config";
+import { dynamicImport } from "@/lib/core/dynamic";
 import { sendResponse } from "@/lib/http/response";
 
 // Get anime description from source url
@@ -23,9 +21,8 @@ export async function GET(request, { params }) {
       throw new Error("No anime found");
     }
 
-    // Import the specific parser module
-    const currentConfig = parserConfig.find(c => c.type === anime.source);
-    const parserModule = await import(`@/lib/core/parser/${currentConfig.parser}`);
+    // Dynamic import
+    const { parserModule } = await dynamicImport(anime.source);
 
     // Get source content from source url
     const res = await fetch(anime.sourceUrl);
