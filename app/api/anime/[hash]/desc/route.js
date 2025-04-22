@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import { marked } from "marked";
 import { prisma } from "@/lib/db";
 import { sendResponse } from "@/lib/http/response";
 
@@ -28,6 +29,7 @@ export async function GET(request, { params }) {
     let desc = "";
     if (anime.source === "Nyaa") {
       desc = $("#torrent-description").html();
+      desc = marked(desc);
     } else {
       desc = $(".episode-desc").children().first().remove();  // Remove the hidden tmall advertisement
       desc = $(".episode-desc").html();

@@ -3,7 +3,6 @@
 import Image from "next/image";
 import { use, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { marked } from "marked";
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +27,6 @@ export default function AnimeDetail({ params }) {
   const { t } = useTranslation();
   const { hash } = use(params);
   const [showAnilist, setShowAnilist] = useState(false);
-  const [parsedContent, setParsedContent] = useState("");
 
   const { data: animeData, error: animeError, isLoading: animeLoading } = useData(`${API.ANIME}/${hash}`);
   const { data: descData, error: descError, isLoading: descLoading, mutate: descMutate } = useData(`${API.ANIME}/${hash}/desc`);
@@ -51,13 +49,6 @@ export default function AnimeDetail({ params }) {
       setShowAnilist(configData.animeCoverSource === "anilist");
     }
   }, [configData, configLoading]);
-
-  // Add markdown to HTML conversion
-  useEffect(() => {
-    if (descData?.content) {
-      setParsedContent(marked(descData.content));
-    }
-  }, [descData?.content]);
 
   if (animeLoading || configLoading) {
     return <></>;
@@ -183,7 +174,7 @@ export default function AnimeDetail({ params }) {
             </div>
           ) : (
             <div className="prose prose-sm max-w-none dark:prose-invert"
-              dangerouslySetInnerHTML={{ __html: parsedContent }}>
+              dangerouslySetInnerHTML={{ __html: descData.content }}>
             </div>
           )}
         </CardContent>
