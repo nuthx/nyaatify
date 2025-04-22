@@ -84,18 +84,20 @@ export default function AnimeDetail({ params }) {
                     className="object-cover"
                     draggable="false"
                   />
-                  <TooltipProvider delayDuration={0}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="float" size="icon" className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out" onClick={() => setShowAnilist(!showAnilist)}>
-                          <RefreshCcw className="w-6 h-6 text-white" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t("anime.page.switch_to", { source: showAnilist ? "Bangumi" : "Anilist" })}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  {animeData.coverAnilist && animeData.coverBangumi && (
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="float" size="icon" className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out" onClick={() => setShowAnilist(!showAnilist)}>
+                            <RefreshCcw className="w-6 h-6 text-white" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t("anime.page.switch_to", { source: showAnilist ? "Bangumi" : "Anilist" })}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                 </>
               )}
             </div>
