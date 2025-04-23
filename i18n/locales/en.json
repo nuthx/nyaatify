@@ -4,6 +4,7 @@
     "download": "Download",
     "pause": "Pause",
     "resume": "Resume",
+    "confirm": "Confirm",
     "cancel": "Cancel",
     "delete": "Delete",
     "confirm_delete": "Confirm Deletion",
@@ -101,7 +102,11 @@
       "torrent_file": "Torrent File",
       "magnet_link": "Magnet Link",
       "pub_info": "Release Information",
-      "loading": "Loading, please wait..."
+      "loading": "Loading, please wait...",
+      "reanalysis": {
+        "title": "Reanalysis",
+        "desc": "Reanalyze the anime information based on the specified Anilist or Bangumi ID."
+      }
     }
   },
   "downloads": {
