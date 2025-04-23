@@ -23,7 +23,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog"
 import {
   Tooltip,
@@ -169,11 +168,13 @@ export default function AnimeDetail({ params }) {
                     romaji: { label: t("anime.page.title_romaji"), value: animeData.titleRomaji }
                   };
                   const title = titles[type];
-                  return (
+                  return title.value ? (
                     <p key={type}><span className="font-semibold">{title.label}: </span>{title.value}</p>
-                  );
+                  ) : null;
                 })}
-                <p><span className="font-semibold">{t("anime.page.title_parsed")}: </span>{animeData.titleParsed}</p>
+                {animeData.titleParsed && (
+                  <p><span className="font-semibold">{t("anime.page.title_parsed")}: </span>{animeData.titleParsed}</p>
+                )}
               </div>
               <Separator />
               <div className="space-y-2.5">
