@@ -4,6 +4,7 @@
     "download": "下载",
     "pause": "暂停",
     "resume": "恢复",
+    "confirm": "确认",
     "cancel": "取消",
     "delete": "删除",
     "confirm_delete": "确认删除",
@@ -33,7 +34,8 @@
       "refresh_rss": "开始刷新订阅"
     },
     "done": {
-      "send": "通知已发送"
+      "send": "通知已发送",
+      "no_change": "动画信息未修改"
     },
     "success": {
       "save": "保存成功",
@@ -101,7 +103,11 @@
       "torrent_file": "种子文件",
       "magnet_link": "磁力链接",
       "pub_info": "发布信息",
-      "loading": "加载中，请稍后"
+      "loading": "加载中，请稍后",
+      "reanalysis": {
+        "title": "重新识别",
+        "desc": "根据指定 Anilist 或 Bangumi 的 ID 重新识别动画信息"
+      }
     }
   },
   "downloads": {

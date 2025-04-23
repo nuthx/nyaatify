@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { toast } from "sonner"
 import { use, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { handleRequest } from "@/lib/http/request";
+import { createForm } from "@/lib/form";
 import {
   Card,
   CardContent,
@@ -16,20 +16,40 @@ import {
   CardFooter
 } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose,
+} from "@/components/ui/dialog"
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { PenLine, Download, Pause, RefreshCcw, Trash2, File, Link, SquareArrowOutUpRight, Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { LabelInput } from "@/components/label-input";
+import { PenLine, PencilRuler, Download, Pause, RefreshCcw, Trash2, File, Link, SquareArrowOutUpRight, Loader2 } from "lucide-react";
 
 export default function AnimeDetail({ params }) {
   const { t } = useTranslation();
   const { hash } = use(params);
-  const [showAnilist, setShowAnilist] = useState(false);
+  const [showAnilistCover, setShowAnilistCover] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { data: animeData, error: animeError, isLoading: animeLoading } = useData(`${API.ANIME}/${hash}`);
-  const { data: descData, error: descError, isLoading: descLoading, mutate: descMutate } = useData(`${API.ANIME}/${hash}/desc`);
+  const reanalysisForm = createForm({
+    anilist_id: { schema: "trim" },
+    bangumi_id: { schema: "trim" }
+  })();
+
+  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(`${API.ANIME}/${hash}`);
+  const { data: descData, error: descError, isLoading: descLoading, mutate: mutateDesc } = useData(`${API.ANIME}/${hash}/desc`);
   const { data: configData, error: configError, isLoading: configLoading } = useData(`${API.CONFIG}`);
 
   // Set page title
@@ -46,9 +66,23 @@ export default function AnimeDetail({ params }) {
   // Set initial cover source based on config
   useEffect(() => {
     if (!configLoading && configData) {
-      setShowAnilist(configData.animeCoverSource === "anilist");
+      setShowAnilistCover(configData.animeCoverSource === "anilist");
     }
   }, [configData, configLoading]);
+
+  const handleReanalysis = async (values) => {
+    const result = await handleRequest("POST", `${API.ANIME}/${hash}/reanalysis`, values, t("toast.failed.edit"));
+    if (result) {
+      if (result.code === 240) {
+        toast(t("toast.done.no_change"));
+      } else {
+        setDialogOpen(false);
+        mutateAnime();
+        toast(t("toast.success.edit"));
+        reanalysisForm.reset();
+      }
+    }
+  };
 
   if (animeLoading || configLoading) {
     return <></>;
@@ -68,38 +102,62 @@ export default function AnimeDetail({ params }) {
   return (
     <div className="container mx-auto max-w-screen-xl py-8 px-6 md:px-10 flex flex-col gap-4">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0">
+        <CardHeader>
           <CardTitle className="text-base/6">{animeData.titleRaw}</CardTitle>
-          <Button variant="ghost" size="icon" className="shrink-0 m-0"><PenLine /></Button>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex flex-col md:flex-row gap-6">
-            <div className="group relative min-w-40 max-w-40 min-h-56 max-h-56 rounded-md bg-muted overflow-hidden">
-              {(animeData.coverAnilist || animeData.coverBangumi) && (
-                <>
-                  <Image
-                    src={showAnilist ? animeData.coverAnilist || animeData.coverBangumi : animeData.coverBangumi || animeData.coverAnilist}
-                    alt={animeData.titleRaw}
-                    fill
-                    className="object-cover"
-                    draggable="false"
-                  />
-                  {animeData.coverAnilist && animeData.coverBangumi && (
-                    <TooltipProvider delayDuration={0}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="float" size="icon" className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out" onClick={() => setShowAnilist(!showAnilist)}>
-                            <RefreshCcw className="w-6 h-6 text-white" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{t("anime.page.switch_to", { source: showAnilist ? "Bangumi" : "Anilist" })}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
-                </>
-              )}
+            <div className="flex flex-col items-center justify-center md:justify-start gap-6 md:gap-2 w-full md:w-auto">
+              <div className="group relative min-w-40 max-w-40 min-h-56 max-h-56 rounded-md bg-muted overflow-hidden">
+                {(animeData.coverAnilist || animeData.coverBangumi) && (
+                  <>
+                    <Image
+                      src={showAnilistCover ? animeData.coverAnilist || animeData.coverBangumi : animeData.coverBangumi || animeData.coverAnilist}
+                      alt={animeData.titleRaw}
+                      fill
+                      className="object-cover"
+                      draggable="false"
+                    />
+                    {animeData.coverAnilist && animeData.coverBangumi && (
+                      <TooltipProvider delayDuration={0}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="float" size="icon" className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out" onClick={() => setShowAnilistCover(!showAnilistCover)}>
+                              <RefreshCcw className="w-6 h-6 text-white" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{t("anime.page.switch_to", { source: showAnilistCover ? "Bangumi" : "Anilist" })}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </>
+                )}
+              </div>
+              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="w-full md:w-40 shadow-none">
+                    <PencilRuler />{t("anime.page.reanalysis.title")}
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <form onSubmit={reanalysisForm.handleSubmit(handleReanalysis)}>
+                    <DialogHeader>
+                      <DialogTitle>{t("anime.page.reanalysis.title")}</DialogTitle>
+                      <DialogDescription>{t("anime.page.reanalysis.desc")}</DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-6">
+                      <LabelInput form={reanalysisForm} title="Anilist ID" id="anilist_id" placeholder={animeData.idAnilist} type="number"/>
+                      <LabelInput form={reanalysisForm} title="Bangumi ID" id="bangumi_id" placeholder={animeData.idBangumi} type="number"/>
+                    </div>
+                    <DialogFooter>
+                      <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>{t("glb.cancel")}</Button>
+                      <Button type="submit">{t("glb.confirm")}</Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="flex-1 space-y-4">
               <div className="space-y-2.5">
@@ -172,7 +230,7 @@ export default function AnimeDetail({ params }) {
           ) : descError ? (
             <div className="flex flex-col items-center justify-center gap-4 m-6">
               <p className="text-sm text-muted-foreground">{t("toast.failed.fetch_desc")}</p>
-              <Button variant="outline" onClick={() => descMutate()}><RefreshCcw />{t("glb.retry")}</Button>
+              <Button variant="outline" onClick={() => mutateDesc()}><RefreshCcw />{t("glb.retry")}</Button>
             </div>
           ) : (
             <div className="prose prose-sm max-w-none dark:prose-invert"
