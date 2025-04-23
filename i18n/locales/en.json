@@ -34,7 +34,8 @@
       "refresh_rss": "Start Refreshing Subscription"
     },
     "done": {
-      "send": "Notification Sent"
+      "send": "Notification Sent",
+      "no_change": "No Anime Info Changed"
     },
     "success": {
       "save": "Saved Successfully",

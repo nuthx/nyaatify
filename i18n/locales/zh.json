@@ -34,7 +34,8 @@
       "refresh_rss": "开始刷新订阅"
     },
     "done": {
-      "send": "通知已发送"
+      "send": "通知已发送",
+      "no_change": "动画信息未修改"
     },
     "success": {
       "save": "保存成功",

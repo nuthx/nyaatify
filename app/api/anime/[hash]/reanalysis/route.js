@@ -15,6 +15,21 @@ export async function POST(request, { params }) {
     let newAnilist = null;
     let newBangumi = null;
 
+    const anime = await prisma.anime.findUnique({
+      where: { hash },
+    });
+
+    if (!anime) {
+      throw new Error("No anime found");
+    }
+
+    if (
+      (!data.anilist_id || data.anilist_id === anime.idAnilist) && 
+      (!data.bangumi_id || data.bangumi_id === anime.idBangumi)
+    ) {
+      throw new Error("No change");
+    }
+
     if (data.anilist_id) {
       newAnilist = await getAnimeDetailFromAnilist(data.anilist_id);
     }
@@ -52,6 +67,13 @@ export async function POST(request, { params }) {
       message: "Anime info updated successfully"
     });
   } catch (error) {
+    if (error.message === "No change") {
+      return sendResponse(request, {
+        code: 240,
+        message: error.message
+      });
+    }
+
     return sendResponse(request, {
       code: 500,
       message: error.message

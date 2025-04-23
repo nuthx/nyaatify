@@ -48,7 +48,7 @@ export default function AnimeDetail({ params }) {
     bangumi_id: { schema: "trim" }
   })();
 
-  const { data: animeData, error: animeError, isLoading: animeLoading } = useData(`${API.ANIME}/${hash}`);
+  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(`${API.ANIME}/${hash}`);
   const { data: descData, error: descError, isLoading: descLoading, mutate: mutateDesc } = useData(`${API.ANIME}/${hash}/desc`);
   const { data: configData, error: configError, isLoading: configLoading } = useData(`${API.CONFIG}`);
 
@@ -73,9 +73,14 @@ export default function AnimeDetail({ params }) {
   const handleReanalysis = async (values) => {
     const result = await handleRequest("POST", `${API.ANIME}/${hash}/reanalysis`, values, t("toast.failed.edit"));
     if (result) {
-      setDialogOpen(false);
-      mutateDesc();
-      toast(t("toast.success.edit"));
+      if (result.code === 240) {
+        toast(t("toast.done.no_change"));
+      } else {
+        setDialogOpen(false);
+        mutateAnime();
+        toast(t("toast.success.edit"));
+        reanalysisForm.reset();
+      }
     }
   };
 
@@ -225,7 +230,7 @@ export default function AnimeDetail({ params }) {
           ) : descError ? (
             <div className="flex flex-col items-center justify-center gap-4 m-6">
               <p className="text-sm text-muted-foreground">{t("toast.failed.fetch_desc")}</p>
-              <Button variant="outline" onClick={() => descMutate()}><RefreshCcw />{t("glb.retry")}</Button>
+              <Button variant="outline" onClick={() => mutateDesc()}><RefreshCcw />{t("glb.retry")}</Button>
             </div>
           ) : (
             <div className="prose prose-sm max-w-none dark:prose-invert"
