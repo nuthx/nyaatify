@@ -71,7 +71,7 @@ export default function AnimeDetail({ params }) {
   }, [configData, configLoading]);
 
   const handleReanalysis = async (values) => {
-    const result = await handleRequest("POST", `${API.ANIME}/${hash}/edit`, values, t("toast.failed.edit"));
+    const result = await handleRequest("POST", `${API.ANIME}/${hash}/reanalysis`, values, t("toast.failed.edit"));
     if (result) {
       setDialogOpen(false);
       mutateDesc();
