@@ -160,6 +160,11 @@ export default function AnimeDetail({ params }) {
             </div>
             <div className="flex-1 space-y-4">
               <div className="space-y-2.5">
+                <div className="flex items-center gap-2 pb-1">
+                  {animeData.rss?.map((rss, idx) => (
+                    <Badge key={idx} variant="outline">{rss.name}</Badge>
+                  ))}
+                </div>
                 {configData.animeTitlePriority.split(",").map((type) => {
                   const titles = {
                     jp: { label: t("anime.page.title_jp"), value: animeData.titleJp },
@@ -169,24 +174,18 @@ export default function AnimeDetail({ params }) {
                   };
                   const title = titles[type];
                   return title.value ? (
-                    <p key={type}><span className="font-semibold">{title.label}: </span>{title.value}</p>
+                    <p key={type} className="text-sm"><span className="font-semibold">{title.label}: </span>{title.value}</p>
                   ) : null;
                 })}
                 {animeData.titleParsed && (
-                  <p><span className="font-semibold">{t("anime.page.title_parsed")}: </span>{animeData.titleParsed}</p>
+                  <p className="text-sm"><span className="font-semibold">{t("anime.page.title_parsed")}: </span>{animeData.titleParsed}</p>
                 )}
               </div>
               <Separator />
               <div className="space-y-2.5">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">{t("anime.page.rss")}: </span>
-                  {animeData.rss?.map((rss, idx) => (
-                    <Badge key={idx} variant="outline">{rss.name}</Badge>
-                  ))}
-                </div>
-                <p><span className="font-semibold">{t("anime.page.size")}: </span>{animeData.size}</p>
-                <p><span className="font-semibold">{t("anime.page.pub_date")}: </span>{new Date(animeData.pubDate).toLocaleString()}</p>
-                <p><span className="font-semibold">{t("anime.page.created_at")}: </span>{new Date(animeData.createdAt).toLocaleString()}</p>
+                <p className="text-sm"><span className="font-semibold">{t("anime.page.size")}: </span>{animeData.size}</p>
+                <p className="text-sm"><span className="font-semibold">{t("anime.page.pub_date")}: </span>{new Date(animeData.pubDate).toLocaleString()}</p>
+                <p className="text-sm"><span className="font-semibold">{t("anime.page.created_at")}: </span>{new Date(animeData.createdAt).toLocaleString()}</p>
               </div>
             </div>
           </div>
