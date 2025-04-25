@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { formatBytes } from "@/lib/bytes";
+import { formatBytes, formatEta } from "@/lib/format";
 import { sendResponse } from "@/lib/http/response";
 import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
 
@@ -29,6 +29,7 @@ export async function GET(request) {
           state: torrent.state,
           progress: torrent.progress,
           eta: torrent.eta,
+          etaDict: formatEta(torrent.eta),
           dlspeed: formatBytes(torrent.dlspeed),
           upspeed: formatBytes(torrent.upspeed),
           completed: formatBytes(torrent.completed),
