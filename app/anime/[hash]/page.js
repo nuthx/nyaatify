@@ -195,7 +195,7 @@ export default function AnimeDetail({ params }) {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 py-3">
+        <CardFooter className="flex flex-wrap justify-between gap-3 py-3">
           <div className="flex gap-2 md:gap-3">
             {animeData.idAnilist && (
               <a href={`https://anilist.co/anime/${animeData.idAnilist}`} target="_blank">
@@ -268,7 +268,7 @@ export default function AnimeDetail({ params }) {
             );
           })()}
         </CardContent>
-        <CardFooter className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 py-3">
+        <CardFooter className="flex flex-wrap justify-between gap-3 py-3">
           <div className="flex gap-2 md:gap-3">
             {(() => {
               const torrent = torrentsData.torrents?.find(t => t.hash === hash);
