@@ -121,11 +121,7 @@ export default function Anime() {
     return {
       ...item,
       downloader: matchingTorrent ? {
-        name: matchingTorrent.downloader,
-        state: matchingTorrent.state,
-        progress: matchingTorrent.progress,
-        completed: matchingTorrent.completed,
-        size: matchingTorrent.size
+        ...matchingTorrent
       } : null
     };
   });
@@ -161,7 +157,7 @@ export default function Anime() {
 
       {animeData.anime.length ? (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             {combinedData.map((item, index) => (
               <AnimeCard
                 key={index}
@@ -206,7 +202,7 @@ function AnimeCard({ item, configData, torrentsData, handleManage }) {
           )}
         </div>
         <div className="flex flex-col gap-2 my-1 w-fit">
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Badge variant="outline">{new Date(item.pubDate).toLocaleString()}</Badge>
             {item.rss?.map((rss, idx) => (
               <Badge key={idx} variant="outline">{rss.name}</Badge>
@@ -229,32 +225,31 @@ function AnimeCard({ item, configData, torrentsData, handleManage }) {
               </Tooltip>
             </TooltipProvider>
           </div>
-          <a className="text-sm text-muted-foreground">{item.titleRaw}</a>
+          <p className="text-sm text-muted-foreground">{item.titleRaw}</p>
         </div>
       </CardContent>
 
-      <CardFooter className="flex items-center justify-between py-4">
-        <div className="flex items-center gap-3">
-          {item.downloader && <Badge>{t(`downloads.state.${item.downloader.state}`)}</Badge>}
-          <a className="text-sm text-muted-foreground">{item.downloader ? `${item.downloader.completed} / ${item.downloader.size} (${item.downloader.progress === 1 ? 100 : (item.downloader.progress*100).toFixed(1)}%)` : item.size}</a>
-        </div>
+      <CardFooter className="flex items-center justify-between py-3">
+        <p className="text-sm text-muted-foreground">
+          {item.downloader ? 
+          `${t(`glb.torrent.${item.downloader.state}`)} | ${item.downloader.completed} / ${item.downloader.size} (${item.downloader.progress === 1 ? 100 : (item.downloader.progress*100).toFixed(1)}%)` : item.size}
+        </p>
         <div className="flex items-center gap-2">
           {item.downloader? (
             <>
-              {["uploading", "queuedUP", "stalledUP", "allocating", "downloading", "metaDL",
-                "queuedDL", "stalledDL", "checkingDL", "forcedDL", "checkingResumeData"].includes(item.downloader.state) && (
-                <Button variant="outline" className="font-normal" onClick={() => handleManage("pause", item.downloader.name, item.hash)}>
-                  <Pause />{t("glb.pause")}
+              {item.downloader.state_class === "stalled" && (
+                <Button size="sm" className="shadow-none" onClick={() => handleManage("resume", item.downloader.downloader, item.hash)}>
+                  <RefreshCcw />{t("glb.resume")}
                 </Button>
               )}
-              {["pausedUP", "pausedDL", "stoppedUP", "stoppedDL"].includes(item.downloader.state) && (
-                <Button className="font-normal" onClick={() => handleManage("resume", item.downloader.name, item.hash)}>
-                  <RefreshCcw />{t("glb.resume")}
+              {item.downloader.state_class === "working" && (
+                <Button size="sm" className="shadow-none" onClick={() => handleManage("pause", item.downloader.downloader, item.hash)}>
+                  <Pause />{t("glb.pause")}
                 </Button>
               )}
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="outline" className="font-normal">
+                  <Button variant="outline" size="sm" className="bg-transparent shadow-none">
                     <Trash2 />{t("glb.delete")}
                   </Button>
                 </AlertDialogTrigger>
@@ -267,7 +262,7 @@ function AnimeCard({ item, configData, torrentsData, handleManage }) {
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleManage("delete", item.downloader.name, item.hash)}>
+                    <AlertDialogAction onClick={() => handleManage("delete", item.downloader.downloader, item.hash)}>
                       {t("glb.delete")}
                     </AlertDialogAction>
                   </AlertDialogFooter>
@@ -275,7 +270,7 @@ function AnimeCard({ item, configData, torrentsData, handleManage }) {
               </AlertDialog>
             </>
           ) : (
-            <Button variant="outline" className="font-normal" onClick={() => handleManage("download", configData.defaultDownloader, item.hash)} disabled={!configData.defaultDownloader || !torrentsData.online.includes(configData.defaultDownloader)}>
+            <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("download", configData.defaultDownloader, item.hash)} disabled={!configData.defaultDownloader || !torrentsData.online.includes(configData.defaultDownloader)}>
               <Download />{t("glb.download")}
             </Button>
           )}
