@@ -197,12 +197,16 @@ export default function AnimeDetail({ params }) {
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 py-3">
           <div className="flex gap-2 md:gap-3">
-            <a href={`https://anilist.co/anime/${animeData.idAnilist}`} target="_blank">
-              <Button variant="outline" size="sm" className="bg-transparent shadow-none"><SquareArrowOutUpRight />Anilist</Button>
-            </a>
-            <a href={`https://bgm.tv/subject/${animeData.idBangumi}`} target="_blank">
-              <Button variant="outline" size="sm" className="bg-transparent shadow-none"><SquareArrowOutUpRight />Bangumi</Button>
-            </a>
+            {animeData.idAnilist && (
+              <a href={`https://anilist.co/anime/${animeData.idAnilist}`} target="_blank">
+                <Button variant="outline" size="sm" className="bg-transparent shadow-none"><SquareArrowOutUpRight />Anilist</Button>
+              </a>
+            )}
+            {animeData.idBangumi && (
+              <a href={`https://bgm.tv/subject/${animeData.idBangumi}`} target="_blank">
+                <Button variant="outline" size="sm" className="bg-transparent shadow-none"><SquareArrowOutUpRight />Bangumi</Button>
+              </a>
+            )}
             <a href={animeData.sourceUrl} target="_blank">
               <Button variant="outline" size="sm" className="bg-transparent shadow-none"><SquareArrowOutUpRight />{animeData.source}</Button>
             </a>
