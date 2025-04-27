@@ -74,8 +74,8 @@ export default function Home() {
               </div>
               <a className="font-medium">{item.name}</a>
               <div className="flex items-center gap-2">
-                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.d_speed")}: {item.dlspeed}/s</a>
-                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.u_speed")}: {item.upspeed}/s</a>
+                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.d_speed")}: {item.dl_speed}/s</a>
+                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.u_speed")}: {item.up_speed}/s</a>
                 {item.eta !== 8640000 && <a className="w-2/6 text-sm text-muted-foreground">
                   {t("downloads.eta")}: {Math.floor(item.eta/86400) > 0 && `${Math.floor(item.eta/86400)} ${t("downloads.d")} `}
                   {Math.floor((item.eta%86400)/3600) > 0 && `${Math.floor((item.eta%86400)/3600)} ${t("downloads.h")} `}

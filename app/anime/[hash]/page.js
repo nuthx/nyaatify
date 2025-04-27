@@ -233,14 +233,14 @@ export default function AnimeDetail({ params }) {
                 <div className="flex flex-col md:flex-row justify-between gap-2">
                   <p className="text-sm text-muted-foreground">{t(`glb.torrent.${torrent.state}`)} | {torrent.completed} / {torrent.size} ({torrent.progress === 1 ? 100 : (torrent.progress*100).toFixed(1)}%)</p>
                   <div className="flex items-center gap-5">
-                    <span className="flex items-center justify-center gap-1 text-sm text-muted-foreground"><CircleArrowDown className="w-4 h-4" /> {torrent.dlspeed}/s</span>
-                    <span className="flex items-center justify-center gap-1 text-sm text-muted-foreground"><CircleArrowUp className="w-4 h-4" /> {torrent.upspeed}/s</span>
-                    {Object.keys(torrent.etaDict).length > 0 && (
+                    <span className="flex items-center justify-center gap-1 text-sm text-muted-foreground"><CircleArrowDown className="w-4 h-4" /> {torrent.dl_speed}/s</span>
+                    <span className="flex items-center justify-center gap-1 text-sm text-muted-foreground"><CircleArrowUp className="w-4 h-4" /> {torrent.up_speed}/s</span>
+                    {Object.keys(torrent.eta_dict).length > 0 && (
                       <span className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
                         <Clock className="w-4 h-4" />
-                        {torrent.etaDict.h ? `${torrent.etaDict.h}:` : ""}
-                        {torrent.etaDict.m ? `${torrent.etaDict.m}:` : ""}
-                        {torrent.etaDict.s ? `${torrent.etaDict.s}s` : ""}
+                        {torrent.eta_dict.h ? `${torrent.eta_dict.h}:` : ""}
+                        {torrent.eta_dict.m ? `${torrent.eta_dict.m}:` : ""}
+                        {torrent.eta_dict.s ? `${torrent.eta_dict.s}s` : ""}
                       </span>
                     )}
                   </div>
@@ -259,12 +259,16 @@ export default function AnimeDetail({ params }) {
               const torrent = torrentsData.torrents?.find(t => t.hash === hash);
               return torrent ? (
                 <>
-                  <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("resume", torrent.downloader, torrent.hash)}>
-                    <Play />{t("glb.resume")}
-                  </Button>
-                  <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("pause", torrent.downloader, torrent.hash)}>
-                    <Pause />{t("glb.pause")}
-                  </Button>
+                  {torrent.state_class === "stalled" && (
+                    <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("resume", torrent.downloader, torrent.hash)}>
+                      <Play />{t("glb.resume")}
+                    </Button>
+                  )}
+                  {torrent.state_class === "working" && (
+                    <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("pause", torrent.downloader, torrent.hash)}>
+                      <Pause />{t("glb.pause")}
+                    </Button>
+                  )}
                   <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("delete", torrent.downloader, torrent.hash)}>
                     <Trash2 />{t("glb.delete")}
                   </Button>
