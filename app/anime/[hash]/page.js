@@ -134,7 +134,7 @@ export default function AnimeDetail({ params }) {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex flex-col md:flex-row gap-6">
-            <div className="flex flex-col items-center justify-center md:justify-start gap-6 md:gap-2 w-full md:w-auto">
+            <div className="flex flex-col md:items-center justify-center md:justify-start gap-6 md:gap-2 w-full md:w-auto">
               <div className="group relative min-w-40 max-w-40 min-h-56 max-h-56 rounded-md bg-muted overflow-hidden">
                 {(animeData.coverAnilist || animeData.coverBangumi) && (
                   <>
@@ -195,7 +195,7 @@ export default function AnimeDetail({ params }) {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between py-3">
+        <CardFooter className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 py-3">
           <div className="flex gap-2 md:gap-3">
             <a href={`https://anilist.co/anime/${animeData.idAnilist}`} target="_blank">
               <Button variant="outline" size="sm" className="bg-transparent shadow-none"><SquareArrowOutUpRight />Anilist</Button>
@@ -264,7 +264,7 @@ export default function AnimeDetail({ params }) {
             );
           })()}
         </CardContent>
-        <CardFooter className="flex justify-between py-3">
+        <CardFooter className="flex flex-col sm:flex-row items-start sm:justify-between gap-3 py-3">
           <div className="flex gap-2 md:gap-3">
             {(() => {
               const torrent = torrentsData.torrents?.find(t => t.hash === hash);
