@@ -132,36 +132,36 @@ export default function Anime() {
 
   return (
     <div className="container mx-auto max-w-screen-xl flex flex-col py-8 space-y-6 px-6 md:px-10">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-1 col-span-1 md:col-span-2">
-          <div className="flex gap-4">
-            {configData.downloaderStateDisplay === "1" && (
-              torrentsData.downloaders.length === 0 ? (
-                <Badge variant="outline">{t("anime.no_downloader")}</Badge>
-              ) : !torrentsData.online.includes(configData.defaultDownloader) && (
-                <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>
-              )
-            )}
-            <a className="text-sm text-muted-foreground">{t("anime.today")}: {animeData.count.today}</a>
-            <a className="text-sm text-muted-foreground">{t("anime.week")}: {animeData.count.week}</a>
-            <a className="text-sm text-muted-foreground">{t("anime.total")}: {animeData.count.total}</a>
-          </div>
-
-          <Select defaultValue={selectedRss} onValueChange={handleRssChange}>
-            <SelectTrigger className="w-full md:w-64">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{t("glb.all")}</SelectItem>
-              {animeData.rss.list.map((rss, idx) => (
-                <SelectItem key={idx} value={rss}>{rss}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <div className="flex flex-col md:flex-row justify-between md:items-center gap-3">
+        <div className="flex gap-4">
+          {configData.downloaderStateDisplay === "1" && (
+            torrentsData.downloaders.length === 0 ? (
+              <Badge variant="outline">{t("anime.no_downloader")}</Badge>
+            ) : !torrentsData.online.includes(configData.defaultDownloader) && (
+              <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>
+            )
+          )}
+          <a className="text-sm text-muted-foreground">{t("anime.today")}: {animeData.count.today}</a>
+          <a className="text-sm text-muted-foreground">{t("anime.week")}: {animeData.count.week}</a>
+          <a className="text-sm text-muted-foreground">{t("anime.total")}: {animeData.count.total}</a>
         </div>
 
-        {animeData.anime.length ? (
-          <>
+        <Select defaultValue={selectedRss} onValueChange={handleRssChange}>
+          <SelectTrigger className="w-full md:w-64">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">{t("glb.all")}</SelectItem>
+            {animeData.rss.list.map((rss, idx) => (
+              <SelectItem key={idx} value={rss}>{rss}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {animeData.anime.length ? (
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {combinedData.map((item, index) => (
               <AnimeCard
                 key={index}
@@ -171,18 +171,18 @@ export default function Anime() {
                 handleManage={handleManage}
               />
             ))}
-            <PaginationPro 
-              currentPage={currentPage} 
-              totalPages={Math.ceil(animeData.pagination.total / animeData.pagination.size)} 
-              onPageChange={handlePageChange}
-            />
-          </>
-        ) : (
-          <p className="my-8 text-sm text-center text-muted-foreground col-span-1 md:col-span-2">
-            {t("anime.empty_anime")}
-          </p>
-        )}
-      </div>
+          </div>
+          <PaginationPro 
+            currentPage={currentPage} 
+            totalPages={Math.ceil(animeData.pagination.total / animeData.pagination.size)} 
+            onPageChange={handlePageChange}
+          />
+        </>
+      ) : (
+        <p className="my-8 text-sm text-center text-muted-foreground col-span-1 md:col-span-2">
+          {t("anime.empty_anime")}
+        </p>
+      )}
     </div>
   );
 }
