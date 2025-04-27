@@ -20,7 +20,36 @@
     "version": "版本",
     "login": "登录",
     "logout": "登出",
-    "confirm_logout": "确认登出"
+    "confirm_logout": "确认登出",
+    "unit": {
+      "d": "天",
+      "h": "时",
+      "m": "分",
+      "s": "秒"
+    },
+    "torrent": {
+      "error": "错误",
+      "missingFiles": "文件丢失",
+      "uploading": "上传中",
+      "pausedUP": "上传暂停",
+      "queuedUP": "上传队列中",
+      "stalledUP": "上传停滞",
+      "checkingUP": "文件校验中",
+      "forcedUP": "强制上传中",
+      "stoppedUP": "停止上传",
+      "allocating": "正在分配空间",
+      "downloading": "下载中",
+      "metaDL": "获取元数据",
+      "pausedDL": "下载暂停",
+      "queuedDL": "下载队列中",
+      "stalledDL": "下载停滞",
+      "checkingDL": "文件校验中",
+      "forcedDL": "强制下载中",
+      "stoppedDL": "停止下载",
+      "checkingResumeData": "检查恢复数据",
+      "moving": "文件移动中",
+      "unknown": "未知状态"
+    }
   },
   "lang": {
     "cn": "中文",
@@ -102,11 +131,17 @@
       "created_at": "添加时间",
       "torrent_file": "种子文件",
       "magnet_link": "磁力链接",
-      "pub_info": "发布信息",
-      "loading": "加载中，请稍后",
       "reanalysis": {
         "title": "重新识别",
         "desc": "根据指定 Anilist 或 Bangumi 的 ID 重新识别动画信息"
+      },
+      "download": {
+        "title": "下载管理",
+        "none": "暂无下载任务"
+      },
+      "pub": {
+        "title": "发布信息",
+        "loading": "加载中，请稍后"
       }
     }
   },
@@ -117,34 +152,7 @@
     "d_speed": "下载速度",
     "u_speed": "上传速度",
     "eta": "剩余时间",
-    "d": "天",
-    "h": "小时",
-    "m": "分钟",
-    "s": "秒",
-    "alert": "此操作会从下载器中删除该任务，但下载完成的文件不会被删除",
-    "state": {
-      "error": "错误",
-      "missingFiles": "文件丢失",
-      "uploading": "做种中",
-      "pausedUP": "暂停做种",
-      "queuedUP": "等待做种",
-      "stalledUP": "做种中",
-      "checkingUP": "校验完成",
-      "forcedUP": "做种中",
-      "stoppedUP": "停止做种",
-      "allocating": "分配空间",
-      "downloading": "下载中",
-      "metaDL": "获取元数据",
-      "pausedDL": "暂停下载",
-      "queuedDL": "等待下载",
-      "stalledDL": "下载中",
-      "checkingDL": "校验中",
-      "forcedDL": "下载中",
-      "stoppedDL": "停止下载",
-      "checkingResumeData": "校验恢复数据",
-      "moving": "文件移动",
-      "unknown": "未知状态"
-    }
+    "alert": "此操作会从下载器中删除该任务，但下载完成的文件不会被删除"
   },
   "st": {
     "title": "设置",

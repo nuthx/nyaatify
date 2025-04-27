@@ -9,6 +9,17 @@ import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import { createForm } from "@/lib/form";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -32,9 +43,16 @@ import {
 } from "@/components/ui/tooltip"
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { LabelInput } from "@/components/label-input";
-import { PenLine, PencilRuler, Download, Pause, RefreshCcw, Trash2, File, Link, SquareArrowOutUpRight, Loader2 } from "lucide-react";
+import { 
+  SquareArrowOutUpRight, PencilLine,
+  Download, Pause, Play, Trash2,
+  FileDown, Link,
+  CircleArrowUp, CircleArrowDown, Clock,
+  Loader2, RefreshCcw,
+} from "lucide-react";
 
 export default function AnimeDetail({ params }) {
   const { t } = useTranslation();
@@ -49,7 +67,8 @@ export default function AnimeDetail({ params }) {
 
   const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(`${API.ANIME}/${hash}`);
   const { data: descData, error: descError, isLoading: descLoading, mutate: mutateDesc } = useData(`${API.ANIME}/${hash}/desc`);
-  const { data: configData, error: configError, isLoading: configLoading } = useData(`${API.CONFIG}`);
+  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(API.TORRENTS, null, { refreshInterval: 1000 });
+  const { data: configData, error: configError, isLoading: configLoading } = useData(API.CONFIG);
 
   // Set page title
   useEffect(() => {
@@ -83,7 +102,14 @@ export default function AnimeDetail({ params }) {
     }
   };
 
-  if (animeLoading || configLoading) {
+  const handleManage = async (action, downloader, hash) => {
+    const result = await handleRequest("POST", API.TORRENTS, { action, downloader, hash }, t(`toast.failed.${action}`));
+    if (result) {
+      mutateTorrents();
+    }
+  };
+
+  if (animeLoading || configLoading || torrentsLoading) {
     return <></>;
   }
 
@@ -93,6 +119,8 @@ export default function AnimeDetail({ params }) {
     errorMessage = animeError.message;
   } else if (configError) {
     errorMessage = configError.message;
+  } else if (torrentsError) {
+    errorMessage = torrentsError.message;
   }
   if (errorMessage) {
     return <a className="text-sm text-center text-muted-foreground flex flex-col py-8 px-6 md:px-10">{errorMessage}</a>
@@ -101,7 +129,7 @@ export default function AnimeDetail({ params }) {
   return (
     <div className="container mx-auto max-w-screen-xl py-8 px-6 md:px-10 flex flex-col gap-4">
       <Card>
-        <CardHeader>
+        <CardHeader className="py-5">
           <CardTitle className="text-base/6">{animeData.titleRaw}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -134,29 +162,6 @@ export default function AnimeDetail({ params }) {
                   </>
                 )}
               </div>
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" className="w-full md:w-40 shadow-none">
-                    <PencilRuler />{t("anime.page.reanalysis.title")}
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <form onSubmit={reanalysisForm.handleSubmit(handleReanalysis)}>
-                    <DialogHeader>
-                      <DialogTitle>{t("anime.page.reanalysis.title")}</DialogTitle>
-                      <DialogDescription>{t("anime.page.reanalysis.desc")}</DialogDescription>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-6">
-                      <LabelInput form={reanalysisForm} title="Anilist ID" id="anilist_id" placeholder={animeData.idAnilist} type="number"/>
-                      <LabelInput form={reanalysisForm} title="Bangumi ID" id="bangumi_id" placeholder={animeData.idBangumi} type="number"/>
-                    </div>
-                    <DialogFooter>
-                      <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>{t("glb.cancel")}</Button>
-                      <Button type="submit">{t("glb.confirm")}</Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
             </div>
             <div className="flex-1 space-y-4">
               <div className="space-y-2.5">
@@ -190,28 +195,126 @@ export default function AnimeDetail({ params }) {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between py-4">
-          <div className="flex gap-2">
+        <CardFooter className="flex justify-between py-3">
+          <div className="flex gap-2 md:gap-3">
             <a href={`https://anilist.co/anime/${animeData.idAnilist}`} target="_blank">
-              <Button variant="outline"><SquareArrowOutUpRight />Anilist</Button>
+              <Button variant="outline" size="sm" className="bg-transparent shadow-none"><SquareArrowOutUpRight />Anilist</Button>
             </a>
             <a href={`https://bgm.tv/subject/${animeData.idBangumi}`} target="_blank">
-              <Button variant="outline"><SquareArrowOutUpRight />Bangumi</Button>
+              <Button variant="outline" size="sm" className="bg-transparent shadow-none"><SquareArrowOutUpRight />Bangumi</Button>
             </a>
             <a href={animeData.sourceUrl} target="_blank">
-              <Button variant="outline"><SquareArrowOutUpRight />{animeData.source}</Button>
+              <Button variant="outline" size="sm" className="bg-transparent shadow-none"><SquareArrowOutUpRight />{animeData.source}</Button>
             </a>
           </div>
-          <div className="flex gap-2">
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm" className="bg-transparent shadow-none">
+                <PencilLine />{t("anime.page.reanalysis.title")}
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <form onSubmit={reanalysisForm.handleSubmit(handleReanalysis)}>
+                <DialogHeader>
+                  <DialogTitle>{t("anime.page.reanalysis.title")}</DialogTitle>
+                  <DialogDescription>{t("anime.page.reanalysis.desc")}</DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-6">
+                  <LabelInput form={reanalysisForm} title="Anilist ID" id="anilist_id" placeholder={animeData.idAnilist} type="number"/>
+                  <LabelInput form={reanalysisForm} title="Bangumi ID" id="bangumi_id" placeholder={animeData.idBangumi} type="number"/>
+                </div>
+                <DialogFooter>
+                  <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>{t("glb.cancel")}</Button>
+                  <Button type="submit">{t("glb.confirm")}</Button>
+                </DialogFooter>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardContent>
+          {(() => {
+            const torrent = torrentsData.torrents?.find(t => t.hash === hash);
+            return torrent ? (
+              <div className="flex flex-col gap-3">
+                <p className="text-sm font-semibold">{torrent.name}</p>
+                <Progress value={torrent.progress * 100} />
+                <div className="flex flex-col md:flex-row justify-between gap-2">
+                  <p className="text-sm text-muted-foreground">{t(`glb.torrent.${torrent.state}`)} | {torrent.completed} / {torrent.size} ({torrent.progress === 1 ? 100 : (torrent.progress*100).toFixed(1)}%)</p>
+                  <div className="flex items-center gap-5">
+                    <span className="flex items-center justify-center gap-1 text-sm text-muted-foreground"><CircleArrowDown className="w-4 h-4" /> {torrent.dl_speed}/s</span>
+                    <span className="flex items-center justify-center gap-1 text-sm text-muted-foreground"><CircleArrowUp className="w-4 h-4" /> {torrent.up_speed}/s</span>
+                    {Object.keys(torrent.eta_dict).length > 0 && (
+                      <span className="flex items-center justify-center gap-1 text-sm text-muted-foreground">
+                        <Clock className="w-4 h-4" />
+                        {torrent.eta_dict.h ? `${torrent.eta_dict.h}:` : ""}
+                        {torrent.eta_dict.m ? `${torrent.eta_dict.m}:` : ""}
+                        {torrent.eta_dict.s ? `${torrent.eta_dict.s}s` : ""}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center m-6">
+                <p className="text-sm text-muted-foreground">{t("anime.page.download.none")}</p>
+              </div>
+            );
+          })()}
+        </CardContent>
+        <CardFooter className="flex justify-between py-3">
+          <div className="flex gap-2 md:gap-3">
+            {(() => {
+              const torrent = torrentsData.torrents?.find(t => t.hash === hash);
+              return torrent ? (
+                <>
+                  {torrent.state_class === "stalled" && (
+                    <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("resume", torrent.downloader, torrent.hash)}>
+                      <Play />{t("glb.resume")}
+                    </Button>
+                  )}
+                  {torrent.state_class === "working" && (
+                    <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("pause", torrent.downloader, torrent.hash)}>
+                      <Pause />{t("glb.pause")}
+                    </Button>
+                  )}
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="bg-transparent shadow-none">
+                        <Trash2 />{t("glb.delete")}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t("downloads.alert")}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleManage("delete", torrent.downloader, torrent.hash)}>
+                          {t("glb.delete")}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </>
+                ) : (
+                <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("download", configData.defaultDownloader, hash)}>
+                  <Download />{t("glb.download")}
+                </Button>
+              );
+            })()}
+          </div>
+          <div className="flex gap-2 md:gap-3">
             <a href={animeData.torrent} target="_blank">
-              <Button variant="outline"><File />{t("anime.page.torrent_file")}</Button>
+              <Button variant="outline" size="sm" className="bg-transparent shadow-none"><FileDown />{t("anime.page.torrent_file")}</Button>
             </a>
             <a href={`magnet:?xt=urn:btih:${animeData.hash}&dn=${animeData.titleRaw}`} target="_blank">
-              <Button variant="outline"><Link />{t("anime.page.magnet_link")}</Button>
-            </a>
-            <Separator orientation="vertical" className="h-8" />
-            <a href={`magnet:?xt=urn:btih:${animeData.hash}&dn=${animeData.titleRaw}`} target="_blank">
-              <Button variant="outline"><Download />{t("glb.download")}</Button>
+              <Button variant="outline" size="sm" className="bg-transparent shadow-none"><Link />{t("anime.page.magnet_link")}</Button>
             </a>
           </div>
         </CardFooter>
@@ -219,18 +322,18 @@ export default function AnimeDetail({ params }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("anime.page.pub_info")}</CardTitle>
+          <CardTitle>{t("anime.page.pub.title")}</CardTitle>
         </CardHeader>
         <CardContent>
           {descLoading ? (
             <div className="flex flex-col items-center justify-center gap-2 m-6">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">{t("anime.page.loading")}</p>
+              <p className="text-sm text-muted-foreground">{t("anime.page.pub.loading")}</p>
             </div>
           ) : descError ? (
             <div className="flex flex-col items-center justify-center gap-4 m-6">
               <p className="text-sm text-muted-foreground">{t("toast.failed.fetch_desc")}</p>
-              <Button variant="outline" onClick={() => mutateDesc()}><RefreshCcw />{t("glb.retry")}</Button>
+              <Button variant="outline" size="sm"onClick={() => mutateDesc()}><RefreshCcw />{t("glb.retry")}</Button>
             </div>
           ) : (
             <div className="prose prose-sm max-w-none dark:prose-invert"
