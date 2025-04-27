@@ -58,7 +58,7 @@ export default function Devices() {
     new_password: { schema: "password8" }
   })();
 
-  const { data: usernameData, isLoading: usernameLoading, mutate: mutateUsername } = useData(API.USERNAME, t("toast.failed.fetch_config"));
+  const { data: usernameData, isLoading: usernameLoading, mutate: usernameMutate } = useData(API.USERNAME, t("toast.failed.fetch_config"));
   const { data: deviceData, isLoading: deviceLoading } = useData(API.DEVICE, t("toast.failed.fetch_config"));
 
   // Set page title
@@ -75,7 +75,7 @@ export default function Devices() {
   const handleUsername = async (values) => {
     const result = await handleRequest("PATCH", API.USERNAME, values, t("toast.failed.edit"));
     if (result) {
-      mutateUsername();
+      usernameMutate();
       toast(t("toast.success.edit"));
     }
   };

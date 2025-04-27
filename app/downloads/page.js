@@ -29,7 +29,7 @@ import { Pause, RefreshCcw, Trash2 } from "lucide-react";
 export default function Home() {
   const { t } = useTranslation();
 
-  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(API.TORRENTS, null, { refreshInterval: 1000 });
+  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: torrentsMutate } = useData(API.TORRENTS, null, { refreshInterval: 1000 });
 
   // Set page title
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function Home() {
   const handleManage = async (action, downloader, hash) => {
     const result = await handleRequest("POST", API.TORRENTS, { action, downloader, hash }, t(`toast.failed.${action}`));
     if (result) {
-      mutateTorrents();
+      torrentsMutate();
     }
   };
 

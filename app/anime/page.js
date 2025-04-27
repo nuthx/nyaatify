@@ -53,7 +53,7 @@ export default function Anime() {
     `${API.ANIME}?page=${currentPage}&rss=${selectedRss === "all" ? "" : selectedRss}`
   );
   const { data: configData, error: configError, isLoading: configLoading } = useData(API.CONFIG);
-  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(API.TORRENTS);
+  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: torrentsMutate } = useData(API.TORRENTS);
 
   // Set page title
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function Anime() {
       if (action === "download") {
         toast(t(`toast.start.download`));
       }
-      mutateTorrents();
+      torrentsMutate();
     }
   };
 

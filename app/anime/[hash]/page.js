@@ -65,9 +65,9 @@ export default function AnimeDetail({ params }) {
     bangumi_id: { schema: "trim" }
   })();
 
-  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: mutateAnime } = useData(`${API.ANIME}/${hash}`);
-  const { data: descData, error: descError, isLoading: descLoading, mutate: mutateDesc } = useData(`${API.ANIME}/${hash}/desc`);
-  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(API.TORRENTS, null, { refreshInterval: 1000 });
+  const { data: animeData, error: animeError, isLoading: animeLoading, mutate: animeMutate } = useData(`${API.ANIME}/${hash}`);
+  const { data: descData, error: descError, isLoading: descLoading, mutate: descMutate } = useData(`${API.ANIME}/${hash}/desc`);
+  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: torrentsMutate } = useData(API.TORRENTS, null, { refreshInterval: 1000 });
   const { data: configData, error: configError, isLoading: configLoading } = useData(API.CONFIG);
 
   // Set page title
@@ -95,7 +95,7 @@ export default function AnimeDetail({ params }) {
         toast(t("toast.done.no_change"));
       } else {
         setDialogOpen(false);
-        mutateAnime();
+        animeMutate();
         toast(t("toast.success.edit"));
         reanalysisForm.reset();
       }
@@ -105,7 +105,7 @@ export default function AnimeDetail({ params }) {
   const handleManage = async (action, downloader, hash) => {
     const result = await handleRequest("POST", API.TORRENTS, { action, downloader, hash }, t(`toast.failed.${action}`));
     if (result) {
-      mutateTorrents();
+      torrentsMutate();
     }
   };
 
@@ -333,7 +333,7 @@ export default function AnimeDetail({ params }) {
           ) : descError ? (
             <div className="flex flex-col items-center justify-center gap-4 m-6">
               <p className="text-sm text-muted-foreground">{t("toast.failed.fetch_desc")}</p>
-              <Button variant="outline" size="sm"onClick={() => mutateDesc()}><RefreshCcw />{t("glb.retry")}</Button>
+              <Button variant="outline" size="sm"onClick={() => descMutate()}><RefreshCcw />{t("glb.retry")}</Button>
             </div>
           ) : (
             <div className="prose prose-sm max-w-none dark:prose-invert"
