@@ -52,8 +52,8 @@ export default function DownloaderSettings() {
     Aria2: "http://192.168.1.100:6800/jsonrpc"
   };
 
-  const { data: downloaderData, isLoading: downloaderLoading, mutate: mutateDownloader } = useData(API.DOWNLOADER, t("toast.failed.fetch_list"));
-  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
+  const { data: downloaderData, isLoading: downloaderLoading, mutate: downloaderMutate } = useData(API.DOWNLOADER, t("toast.failed.fetch_list"));
+  const { data: configData, isLoading: configLoading, mutate: configMutate } = useData(API.CONFIG, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
@@ -64,16 +64,16 @@ export default function DownloaderSettings() {
     const result = await handleRequest("POST", API.DOWNLOADER, values, t("toast.failed.add"));
     if (result) {
       downloaderForm.reset();
-      mutateDownloader();
-      mutateConfig();
+      downloaderMutate();
+      configMutate();
     }
   };
 
   const handleDelete = async (id) => {
     const result = await handleRequest("DELETE", `${API.DOWNLOADER}/${id}`, null, t("toast.failed.delete"));
     if (result) {
-      mutateDownloader();
-      mutateConfig();
+      downloaderMutate();
+      configMutate();
     }
   };
 
@@ -90,7 +90,7 @@ export default function DownloaderSettings() {
     const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
     if (result) {
       toast(t("toast.success.save"));
-      mutateConfig();
+      configMutate();
     }
   };
 

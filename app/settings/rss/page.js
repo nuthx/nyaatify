@@ -37,7 +37,7 @@ export default function RSSSettings() {
     cron: { schema: "required", default: "0 */10 * * * *" }
   })();
 
-  const { data: rssData, isLoading: rssLoading, mutate: mutateRss } = useData(API.RSS, t("toast.failed.fetch_list"));
+  const { data: rssData, isLoading: rssLoading, mutate: rssMutate } = useData(API.RSS, t("toast.failed.fetch_list"));
 
   // Set page title
   useEffect(() => {
@@ -48,14 +48,14 @@ export default function RSSSettings() {
     const result = await handleRequest("POST", API.RSS, values, t("toast.failed.add"));
     if (result) {
       rssForm.reset();
-      mutateRss();
+      rssMutate();
     }
   };
 
   const handleDelete = async (id) => {
     const result = await handleRequest("DELETE", `${API.RSS}/${id}`, null, t("toast.failed.delete"));
     if (result) {
-      mutateRss();
+      rssMutate();
     }
   };
 
@@ -63,7 +63,7 @@ export default function RSSSettings() {
     const result = await handleRequest("POST", `${API.RSS}/refresh`, { name }, t("toast.failed.refresh_rss"));
     if (result) {
       toast(t("toast.start.refresh_rss"));
-      mutateRss();
+      rssMutate();
     }
   };
 

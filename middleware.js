@@ -42,6 +42,7 @@ export const config = {
   matcher: [
     "/api/:path*",
     "/anime",
+    "/anime/:path*",
     "/downloads",
     "/login",
     "/settings/:path*",

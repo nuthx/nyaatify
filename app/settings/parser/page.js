@@ -63,7 +63,7 @@ export default function RSSSettings() {
     title: { schema: "required" }
   })();
 
-  const { data: configData, isLoading: configLoading, mutate: mutateConfig } = useData(API.CONFIG, t("toast.failed.fetch_config"));
+  const { data: configData, isLoading: configLoading, mutate: configMutate } = useData(API.CONFIG, t("toast.failed.fetch_config"));
 
   // Set page title
   useEffect(() => {
@@ -107,7 +107,7 @@ export default function RSSSettings() {
     const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
     if (result) {
       toast(t("toast.success.save"));
-      mutateConfig();
+      configMutate();
     }
   };
 

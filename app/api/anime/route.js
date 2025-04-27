@@ -1,4 +1,5 @@
-import { prisma, getConfig } from "@/lib/db";
+import { prisma } from "@/lib/db";
+import { getTitleFirst } from "@/lib/title";
 import { sendResponse } from "@/lib/http/response";
 
 // Get anime list with pagination
@@ -30,11 +31,7 @@ export async function GET(request) {
           pubDate: "desc"
         },
         include: {
-          rss: {
-            select: {
-              name: true
-            }
-          }
+          rss: { select: { name: true } }
         }
       }),
       // Get total count
@@ -67,26 +64,14 @@ export async function GET(request) {
       })
     ]);
 
-    // Add titleFirst to each anime item
-    const config = await getConfig();
-    const priorities = config.animeTitlePriority.split(",");
-    const animeWithTitleFirst = anime.map(item => ({
-      ...item,
-      titleFirst: priorities.reduce((title, p) => {
-        if (title) return title;
-        const titleMap = {
-          jp: item.titleJp,
-          romaji: item.titleRomaji,
-          cn: item.titleCn,
-          en: item.titleEn
-        };
-        return titleMap[p];
-      }, "") || item.titleParsed || item.titleRaw
-    }));
-
     return sendResponse(request, {
       data: {
-        anime: animeWithTitleFirst,
+        anime: await Promise.all(
+          anime.map(async (item) => ({
+            ...item,
+            titleFirst: await getTitleFirst(item)
+          }))
+        ),
         rss: {
           current: rss || "",
           list: rssList.map(r => r.name)

@@ -4,21 +4,52 @@
     "download": "Download",
     "pause": "Pause",
     "resume": "Resume",
+    "confirm": "Confirm",
     "cancel": "Cancel",
     "delete": "Delete",
     "confirm_delete": "Confirm Deletion",
     "add": "Add",
     "save": "Save",
     "test": "Test",
-    "reset": "Reset",
     "show": "Show",
+    "reset": "Reset",
+    "retry": "Retry",
     "hide": "Hide",
     "enabled": "Enabled",
     "disabled": "Disabled",
     "version": "Version",
     "login": "Login",
     "logout": "Logout",
-    "confirm_logout": "Confirm Logout"
+    "confirm_logout": "Confirm Logout",
+    "unit": {
+      "d": "d",
+      "h": "h",
+      "m": "m",
+      "s": "s"
+    },
+    "torrent": {
+      "error": "Error",
+      "missingFiles": "Missing Files",
+      "uploading": "Uploading",
+      "pausedUP": "Paused Upload",
+      "queuedUP": "Upload Queued",
+      "stalledUP": "Upload Stalled",
+      "checkingUP": "Checking Files",
+      "forcedUP": "Forced Upload",
+      "stoppedUP": "Stopped Upload",
+      "allocating": "Allocating Space",
+      "downloading": "Downloading",
+      "metaDL": "Fetching Metadata",
+      "pausedDL": "Paused Download",
+      "queuedDL": "Download Queued",
+      "stalledDL": "Download Stalled",
+      "checkingDL": "Checking Files",
+      "forcedDL": "Forced Download",
+      "stoppedDL": "Stopped Download",
+      "checkingResumeData": "Verifying Resume Data",
+      "moving": "Moving Files",
+      "unknown": "Unknown Status"
+    }
   },
   "lang": {
     "cn": "Chinese",
@@ -32,7 +63,8 @@
       "refresh_rss": "Start Refreshing Subscription"
     },
     "done": {
-      "send": "Notification Sent"
+      "send": "Notification Sent",
+      "no_change": "No Anime Info Changed"
     },
     "success": {
       "save": "Saved Successfully",
@@ -55,6 +87,7 @@
       "fetch_config": "Failed to fetch config",
       "fetch_list": "Failed to fetch list",
       "fetch_logs": "Failed to fetch logs",
+      "fetch_desc": "Failed to fetch anime description",
       "refresh_rss": "Failed to refresh subscription"
     }
   },
@@ -84,7 +117,33 @@
     "downloader_offline": "Default Downloader Offline",
     "today": "Today",
     "week": "Week",
-    "total": "Total"
+    "total": "Total",
+    "page": {
+      "switch_to": "Switch to {{source}} cover",
+      "title_jp": "Japanese Title",
+      "title_cn": "Chinese Title",
+      "title_en": "English Title",
+      "title_romaji": "Romaji Title",
+      "title_parsed": "Parsed Title",
+      "rss": "RSS",
+      "size": "File Size",
+      "pub_date": "Released At",
+      "created_at": "Created At",
+      "torrent_file": "Torrent File",
+      "magnet_link": "Magnet Link",
+      "reanalysis": {
+        "title": "Reanalysis",
+        "desc": "Reanalyze the anime information based on the specified Anilist or Bangumi ID."
+      },
+      "download": {
+        "title": "Download Management",
+        "none": "No download tasks"
+      },
+      "pub": {
+        "title": "Release Information",
+        "loading": "Loading, please wait..."
+      }
+    }
   },
   "downloads": {
     "empty_downloader": "Please add a downloader first.",
@@ -93,34 +152,7 @@
     "d_speed": "Download Speed",
     "u_speed": "Upload Speed",
     "eta": "ETA",
-    "d": "d",
-    "h": "h",
-    "m": "m",
-    "s": "s",
-    "alert": "This action will delete the task from the downloader, but the downloaded files will not be deleted.",
-    "state": {
-      "error": "Error",
-      "missingFiles": "Missing Files",
-      "uploading": "Uploading",
-      "pausedUP": "Paused",
-      "queuedUP": "Queued",
-      "stalledUP": "Uploading",
-      "checkingUP": "Checked",
-      "forcedUP": "Uploading",
-      "stoppedUP": "Stopped",
-      "allocating": "Allocating Space",
-      "downloading": "Downloading",
-      "metaDL": "Getting Meta",
-      "pausedDL": "Paused",
-      "queuedDL": "Queued",
-      "stalledDL": "Downloading",
-      "checkingDL": "Checking",
-      "forcedDL": "Downloading",
-      "stoppedDL": "Stopped",
-      "checkingResumeData": "Checking Resume Data",
-      "moving": "Moved",
-      "unknown": "Unknown"
-    }
+    "alert": "This action will delete the task from the downloader, but the downloaded files will not be deleted."
   },
   "st": {
     "title": "Settings",

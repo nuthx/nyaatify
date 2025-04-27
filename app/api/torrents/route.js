@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/db";
-import { formatBytes } from "@/lib/bytes";
+import { formatBytes, formatEta } from "@/lib/format";
 import { sendResponse } from "@/lib/http/response";
-import { getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
+import { QB_STATE, getQbittorrentVersion, getQbittorrentTorrents, manageQbittorrentTorrent } from "@/lib/api/qbittorrent";
 
 // Get torrent list
 
@@ -27,10 +27,12 @@ export async function GET(request) {
           name: torrent.name,
           hash: torrent.hash,
           state: torrent.state,
+          state_class: Object.keys(QB_STATE).find(key => QB_STATE[key].includes(torrent.state)) || "stalled",
           progress: torrent.progress,
           eta: torrent.eta,
-          dlspeed: formatBytes(torrent.dlspeed),
-          upspeed: formatBytes(torrent.upspeed),
+          eta_dict: formatEta(torrent.eta),
+          dl_speed: formatBytes(torrent.dl_speed),
+          up_speed: formatBytes(torrent.up_speed),
           completed: formatBytes(torrent.completed),
           size: formatBytes(torrent.size),
           added_on: torrent.added_on,

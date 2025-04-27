@@ -102,7 +102,7 @@ export default function NotificationSettings() {
     ServerChan: "https://sctapi.ftqq.com",
   };
 
-  const { data: notificationData, isLoading: notificationLoading, mutate: mutateNotification } = useData(API.NOTIFICATION, t("toast.failed.fetch_list"));
+  const { data: notificationData, isLoading: notificationLoading, mutate: notificationMutate } = useData(API.NOTIFICATION, t("toast.failed.fetch_list"));
 
   // Set page title
   useEffect(() => {
@@ -123,21 +123,21 @@ export default function NotificationSettings() {
     const result = await handleRequest("POST", API.NOTIFICATION, values, t("toast.failed.add"));
     if (result) {
       notificationForm.reset();
-      mutateNotification();
+      notificationMutate();
     }
   };
 
   const handleDelete = async (id) => {
     const result = await handleRequest("DELETE", `${API.NOTIFICATION}/${id}`, null, t("toast.failed.delete"));
     if (result) {
-      mutateNotification();
+      notificationMutate();
     }
   };
 
   const handleEdit = async (id, values) => {
     const result = await handleRequest("PATCH", `${API.NOTIFICATION}/${id}`, values, t("toast.failed.edit"));
     if (result) {
-      mutateNotification();
+      notificationMutate();
     }
   };
 

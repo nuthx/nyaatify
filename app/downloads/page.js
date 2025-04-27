@@ -29,7 +29,7 @@ import { Pause, RefreshCcw, Trash2 } from "lucide-react";
 export default function Home() {
   const { t } = useTranslation();
 
-  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: mutateTorrents } = useData(API.TORRENTS, null, { refreshInterval: 1000 });
+  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: torrentsMutate } = useData(API.TORRENTS, null, { refreshInterval: 1000 });
 
   // Set page title
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function Home() {
   const handleManage = async (action, downloader, hash) => {
     const result = await handleRequest("POST", API.TORRENTS, { action, downloader, hash }, t(`toast.failed.${action}`));
     if (result) {
-      mutateTorrents();
+      torrentsMutate();
     }
   };
 
@@ -74,8 +74,8 @@ export default function Home() {
               </div>
               <a className="font-medium">{item.name}</a>
               <div className="flex items-center gap-2">
-                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.d_speed")}: {item.dlspeed}/s</a>
-                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.u_speed")}: {item.upspeed}/s</a>
+                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.d_speed")}: {item.dl_speed}/s</a>
+                <a className="w-1/6 text-sm text-muted-foreground">{t("downloads.u_speed")}: {item.up_speed}/s</a>
                 {item.eta !== 8640000 && <a className="w-2/6 text-sm text-muted-foreground">
                   {t("downloads.eta")}: {Math.floor(item.eta/86400) > 0 && `${Math.floor(item.eta/86400)} ${t("downloads.d")} `}
                   {Math.floor((item.eta%86400)/3600) > 0 && `${Math.floor((item.eta%86400)/3600)} ${t("downloads.h")} `}
