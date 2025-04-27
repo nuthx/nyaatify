@@ -9,6 +9,17 @@ import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
 import { createForm } from "@/lib/form";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -269,9 +280,27 @@ export default function AnimeDetail({ params }) {
                       <Pause />{t("glb.pause")}
                     </Button>
                   )}
-                  <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("delete", torrent.downloader, torrent.hash)}>
-                    <Trash2 />{t("glb.delete")}
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="bg-transparent shadow-none">
+                        <Trash2 />{t("glb.delete")}
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>{t("glb.confirm_delete")}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t("downloads.alert")}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>{t("glb.cancel")}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => handleManage("delete", torrent.downloader, torrent.hash)}>
+                          {t("glb.delete")}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </>
                 ) : (
                 <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("download", configData.defaultDownloader, hash)}>
