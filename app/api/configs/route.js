@@ -46,6 +46,16 @@ export async function PATCH(request) {
       throw new Error(`Invalid key: ${invalidKeys.join(", ")}`);
     }
 
+    // Set parser priority to ai if ai config is set
+    if (data.aiApi && data.aiKey && data.aiModel) {
+      data.parserPriority = "ai-first";
+    }
+
+    // Set parser priority to local-only if ai config is not set
+    if (!data.aiApi || !data.aiKey || !data.aiModel) {
+      data.parserPriority = "local-only";
+    }
+
     // Update configs using Prisma transaction
     await prisma.$transaction(
       Object.entries(data).map(([key, value]) =>
