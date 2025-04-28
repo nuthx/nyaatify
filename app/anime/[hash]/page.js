@@ -274,16 +274,12 @@ export default function AnimeDetail({ params }) {
               const torrent = torrentsData.torrents?.find(t => t.hash === hash);
               return torrent ? (
                 <>
-                  {torrent.state_class === "stalled" && (
-                    <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("resume", torrent.downloader, torrent.hash)}>
-                      <Play />{t("glb.resume")}
-                    </Button>
-                  )}
-                  {torrent.state_class === "working" && (
-                    <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("pause", torrent.downloader, torrent.hash)}>
-                      <Pause />{t("glb.pause")}
-                    </Button>
-                  )}
+                  <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("resume", torrent.downloader, torrent.hash)}>
+                    <Play />{t("glb.continue")}
+                  </Button>
+                  <Button variant="outline" size="sm" className="bg-transparent shadow-none" onClick={() => handleManage("pause", torrent.downloader, torrent.hash)}>
+                    <Pause />{t("glb.pause")}
+                  </Button>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button variant="outline" size="sm" className="bg-transparent shadow-none">
