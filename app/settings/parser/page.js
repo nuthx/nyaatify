@@ -60,7 +60,7 @@ export default function RSSSettings() {
   })();
 
   const testForm = createForm({
-    title: { schema: "required" }
+    title: { schema: "required", default: "[VCB-Studio] 鬼灭之刃 刀匠村篇 / Kimetsu no Yaiba Katanakaji no Sato Hen 10-bit 1080p HEVC BDRip [Fin]" }
   })();
 
   const { data: configData, isLoading: configLoading, mutate: configMutate } = useData(API.CONFIG, t("toast.failed.fetch_config"));
