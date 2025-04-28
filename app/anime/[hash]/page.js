@@ -244,7 +244,16 @@ export default function AnimeDetail({ params }) {
             return torrent ? (
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-semibold">{torrent.name}</p>
-                <Progress value={torrent.progress * 100} />
+
+                <Progress 
+                  value={torrent.progress * 100} 
+                  className={`h-1.5 transition-all duration-300 ease-in-out ${
+                    torrent.state_class === "working" 
+                      ? "[&>div]:bg-cyan-700" 
+                      : "[&>div]:bg-primary/30"
+                  }`}
+                />
+
                 <div className="flex flex-col md:flex-row justify-between gap-2">
                   <p className="text-sm text-muted-foreground">{t(`glb.torrent.${torrent.state}`)} | {torrent.completed} / {torrent.size} ({torrent.progress === 1 ? 100 : (torrent.progress*100).toFixed(1)}%)</p>
                   <div className="flex items-center gap-5">
