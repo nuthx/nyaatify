@@ -75,7 +75,6 @@ export default function RSSSettings() {
       aiForm.setValue("aiApi", configData?.aiApi);
       aiForm.setValue("aiModel", configData?.aiModel);
       exclusionsForm.setValue("anitomyTitleExclusions", configData?.anitomyTitleExclusions);
-      console.log(configData);
     }
   }, [configData]);
 

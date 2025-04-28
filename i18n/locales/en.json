@@ -277,6 +277,10 @@
       "state": {
         "title": "Show Downloader State",
         "description": "Show the state of downloader on anime page, such as no downloader or downloader offline."
+      },
+      "tracker": {
+        "title": "Custom Tracker",
+        "description": "Add custom trackers to the default trackers. One line per item."
       }
     },
     "nt": {
