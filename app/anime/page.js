@@ -132,9 +132,9 @@ export default function Anime() {
         <div className="flex gap-4">
           {configData.downloaderStateDisplay === "1" && (
             torrentsData.downloaders.length === 0 ? (
-              <Badge variant="outline">{t("anime.no_downloader")}</Badge>
+              <Badge>{t("anime.no_downloader")}</Badge>
             ) : !torrentsData.online.includes(configData.defaultDownloader) && (
-              <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>
+              <Badge>{t("anime.downloader_offline")}</Badge>
             )
           )}
           <a className="text-sm text-muted-foreground">{t("anime.today")}: {animeData.count.today}</a>
