@@ -1,45 +1,41 @@
-# Stage 1: Build application
-FROM node:20-alpine AS builder
+# Base image
+FROM node:20-alpine AS base
+
+# Set working directory
 WORKDIR /app
 
 # Cache dependencies installation
-COPY package*.json ./
-RUN npm install
-
-# Generate Prisma client
-COPY prisma ./prisma
-RUN npx prisma generate
+FROM base AS deps
+COPY package.json package-lock.json ./
+RUN npm ci
 
 # Build Next.js application
+FROM base AS builder
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN npx prisma generate
 RUN npm run build
 
-# Stage 2: Production runtime
-FROM node:20-alpine AS runner
+# Production environment
+FROM base AS runner
+ENV NODE_ENV=production
+ENV PORT=4200
 
-# Configure runtime environment
-ENV NODE_ENV=production \
-    PORT=4100 \
-    HOSTNAME="0.0.0.0"
+# Setup non-root user
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-# Setup non-root user for security
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 nextjs
-
-# Prepare application directory
-WORKDIR /app
+# Create database directory and set permissions
+RUN mkdir -p /app/data
+RUN chown -R nextjs:nodejs /app/data
 
 # Copy production assets from builder
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/prisma ./prisma
 
-# Initialize application startup
-COPY start.sh /app/start.sh
-RUN chmod +x /app/start.sh && \
-    mkdir -p data && \
-    chown -R nextjs:nodejs /app
+# Copy Prisma schema
+COPY --from=builder /app/prisma ./prisma
 
 # Persist data storage
 VOLUME ["/app/data"]
@@ -49,4 +45,6 @@ USER nextjs
 
 # Expose application port
 EXPOSE 4100
-CMD ["/app/start.sh"]
+
+# Start application
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
