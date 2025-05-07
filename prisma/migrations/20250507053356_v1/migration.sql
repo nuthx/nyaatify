@@ -12,10 +12,12 @@ CREATE TABLE "Anime" (
     "torrent" TEXT,
     "coverAnilist" TEXT,
     "coverBangumi" TEXT,
-    "pageAnilist" TEXT,
-    "pageBangumi" TEXT,
+    "idAnilist" TEXT,
+    "idBangumi" TEXT,
     "pubDate" DATETIME,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "source" TEXT NOT NULL,
+    "sourceUrl" TEXT NOT NULL
 );
 
 -- CreateTable
