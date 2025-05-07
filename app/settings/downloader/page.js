@@ -33,6 +33,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ListCard } from "@/components/listcard";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function DownloaderSettings() {
   const { t } = useTranslation();
@@ -43,6 +44,10 @@ export default function DownloaderSettings() {
     url: { schema: "url" },
     username: { schema: "username" },
     password: { schema: "password" }
+  })();
+
+  const trackersForm = createForm({
+    customTrackers: { schema: "trim" }
   })();
 
   const selectedType = downloaderForm.watch("type");
@@ -59,6 +64,12 @@ export default function DownloaderSettings() {
   useEffect(() => {
     document.title = `${t("st.metadata.downloader")} - Nyaatify`;
   }, [t]);
+
+  useEffect(() => {
+    if (configData) {
+      trackersForm.setValue("customTrackers", configData?.customTrackers);
+    }
+  }, [configData]);
 
   const handleAdd = async (values) => {
     const result = await handleRequest("POST", API.DOWNLOADER, values, t("toast.failed.add"));
@@ -246,6 +257,29 @@ export default function DownloaderSettings() {
               <SelectItem value="0">{t("glb.hide")}</SelectItem>
             </SelectContent>
           </Select>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t("st.dl.tracker.title")}</CardTitle>
+          <CardDescription>{t("st.dl.tracker.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...trackersForm}>
+            <form onSubmit={trackersForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
+              <FormField control={trackersForm.control} name="customTrackers" render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea className="w-full h-44" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+              />
+              <Button type="submit">{t("glb.save")}</Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </>

@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button";
-import { Download, Pause, RefreshCcw, Trash2 } from "lucide-react";
+import { Download, Pause, Play, Trash2 } from "lucide-react";
 import { PaginationPro } from "@/components/pagination";
 
 export default function Anime() {
@@ -53,7 +53,7 @@ export default function Anime() {
     `${API.ANIME}?page=${currentPage}&rss=${selectedRss === "all" ? "" : selectedRss}`
   );
   const { data: configData, error: configError, isLoading: configLoading } = useData(API.CONFIG);
-  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: torrentsMutate } = useData(API.TORRENTS);
+  const { data: torrentsData, error: torrentsError, isLoading: torrentsLoading, mutate: torrentsMutate } = useData(API.TORRENTS, null, { refreshInterval: 1000 });
 
   // Set page title
   useEffect(() => {
@@ -132,9 +132,9 @@ export default function Anime() {
         <div className="flex gap-4">
           {configData.downloaderStateDisplay === "1" && (
             torrentsData.downloaders.length === 0 ? (
-              <Badge variant="outline">{t("anime.no_downloader")}</Badge>
+              <Badge>{t("anime.no_downloader")}</Badge>
             ) : !torrentsData.online.includes(configData.defaultDownloader) && (
-              <Badge variant="destructive">{t("anime.downloader_offline")}</Badge>
+              <Badge>{t("anime.downloader_offline")}</Badge>
             )
           )}
           <a className="text-sm text-muted-foreground">{t("anime.today")}: {animeData.count.today}</a>
@@ -237,20 +237,16 @@ function AnimeCard({ item, configData, torrentsData, handleManage }) {
         <div className="flex items-center gap-2">
           {item.downloader? (
             <>
-              {item.downloader.state_class === "stalled" && (
-                <Button size="sm" className="shadow-none" onClick={() => handleManage("resume", item.downloader.downloader, item.hash)}>
-                  <RefreshCcw />{t("glb.resume")}
-                </Button>
-              )}
-              {item.downloader.state_class === "working" && (
-                <Button size="sm" className="shadow-none" onClick={() => handleManage("pause", item.downloader.downloader, item.hash)}>
-                  <Pause />{t("glb.pause")}
-                </Button>
-              )}
+              <Button className="h-8 w-8 shadow-none" onClick={() => handleManage("resume", item.downloader.downloader, item.hash)}>
+                <Play />
+              </Button>
+              <Button className="h-8 w-8 shadow-none" onClick={() => handleManage("pause", item.downloader.downloader, item.hash)}>
+                <Pause />
+              </Button>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="bg-transparent shadow-none">
-                    <Trash2 />{t("glb.delete")}
+                  <Button variant="outline" className="h-8 w-8 bg-transparent shadow-none">
+                    <Trash2 />
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>

@@ -9,12 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge";
 import { NyaatifyInfo } from "@/components/nyaatify-info";
 
 export default function Settings() {
   const { t } = useTranslation();
-  const currentVersion = pkg.version;
 
   // Set page title
   useEffect(() => {
@@ -32,7 +30,7 @@ export default function Settings() {
         <CardContent className="space-y-6">
           <div className="flex flex-col gap-2">
             <h4 className="font-bold">{t("glb.version")}</h4>
-            <p className="text-sm text-muted-foreground">v{currentVersion}</p>
+            <p className="text-sm text-muted-foreground">v{pkg.version}</p>
           </div>
           <div className="flex flex-col gap-2">
             <h4 className="font-bold">{t("st.abt.project.author")}</h4>

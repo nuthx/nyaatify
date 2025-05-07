@@ -6,5 +6,7 @@ services:
     ports:
       - "4100:4100"
     restart: unless-stopped
+    environment:
+      - JWT_SECRET=your_secret_key_here
     volumes:
       - ./data:/app/data

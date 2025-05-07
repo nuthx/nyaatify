@@ -3,6 +3,7 @@
     "all": "全部",
     "download": "下载",
     "pause": "暂停",
+    "continue": "继续",
     "resume": "恢复",
     "confirm": "确认",
     "cancel": "取消",
@@ -277,6 +278,10 @@
       "state": {
         "title": "显示下载器状态",
         "description": "在动画页面的左上角显示下载器的状态，如未添加下载器、下载器已离线等"
+      },
+      "tracker": {
+        "title": "自定义 Tracker",
+        "description": "在内置 Tracker 的基础上，新增自定义 Tracker，每行填写一个"
       }
     },
     "nt": {

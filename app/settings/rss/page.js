@@ -1,8 +1,9 @@
 "use client";
 
 import { toast } from "sonner"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { CronExpressionParser } from "cron-parser";
 import { API } from "@/lib/http/api";
 import { useData } from "@/lib/http/swr";
 import { handleRequest } from "@/lib/http/request";
@@ -17,6 +18,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,11 +32,12 @@ import { RefreshCw } from "lucide-react";
 
 export default function RSSSettings() {
   const { t } = useTranslation();
+  const [nextRunTime, setNextRunTime] = useState("");
 
   const rssForm = createForm({
     name: { schema: "name" },
     url: { schema: "url" },
-    cron: { schema: "required", default: "0 */10 * * * *" }
+    cron: { schema: "required", default: "0 */30 * * * *" }
   })();
 
   const { data: rssData, isLoading: rssLoading, mutate: rssMutate } = useData(API.RSS, t("toast.failed.fetch_list"));
@@ -43,6 +46,16 @@ export default function RSSSettings() {
   useEffect(() => {
     document.title = `${t("st.metadata.rss")} - Nyaatify`;
   }, [t]);
+
+  // Display next run time when cron changes
+  useEffect(() => {
+    try {
+      const interval = CronExpressionParser.parse(rssForm.getValues("cron"));
+      setNextRunTime(interval.next().toDate().toLocaleString());
+    } catch (error) {
+      setNextRunTime(error.message);
+    }
+  }, [rssForm.watch("cron")]);
 
   const handleAdd = async (values) => {
     const result = await handleRequest("POST", API.RSS, values, t("toast.failed.add"));
@@ -105,8 +118,9 @@ export default function RSSSettings() {
                 <FormItem>
                   <FormLabel>{t("st.rss.add.cron")}</FormLabel>
                   <FormControl>
-                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="0 */10 * * * *" {...field} />
+                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="0 */30 * * * *" {...field} />
                   </FormControl>
+                  <FormDescription>{t("st.rss.list.next")}: {nextRunTime}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
