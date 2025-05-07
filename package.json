@@ -1,13 +1,16 @@
 {
   "name": "nyaatify",
-  "version": "0.0.12",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:migrate": "npx prisma migrate dev",
+    "ncu:check": "ncu",
+    "ncu:update": "ncu -u",
+    "db:push": "prisma generate && prisma db push --force-reset",
+    "db:migrate": "prisma migrate dev",
     "docker:build": "docker build -t nyaatify:$(npm pkg get version | tr -d '\"') -t nyaatify:latest .",
     "docker:run": "docker run -p 4100:4100 nyaatify:latest"
   },
