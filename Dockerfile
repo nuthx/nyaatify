@@ -19,7 +19,7 @@ RUN npm run build
 # Production environment
 FROM base AS runner
 ENV NODE_ENV=production
-ENV PORT=4200
+ENV PORT=4100
 
 # Setup non-root user
 RUN addgroup --system --gid 1001 nodejs
