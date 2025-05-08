@@ -1,15 +1,5 @@
-/data/
-/app/api/test
-
 # dependencies
 /node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
 
 # next.js
 /.next/
@@ -22,18 +12,9 @@
 .DS_Store
 *.pem
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
 # env
 .env*
 
-# vercel
-.vercel
-
-# ide
-.vscode
-.idea
+# testing
+/data
+/app/api/test
