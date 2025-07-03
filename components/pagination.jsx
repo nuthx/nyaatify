@@ -4,7 +4,7 @@ import {
   PaginationEllipsis,
   PaginationItem,
   PaginationLink
-} from "@/components/ui/pagination";
+} from "@/components/ui/pagination"
 
 export function PaginationPro({ className = "", currentPage, totalPages, onPageChange }) {
   const ItemButton = (page, isActive = false) => (
@@ -13,52 +13,56 @@ export function PaginationPro({ className = "", currentPage, totalPages, onPageC
         {page}
       </PaginationLink>
     </PaginationItem>
-  );
+  )
 
   const ButtonGroup = (start, count) => (
     Array.from({ length: count }).map((_, i) => {
-      const page = start + i;
-      return ItemButton(page, page === currentPage);
+      const page = start + i
+      return ItemButton(page, page === currentPage)
     })
-  );
+  )
 
   if (totalPages <= 1) {
-    return null;
+    return null
   }
 
   return (
     <Pagination className={className}>
       <PaginationContent>
-        {totalPages > 7 ? (
-          <>
-            {currentPage <= 4 ? (
+        {totalPages > 7
+          ? (
               <>
-                {ButtonGroup(1, 5)}
-                <PaginationEllipsis />
-                {ItemButton(totalPages)}
+                {currentPage <= 4
+                  ? (
+                      <>
+                        {ButtonGroup(1, 5)}
+                        <PaginationEllipsis />
+                        {ItemButton(totalPages)}
+                      </>
+                    )
+                  : currentPage > totalPages - 4
+                    ? (
+                        <>
+                          {ItemButton(1)}
+                          <PaginationEllipsis />
+                          {ButtonGroup(totalPages - 4, 5)}
+                        </>
+                      )
+                    : (
+                        <>
+                          {ItemButton(1)}
+                          <PaginationEllipsis />
+                          {ButtonGroup(currentPage - 2, 5)}
+                          <PaginationEllipsis />
+                          {ItemButton(totalPages)}
+                        </>
+                      )}
               </>
-            ) : 
-            currentPage > totalPages - 4 ? (
-              <>
-                {ItemButton(1)}
-                <PaginationEllipsis />
-                {ButtonGroup(totalPages - 4, 5)}
-              </>
-            ) : 
-            (
-              <>
-                {ItemButton(1)}
-                <PaginationEllipsis />
-                {ButtonGroup(currentPage - 2, 5)}
-                <PaginationEllipsis />
-                {ItemButton(totalPages)}
-              </>
+            )
+          : (
+              ButtonGroup(1, totalPages)
             )}
-          </>
-        ) : (
-          ButtonGroup(1, totalPages)
-        )}
       </PaginationContent>
     </Pagination>
-  );
+  )
 }

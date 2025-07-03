@@ -1,18 +1,18 @@
-"use client";
+"use client"
 
 import { toast } from "sonner"
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { API } from "@/lib/http/api";
-import { useData } from "@/lib/http/swr";
-import { handleRequest } from "@/lib/http/request";
-import { createForm } from "@/lib/form";
+import { useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import { API } from "@/lib/http/api"
+import { useData } from "@/lib/http/swr"
+import { handleRequest } from "@/lib/http/request"
+import { createForm } from "@/lib/form"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card"
 import {
   Form,
@@ -21,12 +21,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
+  FormDescription
 } from "@/components/ui/form"
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
+  PopoverTrigger
 } from "@/components/ui/popover"
 import {
   Select,
@@ -34,13 +34,13 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { ListCard } from "@/components/listcard";
-import { BellDot, BellMinus, BellRing } from "lucide-react";
+} from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { ListCard } from "@/components/listcard"
+import { BellDot, BellMinus, BellRing } from "lucide-react"
 
 function VariableItem({ name, description }) {
   return (
@@ -52,7 +52,7 @@ function VariableItem({ name, description }) {
 }
 
 function VariablePopover() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <Popover>
@@ -82,7 +82,7 @@ function VariablePopover() {
 }
 
 export default function NotificationSettings() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const notificationForm = createForm({
     name: { schema: "name" },
@@ -93,21 +93,21 @@ export default function NotificationSettings() {
     title: { schema: "required" },
     message: { schema: "required" },
     extra: { schema: "trim" }
-  })();
+  })()
 
-  const selectedType = notificationForm.watch("type");
+  const selectedType = notificationForm.watch("type")
   const urlPlaceholders = {
     Bark: "https://api.day.app",
     Gotify: "https://your-server.com",
-    ServerChan: "https://sctapi.ftqq.com",
-  };
+    ServerChan: "https://sctapi.ftqq.com"
+  }
 
-  const { data: notificationData, isLoading: notificationLoading, mutate: notificationMutate } = useData(API.NOTIFICATION, t("toast.failed.fetch_list"));
+  const { data: notificationData, isLoading: notificationLoading, mutate: notificationMutate } = useData(API.NOTIFICATION, t("toast.failed.fetch_list"))
 
   // Set page title
   useEffect(() => {
-    document.title = `${t("st.metadata.notification")} - Nyaatify`;
-  }, [t]);
+    document.title = `${t("st.metadata.notification")} - Nyaatify`
+  }, [t])
 
   // Set default url for notification type
   useEffect(() => {
@@ -115,41 +115,41 @@ export default function NotificationSettings() {
       Bark: "https://api.day.app",
       Gotify: "",
       ServerChan: "https://sctapi.ftqq.com"
-    };
-    notificationForm.setValue("url", defaultUrls[selectedType]);
-  }, [selectedType]);
+    }
+    notificationForm.setValue("url", defaultUrls[selectedType])
+  }, [selectedType, notificationForm])
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", API.NOTIFICATION, values, t("toast.failed.add"));
+    const result = await handleRequest("POST", API.NOTIFICATION, values, t("toast.failed.add"))
     if (result) {
-      notificationForm.reset();
-      notificationMutate();
+      notificationForm.reset()
+      notificationMutate()
     }
-  };
+  }
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${API.NOTIFICATION}/${id}`, null, t("toast.failed.delete"));
+    const result = await handleRequest("DELETE", `${API.NOTIFICATION}/${id}`, null, t("toast.failed.delete"))
     if (result) {
-      notificationMutate();
+      notificationMutate()
     }
-  };
+  }
 
   const handleEdit = async (id, values) => {
-    const result = await handleRequest("PATCH", `${API.NOTIFICATION}/${id}`, values, t("toast.failed.edit"));
+    const result = await handleRequest("PATCH", `${API.NOTIFICATION}/${id}`, values, t("toast.failed.edit"))
     if (result) {
-      notificationMutate();
+      notificationMutate()
     }
-  };
+  }
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${API.NOTIFICATION}/test`, values, t("toast.failed.send"));
+    const result = await handleRequest("POST", `${API.NOTIFICATION}/test`, values, t("toast.failed.send"))
     if (result) {
-      toast(t("toast.done.send"));
+      toast(t("toast.done.send"))
     }
-  };
+  }
 
   if (notificationLoading) {
-    return <></>;
+    return <></>
   }
 
   return (
@@ -162,113 +162,137 @@ export default function NotificationSettings() {
         <CardContent>
           <Form {...notificationForm}>
             <form onSubmit={notificationForm.handleSubmit((values) => handleAdd(values))} className="space-y-6" noValidate>
-              <FormField control={notificationForm.control} name="name" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.nt.add.name")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="Notification" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              />
-              <FormField control={notificationForm.control} name="filter" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.nt.add.filter")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="name1, name2" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                  <FormDescription>{t("st.nt.add.filter_notice")}</FormDescription>
-                </FormItem>
-              )}
-              />
-              <FormField control={notificationForm.control} name="type" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.nt.add.type")}</FormLabel>
-                  <Select defaultValue={field.value} onValueChange={field.onChange}>
+              <FormField
+                control={notificationForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.nt.add.name")}</FormLabel>
                     <FormControl>
-                      <SelectTrigger className="w-full lg:w-72 transition-width duration-300 ease-in-out">
-                        <SelectValue />
-                      </SelectTrigger>
+                      <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="Notification" {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Bark">{t("st.nt.add.type_bark")}</SelectItem>
-                      <SelectItem value="Gotify">{t("st.nt.add.type_gotify")}</SelectItem>
-                      <SelectItem value="ServerChan">{t("st.nt.add.type_serverchan")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                  <FormDescription>
-                    {selectedType === "Bark" && <a href="https://bark.day.app/#/tutorial" target="_blank" className="underline">{t("st.nt.add.type_notice")}</a>}
-                    {selectedType === "Gotify" && <a href="https://gotify.net/docs/pushmsg" target="_blank" className="underline">{t("st.nt.add.type_notice")}</a>}
-                    {selectedType === "ServerChan" && <a href="https://sct.ftqq.com/sendkey" target="_blank" className="underline">{t("st.nt.add.type_notice")}</a>}
-                  </FormDescription>
-                </FormItem>
-              )}
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormField control={notificationForm.control} name="url" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.nt.add.url")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder={urlPlaceholders[selectedType]} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={notificationForm.control}
+                name="filter"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.nt.add.filter")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="name1, name2" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription>{t("st.nt.add.filter_notice")}</FormDescription>
+                  </FormItem>
+                )}
               />
-              <FormField control={notificationForm.control} name="token" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.nt.add.token")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder="Token" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={notificationForm.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.nt.add.type")}</FormLabel>
+                    <Select defaultValue={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger className="w-full lg:w-72 transition-width duration-300 ease-in-out">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Bark">{t("st.nt.add.type_bark")}</SelectItem>
+                        <SelectItem value="Gotify">{t("st.nt.add.type_gotify")}</SelectItem>
+                        <SelectItem value="ServerChan">{t("st.nt.add.type_serverchan")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                    <FormDescription>
+                      {selectedType === "Bark" && <a href="https://bark.day.app/#/tutorial" target="_blank" className="underline" rel="noreferrer">{t("st.nt.add.type_notice")}</a>}
+                      {selectedType === "Gotify" && <a href="https://gotify.net/docs/pushmsg" target="_blank" className="underline" rel="noreferrer">{t("st.nt.add.type_notice")}</a>}
+                      {selectedType === "ServerChan" && <a href="https://sct.ftqq.com/sendkey" target="_blank" className="underline" rel="noreferrer">{t("st.nt.add.type_notice")}</a>}
+                    </FormDescription>
+                  </FormItem>
+                )}
               />
-              <FormField control={notificationForm.control} name="title" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.nt.add.push_title")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder="Title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                  <FormDescription>
-                    {t("st.nt.add.variable")}
-                    <VariablePopover />
-                  </FormDescription>
-                </FormItem>
-              )}
+              <FormField
+                control={notificationForm.control}
+                name="url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.nt.add.url")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder={urlPlaceholders[selectedType]} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormField control={notificationForm.control} name="message" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.nt.add.push_message")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder="Message" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                  <FormDescription>
-                    {t("st.nt.add.variable")}
-                    <VariablePopover />
-                  </FormDescription>
-                </FormItem>
-              )}
+              <FormField
+                control={notificationForm.control}
+                name="token"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.nt.add.token")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder="Token" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormField control={notificationForm.control} name="extra" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.nt.add.extra")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder="icon=https://example.com/icon.png&sound=default" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                  <FormDescription>
-                    {t("st.nt.add.extra_notice")}
-                    {t("st.nt.add.variable")}
-                    <VariablePopover />
-                  </FormDescription>
-                </FormItem>
-              )}
+              <FormField
+                control={notificationForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.nt.add.push_title")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder="Title" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription>
+                      {t("st.nt.add.variable")}
+                      <VariablePopover />
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={notificationForm.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.nt.add.push_message")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder="Message" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription>
+                      {t("st.nt.add.variable")}
+                      <VariablePopover />
+                    </FormDescription>
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={notificationForm.control}
+                name="extra"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.nt.add.extra")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder="icon=https://example.com/icon.png&sound=default" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription>
+                      {t("st.nt.add.extra_notice")}
+                      {t("st.nt.add.variable")}
+                      <VariablePopover />
+                    </FormDescription>
+                  </FormItem>
+                )}
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
@@ -308,7 +332,8 @@ export default function NotificationSettings() {
                   {notification.state === 1 ? t("glb.disabled") : t("glb.enabled")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleTest(notification)}>
-                  <BellRing />{t("st.nt.list.test")}
+                  <BellRing />
+                  {t("st.nt.list.test")}
                 </DropdownMenuItem>
               </>
             )}
@@ -319,5 +344,5 @@ export default function NotificationSettings() {
         </CardContent>
       </Card>
     </>
-  );
+  )
 }

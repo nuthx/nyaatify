@@ -1,102 +1,102 @@
-"use client";
+"use client"
 
 import { toast } from "sonner"
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "react"
 import { useTheme } from "next-themes"
-import { useTranslation } from "react-i18next";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { API } from "@/lib/http/api";
-import { useData } from "@/lib/http/swr";
-import { handleRequest } from "@/lib/http/request";
+import { useTranslation } from "react-i18next"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { API } from "@/lib/http/api"
+import { useData } from "@/lib/http/swr"
+import { handleRequest } from "@/lib/http/request"
 import {
-  DndContext, 
+  DndContext,
   closestCenter,
   PointerSensor,
   useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+  useSensors
+} from "@dnd-kit/core"
 import {
   arrayMove,
   SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+  verticalListSortingStrategy
+} from "@dnd-kit/sortable"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
+  SelectValue
 } from "@/components/ui/select"
-import { Button } from "@/components/ui/button";
-import { GripVertical } from "lucide-react";
+import { Button } from "@/components/ui/button"
+import { GripVertical } from "lucide-react"
 
 export default function Settings() {
-  const { t, i18n } = useTranslation();
-  const { theme, setTheme } = useTheme();
+  const { t, i18n } = useTranslation()
+  const { theme, setTheme } = useTheme()
 
   const handleLanguageChange = (value) => {
-    i18n.changeLanguage(value);
-  };
+    i18n.changeLanguage(value)
+  }
 
   const [items, setItems] = useState([
     { id: "jp", name: t("lang.jp") },
     { id: "en", name: t("lang.en") },
     { id: "romaji", name: t("lang.romaji") },
     { id: "cn", name: t("lang.cn") }
-  ]);
+  ])
 
   const sensors = useSensors(
     useSensor(PointerSensor)
-  );
+  )
 
-  const { data: configData, isLoading: configLoading, mutate: configMutate } = useData(API.CONFIG, t("toast.failed.fetch_config"));
+  const { data: configData, isLoading: configLoading, mutate: configMutate } = useData(API.CONFIG, t("toast.failed.fetch_config"))
 
   // Set page title
   useEffect(() => {
-    document.title = `${t("st.metadata.general")} - Nyaatify`;
-  }, [t]);
+    document.title = `${t("st.metadata.general")} - Nyaatify`
+  }, [t])
 
   // Check configData?.animeTitlePriority to avoid error when drag finished
   useEffect(() => {
     if (configData?.animeTitlePriority) {
-      setItems(configData.animeTitlePriority.split(",").map(id => ({ id, name: t(`lang.${id}`) })));
+      setItems(configData.animeTitlePriority.split(",").map((id) => ({ id, name: t(`lang.${id}`) })))
     }
-  }, [configData, t]);
+  }, [configData, t])
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
+    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"))
     if (result) {
-      toast(t("toast.success.save"));
-      configMutate();
+      toast(t("toast.success.save"))
+      configMutate()
     }
-  };
+  }
 
   const handleDragEnd = (event) => {
-    const { active, over } = event;
+    const { active, over } = event
     if (active.id !== over.id) {
       // Calculate new sort result then update
-      const oldIndex = items.findIndex(item => item.id === active.id);
-      const newIndex = items.findIndex(item => item.id === over.id);
-      const newItems = arrayMove(items, oldIndex, newIndex);
-      setItems(newItems);
-      
+      const oldIndex = items.findIndex((item) => item.id === active.id)
+      const newIndex = items.findIndex((item) => item.id === over.id)
+      const newItems = arrayMove(items, oldIndex, newIndex)
+      setItems(newItems)
+
       // Save title priority after drag finished
-      handleSaveConfig({ 
-        animeTitlePriority: newItems.map(item => item.id).join(",")
-      });
+      handleSaveConfig({
+        animeTitlePriority: newItems.map((item) => item.id).join(",")
+      })
     }
   }
 
   if (configLoading) {
-    return <></>;
+    return <></>
   }
 
   return (
@@ -146,7 +146,7 @@ export default function Settings() {
         <CardContent className="space-y-2">
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={items} strategy={verticalListSortingStrategy}>
-              {items.map(item => <SortableItem key={item.id} item={item} />)}
+              {items.map((item) => <SortableItem key={item.id} item={item} />)}
             </SortableContext>
           </DndContext>
         </CardContent>
@@ -179,13 +179,13 @@ function SortableItem({ item }) {
     listeners,
     setNodeRef,
     transform,
-    transition,
-  } = useSortable({ id: item.id });
+    transition
+  } = useSortable({ id: item.id })
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
-  };
+    transition
+  }
 
   return (
     <div className="flex items-center justify-between h-10 pr-0.5 pl-3 py-2 w-full lg:w-72 text-sm border rounded-md shadow-sm" ref={setNodeRef} style={style}>
@@ -194,5 +194,5 @@ function SortableItem({ item }) {
         <GripVertical className="h-4 w-4" />
       </Button>
     </div>
-  );
+  )
 }

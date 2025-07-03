@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useState } from "react"
+import { useTranslation } from "react-i18next"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,28 +10,28 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+  AlertDialogTitle
+} from "@/components/ui/alert-dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Ellipsis, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Ellipsis, Trash2 } from "lucide-react"
 
 export function ListCard({ items, empty, content, state, menu, deleteable, deleteDesc, onDelete }) {
-  const { t } = useTranslation();
-  const [itemToDelete, setItemToDelete] = useState(null);
+  const { t } = useTranslation()
+  const [itemToDelete, setItemToDelete] = useState(null)
 
   if (items.length === 0) {
     return (
       <div className="flex items-center justify-center h-20 text-sm text-muted-foreground">
         {empty}
       </div>
-    );
+    )
   }
 
   return items.map((item) => (
@@ -51,12 +51,15 @@ export function ListCard({ items, empty, content, state, menu, deleteable, delet
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="flex-shrink-0"><Ellipsis className="text-muted-foreground" /></Button>
+          <Button variant="ghost" size="icon" className="flex-shrink-0">
+            <Ellipsis className="text-muted-foreground" />
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           {menu(item)}
           <DropdownMenuItem className="text-destructive" disabled={!deleteable(item)} onClick={() => setItemToDelete(item)}>
-            <Trash2 />{t("glb.delete")}
+            <Trash2 />
+            {t("glb.delete")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -71,12 +74,17 @@ export function ListCard({ items, empty, content, state, menu, deleteable, delet
             <AlertDialogCancel>
               {t("glb.cancel")}
             </AlertDialogCancel>
-            <AlertDialogAction onClick={() => { onDelete(item); setItemToDelete(null); }}>
+            <AlertDialogAction
+              onClick={() => {
+                onDelete(item)
+                setItemToDelete(null)
+              }}
+            >
               {t("glb.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  ));
+  ))
 }

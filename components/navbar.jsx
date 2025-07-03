@@ -1,46 +1,46 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import Image from "next/image";
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { usePathname, useRouter } from "next/navigation";
-import { API } from "@/lib/http/api";
-import { handleRequest } from "@/lib/http/request";
-import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import Link from "next/link"
+import Image from "next/image"
+import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import { usePathname, useRouter } from "next/navigation"
+import { API } from "@/lib/http/api"
+import { handleRequest } from "@/lib/http/request"
+import { Button } from "@/components/ui/button"
+import { Menu, X } from "lucide-react"
 
 export function NavBar() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const { t } = useTranslation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter()
+  const pathname = usePathname()
+  const { t } = useTranslation()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Close the menu when the screen size is less than md(768px)
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 768px)");
-    mq.onchange = e => e.matches && setIsMenuOpen(false);
-    return () => mq.onchange = null;
-  }, []);
+    const mq = window.matchMedia("(max-width: 768px)")
+    mq.onchange = (e) => e.matches && setIsMenuOpen(false)
+    return () => mq.onchange = null
+  }, [])
 
   const handleLogout = async () => {
-    setIsMenuOpen(false);  // Close menu before logout
-    const result = await handleRequest("DELETE", API.LOGOUT, null, t("toast.failed.logout"));
+    setIsMenuOpen(false) // Close menu before logout
+    const result = await handleRequest("DELETE", API.LOGOUT, null, t("toast.failed.logout"))
     if (result) {
-      router.push("/login");
-      router.refresh();
+      router.push("/login")
+      router.refresh()
     }
-  };
+  }
 
   if (pathname === "/login") {
-    return null;
+    return null
   }
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-sm">
       <nav className="container mx-auto max-w-screen-xl flex h-16 items-center justify-between px-6 md:px-10">
         <Link href="/" className="flex items-center gap-3">
-          <Image src="/icons/logo-round.svg" alt="Nyaatify Logo" className="dark:invert" width={40} height={40} priority draggable="false"/>
+          <Image src="/icons/logo-round.svg" alt="Nyaatify Logo" className="dark:invert" width={40} height={40} priority draggable="false" />
           <span className="text-xl font-bold">Nyaatify</span>
         </Link>
 
@@ -48,7 +48,7 @@ export function NavBar() {
           {isMenuOpen ? <X /> : <Menu />}
         </Button>
 
-        <div 
+        <div
           className={`
             ${isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"} 
             md:opacity-100 md:pointer-events-auto
@@ -66,19 +66,19 @@ export function NavBar() {
         </div>
       </nav>
     </header>
-  );
+  )
 }
 
 function NavLink({ href, onNavigate }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
-    <Link 
-      href={href} 
+    <Link
+      href={href}
       onClick={onNavigate}
       className="w-full md:w-auto px-4 py-3 md:py-1.5 text-sm text-center text-primary/80 rounded-md transition-all duration-300 ease-in-out hover:bg-accent"
     >
       {t(`nav.${href.replace("/", "")}`)}
     </Link>
-  );
+  )
 }

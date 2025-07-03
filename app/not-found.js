@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import Link from "next/link"
 import Image from "next/image"
@@ -7,16 +7,16 @@ import { useTranslation } from "react-i18next"
 import { Button } from "@/components/ui/button"
 
 export default function NotFound() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   // Set page title
   useEffect(() => {
-    document.title = `${t("404.title")} - Nyaatify`;
-  }, [t]);
+    document.title = `${t("404.title")} - Nyaatify`
+  }, [t])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100svh-68px)] gap-12 p-6 md:p-10">
-      <Image src="/images/404.png" alt="404 page not found" className="dark:grayscale dark:invert dark:opacity-90" width={280} height={280} priority draggable="false"/>
+      <Image src="/images/404.png" alt="404 page not found" className="dark:grayscale dark:invert dark:opacity-90" width={280} height={280} priority draggable="false" />
       <div className="flex flex-col items-center gap-4">
         <h2 className="text-4xl font-bold">{t("404.title")}</h2>
         <p className="text-muted-foreground">{t("404.description")}</p>
