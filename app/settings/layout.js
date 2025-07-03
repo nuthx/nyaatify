@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
-import { usePathname } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
+import Link from "next/link"
+import { useTranslation } from "react-i18next"
+import { usePathname } from "next/navigation"
+import { Separator } from "@/components/ui/separator"
 
 export default function SettingsLayout({ children }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <>
@@ -29,14 +29,14 @@ export default function SettingsLayout({ children }) {
         </div>
       </div>
     </>
-  );
+  )
 }
 
 function NavLink({ href }) {
-  const pathname = usePathname();
-  const isActive = pathname === href;
-  const { t } = useTranslation();
-  
+  const pathname = usePathname()
+  const isActive = pathname === href
+  const { t } = useTranslation()
+
   return (
     <Link
       href={href}
@@ -46,5 +46,5 @@ function NavLink({ href }) {
     >
       {t(`st.nav.${href.replace("/settings/", "")}`)}
     </Link>
-  );
+  )
 }

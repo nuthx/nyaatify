@@ -1,5 +1,5 @@
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 export function LabelInput({ form, title, id, placeholder = "", ...props }) {
   return (
@@ -13,5 +13,5 @@ export function LabelInput({ form, title, id, placeholder = "", ...props }) {
         {...props}
       />
     </div>
-  );
+  )
 }

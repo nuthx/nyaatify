@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/db";
-import { getTitleFirst } from "@/lib/title";
-import { sendResponse } from "@/lib/http/response";
+import { prisma } from "@/lib/db"
+import { getTitleFirst } from "@/lib/title"
+import { sendResponse } from "@/lib/http/response"
 
 // Get anime list with pagination
 // Params: page, number, optional, default: 1
@@ -8,18 +8,20 @@ import { sendResponse } from "@/lib/http/response";
 
 export async function GET(request) {
   try {
-    const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
-    const size = parseInt(request.nextUrl.searchParams.get("size") || "20");
-    const rss = request.nextUrl.searchParams.get("rss");
+    const page = parseInt(request.nextUrl.searchParams.get("page") || "1")
+    const size = parseInt(request.nextUrl.searchParams.get("size") || "20")
+    const rss = request.nextUrl.searchParams.get("rss")
 
     // Create where condition based on rss parameter
-    const whereCondition = rss ? {
-      rss: {
-        some: {
-          name: rss
+    const whereCondition = rss
+      ? {
+          rss: {
+            some: {
+              name: rss
+            }
+          }
         }
-      }
-    } : {};
+      : {}
 
     const [anime, total, todayCount, weekCount, rssList] = await Promise.all([
       // Get anime data with pagination
@@ -62,7 +64,7 @@ export async function GET(request) {
           name: true
         }
       })
-    ]);
+    ])
 
     return sendResponse(request, {
       data: {
@@ -74,7 +76,7 @@ export async function GET(request) {
         ),
         rss: {
           current: rss || "",
-          list: rssList.map(r => r.name)
+          list: rssList.map((r) => r.name)
         },
         count: {
           today: todayCount,
@@ -87,11 +89,11 @@ export async function GET(request) {
           total: total
         }
       }
-    });
+    })
   } catch (error) {
     return sendResponse(request, {
       code: 500,
       message: error.message
-    });
+    })
   }
 }

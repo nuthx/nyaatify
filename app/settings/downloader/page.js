@@ -1,18 +1,18 @@
-"use client";
+"use client"
 
 import { toast } from "sonner"
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { API } from "@/lib/http/api";
-import { useData } from "@/lib/http/swr";
-import { handleRequest } from "@/lib/http/request";
-import { createForm } from "@/lib/form";
+import { useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import { API } from "@/lib/http/api"
+import { useData } from "@/lib/http/swr"
+import { handleRequest } from "@/lib/http/request"
+import { createForm } from "@/lib/form"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card"
 import {
   Form,
@@ -21,7 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
+  FormDescription
 } from "@/components/ui/form"
 import {
   Select,
@@ -29,14 +29,14 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ListCard } from "@/components/listcard";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { ListCard } from "@/components/listcard"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function DownloaderSettings() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   const downloaderForm = createForm({
     type: { schema: "trim", default: "qBittorrent" },
@@ -44,69 +44,69 @@ export default function DownloaderSettings() {
     url: { schema: "url" },
     username: { schema: "username" },
     password: { schema: "password" }
-  })();
+  })()
 
   const trackersForm = createForm({
     customTrackers: { schema: "trim" }
-  })();
+  })()
 
-  const selectedType = downloaderForm.watch("type");
+  const selectedType = downloaderForm.watch("type")
   const urlPlaceholders = {
     qBittorrent: "http://192.168.1.100:8080",
     Transmission: "http://192.168.1.100:9091/transmission/rpc",
     Aria2: "http://192.168.1.100:6800/jsonrpc"
-  };
+  }
 
-  const { data: downloaderData, isLoading: downloaderLoading, mutate: downloaderMutate } = useData(API.DOWNLOADER, t("toast.failed.fetch_list"));
-  const { data: configData, isLoading: configLoading, mutate: configMutate } = useData(API.CONFIG, t("toast.failed.fetch_config"));
+  const { data: downloaderData, isLoading: downloaderLoading, mutate: downloaderMutate } = useData(API.DOWNLOADER, t("toast.failed.fetch_list"))
+  const { data: configData, isLoading: configLoading, mutate: configMutate } = useData(API.CONFIG, t("toast.failed.fetch_config"))
 
   // Set page title
   useEffect(() => {
-    document.title = `${t("st.metadata.downloader")} - Nyaatify`;
-  }, [t]);
+    document.title = `${t("st.metadata.downloader")} - Nyaatify`
+  }, [t])
 
   useEffect(() => {
     if (configData) {
-      trackersForm.setValue("customTrackers", configData?.customTrackers);
+      trackersForm.setValue("customTrackers", configData?.customTrackers)
     }
-  }, [configData]);
+  }, [configData, trackersForm])
 
   const handleAdd = async (values) => {
-    const result = await handleRequest("POST", API.DOWNLOADER, values, t("toast.failed.add"));
+    const result = await handleRequest("POST", API.DOWNLOADER, values, t("toast.failed.add"))
     if (result) {
-      downloaderForm.reset();
-      downloaderMutate();
-      configMutate();
+      downloaderForm.reset()
+      downloaderMutate()
+      configMutate()
     }
-  };
+  }
 
   const handleDelete = async (id) => {
-    const result = await handleRequest("DELETE", `${API.DOWNLOADER}/${id}`, null, t("toast.failed.delete"));
+    const result = await handleRequest("DELETE", `${API.DOWNLOADER}/${id}`, null, t("toast.failed.delete"))
     if (result) {
-      downloaderMutate();
-      configMutate();
+      downloaderMutate()
+      configMutate()
     }
-  };
+  }
 
   const handleTest = async (values) => {
-    const result = await handleRequest("POST", `${API.DOWNLOADER}/test`, values, t("toast.failed.test"));
+    const result = await handleRequest("POST", `${API.DOWNLOADER}/test`, values, t("toast.failed.test"))
     if (result) {
       toast.success(t("toast.success.test"), {
         description: `${t("glb.version")}: ${result.data.version}`
-      });
+      })
     }
-  };
+  }
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
+    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"))
     if (result) {
-      toast(t("toast.success.save"));
-      configMutate();
+      toast(t("toast.success.save"))
+      configMutate()
     }
-  };
+  }
 
   if (downloaderLoading || configLoading) {
-    return <></>;
+    return <></>
   }
 
   return (
@@ -119,69 +119,84 @@ export default function DownloaderSettings() {
         <CardContent>
           <Form {...downloaderForm}>
             <form onSubmit={downloaderForm.handleSubmit((values) => handleAdd(values))} className="space-y-6" noValidate>
-              <FormField control={downloaderForm.control} name="name" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.dl.add.name")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="Downloader" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-              />
-              <FormField control={downloaderForm.control} name="type" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.dl.add.type")}</FormLabel>
-                  <Select defaultValue={field.value} onValueChange={field.onChange}>
+              <FormField
+                control={downloaderForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.dl.add.name")}</FormLabel>
                     <FormControl>
-                      <SelectTrigger className="w-full lg:w-72 transition-width duration-300 ease-in-out">
-                        <SelectValue />
-                      </SelectTrigger>
+                      <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="Downloader" {...field} />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="qBittorrent">qBittorrent</SelectItem>
-                      <SelectItem value="Transmission" disabled>Transmission</SelectItem>
-                      <SelectItem value="Aria2" disabled>Aria2</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                  <FormDescription>
-                    {selectedType === "qBittorrent" && t("st.dl.add.type_notice_qb")}
-                    {selectedType === "Transmission" && t("st.dl.add.type_notice_tr")}
-                    {selectedType === "Aria2" && t("st.dl.add.type_notice_ar")}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={downloaderForm.control}
+                name="type"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.dl.add.type")}</FormLabel>
+                    <Select defaultValue={field.value} onValueChange={field.onChange}>
+                      <FormControl>
+                        <SelectTrigger className="w-full lg:w-72 transition-width duration-300 ease-in-out">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="qBittorrent">qBittorrent</SelectItem>
+                        <SelectItem value="Transmission" disabled>Transmission</SelectItem>
+                        <SelectItem value="Aria2" disabled>Aria2</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                    <FormDescription>
+                      {selectedType === "qBittorrent" && t("st.dl.add.type_notice_qb")}
+                      {selectedType === "Transmission" && t("st.dl.add.type_notice_tr")}
+                      {selectedType === "Aria2" && t("st.dl.add.type_notice_ar")}
                     </FormDescription>
-                </FormItem>
-              )}
+                  </FormItem>
+                )}
               />
-              <FormField control={downloaderForm.control} name="url" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.dl.add.url")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder={urlPlaceholders[selectedType]} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={downloaderForm.control}
+                name="url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.dl.add.url")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder={urlPlaceholders[selectedType]} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormField control={downloaderForm.control} name="username" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.dl.add.username")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="admin" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={downloaderForm.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.dl.add.username")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="admin" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormField control={downloaderForm.control} name="password" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.dl.add.password")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" type="password" placeholder="password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={downloaderForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.dl.add.password")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" type="password" placeholder="password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
               <div className="flex gap-2">
                 <Button type="submit">{t("glb.add")}</Button>
@@ -211,7 +226,7 @@ export default function DownloaderSettings() {
                 {downloader.state === "online" ? t("st.dl.list.online") : t("st.dl.list.offline")}
               </>
             )}
-            menu={(downloader) => (
+            menu={() => (
               <></>
             )}
             deleteable={() => true}
@@ -268,14 +283,17 @@ export default function DownloaderSettings() {
         <CardContent>
           <Form {...trackersForm}>
             <form onSubmit={trackersForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
-              <FormField control={trackersForm.control} name="customTrackers" render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea className="w-full h-44" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={trackersForm.control}
+                name="customTrackers"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea className="w-full h-44" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
               <Button type="submit">{t("glb.save")}</Button>
             </form>
@@ -283,5 +301,5 @@ export default function DownloaderSettings() {
         </CardContent>
       </Card>
     </>
-  );
+  )
 }

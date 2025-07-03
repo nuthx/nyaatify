@@ -1,23 +1,23 @@
-"use client";
+"use client"
 
-import { useEffect } from "react";
-import { useTranslation, Trans } from "react-i18next";
-import pkg from "@/package.json";
+import { useEffect } from "react"
+import { useTranslation, Trans } from "react-i18next"
+import pkg from "@/package.json"
 import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card"
-import { NyaatifyInfo } from "@/components/nyaatify-info";
+import { NyaatifyInfo } from "@/components/nyaatify-info"
 
 export default function Settings() {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   // Set page title
   useEffect(() => {
-    document.title = `${t("st.metadata.about")} - Nyaatify`;
-  }, [t]);
+    document.title = `${t("st.metadata.about")} - Nyaatify`
+  }, [t])
 
   return (
     <>
@@ -36,7 +36,7 @@ export default function Settings() {
             <h4 className="font-bold">{t("st.abt.project.author")}</h4>
             <p className="text-sm text-muted-foreground">
               <Trans i18nKey="st.abt.project.author_desc">
-                <a href="https://github.com/nuthx" target="_blank" className="underline" />
+                <a href="https://github.com/nuthx" target="_blank" className="underline" rel="noreferrer" />
               </Trans>
             </p>
           </div>
@@ -44,22 +44,22 @@ export default function Settings() {
             <h4 className="font-bold">{t("st.abt.project.license")}</h4>
             <p className="text-sm text-muted-foreground">
               <Trans i18nKey="st.abt.project.license_desc">
-                <a href="https://github.com/nuthx/nyaatify/blob/main/LICENSE" target="_blank" className="underline" />
+                <a href="https://github.com/nuthx/nyaatify/blob/main/LICENSE" target="_blank" className="underline" rel="noreferrer" />
               </Trans>
             </p>
           </div>
           <div className="flex flex-col gap-2">
             <h4 className="font-bold">{t("st.abt.project.repository")}</h4>
             <p className="text-sm text-muted-foreground">
-              <a href="https://github.com/nuthx/nyaatify" target="_blank" className="underline">Github</a>
+              <a href="https://github.com/nuthx/nyaatify" target="_blank" className="underline" rel="noreferrer">Github</a>
             </p>
           </div>
           <div className="flex flex-col gap-2">
             <h4 className="font-bold">{t("st.abt.project.contribute")}</h4>
             <p className="text-sm text-muted-foreground">
               <Trans i18nKey="st.abt.project.contributor_desc">
-                <a href="https://github.com/nuthx/nyaatify/pulls" target="_blank" className="underline" />
-                <a href="https://github.com/nuthx/nyaatify/issues" target="_blank" className="underline" />
+                <a href="https://github.com/nuthx/nyaatify/pulls" target="_blank" className="underline" rel="noreferrer" />
+                <a href="https://github.com/nuthx/nyaatify/issues" target="_blank" className="underline" rel="noreferrer" />
               </Trans>
             </p>
           </div>

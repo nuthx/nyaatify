@@ -1,12 +1,12 @@
-import "./globals.css";
+import "./globals.css"
 import { AR_One_Sans } from "next/font/google"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
-import { I18nWrapper } from "@/i18n/wrapper";
+import { I18nWrapper } from "@/i18n/wrapper"
 import { Toaster } from "@/components/ui/sonner"
-import { NavBar } from "@/components/navbar";
+import { NavBar } from "@/components/navbar"
 
 // Use Google Fonts
-const arOneSans = AR_One_Sans({ 
+const arOneSans = AR_One_Sans({
   subsets: ["latin"],
   display: "swap",
   fallback: ["-apple-system", "system-ui", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei", "Arial", "sans-serif"]
@@ -29,5 +29,5 @@ export default function RootLayout({ children }) {
         </NextThemesProvider>
       </body>
     </html>
-  );
+  )
 }

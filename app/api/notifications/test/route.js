@@ -1,5 +1,5 @@
-import { sendResponse } from "@/lib/http/response";
-import { dispatchNotification } from "@/lib/core/notification";
+import { sendResponse } from "@/lib/http/response"
+import { dispatchNotification } from "@/lib/core/notification"
 
 const DEMO_ANIME = {
   rss: "Demo Subscription",
@@ -30,22 +30,22 @@ const DEMO_ANIME = {
 
 export async function POST(request) {
   try {
-    const data = await request.json();
+    const data = await request.json()
 
     // Dispatch test notification
-    const notificationResult = await dispatchNotification(data, DEMO_ANIME);
+    const notificationResult = await dispatchNotification(data, DEMO_ANIME)
 
     if (!notificationResult.success) {
-      throw new Error(notificationResult.message);
+      throw new Error(notificationResult.message)
     }
 
     return sendResponse(request, {
       message: `Test notification successfully, name: ${data.name}`
-    });
+    })
   } catch (error) {
     return sendResponse(request, {
       code: 500,
       message: error.message
-    });
+    })
   }
 }

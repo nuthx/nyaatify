@@ -1,12 +1,12 @@
-"use client";
+"use client"
 
 import { toast } from "sonner"
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { API } from "@/lib/http/api";
-import { useData } from "@/lib/http/swr";
-import { handleRequest } from "@/lib/http/request";
-import { createForm } from "@/lib/form";
+import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
+import { API } from "@/lib/http/api"
+import { useData } from "@/lib/http/swr"
+import { handleRequest } from "@/lib/http/request"
+import { createForm } from "@/lib/form"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,14 +16,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialogTrigger
 } from "@/components/ui/alert-dialog"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card"
 import {
   Form,
@@ -40,78 +40,78 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+} from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 
 export default function RSSSettings() {
-  const { t } = useTranslation();
-  const [testResult, setTestResult] = useState("");
+  const { t } = useTranslation()
+  const [testResult, setTestResult] = useState("")
 
   const aiForm = createForm({
     aiApi: { schema: "url" },
     aiKey: { schema: "required" },
     aiModel: { schema: "required" }
-  })();
+  })()
 
   const exclusionsForm = createForm({
     anitomyTitleExclusions: { schema: "required" }
-  })();
+  })()
 
   const testForm = createForm({
     title: { schema: "required", default: "[VCB-Studio] 鬼灭之刃 刀匠村篇 / Kimetsu no Yaiba Katanakaji no Sato Hen 10-bit 1080p HEVC BDRip [Fin]" }
-  })();
+  })()
 
-  const { data: configData, isLoading: configLoading, mutate: configMutate } = useData(API.CONFIG, t("toast.failed.fetch_config"));
+  const { data: configData, isLoading: configLoading, mutate: configMutate } = useData(API.CONFIG, t("toast.failed.fetch_config"))
 
   // Set page title
   useEffect(() => {
-    document.title = `${t("st.metadata.parser")} - Nyaatify`;
-  }, [t]);
+    document.title = `${t("st.metadata.parser")} - Nyaatify`
+  }, [t])
 
   useEffect(() => {
     if (configData) {
-      aiForm.setValue("aiApi", configData?.aiApi);
-      aiForm.setValue("aiModel", configData?.aiModel);
-      exclusionsForm.setValue("anitomyTitleExclusions", configData?.anitomyTitleExclusions);
+      aiForm.setValue("aiApi", configData?.aiApi)
+      aiForm.setValue("aiModel", configData?.aiModel)
+      exclusionsForm.setValue("anitomyTitleExclusions", configData?.anitomyTitleExclusions)
     }
-  }, [configData]);
+  }, [configData, aiForm, exclusionsForm])
 
   const handleTest = async (values) => {
-    setTestResult("");
-    const result = await handleRequest("POST", `${API.CONFIG}/test/ai`, values, t("toast.failed.test"), true);
+    setTestResult("")
+    const result = await handleRequest("POST", `${API.CONFIG}/test/ai`, values, t("toast.failed.test"), true)
     if (result) {
-      const reader = result.body.getReader();
-      let accumulatedResult = "";
+      const reader = result.body.getReader()
+      let accumulatedResult = ""
       while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        const { done, value } = await reader.read()
+        if (done) break
 
-        const text = new TextDecoder().decode(value);
-        accumulatedResult += text;
-        
+        const text = new TextDecoder().decode(value)
+        accumulatedResult += text
+
         // Format the result manually
-        let formattedResult = accumulatedResult;
-        formattedResult = formattedResult.replace(/\{/, "{\n  ");
-        formattedResult = formattedResult.replace(/",/g, '",\n  ');
-        formattedResult = formattedResult.replace(/\}$/, '\n}');
-        
-        setTestResult(formattedResult);
+        let formattedResult = accumulatedResult
+        formattedResult = formattedResult.replace(/\{/, "{\n  ")
+        formattedResult = formattedResult.replace(/",/g, "\",\n  ")
+        formattedResult = formattedResult.replace(/\}$/, "\n}")
+
+        setTestResult(formattedResult)
       }
     }
-  };
+  }
 
   const handleSaveConfig = async (values) => {
-    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"));
+    const result = await handleRequest("PATCH", API.CONFIG, values, t("toast.failed.save"))
     if (result) {
-      toast(t("toast.success.save"));
-      configMutate();
+      toast(t("toast.success.save"))
+      configMutate()
     }
-  };
+  }
 
   if (configLoading) {
-    return <></>;
+    return <></>
   }
 
   return (
@@ -142,16 +142,19 @@ export default function RSSSettings() {
         <CardContent>
           <Form {...exclusionsForm}>
             <form onSubmit={exclusionsForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
-              <FormField control={exclusionsForm.control} name="anitomyTitleExclusions" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.pr.local.exclusions.title")}</FormLabel>
-                  <FormControl>
-                    <Textarea className="w-full h-44" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                  <FormDescription className="mt-0">{t("st.pr.local.exclusions.description")}</FormDescription>
-                </FormItem>
-              )}
+              <FormField
+                control={exclusionsForm.control}
+                name="anitomyTitleExclusions"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.pr.local.exclusions.title")}</FormLabel>
+                    <FormControl>
+                      <Textarea className="w-full h-44" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                    <FormDescription className="mt-0">{t("st.pr.local.exclusions.description")}</FormDescription>
+                  </FormItem>
+                )}
               />
               <Button type="submit">{t("glb.save")}</Button>
             </form>
@@ -167,35 +170,44 @@ export default function RSSSettings() {
         <CardContent>
           <Form {...aiForm}>
             <form onSubmit={aiForm.handleSubmit(handleSaveConfig)} className="space-y-6" noValidate>
-              <FormField control={aiForm.control} name="aiApi" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.pr.ai.api")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder="https://api.openai.com/v1/chat/completions" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={aiForm.control}
+                name="aiApi"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.pr.ai.api")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder="https://api.openai.com/v1/chat/completions" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormField control={aiForm.control} name="aiKey" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.pr.ai.key")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full" placeholder={configData?.aiKey || "sk-1234567890"} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={aiForm.control}
+                name="aiKey"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.pr.ai.key")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full" placeholder={configData?.aiKey || "sk-1234567890"} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-              <FormField control={aiForm.control} name="aiModel" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.pr.ai.model")}</FormLabel>
-                  <FormControl>
-                    <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="gpt-4" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={aiForm.control}
+                name="aiModel"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.pr.ai.model")}</FormLabel>
+                    <FormControl>
+                      <Input className="w-full lg:w-72 transition-width duration-300 ease-in-out" placeholder="gpt-4" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
               <div className="flex gap-2 items-center">
                 <Button type="submit">{t("glb.save")}</Button>
@@ -228,18 +240,21 @@ export default function RSSSettings() {
         <CardContent>
           <Form {...testForm}>
             <form onSubmit={testForm.handleSubmit(handleTest)} className="space-y-6" noValidate>
-              <FormField control={testForm.control} name="title" render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("st.pr.test.anime_title")}</FormLabel>
-                  <FormControl>
-                    <div className="flex gap-2 items-center">
-                      <Input className="w-full" placeholder="[VCB-Studio] 鬼灭之刃 刀匠村篇 / Kimetsu no Yaiba Katanakaji no Sato Hen 10-bit 1080p HEVC BDRip [Fin]" {...field} />
-                      <Button type="submit">{t("glb.test")}</Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+              <FormField
+                control={testForm.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("st.pr.test.anime_title")}</FormLabel>
+                    <FormControl>
+                      <div className="flex gap-2 items-center">
+                        <Input className="w-full" placeholder="[VCB-Studio] 鬼灭之刃 刀匠村篇 / Kimetsu no Yaiba Katanakaji no Sato Hen 10-bit 1080p HEVC BDRip [Fin]" {...field} />
+                        <Button type="submit">{t("glb.test")}</Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </form>
           </Form>
@@ -252,5 +267,5 @@ export default function RSSSettings() {
         </CardContent>
       </Card>
     </>
-  );
+  )
 }
