@@ -23,6 +23,7 @@ export default defineConfig([
   },
   {
     name: "me/react-rules",
+    files: ["**/*.{js,jsx}"],
     plugins: { react: reactPlugin },
     extends: [
       reactPlugin.configs.flat.recommended,
@@ -39,15 +40,21 @@ export default defineConfig([
   },
   {
     name: "me/react-hooks-rules",
-    plugins: { "react-hooks": reactHooks }
+    files: ["**/*.{js,jsx}"],
+    plugins: { "react-hooks": reactHooks },
+    rules: {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    }
   },
   {
     name: "me/stylistic-rules",
+    files: ["**/*.{js,jsx}"],
     plugins: { "@stylistic": stylistic },
     extends: [stylistic.configs.recommended],
     rules: {
       "@stylistic/arrow-parens": ["error", "always"],
-      "@stylistic/brace-style": ["error", "1tbs"],
+      "@stylistic/brace-style": "off",
       "@stylistic/comma-dangle": ["error", "never"],
       "@stylistic/jsx-first-prop-new-line": ["error", "multiline"],
       "@stylistic/jsx-one-expression-per-line": ["error", { allow: "non-jsx" }],
